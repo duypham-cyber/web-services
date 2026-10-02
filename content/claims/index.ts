@@ -1,5 +1,6 @@
 import type { Claim } from '../schemas';
 import { coreClaims } from './core';
+import { homeClaims } from './home';
 
 /**
  * Gom mọi câu khẳng định. Mỗi khu vực có file riêng để agent sửa song song không đè nhau:
@@ -9,7 +10,7 @@ import { coreClaims } from './core';
  *
  * Đọc câu khẳng định CHỈ qua `claim(id, locale)` ở lib/claims.ts (không import trực tiếp text để render).
  */
-export const ALL_CLAIMS = [...coreClaims] as const;
+export const ALL_CLAIMS = [...coreClaims, ...homeClaims] as const;
 
 export type ClaimId = (typeof ALL_CLAIMS)[number]['id'];
 
