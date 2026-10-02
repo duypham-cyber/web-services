@@ -43,6 +43,7 @@ export async function DoorsSection({ tone }: { tone: SectionTone }) {
               illustration={door.illustration}
               ratio="16/10"
               rounded={false}
+              reveal
               pendingLabel={t('media.photoPending')}
               className="md:aspect-auto md:h-full md:min-h-56 lg:aspect-[16/10] lg:h-auto lg:min-h-0"
             />

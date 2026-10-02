@@ -29,6 +29,12 @@ type MediaFrameProps = {
   sizes?: string;
   /** Khung tự bo góc `lg`; đặt false khi nằm trong Card đã bo và cắt sẵn. */
   rounded?: boolean;
+  /**
+   * Hiệu ứng `curtain` (docs/03 mục 12.2): ảnh vén từ dưới lên khi vào khung nhìn — dùng chung bộ máy motion của
+   * nền móng (thuộc tính data, MotionRuntime + CSS ở app/globals.css). Reduced-motion/không JS: ảnh hiện ngay.
+   * KHÔNG bật cho ảnh LCP.
+   */
+  reveal?: boolean;
   className?: string;
 };
 
@@ -44,16 +50,22 @@ export function MediaFrame({
   pendingLabel,
   sizes = '(min-width: 1024px) 33vw, 100vw',
   rounded = true,
+  reveal = false,
   className,
 }: MediaFrameProps) {
   const showPending = !image && Boolean(pendingLabel) && isDraftPreview();
   return (
-    <div className={cn('relative w-full overflow-hidden bg-blue-50', RATIO[ratio], rounded && 'rounded-lg', className)}>
-      {image ? (
-        <Image src={image.src} alt={image.alt} fill sizes={sizes} className="object-cover" />
-      ) : (
-        <HomeIllustration name={illustration} />
-      )}
+    <div
+      data-motion-item={reveal ? 'curtain' : undefined}
+      className={cn('relative w-full overflow-hidden bg-blue-50', RATIO[ratio], rounded && 'rounded-lg', className)}
+    >
+      <div data-curtain-mask={reveal ? '' : undefined} className="absolute inset-0">
+        {image ? (
+          <Image src={image.src} alt={image.alt} fill sizes={sizes} className="object-cover" />
+        ) : (
+          <HomeIllustration name={illustration} />
+        )}
+      </div>
       {showPending ? (
         <Badge variant="draft" className="absolute left-3 top-3">
           {pendingLabel}
