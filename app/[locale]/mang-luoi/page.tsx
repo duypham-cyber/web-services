@@ -60,7 +60,7 @@ export default async function NetworkPage({ params }: PageProps<'/[locale]/mang-
     <>
       {/* HERO + BẢN ĐỒ — H1 duy nhất của trang */}
       <Section aria-labelledby="page-title" spacing="compact" className="overflow-clip">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,35rem)] lg:gap-16">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,35rem)] xl:gap-16">
           <div>
             <Eyebrow>{t('eyebrow')}</Eyebrow>
             <Heading level={1} id="page-title" className="mt-3 max-w-[22ch]">

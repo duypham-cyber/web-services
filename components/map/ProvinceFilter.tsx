@@ -67,7 +67,7 @@ export function ProvinceFilter({ rows, regions, labels, children }: ProvinceFilt
   return (
     <div ref={rootRef}>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-start">
-        <Field id={`${id}-q`} label={labels.search} hint={labels.searchHint}>
+        <Field id={`${id}-q`} label={labels.search} hint={labels.searchHint} className="md:max-w-[26rem]">
           {(control) => (
             <div className="relative">
               <Search
