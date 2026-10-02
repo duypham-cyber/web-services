@@ -26,7 +26,7 @@
     },
     "standard": {
       "title": "Chuẩn",
-      "body": "Thợ lắp theo hướng dẫn kỹ thuật của hãng và nghiệm thu cùng khách sau khi hoàn tất."
+      "body": "Thợ lắp theo quy trình 5 bước, chạy thử và nghiệm thu cùng khách bằng ảnh."
     },
     "transparent": {
       "title": "Minh bạch",
@@ -35,7 +35,7 @@
   },
   "kpi": {
     "title": "Bluebolt qua các con số",
-    "pending": "Dải số liệu sẽ hiện khi có số thật cho K4 (Hãng và Sàn đang hợp tác) trong content/stats.ts."
+    "pending": "Dải số liệu sẽ hiện khi có số thật cho K4 (hãng và sàn đang hợp tác) trong content/stats.ts."
   },
   "milestones": {
     "eyebrow": "Hành trình",

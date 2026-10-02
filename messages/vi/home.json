@@ -1,12 +1,12 @@
 {
   "meta": {
     "title": "Lắp đặt điện máy toàn quốc cho hãng | Bluebolt Services",
-    "description": "Bluebolt Services điều phối lắp đặt và bảo hành điện máy cho Hãng, Sàn TMĐT và chuỗi bán lẻ: nhận đơn, giao thợ, nghiệm thu và đối soát trên một nền tảng."
+    "description": "Bluebolt Services điều phối lắp đặt và bảo hành điện máy cho hãng, sàn TMĐT và chuỗi bán lẻ: nhận đơn, giao thợ, nghiệm thu và đối soát trên một nền tảng."
   },
   "hero": {
     "eyebrowFallback": "Nhanh · Chuẩn · Minh bạch",
     "title": "Hạ tầng lắp đặt toàn quốc cho hãng điện máy",
-    "lead": "Một đầu mối điều phối lắp đặt và bảo hành điện máy cho Hãng, Sàn TMĐT và chuỗi bán lẻ: nhận đơn, giao thợ, nghiệm thu và đối soát.",
+    "lead": "Một đầu mối điều phối lắp đặt và bảo hành điện máy cho hãng, sàn TMĐT và chuỗi bán lẻ: nhận đơn, giao thợ, nghiệm thu và đối soát.",
     "skipIntro": "Bỏ qua phần giới thiệu ↓"
   },
   "media": {
@@ -15,13 +15,13 @@
   "doors": {
     "eyebrow": "Bắt đầu từ đây",
     "title": "Hãng, thợ và khách hàng trên cùng một mạng lưới",
-    "lead": "Hãng và Sàn giao đơn, thợ đối tác nhận việc qua app, khách lẻ có một đầu mối để được hỗ trợ sau khi lắp.",
+    "lead": "Hãng và sàn giao đơn, thợ đối tác nhận việc qua app, khách lẻ có một đầu mối để được hỗ trợ sau khi lắp.",
     "brands": {
-      "label": "Hãng & Sàn TMĐT",
+      "label": "Hãng & sàn TMĐT",
       "title": "Giao đơn lắp đặt cho một đầu mối",
       "body": "Bluebolt nhận đơn, điều phối thợ, nghiệm thu bằng ảnh và đối soát với bạn theo từng đơn.",
       "cta": "Giải pháp cho hãng điện máy",
-      "secondary": "Cho Sàn TMĐT & bán lẻ"
+      "secondary": "Cho sàn TMĐT & bán lẻ"
     },
     "technicians": {
       "label": "Thợ kỹ thuật",
@@ -71,18 +71,18 @@
       },
       "photoProof": {
         "title": "Nghiệm thu có ảnh, trạng thái rõ từng bước",
-        "body": "Thợ chụp ảnh nghiệm thu trên app. Hãng/Sàn xem trạng thái và ảnh của từng đơn trên dashboard."
+        "body": "Thợ chụp ảnh nghiệm thu trên app; mỗi đơn có trạng thái theo 5 bước. Hình thức báo cáo cho hãng/sàn được thống nhất trong hợp đồng."
       },
       "reconcile": {
         "title": "Đối soát theo từng đơn",
-        "body": "Bluebolt đối soát với Hãng/Sàn trên các đơn đã nghiệm thu. Vật tư phát sinh, nếu có, khách trả trực tiếp cho thợ theo khung giá tham khảo công khai."
+        "body": "Bluebolt đối soát với hãng/sàn trên các đơn đã nghiệm thu. Vật tư phát sinh, nếu có, khách trả trực tiếp cho thợ theo khung giá tham khảo công khai."
       }
     }
   },
   "process": {
     "eyebrow": "Quy trình",
     "title": "Mỗi đơn lắp đặt đi qua cùng 5 bước",
-    "lead": "Bước 00 là lúc khách mua hàng tại Hãng hoặc Sàn. Từ bước 01, đơn nằm trong quy trình của Bluebolt cho tới khi đối soát xong.",
+    "lead": "Bước 00 là lúc khách mua hàng tại hãng hoặc sàn. Từ bước 01, đơn nằm trong quy trình của Bluebolt cho tới khi đối soát xong.",
     "triggerLabel": "sự kiện kích hoạt, chưa tính là một bước",
     "stepLabel": "Bước {n}",
     "pendingNote": "Thứ tự bước 02 → 03 và kênh nhận đơn ở bước 01 đang chờ anh Duy xác nhận (docs/03 mục 14.1)."
@@ -90,11 +90,13 @@
   "technology": {
     "eyebrow": "Công nghệ",
     "title": "Dashboard cho hãng, app cho thợ, chung một dữ liệu đơn",
-    "lead": "Dashboard của Hãng/Sàn và app của thợ dùng chung một dữ liệu đơn, nên hai bên luôn thấy cùng một trạng thái.",
+    "lead": "Dashboard của hãng/sàn và app của thợ dùng chung một dữ liệu đơn, nên hai bên luôn thấy cùng một trạng thái.",
+    "titleNeutral": "Một dữ liệu đơn, từ lúc giao thợ tới nghiệm thu",
+    "leadNeutral": "Thợ cập nhật trạng thái và ảnh nghiệm thu trên app; báo cáo cho hãng/sàn theo hình thức thống nhất trong hợp đồng.",
     "caption": "Giao diện minh họa",
     "captionNote": "Dữ liệu trong hình là ví dụ, không phải đơn thật.",
     "dashboard": {
-      "title": "Dashboard cho Hãng & Sàn",
+      "title": "Dashboard cho hãng & sàn",
       "features": {
         "status": "Trạng thái từng đơn, từ tiếp nhận tới nghiệm thu",
         "photos": "Ảnh nghiệm thu đính kèm mỗi đơn",
@@ -208,7 +210,7 @@
     "cta": "Xem chi tiết",
     "items": {
       "lap-dat-dieu-hoa": {
-        "body": "Điều hòa treo tường và âm trần của mọi thương hiệu, lắp và chạy thử trước khi nghiệm thu."
+        "body": "Điều hòa treo tường và âm trần, lắp và chạy thử trước khi nghiệm thu."
       },
       "lap-dat-dien-may": {
         "body": "Máy giặt, tủ lạnh, máy sấy, bình nóng lạnh, tivi, bếp từ, máy hút mùi và máy lọc nước."
@@ -237,7 +239,7 @@
       "qualification": {
         "title": "Trình độ và kinh nghiệm",
         "a": "Trung cấp hoặc chứng chỉ nghề điện, điện lạnh, cơ điện tử",
-        "b": "Thợ chính từ 1–2 năm lắp đặt thực tế",
+        "b": "Thợ chính có kinh nghiệm lắp đặt thực tế",
         "c": "Ưu tiên chứng chỉ an toàn điện và làm việc trên cao"
       },
       "skills": {

@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Khung giá vật tư lắp đặt tham khảo",
-    "description": "Khung giá vật tư tham khảo khi lắp đặt điều hòa theo vùng, thợ thu tại chỗ, và giá dịch vụ theo hợp đồng cho Hãng, Sàn TMĐT."
+    "description": "Khung giá vật tư tham khảo khi lắp đặt điều hòa theo vùng, thợ thu tại chỗ, và giá dịch vụ theo hợp đồng cho hãng, sàn TMĐT."
   },
   "eyebrow": "Bảng giá",
   "title": "Khung giá vật tư tham khảo (thợ thu tại chỗ)",
@@ -62,7 +62,7 @@
   },
   "contract": {
     "eyebrow": "Doanh nghiệp",
-    "title": "Giá theo hợp đồng cho Hãng, Sàn TMĐT và chuỗi bán lẻ",
+    "title": "Giá theo hợp đồng cho hãng, sàn TMĐT và chuỗi bán lẻ",
     "body": "Phí lắp đặt cho doanh nghiệp tính theo nhóm thiết bị và vùng, ghi trong hợp đồng và đối soát theo từng đơn. Vật tư phát sinh vẫn theo khung giá tham khảo ở trên.",
     "points": {
       "groups": "Đơn giá theo nhóm thiết bị và vùng",

@@ -37,6 +37,14 @@ export const SLA_MATRIX = {
   },
 } as const satisfies Record<SlaMilestone, Record<SlaRegion, ClaimId>>;
 
+/**
+ * Bảng SLA theo vùng có ô nào được hiện không (production: chỉ ô đã duyệt; bản xem trước: cả ô nháp). Trang dùng để đổi
+ * nhãn nút/tiêu đề khi bảng chưa có ô nào ("Xem SLA theo vùng" không dẫn tới chỗ không có SLA).
+ */
+export function slaTableVisible(locale: Locale): boolean {
+  return SLA_MILESTONES.some((m) => SLA_REGIONS.some((r) => claim(SLA_MATRIX[m][r], locale) !== null));
+}
+
 type SlaRegionTableProps = {
   locale: Locale;
   caption: string;

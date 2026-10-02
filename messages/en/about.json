@@ -19,14 +19,14 @@
   },
   "values": {
     "eyebrow": "How we work",
-    "title": "Fast, reliable, transparent",
+    "title": "Fast, precise, transparent",
     "fast": {
       "title": "Fast",
       "body": "Each job goes to the nearest technician with a free slot, who then calls the customer to fix the appointment time."
     },
     "standard": {
-      "title": "Reliable",
-      "body": "Technicians install to the brand's technical guidelines and sign off with the customer when the job is done."
+      "title": "Precise",
+      "body": "Technicians follow the five-step process, test-run the unit and sign off with the customer using photos."
     },
     "transparent": {
       "title": "Transparent",

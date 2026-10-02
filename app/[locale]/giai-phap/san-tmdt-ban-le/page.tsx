@@ -51,7 +51,11 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/giai-pha
   });
 }
 
-/** Nhóm thiết bị cho "Khung giá theo nhóm thiết bị". hasPartsTable = có dòng trong content/pricing.ts. */
+/**
+ * Nhóm thiết bị cho "Khung giá theo nhóm thiết bị". hasPartsTable = có dòng trong content/pricing.ts.
+ * Chưa có phí theo nhóm được duyệt → một câu (lead) + hàng chip 7 nhóm, không lặp 7 thẻ "Theo hợp đồng" giống hệt nhau.
+ * Khi có bảng phí theo nhóm và vùng: dựng lại thành bảng/thẻ có số.
+ */
 const GROUPS = [
   { key: 'ac', icon: AirVent, hasPartsTable: true },
   { key: 'laundry', icon: WashingMachine, hasPartsTable: false },
@@ -138,34 +142,18 @@ export default async function SolutionsRetailPage({ params }: PageProps<'/[local
 
       <Section id="khung-gia" tone="blue-50" aria-labelledby="khung-gia-title">
         <SectionIntro eyebrow={t('retail.groups.eyebrow')} title={t('retail.groups.title')} titleId="khung-gia-title" lead={t('retail.groups.lead')} />
-        <StaggerGrid as="ul" className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ul aria-label={t('retail.groups.listLabel')} className="mt-8 flex flex-wrap gap-3">
           {GROUPS.map(({ key, icon: Icon, hasPartsTable }) => (
-            <Card key={key} as="article" className="flex h-full flex-col">
-              <div className="flex items-start gap-4 lg:flex-col lg:gap-0">
-                <span aria-hidden="true" className="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-600">
-                  <Icon size={22} strokeWidth={1.5} />
-                </span>
-                <div className="min-w-0 lg:mt-4">
-                  <h3 className="text-h3 text-navy-900">{t(`retail.groups.items.${key}.title`)}</h3>
-                  <p className="mt-1 text-small text-slate-600">{t(`retail.groups.items.${key}.examples`)}</p>
-                </div>
-              </div>
-              <div aria-hidden="true" className="flex-1" />
-              <dl className="mt-5 grid gap-2 border-t border-slate-300 pt-4 text-small">
-                <div className="flex items-baseline justify-between gap-3">
-                  <dt className="text-slate-600">{t('retail.groups.feeLabel')}</dt>
-                  <dd className="text-right font-semibold text-navy-900">{t('kit.byContract')}</dd>
-                </div>
-                <div className="flex items-baseline justify-between gap-3">
-                  <dt className="text-slate-600">{t('retail.groups.materialsLabel')}</dt>
-                  <dd className="text-right font-medium text-ink-900">
-                    {hasPartsTable ? t('retail.groups.materialsTable') : t('retail.groups.materialsOnSite')}
-                  </dd>
-                </div>
-              </dl>
-            </Card>
+            <li
+              key={key}
+              className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-slate-300 bg-white px-3.5 py-2 text-small shadow-1"
+            >
+              <Icon aria-hidden="true" size={18} strokeWidth={1.5} className="shrink-0 text-blue-600" />
+              <span className="font-semibold text-navy-900">{t(`retail.groups.items.${key}.title`)}</span>
+              {hasPartsTable ? <span className="text-slate-600">· {t('retail.groups.materialsTable')}</span> : null}
+            </li>
           ))}
-        </StaggerGrid>
+        </ul>
         <TextLink href="/bang-gia" variant="arrow" className="mt-8">
           {t('kit.cta.pricing')}
         </TextLink>

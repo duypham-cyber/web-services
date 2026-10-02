@@ -6,7 +6,7 @@
     },
     "eyebrow": "Dịch vụ",
     "title": "Dịch vụ lắp đặt và bảo trì",
-    "lead": "Bốn nhóm dịch vụ cho đơn của Hãng, Sàn TMĐT và chuỗi bán lẻ.",
+    "lead": "Bốn nhóm dịch vụ cho đơn của hãng, sàn TMĐT và chuỗi bán lẻ.",
     "toDevices": "Thiết bị Bluebolt lắp đặt",
     "grid": {
       "eyebrow": "Bốn nhóm",
@@ -66,7 +66,7 @@
   "eyebrow": "Dịch vụ",
   "items": {
     "lap-dat-dieu-hoa": {
-      "description": "Lắp đặt điều hòa treo tường và âm trần cho đơn của Hãng và Sàn TMĐT: phạm vi công việc, vật tư tham khảo và bảo hành.",
+      "description": "Lắp đặt điều hòa treo tường và âm trần cho đơn của hãng và sàn TMĐT: phạm vi công việc, vật tư tham khảo và bảo hành.",
       "lead": "Điều hòa treo tường và âm trần cho đơn của hãng, sàn TMĐT và chuỗi bán lẻ: khảo sát vị trí, đi ống gọn, hút chân không, chạy thử rồi mới nghiệm thu.",
       "metaTitle": "Lắp đặt điều hòa cho hãng và sàn TMĐT",
       "card": "Treo tường và âm trần: khảo sát vị trí, hút chân không, chạy thử trước khi nghiệm thu.",
@@ -136,7 +136,7 @@
       }
     },
     "lap-dat-dien-may": {
-      "description": "Lắp đặt máy giặt, TV treo tường, tủ lạnh và thiết bị điện máy khác cho đơn của Hãng và Sàn TMĐT.",
+      "description": "Lắp đặt máy giặt, TV treo tường, tủ lạnh và thiết bị điện máy khác cho đơn của hãng và sàn TMĐT.",
       "lead": "Máy giặt, máy sấy, tủ lạnh, TV treo tường và thiết bị nhà bếp: lắp chắc chắn, đấu nối an toàn, chạy thử và hướng dẫn khách sử dụng.",
       "metaTitle": "Lắp đặt máy giặt, TV, tủ lạnh",
       "card": "Máy giặt, máy sấy, tủ lạnh, TV treo tường, bếp từ, máy hút mùi, máy lọc nước, bình nóng lạnh.",
@@ -270,7 +270,7 @@
       }
     },
     "lap-dat-robot-hut-bui": {
-      "description": "Lắp đặt robot hút bụi cho khách của Hãng và Sàn TMĐT: đặt dock sạc, kết nối ứng dụng, quét bản đồ nhà và hướng dẫn sử dụng.",
+      "description": "Lắp đặt robot hút bụi cho khách của hãng và sàn TMĐT: đặt dock sạc, kết nối ứng dụng, quét bản đồ nhà và hướng dẫn sử dụng.",
       "lead": "Đặt dock sạc, kết nối ứng dụng, quét bản đồ nhà lần đầu và hướng dẫn khách sử dụng robot hút bụi.",
       "metaTitle": "Lắp đặt robot hút bụi cho hãng và sàn",
       "card": "Đặt dock sạc, kết nối Wi-Fi và ứng dụng, quét bản đồ nhà lần đầu, hướng dẫn khách sử dụng.",

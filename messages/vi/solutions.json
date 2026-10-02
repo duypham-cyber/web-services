@@ -101,11 +101,11 @@
   },
   "hub": {
     "meta": {
-      "title": "Giải pháp lắp đặt cho Hãng và Sàn",
-      "description": "So sánh tự quản đội thợ, thuê đơn vị địa phương và dùng mạng lưới Bluebolt cho đơn lắp đặt điện máy của Hãng và Sàn TMĐT."
+      "title": "Giải pháp lắp đặt cho hãng và sàn TMĐT",
+      "description": "So sánh tự quản đội thợ, thuê đơn vị địa phương và dùng mạng lưới Bluebolt cho đơn lắp đặt điện máy của hãng và sàn TMĐT."
     },
     "eyebrow": "Giải pháp",
-    "title": "Giải pháp lắp đặt cho Hãng và Sàn",
+    "title": "Giải pháp lắp đặt cho hãng và sàn TMĐT",
     "lead": "Chọn cách triển khai lắp đặt và bảo hành phù hợp với mô hình bán hàng của bạn.",
     "toCompare": "So sánh ba cách triển khai",
     "cards": {
@@ -174,10 +174,11 @@
     "title": "Lắp đặt và bảo hành cho hãng điện máy",
     "lead": "Một đầu mối điều phối thợ, nghiệm thu và đối soát cho đơn lắp đặt của hãng.",
     "toSla": "Xem SLA theo vùng",
+    "toSlaContract": "Xem cách thỏa thuận SLA",
     "pains": {
       "eyebrow": "Vấn đề",
-      "title": "Vì sao hãng khó kiểm soát chất lượng lắp đặt?",
-      "lead": "Khi đơn lắp đặt trải ra nhiều tỉnh, hãng thường gặp năm vấn đề giống nhau.",
+      "title": "Năm điểm nghẽn khi đơn lắp đặt trải ra nhiều tỉnh",
+      "lead": "Mỗi điểm nghẽn đi kèm cách Bluebolt xử lý.",
       "answerLabel": "Cách Bluebolt xử lý",
       "items": {
         "people": {
@@ -188,7 +189,7 @@
         "quality": {
           "title": "Chất lượng không đồng đều",
           "body": "Cùng một sản phẩm nhưng mỗi nơi lắp một kiểu, khách phàn nàn với hãng.",
-          "answer": "Thợ lắp theo hướng dẫn của hãng và nghiệm thu với khách bằng ảnh."
+          "answer": "Mọi đơn đi cùng một quy trình và được nghiệm thu với khách bằng ảnh."
         },
         "speed": {
           "title": "Đơn xử lý chậm",
@@ -213,6 +214,7 @@
     "sla": {
       "eyebrow": "SLA",
       "title": "Cam kết thời gian theo vùng",
+      "titleContract": "SLA theo vùng, ghi trong hợp đồng",
       "lead": "Ba mốc hãng cần đo trên mỗi đơn: xác nhận lịch với khách, hoàn thành lắp đặt và xử lý lỗi lắp đặt."
     },
     "process": {
@@ -362,38 +364,29 @@
       "eyebrow": "Khung giá",
       "title": "Khung giá theo nhóm thiết bị",
       "lead": "Phí lắp đặt tính theo nhóm thiết bị và vùng, ghi trong hợp đồng với sàn. Vật tư phát sinh có khung giá tham khảo riêng, thợ thu tại chỗ.",
-      "feeLabel": "Phí lắp đặt",
-      "materialsLabel": "Vật tư phát sinh",
-      "materialsTable": "Có trong bảng giá",
-      "materialsOnSite": "Thỏa thuận tại chỗ",
+      "listLabel": "Nhóm thiết bị Bluebolt lắp đặt",
+      "materialsTable": "Có bảng giá vật tư",
       "items": {
         "ac": {
-          "title": "Điều hòa",
-          "examples": "Treo tường, âm trần"
+          "title": "Điều hòa"
         },
         "laundry": {
-          "title": "Máy giặt, máy sấy",
-          "examples": "Cửa trước, cửa trên, máy sấy"
+          "title": "Máy giặt, máy sấy"
         },
         "fridge": {
-          "title": "Tủ lạnh",
-          "examples": "Tủ lạnh các dòng"
+          "title": "Tủ lạnh"
         },
         "tv": {
-          "title": "TV treo tường",
-          "examples": "Giá treo thẳng, nghiêng, xoay"
+          "title": "TV treo tường"
         },
         "kitchen": {
-          "title": "Bếp từ, máy hút mùi",
-          "examples": "Thiết bị nhà bếp"
+          "title": "Bếp từ, máy hút mùi"
         },
         "water": {
-          "title": "Máy lọc nước, bình nóng lạnh",
-          "examples": "Thiết bị cấp nước"
+          "title": "Máy lọc nước, bình nóng lạnh"
         },
         "robot": {
-          "title": "Robot hút bụi",
-          "examples": "Robot hút bụi, lau nhà"
+          "title": "Robot hút bụi"
         }
       }
     },

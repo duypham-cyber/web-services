@@ -71,7 +71,7 @@
       },
       "photoProof": {
         "title": "Photo sign-off and a clear status at every step",
-        "body": "Technicians record sign-off photos in the app. You see the status and photos of every job on your dashboard."
+        "body": "Technicians record sign-off photos in the app, and every job has a status across the five steps. How we report to you is agreed in your contract."
       },
       "reconcile": {
         "title": "Reconciliation job by job",
@@ -91,6 +91,8 @@
     "eyebrow": "Technology",
     "title": "A dashboard for brands, an app for technicians, one job record",
     "lead": "The brand dashboard and the technician app share the same job record, so both sides always see the same status.",
+    "titleNeutral": "One job record, from dispatch to sign-off",
+    "leadNeutral": "Technicians update the status and sign-off photos in the app; reporting to brands and marketplaces follows the format agreed in your contract.",
     "caption": "Illustrative UI",
     "captionNote": "The data shown is an example, not a real job.",
     "dashboard": {
@@ -208,7 +210,7 @@
     "cta": "View details",
     "items": {
       "lap-dat-dieu-hoa": {
-        "body": "Wall-mounted and ceiling cassette units from any brand, installed and test-run before sign-off."
+        "body": "Wall-mounted and ceiling cassette units, installed and test-run before sign-off."
       },
       "lap-dat-dien-may": {
         "body": "Washing machines, fridges, dryers, water heaters, TVs, induction hobs, cooker hoods and water purifiers."
@@ -237,7 +239,7 @@
       "qualification": {
         "title": "Qualifications and experience",
         "a": "Vocational diploma or certificate in electrical, refrigeration or mechatronics work",
-        "b": "Lead technicians: 1–2 years of hands-on installation",
+        "b": "Lead technicians with hands-on installation experience",
         "c": "Electrical safety and work-at-height certificates preferred"
       },
       "skills": {

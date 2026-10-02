@@ -25,10 +25,13 @@ const POINTS = ['a', 'b', 'c'] as const;
  * P6 TIÊU CHUẨN THỢ (P1, docs/03 mục 13.4): 4 nhóm dạng badge — chữ viết lại từ trang /worker-map của site cũ.
  * Số hiệu TCVN 5687:2024 / QCVN 25:2025/BKHCN CHƯA kiểm chứng → chỉ hiện qua claim('home.standards-citation')
  * (production ẩn; bản xem trước hiện kèm nhãn Nháp và ghi chú "chưa kiểm chứng").
+ * Số năm kinh nghiệm của thợ chính (site cũ ghi "1–2 năm" lẫn "≥ 2 năm") chỉ đi qua claim('partner.experience-requirement'):
+ * chưa duyệt → production hiện câu trung tính qualification.b; bản xem trước hiện câu có số kèm Nháp.
  */
 export async function StandardsSection({ locale, tone }: { locale: Locale; tone: SectionTone }) {
   const t = await getTranslations('home');
   const citation = claim('home.standards-citation', locale);
+  const experience = claim('partner.experience-requirement', locale);
 
   return (
     <Section id="tieu-chuan-tho" tone={tone} aria-labelledby="tieu-chuan-tho-title">
@@ -54,12 +57,22 @@ export async function StandardsSection({ locale, tone }: { locale: Locale; tone:
               <Heading level={3}>{t(`standards.groups.${key}.title`)}</Heading>
             </div>
             <ul className="mt-4 space-y-2.5 text-small text-slate-600">
-              {POINTS.map((p) => (
-                <li key={p} className="flex gap-2.5">
-                  <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-pill bg-orange-500" />
-                  <span>{t(`standards.groups.${key}.${p}`)}</span>
-                </li>
-              ))}
+              {POINTS.map((p) => {
+                const fromClaim = key === 'qualification' && p === 'b' ? experience : null;
+                return (
+                  <li key={p} className="flex gap-2.5">
+                    <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-pill bg-orange-500" />
+                    {fromClaim ? (
+                      <span>
+                        {fromClaim.text}
+                        {fromClaim.draft ? <DraftBadge className="ml-2 align-middle" /> : null}
+                      </span>
+                    ) : (
+                      <span>{t(`standards.groups.${key}.${p}`)}</span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
             {key === 'safety' && citation ? (
               <p className="mt-5 border-t border-slate-300 pt-4 text-small text-ink-900">

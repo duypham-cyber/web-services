@@ -174,10 +174,11 @@
     "title": "Installation and warranty work for appliance brands",
     "lead": "One partner to dispatch technicians, sign off jobs and reconcile your installation orders.",
     "toSla": "See SLA by region",
+    "toSlaContract": "See how SLAs are agreed",
     "pains": {
       "eyebrow": "The problem",
-      "title": "Why is installation quality so hard for brands to control?",
-      "lead": "Once installation orders spread across provinces, brands tend to run into the same five problems.",
+      "title": "Five bottlenecks when installation orders spread across provinces",
+      "lead": "Each one comes with how Bluebolt handles it.",
       "answerLabel": "How Bluebolt handles it",
       "items": {
         "people": {
@@ -188,7 +189,7 @@
         "quality": {
           "title": "Inconsistent quality",
           "body": "The same product gets installed differently in every place, and customers complain to the brand.",
-          "answer": "Technicians install to the brand's guidelines and sign off with the customer using photos."
+          "answer": "Every job follows the same process and is signed off with the customer using photos."
         },
         "speed": {
           "title": "Slow order handling",
@@ -213,6 +214,7 @@
     "sla": {
       "eyebrow": "SLA",
       "title": "Time commitments by region",
+      "titleContract": "Regional SLAs, set in your contract",
       "lead": "Three milestones a brand needs to measure on every job: appointment confirmation, installation completion and installation fault fixes."
     },
     "process": {
@@ -362,38 +364,29 @@
       "eyebrow": "Pricing structure",
       "title": "Pricing by appliance group",
       "lead": "Installation fees are set per appliance group and region in your contract. Extra parts follow a separate reference price list and are collected on site by the technician.",
-      "feeLabel": "Installation fee",
-      "materialsLabel": "Extra parts",
-      "materialsTable": "In the price list",
-      "materialsOnSite": "Agreed on site",
+      "listLabel": "Appliance groups Bluebolt installs",
+      "materialsTable": "Parts price list available",
       "items": {
         "ac": {
-          "title": "Air conditioners",
-          "examples": "Wall-mounted, ceiling cassette"
+          "title": "Air conditioners"
         },
         "laundry": {
-          "title": "Washing machines and dryers",
-          "examples": "Front-loading, top-loading, dryers"
+          "title": "Washing machines and dryers"
         },
         "fridge": {
-          "title": "Refrigerators",
-          "examples": "All refrigerator types"
+          "title": "Refrigerators"
         },
         "tv": {
-          "title": "Wall-mounted TVs",
-          "examples": "Fixed, tilting and swivel brackets"
+          "title": "Wall-mounted TVs"
         },
         "kitchen": {
-          "title": "Induction hobs and cooker hoods",
-          "examples": "Kitchen appliances"
+          "title": "Induction hobs and cooker hoods"
         },
         "water": {
-          "title": "Water purifiers and water heaters",
-          "examples": "Water supply appliances"
+          "title": "Water purifiers and water heaters"
         },
         "robot": {
-          "title": "Robot vacuums",
-          "examples": "Robot vacuums and mops"
+          "title": "Robot vacuums"
         }
       }
     },

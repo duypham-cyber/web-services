@@ -58,8 +58,8 @@ export const processSteps: readonly ProcessStep[] = [
     title: { vi: 'Lắp đặt & nghiệm thu', en: 'Installation and sign-off' },
     actor: { vi: 'Thợ + Khách', en: 'Technician + customer' },
     description: {
-      vi: 'Thợ lắp đặt theo hướng dẫn của hãng, nghiệm thu với khách bằng ảnh trên app.',
-      en: "The technician installs to the brand's guidelines and signs off with the customer using photos in the app.",
+      vi: 'Thợ lắp đặt, chạy thử và nghiệm thu với khách bằng ảnh trên app.',
+      en: 'The technician installs and test-runs the unit, then signs off with the customer using photos in the app.',
     },
     isTrigger: false,
   },

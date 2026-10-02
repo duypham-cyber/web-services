@@ -12,27 +12,38 @@ import { DashboardMockup, PhoneMockup } from './Mockups';
 import { SectionHeader } from './SectionHeader';
 
 type Feature = { text: string; draft?: boolean };
+type Group = { key: 'dashboard' | 'app'; icon: typeof LayoutDashboard; features: Feature[]; draft?: boolean };
 
 /**
- * CÔNG NGHỆ: dashboard cho Hãng/Sàn + app cho thợ (NOI-DUNG.md mục 9, docs/03 mục 5 "nền tảng được trình diễn").
+ * CÔNG NGHỆ: app cho thợ (+ dashboard cho hãng/sàn khi đã xác nhận) — NOI-DUNG.md mục 9, docs/03 mục 5.
  * Hình là GIAO DIỆN MINH HỌA dựng bằng HTML/CSS (không phải ảnh chụp app thật), luôn kèm nhãn "Giao diện minh họa".
- * Nội dung thật (cho trình đọc màn hình, Googlebot) nằm ở hai danh sách tính năng bên dưới.
+ * Nội dung thật (cho trình đọc màn hình, Googlebot) nằm ở các danh sách tính năng bên dưới.
+ * Hãng/sàn có tài khoản xem dashboard hay nhận báo cáo định kỳ CHƯA xác nhận (claim b2b.platform.realtime-tracking,
+ * docs/DECISIONS.md D-25): chưa duyệt → tiêu đề/câu dẫn trung tính, thẻ "Dashboard cho hãng & sàn" chỉ ở bản xem trước
+ * (kèm Nháp); production chỉ còn thẻ app thợ.
  * Nền navy cố định; motion: một hiệu ứng lớn (rise cả khối hình), danh sách stagger.
  */
 export async function TechnologySection({ locale }: { locale: Locale }) {
   const t = await getTranslations('home');
   const ekyc = claim('technician.ekyc', locale);
+  const platform = claim('b2b.platform.realtime-tracking', locale);
+  const platformConfirmed = platform !== null && !platform.draft;
 
-  const groups: { key: 'dashboard' | 'app'; icon: typeof LayoutDashboard; features: Feature[] }[] = [
-    {
-      key: 'dashboard',
-      icon: LayoutDashboard,
-      features: [
-        { text: t('technology.dashboard.features.status') },
-        { text: t('technology.dashboard.features.photos') },
-        { text: t('technology.dashboard.features.payments') },
-      ],
-    },
+  const groups: Group[] = [
+    ...(platform
+      ? [
+          {
+            key: 'dashboard' as const,
+            icon: LayoutDashboard,
+            draft: platform.draft,
+            features: [
+              { text: t('technology.dashboard.features.status') },
+              { text: t('technology.dashboard.features.photos') },
+              { text: t('technology.dashboard.features.payments') },
+            ],
+          },
+        ]
+      : []),
     {
       key: 'app',
       icon: Smartphone,
@@ -47,7 +58,12 @@ export async function TechnologySection({ locale }: { locale: Locale }) {
 
   return (
     <Section id="cong-nghe" tone="navy" aria-labelledby="cong-nghe-title" className="overflow-clip">
-      <SectionHeader id="cong-nghe-title" eyebrow={t('technology.eyebrow')} title={t('technology.title')} lead={t('technology.lead')} />
+      <SectionHeader
+        id="cong-nghe-title"
+        eyebrow={t('technology.eyebrow')}
+        title={platformConfirmed ? t('technology.title') : t('technology.titleNeutral')}
+        lead={platformConfirmed ? t('technology.lead') : t('technology.leadNeutral')}
+      />
 
       <Rise as="figure" className="mt-12 lg:mt-16">
         <div className="flex flex-col items-center sm:flex-row sm:items-end">
@@ -60,15 +76,16 @@ export async function TechnologySection({ locale }: { locale: Locale }) {
         </figcaption>
       </Rise>
 
-      <StaggerGrid as="ul" className="mt-12 grid gap-6 md:grid-cols-2" itemClassName="flex">
-        {groups.map(({ key, icon: Icon, features }) => (
+      <StaggerGrid as="ul" className={groups.length > 1 ? 'mt-12 grid gap-6 md:grid-cols-2' : 'mt-12 grid max-w-[46rem] gap-6'} itemClassName="flex">
+        {groups.map(({ key, icon: Icon, features, draft }) => (
           <div key={key} className="w-full rounded-lg border border-(--surface-border) p-6 md:p-8">
             <span className="inline-flex size-12 items-center justify-center rounded-md bg-blue-600 text-white">
               <Icon aria-hidden="true" size={24} strokeWidth={1.5} />
             </span>
-            <Heading level={3} className="mt-5">
-              {t(`technology.${key}.title`)}
-            </Heading>
+            <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
+              <Heading level={3}>{t(`technology.${key}.title`)}</Heading>
+              {draft ? <DraftBadge /> : null}
+            </div>
             <ul className="mt-4 space-y-3">
               {features.map((f) => (
                 <li key={f.text} className="flex gap-3 text-body text-(--surface-fg)">

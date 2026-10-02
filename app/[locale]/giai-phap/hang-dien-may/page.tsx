@@ -17,12 +17,15 @@ import { MediaFrame } from '@/components/solutions/kit/MediaFrame';
 import { ProcessTimeline } from '@/components/solutions/kit/ProcessTimeline';
 import { SectionIntro } from '@/components/solutions/kit/SectionIntro';
 import { SlaSection } from '@/components/solutions/kit/SlaSection';
+import { slaTableVisible } from '@/components/solutions/kit/SlaRegionTable';
 import { SubpageHero } from '@/components/solutions/kit/SubpageHero';
 import { Button } from '@/components/ui/Button';
+import { DraftBadge } from '@/components/ui/DraftBadge';
 import { Section } from '@/components/ui/Section';
 import { TextLink } from '@/components/ui/TextLink';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
+import { claim } from '@/lib/claims';
 import { isDraftPreview } from '@/lib/env';
 import { serviceJsonLd } from '@/lib/jsonld';
 import { buildMetadata } from '@/lib/seo';
@@ -70,6 +73,10 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
   const messages = await getMessages({ locale });
   const preview = isDraftPreview();
   const compare = await getCompareData(locale);
+  // Chưa ô SLA nào được hiện (production trước khi duyệt) → nút và tiêu đề không hứa "SLA theo vùng" (CD-10)
+  const slaShown = slaTableVisible(locale);
+  // "Lắp đúng chuẩn kỹ thuật của hãng" chỉ hiện khi claim đã duyệt (bản xem trước: kèm Nháp) — CD-02
+  const brandStandard = claim('quality.brand-standard', locale);
   const faq = buildFaqEntries(FAQ, messages.solutions.brands.faq.items, locale);
   const billingRows = (k: 'fee' | 'materials') =>
     (['scope', 'price', 'settle'] as const).map((r) => ({
@@ -91,7 +98,7 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
               {t('kit.cta.demo')}
             </Button>
             <Button externalHref="#sla" variant="ghost" size="lg">
-              {t('brands.toSla')}
+              {slaShown ? t('brands.toSla') : t('brands.toSlaContract')}
             </Button>
           </>
         }
@@ -124,6 +131,12 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
                 <div className="rounded-md bg-blue-50 p-4">
                   <p className="eyebrow text-orange-700">{t('brands.pains.answerLabel')}</p>
                   <p className="mt-1.5 text-small text-ink-900">{t(`brands.pains.items.${key}.answer`)}</p>
+                  {key === 'quality' && brandStandard ? (
+                    <p className="mt-1.5 text-small text-ink-900">
+                      {brandStandard.text}
+                      {brandStandard.draft ? <DraftBadge className="ml-2" /> : null}
+                    </p>
+                  ) : null}
                 </div>
               </li>
             ))}
@@ -133,7 +146,12 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
 
       <KpiBand locale={locale} ids={['K3', 'K5', 'K6']} title={t('brands.kpi.title')} hiddenNote={t('kit.kpiHidden', { ids: 'K3, K5, K6' })} />
 
-      <SlaSection locale={locale} eyebrow={t('brands.sla.eyebrow')} title={t('brands.sla.title')} lead={t('brands.sla.lead')} />
+      <SlaSection
+        locale={locale}
+        eyebrow={t('brands.sla.eyebrow')}
+        title={slaShown ? t('brands.sla.title') : t('brands.sla.titleContract')}
+        lead={t('brands.sla.lead')}
+      />
 
       <Section id="quy-trinh" aria-labelledby="quy-trinh-title">
         <SectionIntro eyebrow={t('brands.process.eyebrow')} title={t('brands.process.title')} titleId="quy-trinh-title" lead={t('brands.process.lead')}>
