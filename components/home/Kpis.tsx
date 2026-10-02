@@ -1,19 +1,16 @@
 import { getTranslations } from 'next-intl/server';
-import { DraftBadge } from '@/components/ui/DraftBadge';
-import { KpiTile } from '@/components/ui/KpiTile';
+import { DraftLine } from '@/components/ui/DraftLine';
+import { StatTile } from '@/components/ui/StatTile';
 import type { StatId } from '@/content/schemas';
-import { getStat } from '@/content/stats';
 import type { Locale } from '@/i18n/routing';
-import { cn } from '@/lib/cn';
-import { isDraftPreview } from '@/lib/env';
-import { formatDate } from '@/lib/format';
+import { pendingStats, statViews } from '@/lib/stats';
 
 /**
- * Có ô KPI nào hiển thị được không: số thật (content/stats.ts) hoặc ô nháp ở bản xem trước.
+ * Có ô KPI nào hiển thị được không: số đo thật (content/stats.ts) hoặc — CHỈ bản xem trước — số site cũ (lib/stats.ts).
  * Production + mọi số null → false → section/dải chứa KPI tự ẩn (AC-DATA-1: "cả dải trống thì ẩn dải").
  */
 export function hasVisibleKpis(ids: readonly StatId[]): boolean {
-  return isDraftPreview() || ids.some((id) => getStat(id).value !== null);
+  return statViews(ids).length > 0;
 }
 
 type KpiGroupProps = {
@@ -26,51 +23,32 @@ type KpiGroupProps = {
 };
 
 /**
- * Nhóm ô KPI đọc từ content/stats.ts (KHÔNG bịa số):
- *   - value có số → KpiTile (count-up, số cuối có sẵn trong HTML) + định nghĩa + ngày cập nhật;
- *   - value null  → production: ẩn ô; bản xem trước: ô nháp "—" kèm nhãn Nháp, định nghĩa, "chờ số liệu".
+ * Nhóm ô KPI đọc từ content/stats.ts qua lib/stats.ts (KHÔNG bịa số):
+ *   - số đo thật → StatTile (count-up, số cuối có sẵn trong HTML) + định nghĩa + ngày cập nhật;
+ *   - bản xem trước, chưa có số đo → số site cũ kèm nhãn "Nháp · số site cũ"; KPI không có số nào → gom vào MỘT dòng
+ *     "Chờ số liệu: …" dưới lưới (không còn ô "—");
+ *   - production: chỉ số đo thật; không có → không render gì.
  */
 export async function KpiGroup({ locale, ids, className, tileClassName }: KpiGroupProps) {
-  const t = await getTranslations('home');
-  const tc = await getTranslations('common');
-  const preview = isDraftPreview();
-  const items = ids.map(getStat).filter((s) => s.value !== null || preview);
-  if (items.length === 0) return null;
+  const tc = await getTranslations({ locale, namespace: 'common' });
+  const views = statViews(ids);
+  const pending = pendingStats(ids);
+  if (views.length === 0 && pending.length === 0) return null;
 
   return (
-    <div className={className}>
-      {items.map((s) =>
-        s.value !== null ? (
-          <KpiTile
-            key={s.id}
-            value={s.value}
-            format={s.format}
-            locale={locale}
-            unit={tc('units.hours')}
-            label={s.label[locale]}
-            note={
-              s.updatedAt
-                ? `${s.definition[locale]} · ${t('kpi.updated', { date: formatDate(s.updatedAt, locale) })}`
-                : s.definition[locale]
-            }
-            animate
-            className={tileClassName}
-          />
-        ) : (
-          <div key={s.id} className={cn('flex flex-col gap-2', tileClassName)}>
-            <p className="font-display text-kpi text-(--surface-muted)">
-              <span aria-hidden="true">—</span>
-              <span className="sr-only">{t('kpi.pendingValue')}</span>
-            </p>
-            <p className="flex flex-wrap items-center gap-2 text-small font-semibold text-(--surface-fg)">
-              <span>{s.label[locale]}</span>
-              <DraftBadge />
-            </p>
-            <p className="text-small text-(--surface-muted)">{s.definition[locale]}</p>
-            <p className="text-small text-(--surface-muted)">{t('kpi.pendingNote')}</p>
-          </div>
-        ),
-      )}
-    </div>
+    <>
+      {views.length > 0 ? (
+        <div className={className}>
+          {views.map((view) => (
+            <StatTile key={view.stat.id} view={view} locale={locale} animate className={tileClassName} />
+          ))}
+        </div>
+      ) : null}
+      {pending.length > 0 ? (
+        <DraftLine className={views.length > 0 ? 'mt-6' : undefined}>
+          {tc('kpi.pending', { items: pending.map((s) => s.label[locale]).join(' · ') })}
+        </DraftLine>
+      ) : null}
+    </>
   );
 }

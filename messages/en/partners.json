@@ -38,10 +38,8 @@
     "title": "How you get paid",
     "lead": "Every job has its own pay, reconciled job by job in the technician app.",
     "referenceLabel": "Reference monthly earnings",
-    "referencePending": "Waiting for real figures from operations",
     "referenceUnit": "VND per month",
     "platformFeeLabel": "Platform fee",
-    "platformFeePending": "Waiting for operations to publish the rate and how it is calculated",
     "updated": "Updated {date}",
     "items": {
       "payout": "Pay per job",

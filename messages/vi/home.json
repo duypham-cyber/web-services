@@ -42,16 +42,10 @@
     "lead": "Bluebolt chia mạng lưới theo tỉnh/thành và vùng. Mỗi đơn được giao cho thợ gần nhất có đúng kỹ năng; bản đồ và bảng tỉnh/thành có thợ cập nhật theo số liệu vận hành.",
     "cta": "Xem mạng lưới"
   },
-  "kpi": {
-    "updated": "cập nhật {date}",
-    "pendingValue": "Chưa có số",
-    "pendingNote": "Chờ số liệu vận hành"
-  },
   "trust": {
     "title": "Số liệu vận hành",
     "lead": "Mỗi con số có định nghĩa và ngày cập nhật. Số nào chưa đo được thì chúng tôi không hiển thị.",
     "logosTitle": "Hãng và sàn đang hợp tác",
-    "logoSlot": "Logo đối tác",
     "logosNote": "Logo chỉ hiện khi có văn bản đồng ý của từng đối tác."
   },
   "challenge": {
@@ -231,10 +225,7 @@
     "eyebrow": "Bằng chứng",
     "title": "Dự án đã triển khai",
     "lead": "Video, case study và logo đối tác chỉ xuất hiện khi có văn bản đồng ý của đối tác.",
-    "videoSlot": "Video Bluebolt × Panasonic",
-    "videoNote": "Chờ văn bản cho phép dùng video. Khi được duyệt, video hiện bằng ảnh bìa và chỉ tải khi người xem bấm phát.",
-    "caseSlot": "Case study: [Hãng] triển khai tại [N] tỉnh/thành trong [M] tuần",
-    "caseNote": "Cần một chỉ số kết quả, trích dẫn của người thật và văn bản đồng ý của hãng."
+    "draftLine": "Video Bluebolt × Panasonic và case study chỉ bật khi có văn bản đồng ý của đối tác, kèm một chỉ số kết quả và trích dẫn của người thật."
   },
   "standards": {
     "eyebrow": "Tiêu chuẩn thợ",

@@ -38,10 +38,8 @@
     "title": "Bạn được trả tiền thế nào",
     "lead": "Mỗi đơn có tiền công riêng và được đối soát theo đơn trên app thợ.",
     "referenceLabel": "Thu nhập tham khảo mỗi tháng",
-    "referencePending": "Chờ số liệu thật từ vận hành",
     "referenceUnit": "đồng/tháng",
     "platformFeeLabel": "Phí nền tảng",
-    "platformFeePending": "Chờ vận hành công bố mức phí và cách tính",
     "updated": "Cập nhật {date}",
     "items": {
       "payout": "Tiền công theo đơn",

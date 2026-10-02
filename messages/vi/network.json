@@ -24,7 +24,8 @@
     "hiddenNote": "Số thợ đang hoạt động và số tỉnh có thợ sẽ hiện ở đây khi vận hành cung cấp số đã đối soát."
   },
   "regions": {
-    "provinceCount": "{count} tỉnh, thành"
+    "provinceCount": "{count} tỉnh, thành",
+    "legacyTechnicians": "{region}: {count} thợ"
   },
   "table": {
     "eyebrow": "Tra cứu",

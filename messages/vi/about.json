@@ -40,8 +40,7 @@
   "milestones": {
     "eyebrow": "Hành trình",
     "title": "Mốc phát triển",
-    "pending": "Chỉ đưa lên các mốc có nguồn: năm thành lập theo giấy chứng nhận đăng ký doanh nghiệp, hợp đồng hãng đầu tiên, ngày ra mắt app thợ. Chờ anh Duy cung cấp.",
-    "slot": "Mốc {n}: chờ nguồn"
+    "pending": "Chỉ đưa lên các mốc có nguồn: năm thành lập theo giấy chứng nhận đăng ký doanh nghiệp, hợp đồng hãng đầu tiên, ngày ra mắt app thợ. Chờ anh Duy cung cấp."
   },
   "company": {
     "eyebrow": "Pháp nhân",

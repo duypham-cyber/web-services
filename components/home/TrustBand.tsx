@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { DraftBadge } from '@/components/ui/DraftBadge';
+import { DraftLine } from '@/components/ui/DraftLine';
 import { Heading } from '@/components/ui/Heading';
 import { Section } from '@/components/ui/Section';
 import { partnersWithConsent } from '@/content/partners';
@@ -11,9 +11,6 @@ import { hasVisibleKpis, KpiGroup } from './Kpis';
 
 const TRUST_KPIS: readonly StatId[] = ['K1', 'K2', 'K3', 'K4'];
 
-/** Số ô giữ chỗ logo ở bản xem trước. */
-const LOGO_SLOTS = 6;
-
 /**
  * Logo hãng/sàn: nguồn DUY NHẤT là content/partners.ts (agent partner) — chỉ đối tác có văn bản đồng ý
  * (partnersWithConsent(), AC-DATA-4). Dải logo trên trang chủ còn cần claim 'home.partner-logos' được duyệt.
@@ -24,15 +21,19 @@ function logosState(locale: Locale): 'show' | 'draft' | 'hidden' {
   return isDraftPreview() ? 'draft' : 'hidden';
 }
 
-/** Dải tin cậy chỉ hiện khi có ít nhất một KPI thật hoặc logo đã duyệt (bản xem trước: luôn hiện ô nháp). */
+/**
+ * Dải tin cậy chỉ hiện khi có ít nhất một ô KPI (số đo thật; bản xem trước: cả số site cũ) hoặc logo đã duyệt.
+ * Logo chưa có phép KHÔNG đủ để hiện cả dải — ở bản xem trước nó chỉ là một dòng ghi chú bên trong dải.
+ */
 export function trustBandVisible(locale: Locale): boolean {
-  return hasVisibleKpis(TRUST_KPIS) || logosState(locale) !== 'hidden';
+  return hasVisibleKpis(TRUST_KPIS) || logosState(locale) === 'show';
 }
 
 /**
  * P2 DẢI TIN CẬY (docs/03 mục 13.4): KPI K1–K4 (count-up; ô thiếu số thì ẩn) + logo đối tác (chỉ khi có phép).
  * Nền navy cố định. Không có số, không có logo → cả dải ẩn (page.tsx gọi trustBandVisible()).
  * Chỉ có logo mà chưa có số → tiêu đề H2 của dải là tiêu đề dải logo.
+ * Bản xem trước: ô số site cũ kèm "Nháp · số site cũ"; KPI chưa có số và logo chưa có phép mỗi thứ MỘT dòng ghi chú.
  */
 export async function TrustBand({ locale }: { locale: Locale }) {
   const t = await getTranslations('home');
@@ -58,39 +59,28 @@ export async function TrustBand({ locale }: { locale: Locale }) {
         </>
       ) : null}
 
-      {logos !== 'hidden' ? (
+      {logos === 'show' ? (
         <div className={kpis ? 'mt-12 border-t border-(--surface-border) pt-8' : undefined}>
           {kpis ? (
-            <p className="flex flex-wrap items-center gap-2 text-small font-semibold text-(--surface-fg)">
-              <span>{t('trust.logosTitle')}</span>
-              {logos === 'draft' ? <DraftBadge /> : null}
-            </p>
+            <p className="text-small font-semibold text-(--surface-fg)">{t('trust.logosTitle')}</p>
           ) : (
-            <Heading level={2} id="so-lieu-title" size="h3" className="flex flex-wrap items-center gap-2">
-              <span>{t('trust.logosTitle')}</span>
-              {logos === 'draft' ? <DraftBadge /> : null}
+            <Heading level={2} id="so-lieu-title" size="h3">
+              {t('trust.logosTitle')}
             </Heading>
           )}
           <ul className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            {logos === 'show'
-              ? partnersWithConsent().map((partner) => (
-                  <li key={partner.name} className="flex h-16 items-center justify-center rounded-md bg-white px-4">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- logo SVG/AVIF nhỏ, khung cao cố định */}
-                    <img src={partner.logo} alt={partner.name} width={160} height={40} className="h-10 w-auto max-w-full object-contain" />
-                  </li>
-                ))
-              : Array.from({ length: LOGO_SLOTS }, (_, i) => (
-                  <li
-                    key={i}
-                    className="flex h-16 items-center justify-center rounded-md border border-dashed border-(--surface-border) px-3 text-center text-small text-(--surface-muted)"
-                  >
-                    {t('trust.logoSlot')}
-                  </li>
-                ))}
+            {partnersWithConsent().map((partner) => (
+              <li key={partner.name} className="flex h-16 items-center justify-center rounded-md bg-white px-4">
+                {/* eslint-disable-next-line @next/next/no-img-element -- logo SVG/AVIF nhỏ, khung cao cố định */}
+                <img src={partner.logo} alt={partner.name} width={160} height={40} className="h-10 w-auto max-w-full object-contain" />
+              </li>
+            ))}
           </ul>
-          {logos === 'draft' ? <p className="mt-4 text-small text-(--surface-muted)">{t('trust.logosNote')}</p> : null}
         </div>
       ) : null}
+
+      {/* Bản xem trước: logo chưa có phép = MỘT dòng ghi chú (không còn 6 ô giữ chỗ nét đứt) */}
+      {logos === 'draft' ? <DraftLine className="mt-6" label={t('trust.logosTitle')}>{t('trust.logosNote')}</DraftLine> : null}
     </Section>
   );
 }

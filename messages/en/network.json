@@ -24,7 +24,8 @@
     "hiddenNote": "Active technicians and provinces covered will appear here once operations supplies verified figures."
   },
   "regions": {
-    "provinceCount": "{count} provinces"
+    "provinceCount": "{count} provinces",
+    "legacyTechnicians": "{region}: {count} technicians"
   },
   "table": {
     "eyebrow": "Look up",

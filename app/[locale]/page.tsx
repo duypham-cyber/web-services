@@ -40,6 +40,8 @@ type FlowItem = {
   key: string;
   /** Tông cố định (dải navy). Không đặt → tự xen kẽ trắng / xanh nhạt theo section hiển thị liền trước. */
   tone?: SectionTone;
+  /** Dải phụ (ghi chú một dòng ở bản xem trước): lấy tông của section liền trước, KHÔNG tính vào nhịp xen kẽ. */
+  inheritTone?: boolean;
   render: (tone: SectionTone) => ReactNode;
 };
 
@@ -50,8 +52,8 @@ type FlowItem = {
 function renderFlow(items: readonly FlowItem[]): ReactNode[] {
   let previous: SectionTone = 'navy';
   return items.map((item) => {
-    const tone = item.tone ?? (previous === 'light' ? 'blue-50' : 'light');
-    previous = tone;
+    const tone = item.tone ?? (item.inheritTone ? previous : previous === 'light' ? 'blue-50' : 'light');
+    if (!item.inheritTone) previous = tone;
     return <Fragment key={item.key}>{item.render(tone)}</Fragment>;
   });
 }
@@ -82,7 +84,9 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
     { key: 'process', render: (tone) => <ProcessSection locale={locale} tone={tone} /> },
     { key: 'technology', tone: 'navy', render: () => <TechnologySection locale={locale} /> },
     { key: 'services', render: (tone) => <ServicesSection locale={locale} tone={tone} /> },
-    ...(proofVisible() ? [{ key: 'proof', render: (tone: SectionTone) => <ProofSection tone={tone} /> }] : []),
+    ...(proofVisible()
+      ? [{ key: 'proof', inheritTone: true, render: (tone: SectionTone) => <ProofSection tone={tone} /> }]
+      : []),
     { key: 'standards', render: (tone) => <StandardsSection locale={locale} tone={tone} /> },
     { key: 'knowledge', render: (tone) => <KnowledgeSection locale={locale} tone={tone} /> },
     { key: 'cta', render: (tone) => <FinalCta locale={locale} tone={tone} /> },

@@ -40,8 +40,7 @@
   "milestones": {
     "eyebrow": "Our journey",
     "title": "Milestones",
-    "pending": "Only milestones with a source will be shown: founding year per the business registration certificate, first brand contract, technician app launch date. Waiting for input from Mr Duy.",
-    "slot": "Milestone {n}: source needed"
+    "pending": "Only milestones with a source will be shown: founding year per the business registration certificate, first brand contract, technician app launch date. Waiting for input from Mr Duy."
   },
   "company": {
     "eyebrow": "Legal entity",

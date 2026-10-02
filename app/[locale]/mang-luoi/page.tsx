@@ -4,25 +4,27 @@ import { getTranslations } from 'next-intl/server';
 import { QUOTE_HREF } from '@/components/layout/Header';
 import { ProvinceTable } from '@/components/map/ProvinceTable';
 import { VietnamMap } from '@/components/map/VietnamMap';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { DraftBadge } from '@/components/ui/DraftBadge';
+import { DraftLine } from '@/components/ui/DraftLine';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Heading } from '@/components/ui/Heading';
-import { KpiTile } from '@/components/ui/KpiTile';
 import { Section } from '@/components/ui/Section';
+import { StatTile } from '@/components/ui/StatTile';
 import { TableScroll } from '@/components/ui/TableScroll';
 import { provinces, regions } from '@/content/provinces';
 import { site } from '@/content/site';
 import { slaItems } from '@/content/sla';
-import { statsWithValue } from '@/content/stats';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
 import { claim } from '@/lib/claims';
 import { isDraftPreview } from '@/lib/env';
-import { formatDate } from '@/lib/format';
+import { formatStatValue } from '@/lib/format';
 import { buildMetadata } from '@/lib/seo';
+import { legacyRegionCounts, pendingStats, statViews } from '@/lib/stats';
 
 export const generateStaticParams = localeStaticParams;
 
@@ -51,16 +53,19 @@ export default async function NetworkPage({ params }: PageProps<'/[locale]/mang-
   const tc = await getTranslations({ locale, namespace: 'common' });
   const preview = isDraftPreview();
   const coverage = claim('coverage.provinces-34', locale);
-  const kpis = statsWithValue(['K1', 'K2']);
+  // KPI qua cổng lib/stats.ts: số đo thật; bản xem trước thêm số site cũ (Nháp · số site cũ)
+  const kpis = statViews(['K1', 'K2']);
+  const pendingKpis = pendingStats(['K1', 'K2']);
   const sla = SLA_IDS.map((id) => slaItems.find((s) => s.id === id)).filter((s) => s !== undefined);
   const approvedSla = sla.filter((s) => (s.status as string) === 'approved' && s.value !== null);
   const phone = site.hotline.display[locale];
 
   return (
     <>
-      {/* HERO + BẢN ĐỒ — H1 duy nhất của trang */}
+      {/* HERO + BẢN ĐỒ — H1 duy nhất của trang. Breadcrumb + JSON-LD BreadcrumbList (AC-LD-1, đề xuất của agent SEO) */}
       <Section aria-labelledby="page-title" spacing="compact" className="overflow-clip">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,35rem)] xl:gap-16">
+        <Breadcrumbs routeKey="network" locale={locale} />
+        <div className="mt-6 grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,35rem)] xl:gap-16">
           <div>
             <Eyebrow>{t('eyebrow')}</Eyebrow>
             <Heading level={1} id="page-title" className="mt-3 max-w-[22ch]">
@@ -75,22 +80,17 @@ export default async function NetworkPage({ params }: PageProps<'/[locale]/mang-
             ) : null}
             {kpis.length > 0 ? (
               <div className="mt-8 grid grid-cols-2 gap-6">
-                {kpis.map((k) => (
-                  <KpiTile
-                    key={k.id}
-                    value={k.value}
-                    format={k.format}
-                    locale={locale}
-                    label={k.label[locale]}
-                    note={k.updatedAt ? `${k.definition[locale]} · ${formatDate(k.updatedAt, locale)}` : k.definition[locale]}
-                    animate
-                  />
+                {kpis.map((view) => (
+                  <StatTile key={view.stat.id} view={view} locale={locale} animate />
                 ))}
               </div>
-            ) : preview ? (
-              <p className="mt-6 flex max-w-text flex-wrap items-center gap-2 text-small text-(--surface-muted)">
-                <DraftBadge /> {t('stats.hiddenNote')}
-              </p>
+            ) : null}
+            {kpis.length === 0 ? (
+              <DraftLine className="mt-6 max-w-text">{t('stats.hiddenNote')}</DraftLine>
+            ) : pendingKpis.length > 0 ? (
+              <DraftLine className="mt-4 max-w-text">
+                {tc('kpi.pending', { items: pendingKpis.map((s) => s.label[locale]).join(' · ') })}
+              </DraftLine>
             ) : null}
             <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
               {[
@@ -136,6 +136,8 @@ export default async function NetworkPage({ params }: PageProps<'/[locale]/mang-
         <ul className="mt-10 grid gap-6 md:grid-cols-3">
           {regions.map((region) => {
             const count = provinces.filter((p) => p.region === region.id).length;
+            // Bản xem trước: số thợ theo miền site cũ ghi (/system-map); production luôn [] (lib/stats.ts)
+            const legacy = legacyRegionCounts(region.id);
             return (
               <Card as="li" key={region.id} padding="lg" className="flex flex-col">
                 <span
@@ -155,6 +157,21 @@ export default async function NetworkPage({ params }: PageProps<'/[locale]/mang-
                 <p className="mt-4 text-small font-semibold text-(--surface-heading)">
                   {t('regions.provinceCount', { count })}
                 </p>
+                {legacy.length > 0 ? (
+                  <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-small text-(--surface-muted)">
+                    <span>
+                      {legacy
+                        .map((r) =>
+                          t('regions.legacyTechnicians', {
+                            region: r.label[locale],
+                            count: `${formatStatValue(r.value, 'integer', locale)}${r.plus ? '+' : ''}`,
+                          }),
+                        )
+                        .join(' · ')}
+                    </span>
+                    <Badge variant="draft">{tc('status.draftLegacy')}</Badge>
+                  </p>
+                ) : null}
               </Card>
             );
           })}

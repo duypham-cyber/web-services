@@ -63,10 +63,16 @@
   "status": {
     "draft": "Draft",
     "illustration": "Illustration",
-    "pending": "Pending confirmation"
+    "pending": "Pending confirmation",
+    "draftLegacy": "Draft · old-site figure"
   },
   "units": {
-    "hours": "h"
+    "hours": "h",
+    "minutes": "min"
+  },
+  "kpi": {
+    "updated": "updated {date}",
+    "pending": "Awaiting figures: {items}"
   },
   "dev": {
     "panelTitle": "Build notes",

@@ -4,7 +4,6 @@ import { getTranslations } from 'next-intl/server';
 import { CompanyFacts } from '@/components/about/CompanyFacts';
 import { QUOTE_HREF, TECHNICIAN_SIGNUP_HREF } from '@/components/layout/Header';
 import { StaggerGrid } from '@/components/motion/StaggerGrid';
-import { DraftNote } from '@/components/partners/DraftNote';
 import { FinalCta } from '@/components/partners/FinalCta';
 import { MediaFrame } from '@/components/partners/MediaFrame';
 import { PageHero } from '@/components/partners/PageHero';
@@ -13,15 +12,16 @@ import { SectionHeader } from '@/components/partners/SectionHeader';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Heading } from '@/components/ui/Heading';
-import { KpiTile } from '@/components/ui/KpiTile';
+import { DraftLine } from '@/components/ui/DraftLine';
 import { Section } from '@/components/ui/Section';
+import { StatTile } from '@/components/ui/StatTile';
 import { partnersWithConsent } from '@/content/partners';
 import { stats } from '@/content/stats';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
 import { isDraftPreview } from '@/lib/env';
-import { formatDate } from '@/lib/format';
 import { buildMetadata } from '@/lib/seo';
+import { statViews } from '@/lib/stats';
 
 export const generateStaticParams = localeStaticParams;
 
@@ -44,8 +44,9 @@ const VALUES: { key: 'fast' | 'standard' | 'transparent'; icon: LucideIcon }[] =
 
 /**
  * /ve-chung-toi — T-ABOUT (docs/03 mục 13.5; đích 301 của /intro). Nội dung viết lại từ research/raw/intro.txt:
- * sứ mệnh → cách làm việc (Nhanh – Chuẩn – Minh bạch) → KPI (content/stats.ts, null → ẩn) → mốc phát triển (chỉ mốc
- * có nguồn: hiện chưa có → chỉ ô giữ chỗ ở bản xem trước) → pháp nhân, MST, văn phòng → đối tác (ẩn tới khi có phép)
+ * sứ mệnh → cách làm việc (Nhanh – Chuẩn – Minh bạch) → KPI (content/stats.ts qua lib/stats.ts, null → ẩn) → mốc phát
+ * triển (chỉ mốc có nguồn: hiện chưa có → bản xem trước chỉ còn dòng ghi chú) → pháp nhân, MST, văn phòng → đối tác
+ * (ẩn tới khi có phép)
  * → CTA cuối. Ảnh: khung giữ chỗ (MediaFrame) — thay bằng ảnh thật/khung phim khi có, không dùng KHANG.
  */
 export default async function AboutPage({ params }: PageProps<'/[locale]/ve-chung-toi'>) {
@@ -54,7 +55,7 @@ export default async function AboutPage({ params }: PageProps<'/[locale]/ve-chun
   const tp = await getTranslations({ locale, namespace: 'partners' });
   const tc = await getTranslations({ locale, namespace: 'common' });
   const preview = isDraftPreview();
-  const kpis = stats.filter((s) => s.showOn.includes('about') && s.value !== null);
+  const kpis = statViews(stats.filter((s) => s.showOn.includes('about')).map((s) => s.id));
   const partners = partnersWithConsent();
 
   return (
@@ -99,36 +100,21 @@ export default async function AboutPage({ params }: PageProps<'/[locale]/ve-chun
             {t('kpi.title')}
           </Heading>
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-            {kpis.map((k) => (
-              <KpiTile
-                key={k.id}
-                value={k.value}
-                format={k.format}
-                locale={locale}
-                unit={tc('units.hours')}
-                label={k.label[locale]}
-                note={k.updatedAt ? `${k.definition[locale]} · ${formatDate(k.updatedAt, locale)}` : k.definition[locale]}
-                animate
-              />
+            {kpis.map((view) => (
+              <StatTile key={view.stat.id} view={view} locale={locale} animate />
             ))}
           </div>
         </Section>
       ) : null}
 
+      {/* Bản xem trước: mốc phát triển / số liệu / logo đối tác chưa có nguồn → dòng ghi chú gọn (không còn khung nét
+          đứt chiếm cả section). Production: không có gì (DraftLine trả null). */}
       {preview ? (
-        <Section spacing="compact" aria-labelledby="moc-phat-trien-title">
-          <SectionHeader id="moc-phat-trien-title" eyebrow={t('milestones.eyebrow')} title={t('milestones.title')} />
-          <ol className="mt-8 grid gap-4 md:grid-cols-3">
-            {[1, 2, 3].map((n) => (
-              <li key={n} className="rounded-lg border-2 border-dashed border-slate-500 px-5 py-6 text-small font-medium text-slate-600">
-                {t('milestones.slot', { n })}
-              </li>
-            ))}
-          </ol>
-          <div className="mt-6 flex flex-col gap-3">
-            <DraftNote>{t('milestones.pending')}</DraftNote>
-            {kpis.length === 0 ? <DraftNote>{t('kpi.pending')}</DraftNote> : null}
-            {partners.length === 0 ? <DraftNote>{t('partners.pending')}</DraftNote> : null}
+        <Section as="div" tone="blue-50" spacing="none" className="pb-12 md:pb-16">
+          <div className="flex flex-col gap-2">
+            <DraftLine label={t('milestones.title')}>{t('milestones.pending')}</DraftLine>
+            {kpis.length === 0 ? <DraftLine label={t('kpi.title')}>{t('kpi.pending')}</DraftLine> : null}
+            {partners.length === 0 ? <DraftLine label={t('partners.title')}>{t('partners.pending')}</DraftLine> : null}
           </div>
         </Section>
       ) : null}

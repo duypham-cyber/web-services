@@ -42,16 +42,10 @@
     "lead": "We organise our network by province and region. Each job goes to the nearest technician with the right skills, and the map and province table follow our operating data.",
     "cta": "View the network"
   },
-  "kpi": {
-    "updated": "updated {date}",
-    "pendingValue": "No figure yet",
-    "pendingNote": "Awaiting operating data"
-  },
   "trust": {
     "title": "Operating figures",
     "lead": "Every figure comes with a definition and an update date. If we cannot measure something yet, we do not show it.",
     "logosTitle": "Brands and marketplaces we work with",
-    "logoSlot": "Partner logo",
     "logosNote": "Logos appear only with each partner's written consent."
   },
   "challenge": {
@@ -231,10 +225,7 @@
     "eyebrow": "Proof",
     "title": "Work we have delivered",
     "lead": "Videos, case studies and partner logos appear only with the partner's written consent.",
-    "videoSlot": "Bluebolt × Panasonic video",
-    "videoNote": "Awaiting written permission to use the video. Once approved, it will show as a cover image and load only when played.",
-    "caseSlot": "Case study: [Brand] rolled out in [N] provinces in [M] weeks",
-    "caseNote": "Needs one result metric, a quote from a real person and the brand's written consent."
+    "draftLine": "The Bluebolt × Panasonic video and the case study go live only with the partner's written consent, one result metric and a quote from a real person."
   },
   "standards": {
     "eyebrow": "Technician standards",

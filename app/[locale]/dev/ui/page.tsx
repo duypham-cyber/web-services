@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Chip } from '@/components/ui/Chip';
 import { DraftBadge } from '@/components/ui/DraftBadge';
+import { DraftLine } from '@/components/ui/DraftLine';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Field, Select, TextArea, TextInput } from '@/components/ui/Field';
 import { Heading } from '@/components/ui/Heading';
@@ -19,11 +20,13 @@ import { IconButton } from '@/components/ui/IconButton';
 import { KpiTile } from '@/components/ui/KpiTile';
 import { Prose } from '@/components/ui/Prose';
 import { Section, type SectionTone } from '@/components/ui/Section';
+import { StatTile } from '@/components/ui/StatTile';
 import { TableScroll } from '@/components/ui/TableScroll';
 import { TextLink } from '@/components/ui/TextLink';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
 import { devPagesEnabled } from '@/lib/env';
+import { statViews } from '@/lib/stats';
 import { buildMetadata } from '@/lib/seo';
 import { contrastRatio, readColorTokens } from '@/lib/tokens';
 import { CONTRAST_PAIRS } from '@/styles/contrast-pairs';
@@ -170,6 +173,18 @@ function ComponentsOn({ tone }: { tone: SectionTone }) {
           <KpiTile value={4} format="hours" unit="giờ" locale="vi" label="Xác nhận lịch trung bình" note="Số minh họa" />
           <KpiTile value={null} locale="vi" label="Ô này không hiện vì value = null" />
         </div>
+      </DemoBlock>
+
+      <DemoBlock title="StatTile (KPI của content/stats.ts qua lib/stats.ts) + DraftLine (ghi chú một dòng, chỉ bản xem trước)">
+        <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+          {/* Ép chế độ xem trước để luôn thấy dạng "Nháp · số site cũ" ở trang nội bộ này */}
+          {statViews(['K1', 'K2', 'K6'], { draftPreview: true }).map((view) => (
+            <StatTile key={view.stat.id} view={view} locale="vi" />
+          ))}
+        </div>
+        <DraftLine className="mt-6" label="Logo hãng & sàn">
+          Chỉ hiện khi có văn bản đồng ý (production: không render gì).
+        </DraftLine>
       </DemoBlock>
     </div>
   );

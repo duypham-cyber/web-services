@@ -63,10 +63,16 @@
   "status": {
     "draft": "Nháp",
     "illustration": "Minh họa",
-    "pending": "Chờ xác nhận"
+    "pending": "Chờ xác nhận",
+    "draftLegacy": "Nháp · số site cũ"
   },
   "units": {
-    "hours": "giờ"
+    "hours": "giờ",
+    "minutes": "phút"
+  },
+  "kpi": {
+    "updated": "cập nhật {date}",
+    "pending": "Chờ số liệu: {items}"
   },
   "dev": {
     "panelTitle": "Ghi chú dựng trang",

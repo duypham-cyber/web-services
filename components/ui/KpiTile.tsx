@@ -9,8 +9,10 @@ type KpiTileProps = {
   value: number | null;
   format?: StatFormat;
   locale: Locale;
-  /** Đơn vị cho format "hours" (từ messages, vd "giờ" / "h"). */
+  /** Đơn vị cho format "hours"/"minutes" (từ messages common.units, vd "giờ" / "h", "phút" / "min"). */
   unit?: string;
+  /** Hậu tố ngay sau số, vd "+" của số site cũ ("500+", chỉ bản xem trước — lib/stats.ts). */
+  suffix?: string;
   label: string;
   /** Định nghĩa + ngày cập nhật, vd "Thợ có ≥ 1 đơn trong 90 ngày · cập nhật 02/10/2026". */
   note?: string;
@@ -22,11 +24,11 @@ type KpiTileProps = {
 };
 
 /**
- * Ô số liệu: số lớn tabular-nums (token `kpi`), nhãn, ghi chú. Đọc số từ content/stats.ts:
- *   const k1 = getStat('K1');
- *   <KpiTile value={k1.value} format={k1.format} locale={locale} label={k1.label[locale]} note={...} animate />
+ * Ô số liệu: số lớn tabular-nums (token `kpi`), nhãn, ghi chú. Primitive trình bày — KPI của content/stats.ts render qua
+ * <StatTile view={statView(...)} /> (components/ui/StatTile.tsx), là chỗ quyết định số đo thật / số site cũ (Nháp).
+ *   <KpiTile value={1234} locale="vi" label="..." note="..." animate />
  */
-export function KpiTile({ value, format = 'integer', locale, unit, label, note, animate, badge, className }: KpiTileProps) {
+export function KpiTile({ value, format = 'integer', locale, unit, suffix, label, note, animate, badge, className }: KpiTileProps) {
   if (value === null) return null;
   return (
     <div className={cn('flex flex-col gap-2', className)}>
@@ -36,6 +38,7 @@ export function KpiTile({ value, format = 'integer', locale, unit, label, note, 
         ) : (
           formatStatValue(value, format, locale, unit)
         )}
+        {suffix}
       </p>
       <p className="flex flex-wrap items-center gap-2 text-small font-semibold text-(--surface-fg)">
         <span>{label}</span>
