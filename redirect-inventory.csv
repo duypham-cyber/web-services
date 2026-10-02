@@ -1,0 +1,47 @@
+id,source,from,to,expected_status,kind,note
+S01,sitemap,/,/,200,keep,
+S02,sitemap,/intro,/ve-chung-toi,301,redirect,
+S03,sitemap,/services,/dich-vu,301,redirect,
+S04,sitemap,/prices,/bang-gia,301,redirect,Chính sách 4 phần trong accordion tách sang /chinh-sach-bao-hanh và các trang pháp lý
+S05,sitemap,/news,/kien-thuc,301,redirect,
+S06,sitemap,/requirement,/doi-tac-tho,301,redirect,Danh sách việc trở thành section #viec-dang-tuyen
+S07,sitemap,/worker-map,/doi-tac-tho,301,redirect,"Title cũ ""Tuyển thợ & tiêu chuẩn kỹ thuật viên"""
+S08,sitemap,/system-map,/mang-luoi,301,redirect,"Title cũ ""Hệ thống thợ kỹ thuật toàn quốc""; phần tiêu chuẩn chuyển sang /doi-tac-tho"
+S09,sitemap,/contact,/lien-he,301,redirect,
+S10,sitemap,/news/lap-dat-may-lanh-dung-cach-7-buoc,/kien-thuc/lap-dat-may-lanh-dung-cach-7-buoc,301,redirect,Giữ slug; kiểm Search Console trước (docs/03 mục 10.2)
+S11,sitemap,/news/10-nguyen-nhan-may-lanh-khong-lanh,/kien-thuc/10-nguyen-nhan-may-lanh-khong-lanh,301,redirect,
+S12,sitemap,/news/rui-ro-lap-dat-may-giat-khong-dung-cach,/kien-thuc/rui-ro-lap-dat-may-giat-khong-dung-cach,301,redirect,
+S13,sitemap,/news/chuyen-doi-so-trong-lap-dat-toan-quoc,/kien-thuc/chuyen-doi-so-trong-lap-dat-toan-quoc,301,redirect,Xếp lại vào nhóm B2B
+S14,sitemap,/news/tuong-lai-nganh-dien-lanh-2026,/kien-thuc/tuong-lai-nganh-dien-lanh-2026,301,redirect,
+S15,sitemap,/news/robot-va-tu-dong-hoa-gia-dinh,/kien-thuc/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai,301,redirect,Gộp 2 bài robot đang tranh từ khóa (CRO-14)
+S16,sitemap,/news/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai,/kien-thuc/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai,301,redirect,Bài giữ lại sau khi gộp
+S17,sitemap,/news/ky-nguyen-ai-nhung-nganh-bi-anh-huong,,410,gone,Bài lạc đề. Giả định: gỡ (410). Chờ anh Duy quyết (docs/04 Q10). Không 301 về trang không liên quan (soft 404)
+S18,sitemap,/en,/en,200,keep,
+S19,sitemap,/en/intro,/en/about,301,redirect,
+S20,sitemap,/en/services,/en/services,200,keep,
+S21,sitemap,/en/prices,/en/pricing,301,redirect,
+S22,sitemap,/en/news,/en/knowledge,301,redirect,
+S23,sitemap,/en/requirement,/en/technician-partners,301,redirect,
+S24,sitemap,/en/worker-map,/en/technician-partners,301,redirect,
+S25,sitemap,/en/system-map,/en/network,301,redirect,
+S26,sitemap,/en/contact,/en/contact,200,keep,
+S27,sitemap,/en/news/lap-dat-may-lanh-dung-cach-7-buoc,/en/knowledge/how-to-install-an-air-conditioner-in-7-steps,301,redirect,Slug EN mới
+S28,sitemap,/en/news/10-nguyen-nhan-may-lanh-khong-lanh,/en/knowledge/10-reasons-your-air-conditioner-is-not-cooling,301,redirect,
+S29,sitemap,/en/news/rui-ro-lap-dat-may-giat-khong-dung-cach,/en/knowledge/risks-of-improper-washing-machine-installation,301,redirect,
+S30,sitemap,/en/news/chuyen-doi-so-trong-lap-dat-toan-quoc,/en/knowledge/digital-transformation-in-nationwide-installation,301,redirect,
+S31,sitemap,/en/news/tuong-lai-nganh-dien-lanh-2026,/en/knowledge/hvac-industry-outlook-2026,301,redirect,
+S32,sitemap,/en/news/robot-va-tu-dong-hoa-gia-dinh,/en/knowledge/home-robots-and-automation-trends,301,redirect,Gộp như dòng 15
+S33,sitemap,/en/news/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai,/en/knowledge/home-robots-and-automation-trends,301,redirect,
+S34,sitemap,/en/news/ky-nguyen-ai-nhung-nganh-bi-anh-huong,,410,gone,Theo quyết định dòng 17 (giả định 410)
+A01,og-image,/images/og-cover.jpg,/images/og/bluebolt-services-vi.jpg,301,redirect,"og:image cũ của 18 trang. Ảnh là banner khóa học ""Đào tạo chuyển đổi số AI"" của đơn vị khác, hotline khác → KHÔNG giữ; 301 sang ảnh OG mới"
+A02,og-image,/images/logo-bluebolt-services.svg,/images/logo-bluebolt-services.svg,200,keep,"Logo site cũ, giữ nguyên đường dẫn (docs/DECISIONS.md D-15)"
+A03,og-image,/images/news/lap-dat-may-lanh-7-buoc.jpg,/images/news/lap-dat-may-lanh-7-buoc.jpg,200,keep,og:image bài lap-dat-may-lanh-dung-cach-7-buoc (VI + EN)
+A04,og-image,/images/news/nguyen-nhan-may-lanh-hero.png,/images/news/nguyen-nhan-may-lanh.png,301,redirect,og:image bài 10-nguyen-nhan: ảnh dàn nóng có logo hãng trong bài về máy hỏng → không dùng; 301 sang infographic cùng bài
+A05,og-image,/images/news/may-giat-hero.png,/images/news/may-giat-hero.png,200,keep,"og:image bài rui-ro-lap-dat-may-giat (VI + EN), vẫn là ảnh đầu bài"
+A06,og-image,/images/news-card5.jpg,/images/news-card5.jpg,200,keep,"og:image bài chuyen-doi-so (VI + EN); file nén lại 1600px (bản cũ 9,3 MB), giữ tên"
+A07,og-image,/images/news/tuong-lai-nganh-dien-lanh-2026.avif,/images/news/tuong-lai-nganh-dien-lanh-2026.avif,200,keep,og:image bài tuong-lai-nganh-dien-lanh-2026 (VI + EN)
+A08,og-image,/images/news/robot-gia-dinh.jpg,/images/news/og/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai.jpg,301,redirect,"og:image bài robot-va-tu-dong-hoa (đã gộp). Ảnh stock ""gia đình phương Tây + robot"" (docs/03 mục 11.4) → 301 sang ảnh OG bài gộp"
+A09,og-image,/images/news/em-telco-tect-image-web-1024x690.jpg,/images/news/og/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai.jpg,301,redirect,"og:image bài robot-tu-dong-hoa: ảnh tháp viễn thông lạc đề, tên file của website khác → 301 sang ảnh OG bài gộp"
+A10,og-image,/images/news-card10.jpg,,410,gone,"og:image bài AI (410). Ảnh stock ""cô gái headset vs robot"" (docs/03 mục 11.4)"
+A11,og-image,/images/khang-3d-poster.webp,,410,gone,"Ảnh KHANG (quyền chưa xác nhận, D-03) — không phục vụ trên site mới"
+A12,og-image,/images/vn-map-workers.svg,,410,gone,Bản đồ cũ (số thợ theo vùng chưa duyệt). Bản đồ mới do agent bản đồ dựng ở /mang-luoi

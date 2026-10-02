@@ -7,7 +7,9 @@ import type { RedirectRow } from './schemas';
  * Ai đọc bảng này:
  *   - next.config.ts → redirects(): CHỈ dòng kind "redirect", mã 301 (statusCode: 301; KHÔNG permanent: true vì ra 308).
  *   - proxy.ts       → trả 410 cho dòng kind "gone" (không đưa vào redirects()).
- *   - Sau này: scripts/gen-openresty-map.mjs sinh map openresty 1 hop (http→https, www→apex, "/" cuối) — docs/04 mục 2.7.
+ *   - scripts/gen-openresty-map.mjs → deploy/openresty/lapdattoanquoc.conf (map 1 hop: http→https, www→apex, "/" cuối)
+ *     + redirect-inventory.csv (docs/04 mục 2.7). Sửa bảng này xong phải chạy lại script (test SEO kiểm file đã cập nhật).
+ *   - scripts/check-redirects.mjs → kiểm N/N dòng × biến thể trên BASE_URL bất kỳ (NFR-SEO-01).
  *
  * Lưu ý: ở tầng Next, biến thể có "/" cuối (vd /news/) đi 2 bước (308 bỏ "/" rồi 301). Production xử lý 1 bước ở openresty.
  * File này KHÔNG import alias "@/..." và KHÔNG import zod (next.config.ts đọc trực tiếp). Validate ở content/validate.ts.
@@ -155,12 +157,104 @@ export const legacyRedirects: readonly RedirectRow[] = [
   },
 ];
 
-/** Dùng cho next.config.ts → redirects(). 301 một bước (không chuỗi). */
+/**
+ * Ảnh cũ đang được dùng làm og:image (crawl 02/10/2026: og:image của 18 trang + 8 bài viết) — AC-301-3: phải trả 200
+ * (giữ file ở public/ đúng đường dẫn) hoặc 301 sang ảnh mới, để preview Zalo/Facebook của link cũ không vỡ.
+ * Ngoài 34 dòng sitemap ở trên (content/validate.ts kiểm đúng 34 dòng), nên tách thành bảng riêng.
+ * kind "gone": ảnh bị gỡ vì nội dung (KHANG chưa rõ quyền, bài AI đã gỡ) → openresty trả 410; tầng Next trả 404.
+ */
+export type LegacyAssetRow = {
+  from: string;
+  to: string | null;
+  kind: 'keep' | 'redirect' | 'gone';
+  note: string;
+};
+
+export const legacyAssets: readonly LegacyAssetRow[] = [
+  {
+    from: '/images/og-cover.jpg',
+    to: '/images/og/bluebolt-services-vi.jpg',
+    kind: 'redirect',
+    note: 'og:image cũ của 18 trang. Ảnh là banner khóa học "Đào tạo chuyển đổi số AI" của đơn vị khác, hotline khác → KHÔNG giữ; 301 sang ảnh OG mới',
+  },
+  {
+    from: '/images/logo-bluebolt-services.svg',
+    to: '/images/logo-bluebolt-services.svg',
+    kind: 'keep',
+    note: 'Logo site cũ, giữ nguyên đường dẫn (docs/DECISIONS.md D-15)',
+  },
+  {
+    from: '/images/news/lap-dat-may-lanh-7-buoc.jpg',
+    to: '/images/news/lap-dat-may-lanh-7-buoc.jpg',
+    kind: 'keep',
+    note: 'og:image bài lap-dat-may-lanh-dung-cach-7-buoc (VI + EN)',
+  },
+  {
+    from: '/images/news/nguyen-nhan-may-lanh-hero.png',
+    to: '/images/news/nguyen-nhan-may-lanh.png',
+    kind: 'redirect',
+    note: 'og:image bài 10-nguyen-nhan: ảnh dàn nóng có logo hãng trong bài về máy hỏng → không dùng; 301 sang infographic cùng bài',
+  },
+  {
+    from: '/images/news/may-giat-hero.png',
+    to: '/images/news/may-giat-hero.png',
+    kind: 'keep',
+    note: 'og:image bài rui-ro-lap-dat-may-giat (VI + EN), vẫn là ảnh đầu bài',
+  },
+  {
+    from: '/images/news-card5.jpg',
+    to: '/images/news-card5.jpg',
+    kind: 'keep',
+    note: 'og:image bài chuyen-doi-so (VI + EN); file nén lại 1600px (bản cũ 9,3 MB), giữ tên',
+  },
+  {
+    from: '/images/news/tuong-lai-nganh-dien-lanh-2026.avif',
+    to: '/images/news/tuong-lai-nganh-dien-lanh-2026.avif',
+    kind: 'keep',
+    note: 'og:image bài tuong-lai-nganh-dien-lanh-2026 (VI + EN)',
+  },
+  {
+    from: '/images/news/robot-gia-dinh.jpg',
+    to: '/images/news/og/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai.jpg',
+    kind: 'redirect',
+    note: 'og:image bài robot-va-tu-dong-hoa (đã gộp). Ảnh stock "gia đình phương Tây + robot" (docs/03 mục 11.4) → 301 sang ảnh OG bài gộp',
+  },
+  {
+    from: '/images/news/em-telco-tect-image-web-1024x690.jpg',
+    to: '/images/news/og/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai.jpg',
+    kind: 'redirect',
+    note: 'og:image bài robot-tu-dong-hoa: ảnh tháp viễn thông lạc đề, tên file của website khác → 301 sang ảnh OG bài gộp',
+  },
+  {
+    from: '/images/news-card10.jpg',
+    to: null,
+    kind: 'gone',
+    note: 'og:image bài AI (410). Ảnh stock "cô gái headset vs robot" (docs/03 mục 11.4)',
+  },
+  {
+    from: '/images/khang-3d-poster.webp',
+    to: null,
+    kind: 'gone',
+    note: 'Ảnh KHANG (quyền chưa xác nhận, D-03) — không phục vụ trên site mới',
+  },
+  {
+    from: '/images/vn-map-workers.svg',
+    to: null,
+    kind: 'gone',
+    note: 'Bản đồ cũ (số thợ theo vùng chưa duyệt). Bản đồ mới do agent bản đồ dựng ở /mang-luoi',
+  },
+];
+
+/** Dùng cho next.config.ts → redirects(). 301 một bước (không chuỗi). Gồm cả ảnh og:image cũ đã đổi (legacyAssets). */
 export function buildNextRedirects(): { source: string; destination: string; statusCode: 301 }[] {
-  return legacyRedirects
+  const pages = legacyRedirects
     .filter((r) => r.kind === 'redirect' && r.to !== null)
     .map((r) => ({ source: r.from, destination: r.to as string, statusCode: 301 as const }));
+  const assets = legacyAssets
+    .filter((r) => r.kind === 'redirect' && r.to !== null)
+    .map((r) => ({ source: r.from, destination: r.to as string, statusCode: 301 as const }));
+  return [...pages, ...assets];
 }
 
-/** Đường dẫn trả 410 Gone (proxy.ts). */
+/** Đường dẫn trả 410 Gone (proxy.ts). Ảnh "gone" không qua proxy (matcher bỏ file có dấu chấm) → openresty lo. */
 export const GONE_PATHS: ReadonlySet<string> = new Set(legacyRedirects.filter((r) => r.kind === 'gone').map((r) => r.from));
