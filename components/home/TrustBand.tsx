@@ -11,13 +11,13 @@ import { hasVisibleKpis, KpiGroup } from './Kpis';
 
 const TRUST_KPIS: readonly StatId[] = ['K1', 'K2', 'K3', 'K4'];
 
+/** Số ô giữ chỗ logo ở bản xem trước. */
+const LOGO_SLOTS = 6;
+
 /**
  * Logo hãng/sàn: nguồn DUY NHẤT là content/partners.ts (agent partner) — chỉ đối tác có văn bản đồng ý
  * (partnersWithConsent(), AC-DATA-4). Dải logo trên trang chủ còn cần claim 'home.partner-logos' được duyệt.
  */
-/** Số ô giữ chỗ logo ở bản xem trước. */
-const LOGO_SLOTS = 6;
-
 function logosState(locale: Locale): 'show' | 'draft' | 'hidden' {
   const c = claim('home.partner-logos', locale);
   if (c && !c.draft && partnersWithConsent().length > 0) return 'show';
@@ -32,33 +32,45 @@ export function trustBandVisible(locale: Locale): boolean {
 /**
  * P2 DẢI TIN CẬY (docs/03 mục 13.4): KPI K1–K4 (count-up; ô thiếu số thì ẩn) + logo đối tác (chỉ khi có phép).
  * Nền navy cố định. Không có số, không có logo → cả dải ẩn (page.tsx gọi trustBandVisible()).
+ * Chỉ có logo mà chưa có số → tiêu đề H2 của dải là tiêu đề dải logo.
  */
 export async function TrustBand({ locale }: { locale: Locale }) {
   const t = await getTranslations('home');
+  const kpis = hasVisibleKpis(TRUST_KPIS);
   const logos = logosState(locale);
 
   return (
     <Section id="so-lieu" tone="navy" spacing="compact" aria-labelledby="so-lieu-title" className="lg:py-20">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
-        <Heading level={2} id="so-lieu-title" size="h3">
-          {t('trust.title')}
-        </Heading>
-        <p className="max-w-[36rem] text-small text-(--surface-muted)">{t('trust.lead')}</p>
-      </div>
-
-      <KpiGroup
-        locale={locale}
-        ids={TRUST_KPIS}
-        className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4 lg:gap-x-6"
-        tileClassName="border-l border-(--surface-border) pl-4 md:pl-5"
-      />
+      {kpis ? (
+        <>
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+            <Heading level={2} id="so-lieu-title" size="h3">
+              {t('trust.title')}
+            </Heading>
+            <p className="max-w-[36rem] text-small text-(--surface-muted)">{t('trust.lead')}</p>
+          </div>
+          <KpiGroup
+            locale={locale}
+            ids={TRUST_KPIS}
+            className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4 lg:gap-x-6"
+            tileClassName="border-l border-(--surface-border) pl-4 md:pl-5"
+          />
+        </>
+      ) : null}
 
       {logos !== 'hidden' ? (
-        <div className="mt-12 border-t border-(--surface-border) pt-8">
-          <p className="flex flex-wrap items-center gap-2 text-small font-semibold text-(--surface-fg)">
-            <span>{t('trust.logosTitle')}</span>
-            {logos === 'draft' ? <DraftBadge /> : null}
-          </p>
+        <div className={kpis ? 'mt-12 border-t border-(--surface-border) pt-8' : undefined}>
+          {kpis ? (
+            <p className="flex flex-wrap items-center gap-2 text-small font-semibold text-(--surface-fg)">
+              <span>{t('trust.logosTitle')}</span>
+              {logos === 'draft' ? <DraftBadge /> : null}
+            </p>
+          ) : (
+            <Heading level={2} id="so-lieu-title" size="h3" className="flex flex-wrap items-center gap-2">
+              <span>{t('trust.logosTitle')}</span>
+              {logos === 'draft' ? <DraftBadge /> : null}
+            </Heading>
+          )}
           <ul className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             {logos === 'show'
               ? partnersWithConsent().map((partner) => (
