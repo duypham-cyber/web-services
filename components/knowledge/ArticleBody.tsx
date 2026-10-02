@@ -144,9 +144,18 @@ function BlockView({ block, locale, labels }: { block: Block; locale: Locale; la
       const visible = block.items.filter((item) => !isClaimItem(item) || claim(item.claim, locale) !== null);
       if (visible.length === 0) return null;
       const List = block.ordered ? 'ol' : 'ul';
+      // Nhãn ngắn ("Dấu hiệu") in đậm; câu dẫn dài in thường kèm dấu hai chấm (đọc liền mạch hơn)
+      const label = block.label?.[locale];
+      const longLabel = !!label && label.length > 40;
       return (
-        <div className="space-y-2">
-          {block.label ? <p className="font-semibold text-(--surface-heading)">{block.label[locale]}</p> : null}
+        <div className={longLabel ? 'space-y-3' : 'space-y-2'}>
+          {label ? (
+            longLabel ? (
+              <p>{`${label}:`}</p>
+            ) : (
+              <p className="font-semibold text-(--surface-heading)">{label}</p>
+            )
+          ) : null}
           <List
             className={cn(
               'space-y-2 pl-6 marker:text-blue-600',

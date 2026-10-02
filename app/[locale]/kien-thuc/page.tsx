@@ -83,10 +83,15 @@ export default async function KnowledgeHubPage({ params }: PageProps<'/[locale]/
             </p>
           </div>
           <p className="mt-3 max-w-text text-body text-(--surface-muted)">{g.description}</p>
-          <ul className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <ul className={g.items.length === 1 ? 'mt-10' : 'mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3'}>
             {g.items.map((article) => (
               <li key={article.key}>
-                <ArticleCard article={article} locale={locale} previewNote={previewNote} />
+                <ArticleCard
+                  article={article}
+                  locale={locale}
+                  previewNote={previewNote}
+                  layout={g.items.length === 1 ? 'horizontal' : 'vertical'}
+                />
               </li>
             ))}
           </ul>

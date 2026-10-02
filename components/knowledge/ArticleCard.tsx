@@ -4,6 +4,7 @@ import { Chip } from '@/components/ui/Chip';
 import { readingMinutes, type ArticleEntry } from '@/content/articles/all';
 import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
+import { cn } from '@/lib/cn';
 import { formatDate } from '@/lib/format';
 import { ARTICLE_ICONS } from './icons';
 import { MediaFrame } from './MediaFrame';
@@ -15,19 +16,32 @@ type ArticleCardProps = {
   headingLevel?: 3 | 4;
   /** Ghi chú "ảnh thật sẽ chụp" khi chưa có ảnh — chỉ truyền ở bản xem trước. */
   previewNote?: string | null;
+  /** horizontal = ảnh trái, chữ phải từ 768px (nhóm chỉ có 1 bài); mặc định ảnh trên, chữ dưới. */
+  layout?: 'vertical' | 'horizontal';
 };
 
 /**
  * Thẻ bài viết: ảnh 16:9 (hoặc khung giữ chỗ) · nhóm · tiêu đề (cả thẻ bấm được) · trích 2 dòng · ngày · phút đọc.
  * Link tiêu đề phủ cả thẻ bằng ::after (Card relative). Không motion trên chữ.
  */
-export async function ArticleCard({ article, locale, headingLevel = 3, previewNote }: ArticleCardProps) {
+export async function ArticleCard({
+  article,
+  locale,
+  headingLevel = 3,
+  previewNote,
+  layout = 'vertical',
+}: ArticleCardProps) {
   const t = await getTranslations({ locale, namespace: 'knowledge' });
   const { content } = article;
   const Heading = `h${headingLevel}` as const;
   const minutes = readingMinutes(content, locale);
   return (
-    <Card as="article" padding="none" interactive className="flex h-full flex-col overflow-clip">
+    <Card
+      as="article"
+      padding="none"
+      interactive
+      className={cn('flex h-full flex-col overflow-clip', layout === 'horizontal' && 'md:flex-row')}
+    >
       <MediaFrame
         image={content.hero}
         locale={locale}
@@ -36,8 +50,9 @@ export async function ArticleCard({ article, locale, headingLevel = 3, previewNo
         placeholderIcon={ARTICLE_ICONS[article.key]}
         previewNote={previewNote}
         rounded={false}
+        className={layout === 'horizontal' ? 'md:w-1/2 md:shrink-0 md:self-stretch md:[aspect-ratio:auto]!' : undefined}
       />
-      <div className="flex flex-1 flex-col p-6">
+      <div className={cn('flex flex-1 flex-col p-6', layout === 'horizontal' && 'md:p-10')}>
         <div>
           <Chip variant="blue">{t(`article.categories.${article.category}`)}</Chip>
         </div>
