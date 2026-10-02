@@ -94,12 +94,10 @@ test('ảnh og:image cũ: giữ (200) hoặc 301 sang ảnh mới (AC-301-3)', a
     if (asset.kind === 'redirect') {
       const location = res.headers().location ?? '';
       if (res.status() !== 301 || new URL(location, 'http://x').pathname !== asset.to) {
-        problems.push(`${asset.from}: ${res.status()} → ${location} (cần 301 → ${asset.to}; dev server cần khởi động lại sau khi đổi content/redirects.ts)`);
+        problems.push(`${asset.from}: ${res.status()} → ${location} (cần 301 → ${asset.to})`);
       }
     }
-    if (asset.kind === 'gone' && ![404, 410].includes(res.status())) {
-      problems.push(`${asset.from}: ${res.status()} (cần 410 ở openresty, 404 ở tầng Next)`);
-    }
+    if (asset.kind === 'gone' && res.status() !== 410) problems.push(`${asset.from}: ${res.status()} (cần 410)`);
   }
   expect(problems, problems.join('\n')).toEqual([]);
 });

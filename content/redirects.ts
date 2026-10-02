@@ -6,6 +6,7 @@ import type { RedirectRow } from './schemas';
  *
  * Ai đọc bảng này:
  *   - next.config.ts → redirects(): CHỈ dòng kind "redirect", mã 301 (statusCode: 301; KHÔNG permanent: true vì ra 308).
+ *   - app/images/[...asset]/route.ts → 301/410 cho ảnh og:image cũ (legacyAssets bên dưới).
  *   - proxy.ts       → trả 410 cho dòng kind "gone" (không đưa vào redirects()).
  *   - scripts/gen-openresty-map.mjs → deploy/openresty/lapdattoanquoc.conf (map 1 hop: http→https, www→apex, "/" cuối)
  *     + redirect-inventory.csv (docs/04 mục 2.7). Sửa bảng này xong phải chạy lại script (test SEO kiểm file đã cập nhật).
@@ -161,7 +162,8 @@ export const legacyRedirects: readonly RedirectRow[] = [
  * Ảnh cũ đang được dùng làm og:image (crawl 02/10/2026: og:image của 18 trang + 8 bài viết) — AC-301-3: phải trả 200
  * (giữ file ở public/ đúng đường dẫn) hoặc 301 sang ảnh mới, để preview Zalo/Facebook của link cũ không vỡ.
  * Ngoài 34 dòng sitemap ở trên (content/validate.ts kiểm đúng 34 dòng), nên tách thành bảng riêng.
- * kind "gone": ảnh bị gỡ vì nội dung (KHANG chưa rõ quyền, bài AI đã gỡ) → openresty trả 410; tầng Next trả 404.
+ * kind "gone": ảnh bị gỡ vì nội dung (KHANG chưa rõ quyền, bài AI đã gỡ) → 410.
+ * Tầng Next: app/images/[...asset]/route.ts (301/410); production: openresty xử lý trước (1 hop).
  */
 export type LegacyAssetRow = {
   from: string;
@@ -245,16 +247,20 @@ export const legacyAssets: readonly LegacyAssetRow[] = [
   },
 ];
 
-/** Dùng cho next.config.ts → redirects(). 301 một bước (không chuỗi). Gồm cả ảnh og:image cũ đã đổi (legacyAssets). */
+/** Dùng cho next.config.ts → redirects(). 301 một bước (không chuỗi). Chỉ URL trang (34 dòng sitemap). */
 export function buildNextRedirects(): { source: string; destination: string; statusCode: 301 }[] {
-  const pages = legacyRedirects
+  return legacyRedirects
     .filter((r) => r.kind === 'redirect' && r.to !== null)
     .map((r) => ({ source: r.from, destination: r.to as string, statusCode: 301 as const }));
-  const assets = legacyAssets
-    .filter((r) => r.kind === 'redirect' && r.to !== null)
-    .map((r) => ({ source: r.from, destination: r.to as string, statusCode: 301 as const }));
-  return [...pages, ...assets];
 }
 
-/** Đường dẫn trả 410 Gone (proxy.ts). Ảnh "gone" không qua proxy (matcher bỏ file có dấu chấm) → openresty lo. */
+/**
+ * Ảnh og:image cũ cần 301/410 ở tầng Next (app/images/[...asset]/route.ts). Ảnh "keep" là file tĩnh trong public/,
+ * không đi qua đây. Production: openresty xử lý trước (deploy/openresty/lapdattoanquoc.conf).
+ */
+export function findLegacyAsset(path: string): LegacyAssetRow | undefined {
+  return legacyAssets.find((a) => a.from === path && a.kind !== 'keep');
+}
+
+/** Đường dẫn trang trả 410 Gone (proxy.ts). Ảnh "gone" không qua proxy (matcher bỏ file có dấu chấm) → route ảnh lo. */
 export const GONE_PATHS: ReadonlySet<string> = new Set(legacyRedirects.filter((r) => r.kind === 'gone').map((r) => r.from));
