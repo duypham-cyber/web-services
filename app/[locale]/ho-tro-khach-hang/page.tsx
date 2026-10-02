@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { ClaimLine, DraftNote } from '@/components/partners/DraftNote';
 import { FinalCta } from '@/components/partners/FinalCta';
 import { PageHero } from '@/components/partners/PageHero';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { SectionHeader } from '@/components/partners/SectionHeader';
 import { StepList } from '@/components/partners/StepList';
 import { HotlineCard } from '@/components/support/HotlineCard';
@@ -45,6 +46,7 @@ export default async function SupportPage({ params }: PageProps<'/[locale]/ho-tr
   return (
     <>
       <PageHero
+        breadcrumb={<Breadcrumbs routeKey="support" locale={locale} />}
         eyebrow={t('eyebrow')}
         title={t('title')}
         lead={t('lead')}

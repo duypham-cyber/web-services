@@ -7,6 +7,7 @@ import { OfficeMap } from '@/components/contact/OfficeMap';
 import { ContactButtons } from '@/components/partners/ContactButtons';
 import { DraftNote } from '@/components/partners/DraftNote';
 import { PageHero } from '@/components/partners/PageHero';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { SectionHeader } from '@/components/partners/SectionHeader';
 import { Section } from '@/components/ui/Section';
 import { TextLink } from '@/components/ui/TextLink';
@@ -52,7 +53,12 @@ export default async function ContactPage({ params }: PageProps<'/[locale]/lien-
 
   return (
     <>
-      <PageHero eyebrow={t('eyebrow')} title={t('title')} lead={t('lead')}>
+      <PageHero
+        breadcrumb={<Breadcrumbs routeKey="contact" locale={locale} />}
+        eyebrow={t('eyebrow')}
+        title={t('title')}
+        lead={t('lead')}
+      >
         <nav aria-label={t('jumpLabel')} className="mt-8">
           <ul className="flex flex-wrap gap-3">
             {JUMPS.map((jump) => (

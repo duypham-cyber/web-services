@@ -8,6 +8,7 @@ import { DraftNote } from '@/components/partners/DraftNote';
 import { FinalCta } from '@/components/partners/FinalCta';
 import { MediaFrame } from '@/components/partners/MediaFrame';
 import { PageHero } from '@/components/partners/PageHero';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { SectionHeader } from '@/components/partners/SectionHeader';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -59,6 +60,7 @@ export default async function AboutPage({ params }: PageProps<'/[locale]/ve-chun
   return (
     <>
       <PageHero
+        breadcrumb={<Breadcrumbs routeKey="about" locale={locale} />}
         eyebrow={t('eyebrow')}
         title={t('title')}
         lead={t('lead')}

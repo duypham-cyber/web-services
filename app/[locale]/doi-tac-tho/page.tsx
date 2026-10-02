@@ -8,6 +8,7 @@ import { EarningsSection } from '@/components/partners/EarningsSection';
 import { FaqList, type FaqItem } from '@/components/partners/FaqList';
 import { JobsSection } from '@/components/partners/JobsSection';
 import { PageHero } from '@/components/partners/PageHero';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { RegisterSection } from '@/components/partners/RegisterSection';
 import { SectionHeader } from '@/components/partners/SectionHeader';
 import { StandardsSection } from '@/components/partners/StandardsSection';
@@ -124,6 +125,7 @@ export default async function PartnersPage({ params }: PageProps<'/[locale]/doi-
   return (
     <>
       <PageHero
+        breadcrumb={<Breadcrumbs routeKey="partners" locale={locale} />}
         eyebrow={t('eyebrow')}
         title={t('title')}
         lead={t('lead')}

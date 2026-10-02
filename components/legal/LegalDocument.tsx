@@ -2,6 +2,7 @@ import { FileClock, Mail, Phone } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { DraftNote } from '@/components/partners/DraftNote';
 import { PageHero } from '@/components/partners/PageHero';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { DraftBadge } from '@/components/ui/DraftBadge';
 import { Prose } from '@/components/ui/Prose';
 import { Section } from '@/components/ui/Section';
@@ -11,6 +12,8 @@ import type { Locale } from '@/i18n/routing';
 import { isDraftPreview } from '@/lib/env';
 import { formatDate } from '@/lib/format';
 import { LegalBlocks } from './LegalBlocks';
+
+const LEGAL_ROUTE_KEY = { privacy: 'legal.privacy', terms: 'legal.terms', warranty: 'legal.warranty' } as const;
 
 /**
  * TEMPLATE T-LEGAL (contracts/site-shell-p0.md mục 1.3, AC-LEGAL-1): H1 → phiên bản / ngày hiệu lực → mục lục
@@ -30,7 +33,12 @@ export async function LegalDocument({ locale, docKey }: { locale: Locale; docKey
 
   return (
     <>
-      <PageHero eyebrow={t('eyebrow')} title={t(`${docKey}.title`)} lead={lead}>
+      <PageHero
+        breadcrumb={<Breadcrumbs routeKey={LEGAL_ROUTE_KEY[docKey]} locale={locale} />}
+        eyebrow={t('eyebrow')}
+        title={t(`${docKey}.title`)}
+        lead={lead}
+      >
         <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-2 text-small">
           <div className="flex gap-2">
             <dt className="text-(--surface-muted)">{t('version')}:</dt>
