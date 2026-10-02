@@ -1,12 +1,13 @@
 import type { Locale } from '@/i18n/routing';
 
-export type StatFormat = 'integer' | 'of-34' | 'percent' | 'hours';
+export type StatFormat = 'integer' | 'of-34' | 'percent' | 'hours' | 'minutes';
 
 const INTL_LOCALE: Record<Locale, string> = { vi: 'vi-VN', en: 'en-US' };
 
 /**
- * Định dạng số KPI theo ngôn ngữ: vi "1.234" · en "1,234"; "27/34"; "96,4%"; "4 giờ" / "4 h".
- * Dùng chung cho KpiTile (server) và CountUp (client) để chuỗi SSR và chuỗi cuối của hiệu ứng trùng khớp.
+ * Định dạng số KPI theo ngôn ngữ: vi "1.234" · en "1,234"; "27/34"; "96,4%"; "4 giờ" / "4 h"; "60 phút" / "60 min".
+ * `unit` là đơn vị của format "hours"/"minutes" (messages common.units). Dùng chung cho KpiTile (server) và CountUp
+ * (client) để chuỗi SSR và chuỗi cuối của hiệu ứng trùng khớp.
  */
 export function formatStatValue(value: number, format: StatFormat, locale: Locale, unit?: string): string {
   const nf = new Intl.NumberFormat(INTL_LOCALE[locale], {
@@ -18,6 +19,7 @@ export function formatStatValue(value: number, format: StatFormat, locale: Local
     case 'percent':
       return `${nf.format(value)}%`;
     case 'hours':
+    case 'minutes':
       return unit ? `${nf.format(value)} ${unit}` : nf.format(value);
     default:
       return nf.format(value);

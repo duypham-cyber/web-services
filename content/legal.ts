@@ -564,25 +564,3 @@ const terms: LegalDoc = {
 };
 
 export const legalDocs: Record<LegalDocKey, LegalDoc> = { privacy, terms, warranty };
-
-/**
- * Các mốc giờ khác đang ghi trong chính sách cũ (ngoài content/sla.ts) — chỉ để anh Duy đối chiếu ở bảng giờ làm việc
- * của /lien-he (bản xem trước). KHÔNG hiển thị như cam kết ở production.
- */
-export const legacyServiceHours: readonly { id: string; label: LocalizedText; current: LocalizedText; source: string }[] = [
-  {
-    id: 'onsite-work',
-    label: t('Thi công tại nhà khách', 'On-site work'),
-    current: t(
-      '08:00–12:00 và 13:00–17:00, thứ Hai đến thứ Bảy; không thi công Chủ nhật, ngày lễ, Tết',
-      '08:00–12:00 and 13:00–17:00, Monday to Saturday; no on-site work on Sundays or public holidays',
-    ),
-    source: 'Chính sách cũ Phần 3, Điều khoản 1',
-  },
-  {
-    id: 'warranty-service',
-    label: t('Xử lý bảo hành cùng hãng', 'Warranty service with brands'),
-    current: t('08:00–17:00, thứ Hai đến thứ Sáu', '08:00–17:00, Monday to Friday'),
-    source: 'Chính sách cũ Phần 4, Điều khoản 2',
-  },
-];

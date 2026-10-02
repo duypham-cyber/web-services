@@ -2,7 +2,6 @@ import { BadgeCheck, FileText, Info, Layers, ReceiptText } from 'lucide-react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { QUOTE_HREF } from '@/components/layout/Header';
-import { assertPricingValid } from '@/components/pricing/pricing-schema';
 import { PriceTable, type PriceTableRow } from '@/components/pricing/PriceTable';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { PendingPanel } from '@/components/solutions/kit/draft';
@@ -42,13 +41,13 @@ const POLICY_PARTS = ['general', 'customers', 'technicians', 'brands'] as const;
 /**
  * /bang-gia — "Khung giá vật tư tham khảo (thợ thu tại chỗ)" (T-PRICING, docs/03 mục 13.5; site-shell-p0 mục 1.3).
  * KHÔNG motion, KHÔNG shot, KHÔNG Lenis, không animate giá. Bảng server render đủ, lọc theo thiết bị/vùng ở client.
- * Dữ liệu: content/pricing.ts (Zod ở components/pricing/pricing-schema.ts, build fail nếu sai).
+ * Dữ liệu: content/pricing.ts (Zod: content/schemas.ts pricingTableSchema, kiểm trong validateContent() của root layout →
+ * build fail nếu sai).
  * Production: bảng CHỈ hiện khi có ngày hiệu lực + đã duyệt (site-shell-p0 mục 5) → nếu chưa, hiện khối "đang cập nhật".
  * Chính sách 4 phần của trang giá cũ: chỉ tóm tắt + link /chinh-sach-bao-hanh (trang pháp lý của agent partner).
  */
 export default async function PricingPage({ params }: PageProps<'/[locale]/bang-gia'>) {
   const locale = await resolveLocale(params);
-  assertPricingValid();
   const t = await getTranslations({ locale, namespace: 'pricing' });
   const ts = await getTranslations({ locale, namespace: 'solutions' });
   const preview = isDraftPreview();

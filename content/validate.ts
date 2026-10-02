@@ -1,20 +1,33 @@
 import { z } from 'zod';
 import { articles } from './articles';
+import { validateArticles } from './articles/schema';
 import { claims } from './claims';
+import { jobPostings } from './jobs';
+import { legalDocs } from './legal';
+import { brandPartners, technicianApp, technicianEarnings } from './partners';
+import { pricingTable } from './pricing';
 import { processSteps } from './process';
-import { archipelagos, provinces } from './provinces';
+import { archipelagos, formerNames, provinces, regions } from './provinces';
 import { legacyRedirects } from './redirects';
 import {
   archipelagoSchema,
   articleSchema,
+  brandPartnerSchema,
   claimSchema,
+  formerNamesSchema,
+  jobPostingSchema,
+  legalDocSchema,
+  pricingTableSchema,
   processStepSchema,
   provinceSchema,
   redirectRowSchema,
+  regionInfoSchema,
   serviceSchema,
   siteSchema,
   slaItemSchema,
   statSchema,
+  technicianAppSchema,
+  technicianEarningsSchema,
 } from './schemas';
 import { services } from './services';
 import { site } from './site';
@@ -43,6 +56,14 @@ export function validateContent(): void {
   check('redirects.ts', z.array(redirectRowSchema).length(34), legacyRedirects);
   check('services.ts', z.array(serviceSchema).length(4), services);
   check('articles.ts', z.array(articleSchema).min(1), articles);
+  check('provinces.ts (regions)', z.array(regionInfoSchema).length(3), regions);
+  check('provinces.ts (formerNames)', formerNamesSchema, formerNames);
+  check('pricing.ts', pricingTableSchema, pricingTable);
+  check('jobs.ts', z.array(jobPostingSchema), jobPostings);
+  check('legal.ts', z.array(legalDocSchema).length(3), Object.values(legalDocs));
+  check('partners.ts (brandPartners)', z.array(brandPartnerSchema), brandPartners);
+  check('partners.ts (technicianEarnings)', technicianEarningsSchema, technicianEarnings);
+  check('partners.ts (technicianApp)', technicianAppSchema, technicianApp);
 
   // --- Ràng buộc chéo ---
   const dup = <T>(name: string, values: readonly T[]) => {
@@ -61,6 +82,24 @@ export function validateContent(): void {
   dup('services slug en', services.map((s) => s.slug.en));
   dup('articles slug vi', articles.map((a) => a.slug.vi));
   dup('articles slug en', articles.map((a) => a.slug.en));
+  dup('regions id', regions.map((r) => r.id));
+  dup('jobs id', jobPostings.map((j) => j.id));
+  dup('brandPartners name', brandPartners.map((p) => p.name));
+
+  // Mã tỉnh tham chiếu phải có trong provinces.ts; mỗi vùng có ít nhất 1 tỉnh
+  const provinceCodes = new Set(provinces.map((p) => p.code));
+  for (const code of Object.keys(formerNames)) {
+    if (!provinceCodes.has(code)) problems.push(`provinces.ts formerNames: mã tỉnh "${code}" không có trong provinces`);
+  }
+  for (const j of jobPostings) {
+    if (!provinceCodes.has(j.provinceCode)) problems.push(`jobs.ts ${j.id}: mã tỉnh "${j.provinceCode}" không có trong provinces`);
+  }
+  for (const r of regions) {
+    if (!provinces.some((p) => p.region === r.id)) problems.push(`provinces.ts: vùng "${r.id}" không có tỉnh nào`);
+  }
+  for (const [key, doc] of Object.entries(legalDocs)) {
+    if (doc.key !== key) problems.push(`legal.ts: legalDocs.${key}.key = "${doc.key}"`);
+  }
 
   // Mỗi URL cũ của bài viết phải trỏ về đúng bài mới trong redirects.ts
   for (const a of articles) {
@@ -75,6 +114,9 @@ export function validateContent(): void {
   if (problems.length > 0) {
     throw new Error(`Nội dung trong content/ không hợp lệ:\n- ${problems.join('\n- ')}`);
   }
+
+  // Thân 6 bài Kiến thức (Zod + luật giọng văn) — content/articles/schema.ts (agent SEO); ném lỗi riêng nếu sai
+  validateArticles();
 }
 
 let validated = false;

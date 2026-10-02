@@ -1,8 +1,8 @@
 /**
  * Khung giá VẬT TƯ tham khảo (thợ thu tại chỗ) cho /bang-gia — docs/03 mục 13.5, contracts/site-shell-p0.md mục 3.
- * Chủ sở hữu: agent trang B2B. Dữ liệu thuần, KHÔNG import zod (README rule 1). Schema Zod + ràng buộc nằm ở
- * components/pricing/pricing-schema.ts; trang /bang-gia gọi `assertPricingValid()` khi render → `next build` FAIL
- * nếu dữ liệu sai. (Đề xuất cho nền móng: chuyển schema vào content/schemas.ts + content/validate.ts.)
+ * Chủ sở hữu: agent trang B2B. Dữ liệu thuần, KHÔNG import zod (README rule 1). Schema Zod + ràng buộc: content/schemas.ts
+ * (pricingTableSchema), kiểm trong content/validate.ts → root layout gọi khi render nên dữ liệu sai làm `next build` FAIL;
+ * tests/unit/content.test.ts kiểm cùng điều đó.
  *
  * NGUỒN DUY NHẤT — không thêm dòng/giá nào ngoài nguồn:
  *   Bảng "Bảng giá Vật Tư BLUEBOLT SERVICES 2026" trên lapdattoanquoc.vn/prices (crawl 01/10/2026), đã bấm "Xem thêm":

@@ -4,20 +4,20 @@ import { SectionHeader } from '@/components/partners/SectionHeader';
 import { DraftBadge } from '@/components/ui/DraftBadge';
 import { Section } from '@/components/ui/Section';
 import { TableScroll } from '@/components/ui/TableScroll';
-import { legacyServiceHours } from '@/content/legal';
 import { slaItems } from '@/content/sla';
 import type { LocalizedText } from '@/content/schemas';
 import type { Locale } from '@/i18n/routing';
 import { isDraftPreview } from '@/lib/env';
 
-const SLA_IDS = ['hotline-hours', 'order-intake-hours'] as const;
+const SLA_IDS = ['hotline-hours', 'order-intake-hours', 'onsite-work-hours', 'warranty-service-hours'] as const;
 
 type Row = { id: string; label: LocalizedText; value: LocalizedText | null; current: LocalizedText };
 
 /**
  * /lien-he#gio-lam-viec — bảng giờ hoạt động. Giờ trên site cũ tự mâu thuẫn (24/7 vs 9–18h) → mọi dòng là nháp:
  *   - production: chỉ dòng đã duyệt (content/sla.ts approved); chưa có dòng nào → đoạn trung tính.
- *   - bản xem trước: liệt kê mọi mốc giờ đang ghi (sla.ts + chính sách cũ) kèm nhãn Nháp để anh Duy chốt.
+ *   - bản xem trước: liệt kê mọi mốc giờ đang ghi (content/sla.ts — gồm cả giờ thi công, giờ bảo hành của chính sách cũ)
+ *     kèm nhãn Nháp để anh Duy chốt.
  */
 export async function HoursTable({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'contact' });
@@ -29,8 +29,7 @@ export async function HoursTable({ locale }: { locale: Locale }) {
     const approved = item.status === 'approved' && item.value !== null;
     return [{ id: item.id, label: item.label, value: approved ? item.value : null, current: item.current }];
   });
-  const legacyRows: Row[] = legacyServiceHours.map((h) => ({ id: h.id, label: h.label, value: null, current: h.current }));
-  const rows = [...slaRows, ...legacyRows].filter((row) => row.value !== null || preview);
+  const rows = slaRows.filter((row) => row.value !== null || preview);
   const tableLabel = preview ? t('hours.tableLabel') : t('hours.title');
 
   return (

@@ -1,4 +1,8 @@
 import { z } from 'zod';
+import type { JobPosting } from './jobs';
+import type { LegalDoc } from './legal';
+import type { BrandPartner, MoneyFigure, PercentFigure } from './partners';
+import { AC_CAPACITIES_BTU, type AcCapacityBtu, type PricingTable } from './pricing';
 
 /**
  * Schema Zod cho mọi nội dung trong content/.
@@ -74,6 +78,26 @@ export type Site = z.infer<typeof siteSchema>;
 export const statIdSchema = z.enum(['K1', 'K2', 'K3', 'K4', 'K5', 'K6']);
 export type StatId = z.infer<typeof statIdSchema>;
 
+/** Cách định dạng số KPI (lib/format.ts → formatStatValue). "minutes" dùng cho số site cũ "60 phút". */
+export const statFormatSchema = z.enum(['integer', 'of-34', 'percent', 'hours', 'minutes']);
+
+/** Ba vùng điều phối (content/provinces.ts → regions). */
+export const regionSchema = z.enum(['north', 'central', 'south']);
+
+/**
+ * Số thợ theo miền mà site cũ đang ghi (trang /system-map). Tên miền giữ đúng như site cũ ghi (có "Mekong" riêng);
+ * `region` = vùng tương ứng trên site mới để đặt đúng thẻ vùng ở /mang-luoi.
+ */
+export const statLegacyRegionSchema = z
+  .object({
+    region: regionSchema,
+    label: localizedTextSchema,
+    value: z.number().int().nonnegative(),
+    /** Site cũ ghi kèm "+" (vd "120+ thợ"). */
+    plus: z.boolean(),
+  })
+  .strict();
+
 export const statSchema = z
   .object({
     id: statIdSchema,
@@ -81,11 +105,25 @@ export const statSchema = z
     definition: localizedTextSchema,
     /** null = chưa có số thật → ô KPI bị ẩn. KHÔNG điền số ước. */
     value: z.number().nonnegative().nullable(),
-    format: z.enum(['integer', 'of-34', 'percent', 'hours']),
+    format: statFormatSchema,
     updatedAt: isoDateSchema.nullable(),
     source: z.string().min(1).nullable(),
     /** Khóa route (lib/routes.ts) nơi KPI được phép hiện. */
     showOn: z.array(z.string().min(1)).min(1),
+    /**
+     * Số ĐANG GHI trên site cũ (lapdattoanquoc.vn), để bản xem trước bớt ô trống. CHỈ hiện khi DRAFT_PREVIEW=1, kèm
+     * nhãn "Nháp · số site cũ"; production KHÔNG BAO GIỜ hiện (cổng duy nhất: lib/stats.ts, có unit test). Không phải số
+     * đo theo `definition`. null = site cũ không có số này.
+     */
+    legacyValue: z.number().nonnegative().nullable(),
+    /** Site cũ ghi kèm dấu "+" (vd "500+"). */
+    legacyPlus: z.boolean().optional(),
+    /** Định dạng của số site cũ khi khác `format` (vd K6: site cũ ghi "60 phút" → "minutes"). Mặc định = `format`. */
+    legacyFormat: statFormatSchema.optional(),
+    /** Trang + câu nguyên văn trên site cũ + ngày crawl; ghi cả chỗ site cũ tự mâu thuẫn. Có legacyValue thì bắt buộc. */
+    legacySource: z.string().min(1).nullable(),
+    /** Số theo miền site cũ ghi (chỉ K1, trang /system-map). Cùng luật hiển thị với legacyValue. */
+    legacyByRegion: z.array(statLegacyRegionSchema).optional(),
   })
   .strict()
   .superRefine((s, ctx) => {
@@ -98,8 +136,23 @@ export const statSchema = z
     if (s.value !== null && s.format === 'of-34' && s.value > 34) {
       ctx.addIssue({ code: 'custom', message: `${s.id}: số tỉnh phải ≤ 34` });
     }
+    const hasLegacy = s.legacyValue !== null || (s.legacyByRegion?.length ?? 0) > 0;
+    if (hasLegacy && s.legacySource === null) {
+      ctx.addIssue({ code: 'custom', message: `${s.id}: có số site cũ thì phải có legacySource (trang, câu nguyên văn, ngày crawl)` });
+    }
+    if (s.legacyValue === null && (s.legacyPlus !== undefined || s.legacyFormat !== undefined)) {
+      ctx.addIssue({ code: 'custom', message: `${s.id}: legacyPlus/legacyFormat chỉ dùng khi có legacyValue` });
+    }
+    const legacyFormat = s.legacyFormat ?? s.format;
+    if (s.legacyValue !== null && legacyFormat === 'of-34' && s.legacyValue > 34) {
+      ctx.addIssue({ code: 'custom', message: `${s.id}: số tỉnh site cũ phải ≤ 34` });
+    }
+    if (s.legacyValue !== null && legacyFormat === 'percent' && s.legacyValue > 100) {
+      ctx.addIssue({ code: 'custom', message: `${s.id}: phần trăm site cũ phải ≤ 100` });
+    }
   });
 export type Stat = z.infer<typeof statSchema>;
+export type StatLegacyRegion = z.infer<typeof statLegacyRegionSchema>;
 
 // ---------------------------------------------------------------------------------------------
 // claims/ — câu khẳng định cần bằng chứng (docs/04 R17, Q19)
@@ -162,9 +215,8 @@ export const slaItemSchema = z
 export type SlaItem = z.infer<typeof slaItemSchema>;
 
 // ---------------------------------------------------------------------------------------------
-// provinces.ts — 34 đơn vị hành chính cấp tỉnh (sau sắp xếp 2025)
+// provinces.ts — 34 đơn vị hành chính cấp tỉnh (sau sắp xếp 2025). regionSchema khai báo ở mục stats (dùng chung).
 // ---------------------------------------------------------------------------------------------
-export const regionSchema = z.enum(['north', 'central', 'south']);
 export const provinceSchema = z
   .object({
     code: z.string().regex(/^\d{2}$/),
@@ -190,6 +242,18 @@ export const archipelagoSchema = z
     note: z.string().min(1),
   })
   .strict();
+
+/** Ba vùng điều phối (provinces.ts → regions): tên + phạm vi theo cách Bluebolt tự mô tả trên site cũ. */
+export const regionInfoSchema = z
+  .object({
+    id: regionSchema,
+    name: localizedTextSchema,
+    scope: localizedTextSchema,
+  })
+  .strict();
+
+/** Tên tỉnh cũ đã nhập vào tỉnh mới (provinces.ts → formerNames): khóa = mã tỉnh mới. */
+export const formerNamesSchema = z.record(z.string().regex(/^\d{2}$/), z.array(z.string().trim().min(1)).min(1));
 
 // ---------------------------------------------------------------------------------------------
 // redirects.ts — 34 URL cũ trong sitemap (docs/03 mục 10.3)
@@ -247,3 +311,201 @@ export const articleSchema = z
   .strict()
   .refine((a) => a.key === a.slug.vi, 'key = slug VI');
 export type Article = z.infer<typeof articleSchema>;
+
+// ---------------------------------------------------------------------------------------------
+// pricing.ts — khung giá VẬT TƯ tham khảo /bang-gia (chủ sở hữu dữ liệu: agent B2B). Chuyển từ
+// components/pricing/pricing-schema.ts về đây (đề xuất B1 của agent B2B): validateContent() kiểm cùng mọi file khác.
+// ---------------------------------------------------------------------------------------------
+const priceVndSchema = z
+  .number()
+  .int('Giá VNĐ phải là số nguyên')
+  .positive()
+  .refine((v) => v % 1000 === 0, 'Giá VNĐ làm tròn tới nghìn (đúng như bảng nguồn)');
+
+const priceItemSchema = z
+  .object({
+    id: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+    device: z.enum(['air-conditioner']),
+    group: z.enum(['copper-pipe', 'cable-drain']),
+    item: localizedTextSchema,
+    sourceLabel: z.string().min(1),
+    capacityBtu: z
+      .custom<AcCapacityBtu>((v) => (AC_CAPACITIES_BTU as readonly unknown[]).includes(v), 'Công suất phải có trong AC_CAPACITIES_BTU')
+      .nullable(),
+    unit: z.literal('m'),
+    prices: z.object({ HCM: priceVndSchema, HN: priceVndSchema, OTHER: priceVndSchema, SPECIAL: priceVndSchema }).strict(),
+  })
+  .strict();
+
+export const pricingTableSchema = z
+  .object({
+    currency: z.literal('VND'),
+    vatIncluded: z.boolean(),
+    effectiveFrom: isoDateSchema.nullable(),
+    sourceYear: z.number().int().min(2020).max(2100),
+    status: publishStatusSchema,
+    approvedBy: z.string().min(1).nullable(),
+    source: z.string().min(1),
+    items: z.array(priceItemSchema).min(1),
+  })
+  .strict()
+  .superRefine((t, ctx) => {
+    if (t.status === 'approved' && (t.effectiveFrom === null || t.approvedBy === null)) {
+      ctx.addIssue({ code: 'custom', message: 'pricing: approved thì phải có effectiveFrom và approvedBy' });
+    }
+    const ids = new Set<string>();
+    for (const it of t.items) {
+      if (ids.has(it.id)) ctx.addIssue({ code: 'custom', message: `pricing: trùng id "${it.id}"` });
+      ids.add(it.id);
+    }
+  }) satisfies z.ZodType<PricingTable>;
+
+// ---------------------------------------------------------------------------------------------
+// jobs.ts — tin tuyển thợ /doi-tac-tho#viec-dang-tuyen (chủ sở hữu: agent partner; đề xuất P3)
+// ---------------------------------------------------------------------------------------------
+export const jobPostingSchema = z
+  .object({
+    id: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+    title: localizedTextSchema,
+    provinceCode: z.string().regex(/^\d{2}$/),
+    employment: z.literal('collaborator'),
+    openings: z.number().int().positive().nullable(),
+    status: publishStatusSchema,
+    postedAt: isoDateSchema.nullable(),
+    validThrough: isoDateSchema.nullable(),
+    code: z.string().min(1).nullable(),
+    source: z.string().min(1),
+    note: z.string().min(1).optional(),
+  })
+  .strict()
+  .superRefine((j, ctx) => {
+    // Tin được hiện ở production phải đủ trường của JobPosting (Google): ngày đăng + hạn nộp
+    if (j.status === 'approved' && (j.postedAt === null || j.validThrough === null)) {
+      ctx.addIssue({ code: 'custom', message: `${j.id}: approved thì phải có postedAt và validThrough` });
+    }
+    if (j.postedAt !== null && j.validThrough !== null && j.validThrough < j.postedAt) {
+      ctx.addIssue({ code: 'custom', message: `${j.id}: validThrough phải ≥ postedAt` });
+    }
+  }) satisfies z.ZodType<JobPosting>;
+
+// ---------------------------------------------------------------------------------------------
+// legal.ts — 3 văn bản pháp lý (chủ sở hữu: agent partner; người viết nội dung: pháp chế; đề xuất P3)
+// ---------------------------------------------------------------------------------------------
+const anchorIdSchema = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'neo ASCII kebab-case');
+
+const legalBlockSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('p'), text: localizedTextSchema }).strict(),
+  z.object({ kind: z.literal('list'), items: z.array(localizedTextSchema).min(1) }).strict(),
+  z
+    .object({
+      kind: z.literal('table'),
+      caption: localizedTextSchema,
+      head: z.array(localizedTextSchema).min(1),
+      rows: z.array(z.array(localizedTextSchema).min(1)).min(1),
+    })
+    .strict(),
+]);
+
+const legalSubsectionSchema = z
+  .object({
+    id: anchorIdSchema,
+    title: localizedTextSchema,
+    blocks: z.array(legalBlockSchema),
+    reviewNote: localizedTextSchema.optional(),
+  })
+  .strict();
+
+const legalSectionSchema = z
+  .object({
+    id: anchorIdSchema,
+    title: localizedTextSchema,
+    blocks: z.array(legalBlockSchema).nullable(),
+    subsections: z.array(legalSubsectionSchema).optional(),
+    reviewNote: localizedTextSchema.optional(),
+  })
+  .strict();
+
+export const legalDocSchema = z
+  .object({
+    key: z.enum(['privacy', 'terms', 'warranty']),
+    status: publishStatusSchema,
+    origin: z.enum(['legacy-site', 'outline', 'legal-team']),
+    version: z.string().min(1).nullable(),
+    effectiveFrom: isoDateSchema.nullable(),
+    approvedBy: z.string().min(1).nullable(),
+    approvedAt: isoDateSchema.nullable(),
+    source: z.string().min(1),
+    sections: z.array(legalSectionSchema).min(1),
+  })
+  .strict()
+  .superRefine((d, ctx) => {
+    if (d.status === 'approved' && (d.version === null || d.effectiveFrom === null || d.approvedBy === null || d.approvedAt === null)) {
+      ctx.addIssue({ code: 'custom', message: `${d.key}: approved thì phải có version, effectiveFrom, approvedBy, approvedAt` });
+    }
+    // Neo trong trang phải duy nhất (mục lục dính trỏ theo id)
+    const ids = new Set<string>();
+    for (const s of d.sections) {
+      for (const id of [s.id, ...(s.subsections ?? []).map((x) => x.id)]) {
+        if (ids.has(id)) ctx.addIssue({ code: 'custom', message: `${d.key}: trùng neo "${id}"` });
+        ids.add(id);
+      }
+      for (const b of [...(s.blocks ?? []), ...(s.subsections ?? []).flatMap((x) => x.blocks)]) {
+        if (b.kind === 'table' && b.rows.some((r) => r.length !== b.head.length)) {
+          ctx.addIssue({ code: 'custom', message: `${d.key}#${s.id}: hàng bảng phải có ${b.head.length} ô như tiêu đề` });
+        }
+      }
+    }
+  }) satisfies z.ZodType<LegalDoc>;
+
+// ---------------------------------------------------------------------------------------------
+// partners.ts — logo đối tác (cần văn bản đồng ý), số tiền của thợ, link app (chủ sở hữu: agent partner; đề xuất P3)
+// ---------------------------------------------------------------------------------------------
+export const brandPartnerSchema = z
+  .object({
+    name: z.string().min(1),
+    logo: z.string().regex(/^\/[^\s]+\.(svg|avif|webp|png)$/, 'Logo là file trong /public (svg, avif, webp, png)'),
+    kind: z.enum(['brand', 'marketplace', 'retail']),
+    consentDoc: z.string().min(1).nullable(),
+    consentDate: isoDateSchema.nullable(),
+  })
+  .strict()
+  .refine((p) => (p.consentDoc === null) === (p.consentDate === null), 'consentDoc và consentDate đi cùng nhau') satisfies z.ZodType<BrandPartner>;
+
+const moneyFigureSchema = z
+  .object({
+    min: z.number().int().nonnegative().nullable(),
+    max: z.number().int().nonnegative().nullable(),
+    definition: localizedTextSchema,
+    updatedAt: isoDateSchema.nullable(),
+    source: z.string().min(1).nullable(),
+  })
+  .strict()
+  .superRefine((f, ctx) => {
+    if ((f.min === null) !== (f.max === null)) ctx.addIssue({ code: 'custom', message: 'min và max cùng có hoặc cùng null' });
+    if (f.min !== null && f.max !== null && f.min > f.max) ctx.addIssue({ code: 'custom', message: 'min phải ≤ max' });
+    if (f.min !== null && (f.updatedAt === null || f.source === null)) {
+      ctx.addIssue({ code: 'custom', message: 'có số thì phải có updatedAt và source' });
+    }
+  }) satisfies z.ZodType<MoneyFigure>;
+
+const percentFigureSchema = z
+  .object({
+    value: z.number().min(0).max(100).nullable(),
+    definition: localizedTextSchema,
+    updatedAt: isoDateSchema.nullable(),
+    source: z.string().min(1).nullable(),
+  })
+  .strict()
+  .refine((f) => f.value === null || (f.updatedAt !== null && f.source !== null), 'có số thì phải có updatedAt và source') satisfies z.ZodType<PercentFigure>;
+
+export const technicianEarningsSchema = z
+  .object({ monthlyReference: moneyFigureSchema, platformFee: percentFigureSchema })
+  .strict();
+
+export const technicianAppSchema = z
+  .object({
+    androidUrl: z.url().nullable(),
+    iosUrl: z.url().nullable(),
+    note: z.string().min(1),
+  })
+  .strict();

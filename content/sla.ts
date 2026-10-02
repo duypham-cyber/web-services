@@ -97,4 +97,27 @@ export const slaItems: readonly SlaItem[] = [
     status: 'draft',
     approvedBy: null,
   },
+  // Hai mốc giờ dưới đây chuyển từ content/legal.ts (legacyServiceHours) về đây cho một nguồn — đề xuất P4 của agent
+  // partner, 02/10/2026. /lien-he#gio-lam-viec (HoursTable) đọc theo id.
+  {
+    id: 'onsite-work-hours',
+    label: { vi: 'Thi công tại nhà khách', en: 'On-site work' },
+    current: {
+      vi: '08:00–12:00 và 13:00–17:00, thứ Hai đến thứ Bảy; không thi công Chủ nhật, ngày lễ, Tết',
+      en: '08:00–12:00 and 13:00–17:00, Monday to Saturday; no on-site work on Sundays or public holidays',
+    },
+    currentSource: 'Chính sách cũ Phần 3, Điều khoản 1 (policy-vi.json)',
+    value: null,
+    status: 'draft',
+    approvedBy: null,
+  },
+  {
+    id: 'warranty-service-hours',
+    label: { vi: 'Xử lý bảo hành cùng hãng', en: 'Warranty service with brands' },
+    current: { vi: '08:00–17:00, thứ Hai đến thứ Sáu', en: '08:00–17:00, Monday to Friday' },
+    currentSource: 'Chính sách cũ Phần 4, Điều khoản 2 (policy-vi.json)',
+    value: null,
+    status: 'draft',
+    approvedBy: null,
+  },
 ];
