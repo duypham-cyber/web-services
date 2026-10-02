@@ -147,7 +147,7 @@ export async function DashboardMockup({ className, reserveEnd }: { className?: s
             {ROWS.map((row) => (
               <div key={row.key} className={cn(grid, XS, 'border-t border-slate-300 px-3 py-2.5 font-normal')}>
                 <span className="hidden font-semibold tabular text-navy-900 @sm:block">{t(`technology.mock.rows.${row.key}.id`)}</span>
-                <span className="truncate text-ink-900">{t(`technology.mock.rows.${row.key}.device`)}</span>
+                <span className="min-w-0 text-ink-900">{t(`technology.mock.rows.${row.key}.device`)}</span>
                 <span className="hidden truncate text-slate-600 @xl:block">{t(`technology.mock.rows.${row.key}.area`)}</span>
                 <span className="hidden tabular text-slate-600 @xl:block">{t(`technology.mock.rows.${row.key}.slot`)}</span>
                 <span className={cn('justify-self-end whitespace-nowrap rounded-pill px-2 py-0.5 font-semibold', STATUS_CLASS[row.status])}>

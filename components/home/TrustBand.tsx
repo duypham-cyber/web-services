@@ -16,7 +16,7 @@ const TRUST_KPIS: readonly StatId[] = ['K1', 'K2', 'K3', 'K4'];
  * (partnersWithConsent(), AC-DATA-4). Dải logo trên trang chủ còn cần claim 'home.partner-logos' được duyệt.
  */
 /** Số ô giữ chỗ logo ở bản xem trước. */
-const LOGO_SLOTS = 5;
+const LOGO_SLOTS = 6;
 
 function logosState(locale: Locale): 'show' | 'draft' | 'hidden' {
   const c = claim('home.partner-logos', locale);
@@ -49,8 +49,8 @@ export async function TrustBand({ locale }: { locale: Locale }) {
       <KpiGroup
         locale={locale}
         ids={TRUST_KPIS}
-        className="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4"
-        tileClassName="border-l border-(--surface-border) pl-5"
+        className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4 lg:gap-x-6"
+        tileClassName="border-l border-(--surface-border) pl-4 md:pl-5"
       />
 
       {logos !== 'hidden' ? (
@@ -59,7 +59,7 @@ export async function TrustBand({ locale }: { locale: Locale }) {
             <span>{t('trust.logosTitle')}</span>
             {logos === 'draft' ? <DraftBadge /> : null}
           </p>
-          <ul className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          <ul className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             {logos === 'show'
               ? partnersWithConsent().map((partner) => (
                   <li key={partner.name} className="flex h-16 items-center justify-center rounded-md bg-white px-4">
