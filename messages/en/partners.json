@@ -51,6 +51,11 @@
     },
     "pricingLink": "See the reference price list for materials",
     "fallback": "When the recruitment team calls you back, they will explain how pay is calculated, which fees apply and when payments are reconciled.",
+    "topics": {
+      "t1": "How pay is calculated for each job",
+      "t2": "Which fees and surcharges apply",
+      "t3": "When jobs are reconciled and how you get paid"
+    },
     "draftNote": "Reference earnings and the platform fee appear only once operations provides real figures (content/partners.ts). Lines marked Draft come from the old policy and are awaiting approval (content/claims/partner.ts)."
   },
   "onboarding": {

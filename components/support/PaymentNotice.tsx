@@ -37,7 +37,7 @@ export async function PaymentNotice({ locale }: { locale: Locale }) {
               ) : null}
             </p>
           ) : null}
-          <p className="mt-4 max-w-[62ch] text-body text-ink-900">
+          <p className={`mt-4 max-w-[62ch] text-ink-900 ${noTransfer ? 'text-body' : 'text-lead'}`}>
             {t('payment.tip', { phone: site.hotline.display[locale] })}
           </p>
           {materials ? (

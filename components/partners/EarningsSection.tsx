@@ -1,4 +1,4 @@
-import { Banknote, PackageOpen, Timer, WalletCards, type LucideIcon } from 'lucide-react';
+import { Banknote, Check, PackageOpen, Timer, WalletCards, type LucideIcon } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { StaggerGrid } from '@/components/motion/StaggerGrid';
 import { Card } from '@/components/ui/Card';
@@ -22,6 +22,7 @@ import { DraftNote } from './DraftNote';
 import { SectionHeader } from './SectionHeader';
 
 const NUMBER_LOCALE: Record<Locale, string> = { vi: 'vi-VN', en: 'en-US' };
+const TOPIC_KEYS = ['t1', 't2', 't3'] as const;
 
 type PayItem = { key: 'payout' | 'materials' | 'urgent' | 'wallet'; icon: LucideIcon; c: ClaimText | null };
 
@@ -51,9 +52,41 @@ export async function EarningsSection({ locale }: { locale: Locale }) {
   const k1 = statsWithValue(['K1']);
   const tileCount = Number(showReference) + Number(showFee) + k1.length;
 
+  const header = (
+    <SectionHeader id="thu-nhap-title" eyebrow={t('earnings.eyebrow')} title={t('earnings.title')} lead={t('earnings.lead')} />
+  );
+  const pricingLink = (
+    <TextLink href="/bang-gia" variant="arrow" className="py-1">
+      {t('earnings.pricingLink')}
+    </TextLink>
+  );
+
+  // Production chưa có số và chưa có câu nào được duyệt → bố cục 2 cột gọn: đầu section | việc bộ phận tuyển thợ giải thích
+  if (!showReference && !showFee && k1.length === 0 && visible.length === 0) {
+    return (
+      <Section id="thu-nhap" aria-labelledby="thu-nhap-title">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          {header}
+          <div className="max-w-[62ch]">
+            <p className="text-body text-(--surface-fg) md:text-lead md:font-normal">{t('earnings.fallback')}</p>
+            <ul className="mt-6 flex flex-col gap-3">
+              {TOPIC_KEYS.map((key) => (
+                <li key={key} className="flex gap-3 text-body text-(--surface-fg)">
+                  <Check aria-hidden="true" size={20} strokeWidth={2} className="mt-0.5 shrink-0 text-success-700" />
+                  {t(`earnings.topics.${key}`)}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6">{pricingLink}</div>
+          </div>
+        </div>
+      </Section>
+    );
+  }
+
   return (
     <Section id="thu-nhap" aria-labelledby="thu-nhap-title">
-      <SectionHeader id="thu-nhap-title" eyebrow={t('earnings.eyebrow')} title={t('earnings.title')} lead={t('earnings.lead')} />
+      {header}
 
       {showReference || showFee || k1.length > 0 ? (
         <div className={`mt-10 grid gap-6 md:grid-cols-2 ${tileCount > 2 ? 'lg:grid-cols-3' : ''}`}>
@@ -109,11 +142,7 @@ export async function EarningsSection({ locale }: { locale: Locale }) {
                     </>
                   ) : null}
                 </p>
-                {key === 'materials' ? (
-                  <TextLink href="/bang-gia" variant="arrow" className="mt-4 py-1">
-                    {t('earnings.pricingLink')}
-                  </TextLink>
-                ) : null}
+                {key === 'materials' ? <div className="mt-4">{pricingLink}</div> : null}
               </div>
             </Card>
           ))}
@@ -121,9 +150,7 @@ export async function EarningsSection({ locale }: { locale: Locale }) {
       ) : (
         <div className="mt-8 max-w-[62ch]">
           <p className="text-body text-(--surface-fg)">{t('earnings.fallback')}</p>
-          <TextLink href="/bang-gia" variant="arrow" className="mt-4 py-1">
-            {t('earnings.pricingLink')}
-          </TextLink>
+          <div className="mt-4">{pricingLink}</div>
         </div>
       )}
 

@@ -12,7 +12,6 @@ import {
   Wrench,
   type LucideIcon,
 } from 'lucide-react';
-import Image from 'next/image';
 import type { CSSProperties } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/cn';
@@ -21,7 +20,8 @@ import { isDraftPreview } from '@/lib/env';
 /**
  * KHUNG ẢNH DÙNG CHUNG của khu vực partner (/doi-tac-tho, /ho-tro-khach-hang, /ve-chung-toi, /lien-he).
  *
- * - Có ảnh thật → truyền `image` (đường dẫn trong /public, alt mô tả, kích thước gốc): render next/image AVIF/WebP.
+ * - Có ảnh thật → truyền `image` (đường dẫn trong /public đã xuất sẵn AVIF/WebP, alt mô tả, kích thước gốc): render
+ *   <picture> thuần, KHÔNG kéo next/image (component client ~6 KB gz) vào JS tải đầu của trang.
  * - Chưa có ảnh thật (hiện tại) → khung giữ chỗ đúng tỉ lệ, dựng bằng token + icon Lucide (không stock, không mascot,
  *   không logo hãng — docs/03 mục 11.4). Ghi chú "Ảnh thật sẽ chụp: …" CHỈ hiện ở bản xem trước (DRAFT_PREVIEW=1).
  *
@@ -33,12 +33,12 @@ export type MediaRatio = '4/3' | '3/2' | '16/10' | '1/1' | '4/5';
 type MediaFrameProps = {
   motif: MediaMotif;
   ratio?: MediaRatio;
-  image?: { src: string; alt: string; width: number; height: number };
+  /** src = ảnh dự phòng (JPG/WebP); avif = bản AVIF cùng kích thước (nếu có). Ảnh đã nén sẵn, không qua /_next/image. */
+  image?: { src: string; avif?: string; alt: string; width: number; height: number };
   /** Ghi chú bản xem trước, vd "Ảnh thật sẽ chụp: đội điều phối". */
   pendingNote?: string;
   /** Ưu tiên tải (ảnh hero LCP). Chỉ dùng khi có ảnh thật. */
   priority?: boolean;
-  sizes?: string;
   className?: string;
 };
 
@@ -63,21 +63,25 @@ const DOTS: CSSProperties = {
   backgroundSize: '22px 22px',
 };
 
-export function MediaFrame({ motif, ratio = '4/3', image, pendingNote, priority, sizes, className }: MediaFrameProps) {
+export function MediaFrame({ motif, ratio = '4/3', image, pendingNote, priority, className }: MediaFrameProps) {
   const frame = cn('relative overflow-hidden rounded-xl', RATIO_CLASS[ratio], className);
 
   if (image) {
     return (
       <div className={cn(frame, 'bg-blue-100')}>
-        <Image
-          src={image.src}
-          alt={image.alt}
-          width={image.width}
-          height={image.height}
-          priority={priority}
-          sizes={sizes ?? '(min-width: 1024px) 40vw, 100vw'}
-          className="size-full object-cover"
-        />
+        <picture>
+          {image.avif ? <source type="image/avif" srcSet={image.avif} /> : null}
+          <img
+            src={image.src}
+            alt={image.alt}
+            width={image.width}
+            height={image.height}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : undefined}
+            decoding="async"
+            className="size-full object-cover"
+          />
+        </picture>
       </div>
     );
   }

@@ -51,6 +51,11 @@
     },
     "pricingLink": "Xem khung giá vật tư tham khảo",
     "fallback": "Khi gọi lại, bộ phận tuyển thợ sẽ giải thích cách tính tiền công, các khoản phí và lịch đối soát cho bạn.",
+    "topics": {
+      "t1": "Cách tính tiền công cho từng đơn",
+      "t2": "Các khoản phí và phụ phí áp dụng",
+      "t3": "Lịch đối soát và cách nhận tiền"
+    },
     "draftNote": "Thu nhập tham khảo và phí nền tảng chỉ hiện khi vận hành cung cấp số thật (content/partners.ts). Các dòng có nhãn Nháp lấy từ chính sách cũ, chờ duyệt (content/claims/partner.ts)."
   },
   "onboarding": {

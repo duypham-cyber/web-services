@@ -32,7 +32,12 @@ export async function JobsSection({ locale }: { locale: Locale }) {
   return (
     <Section tone="blue-50" id="viec-dang-tuyen" aria-labelledby="viec-dang-tuyen-title">
       <div className="flex flex-wrap items-end justify-between gap-6">
-        <SectionHeader id="viec-dang-tuyen-title" eyebrow={t('jobs.eyebrow')} title={t('jobs.title')} lead={t('jobs.lead')} />
+        <SectionHeader
+          id="viec-dang-tuyen-title"
+          eyebrow={t('jobs.eyebrow')}
+          title={t('jobs.title')}
+          lead={jobs.length > 0 ? t('jobs.lead') : undefined}
+        />
         <TextLink href="/mang-luoi" variant="arrow" className="py-2">
           {t('jobs.networkLink')}
         </TextLink>
