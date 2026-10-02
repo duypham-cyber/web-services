@@ -26,12 +26,19 @@ Mọi quyết định và giả định: `docs/DECISIONS.md`. Đường dẫn ri
 - Dev server DÙNG CHUNG đã chạy sẵn: `http://127.0.0.1:3091` (systemd user `bluebolt-web-dev`, DRAFT_PREVIEW=1).
   KHÔNG chạy `npm run dev` thứ hai. Sửa next.config.ts → `systemctl --user restart bluebolt-web-dev`.
 - `npm run typecheck` (next typegen + tsc) · `npm run lint` · `npm run test` (Vitest, tests/unit)
+- Bản đồ: `npm run map:gen` (sinh lại `components/map/vn34-map.generated.ts` + `public/data/vn34-map*.svg` từ TopoJSON) ·
+  `npm run map:check` (lệch nguồn → exit 1) · `npm run test:map` (chủ quyền Hoàng Sa/Trường Sa, 9 bề rộng).
+- Chuyển URL: sửa `content/redirects.ts` → `npm run redirects:gen` (openresty + `redirect-inventory.csv`) ·
+  `BASE_URL=<server> npm run redirects:check`. Ảnh OG bài viết: `npm run seo:og`.
+- Cổng nháp cho bản production: `npm run check:draft -- .next-check-<pid>` (dò HTML bản build: nhãn Nháp, claim nháp, SLA
+  "đang ghi", số site cũ, ghi chú dựng trang, `data-draft-preview`).
 - `scripts/safe-build.sh` — build production có khóa flock, distDir `.next-check-<pid>`, in bảng JS tải đầu mỗi route.
   `SAFE_BUILD_CLEAN=1` để tự xóa; `DRAFT_PREVIEW=1` / `DEV_PAGES=1` / `STAGING=1` (thêm X-Robots-Tag noindex) phải đặt
   LÚC BUILD (trang tĩnh và header được đóng băng khi build). KHÔNG gọi `next build` trực tiếp.
 - Xem bản build: `NEXT_DIST_DIR=.next-check-<pid> PORT=3092 npm run start` (127.0.0.1:3092). Xong thì dừng theo PID.
 - Playwright (chạy trên dev server; `BASE_URL=http://127.0.0.1:3092` cho bản build; tối đa 2 worker):
-  `npm run test:overflow` (9 bề rộng × mọi route × VI/EN) · `npm run test:seo` · `npm run test:a11y` · `npm run test:e2e` (tất cả)
+  `npm run test:overflow` (9 bề rộng × mọi route × VI/EN) · `npm run test:seo` (seo-render + tests/seo/) · `npm run test:a11y`
+  · `npm run test:map` · `npm run test:e2e` (tất cả)
   Chỉ chạy route của mình: `ONLY_ROUTES=partners,support npm run test:seo`.
 - Ảnh tự soát: `npm run shot -- --routes partners --locales vi,en --widths 360,390,1440 --mode slices`
   → `.cache/shots/*.png`, rồi MỞ ẢNH RA XEM (Read) trước khi báo xong. Danh sách route: `/dev/routes`.
@@ -42,7 +49,7 @@ Mọi quyết định và giả định: `docs/DECISIONS.md`. Đường dẫn ri
 app/[locale]/…            trang (khóa route = thư mục tiếng Việt; slug EN ở i18n/routing.ts)
 app/[locale]/dev/ui       UI kit (noindex, chỉ dev hoặc DEV_PAGES=1) · dev/routes: danh mục route
 components/ui/            primitive (nền móng) · components/motion/ (nền móng) · components/layout/ (nền móng)
-components/film/          Agent phim (FilmHero là STUB, giữ props) · components/map/ Agent bản đồ (VietnamMap STUB)
+components/film/          Agent phim (FilmHero là STUB, giữ props) · components/map/ Agent bản đồ (VietnamMap SVG 34 tỉnh)
 content/                  nội dung là code + Zod (chủ sở hữu từng file: content/README.md)
 messages/{vi,en}/*.json   chữ giao diện theo namespace (bảng dưới)
 lib/                      routes (nguồn route duy nhất), seo, claims, env, format, tokens, cn
@@ -82,11 +89,15 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 - Chữ giao diện ở `messages/<locale>/<namespace>.json`, KHÓA GIỐNG HỆT ở vi và en (test kiểm). Namespace ↔ chủ sở hữu:
   `common` `errors` (nền móng) · `home` `solutions` `services` `pricing` (b2b) · `film` (phim) · `network` (bản đồ) ·
   `partners` `support` `about` `contact` `legal` (partner) · `knowledge` (seo). Thêm namespace: `i18n/messages.ts` + `i18n/types.ts`.
-- Khóa messages có kiểu chặt: `t('nav.sai')` → typecheck lỗi. Client component chỉ có namespace `common` và `errors`;
-  chữ khác truyền từ Server Component qua props.
+- Khóa messages có kiểu chặt: `t('nav.sai')` → typecheck lỗi. Client component chỉ có namespace `common` và `errors`, và
+  KHÔNG có nhánh chỉ-server `common.status|dev|kpi` (`i18n/messages.ts` → `pickClientMessages`); chữ khác (kể cả nhãn "Nháp")
+  truyền từ Server Component qua props.
 - Không chuỗi tiếng Việt trong messages EN (test dò dấu). Tên pháp nhân không dịch, lấy từ `content/site.ts`.
 - Hotline: VI `0902 808 049` · EN `+84 902 808 049` (`site.hotline`). Giọng văn: sentence case, không "?!", "!!", emoji.
-- Mọi số liệu đọc từ `content/stats.ts` (`getStat`, `statsWithValue`). `value: null` → `KpiTile` không render. KHÔNG bịa số.
+- Mọi số liệu đọc từ `content/stats.ts` QUA `lib/stats.ts`: `statViews(ids)` → `<StatTile view locale />`. `value: null` →
+  production không render ô. Bản xem trước hiện số site cũ (`legacyValue`, bộ NOI-DUNG.md mục 13) kèm "Nháp · số site cũ",
+  KPI không có số nào gom thành một dòng "Chờ số liệu" (D-24). KHÔNG bịa số; KHÔNG đọc trường `legacy*` ngoài `lib/stats.ts`
+  (`tests/unit/stats.test.ts` dò mã nguồn).
 - Câu khẳng định (34 tỉnh, chuẩn hãng, E-KYC, bảo hành, 24/7…) CHỈ qua `claim(id, locale)` (`lib/claims.ts`):
   ```tsx
   const c = claim('coverage.provinces-34', locale);          // null ở production nếu chưa approved
@@ -94,7 +105,9 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
   ```
   Claim mới: thêm vào `content/claims/<khu-vuc>.ts` (status "draft", evidence, note) và gom ở `content/claims/index.ts`.
 - `DRAFT_PREVIEW=1` (dev server dùng chung đang bật): hiện nội dung draft kèm nhãn "Nháp" (`<DraftBadge/>`,
-  `<Badge variant="draft">`). Production build không có cờ → draft ẩn hẳn. Cờ đọc ở server (`lib/env.ts`), lúc build.
+  `<Badge variant="draft">`). Production build không có cờ → draft ẩn hẳn. Cờ đọc ở server (`lib/env.ts`), lúc build; bản xem
+  trước có `<html data-draft-preview>` (test dựa vào đó). Chỗ còn thiếu (logo, bằng chứng, mốc, số chờ) ở bản xem trước là MỘT
+  dòng `<DraftLine label>…</DraftLine>` (tự null ở production) — không dựng khung nét đứt chiếm cả section.
 
 ## Design system (docs/03 mục 11–12) — chỉ dùng token
 - Màu: CHỈ tên trong `styles/tokens.css` (palette mặc định của Tailwind đã xóa). Cam `orange-500` chỉ làm NỀN (chữ navy-900
@@ -108,7 +121,8 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
   `Button variant="primary|blue|ghost|on-dark" size="sm|md|lg"` + `href` (nội bộ) | `externalHref` (tel/mailto/https/#id) | không
   (button) · `TextLink variant="inline|arrow"` · `IconButton label` · `Card tone padding interactive` · `Chip` · `Badge
   variant="info|warranty|success|danger|draft|illustration"` · `DraftBadge` · `Field` + `TextInput|TextArea|Select` (CHỈ trình bày)
-  · `KpiTile` · `Prose` · `TableScroll label` (bảng rộng cuộn ngang trong khung, focus được). Xem tất cả ở `/dev/ui`.
+  · `KpiTile` (trình bày) · `StatTile view` (KPI của content/stats.ts, qua lib/stats.ts) · `DraftLine label` (ghi chú một dòng,
+  chỉ bản xem trước) · `Prose` · `TableScroll label` (bảng rộng cuộn ngang trong khung, focus được). Xem tất cả ở `/dev/ui`.
 - `className` của primitive chỉ cho bố cục (margin, width, grid). Ẩn/hiện theo breakpoint dùng `max-md:hidden`,
   `max-xl:hidden` (KHÔNG `hidden md:flex` trên primitive đã có display — Tailwind không gộp class xung đột).
 - Phần tử trang trí `absolute` phải nằm trong wrapper `overflow-clip`. Mọi trang phải qua `npm run test:overflow`.
@@ -119,11 +133,13 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 - `components/film/FilmHero.tsx` — STUB. Agent phim thay ruột, GIỮ props `FilmHeroProps` { locale, eyebrow ({text, draft}|null),
   title (H1), lead, primaryCta, secondaryCta ({label, href}), skipLabel, skipTargetId='ba-cua-vao' }. Link "Bỏ qua phần giới
   thiệu ↓" đứng ĐẦU trong DOM (focus đầu tiên sau header), hiển thị dưới CTA. Đích handoff: `<section id="ba-cua-vao">` (H2).
-- `components/map/VietnamMap.tsx` — STUB khung cố định 3:4. Agent bản đồ GIỮ props { locale, variant='home'|'network', title,
-  className }. NFR-MAP-01: Hoàng Sa, Trường Sa luôn trong khung, nhãn ≥ 11px (`content/provinces.ts` → archipelagos).
+- `components/map/VietnamMap.tsx` — SVG 34 tỉnh chiếu sẵn lúc build (agent bản đồ, `npm run map:gen`), khung 3:4, props
+  { locale, variant='home'|'network', title, className }. NFR-MAP-01: Hoàng Sa, Trường Sa luôn trong khung, nhãn ≥ 11px
+  (`content/provinces.ts` → archipelagos); `npm run test:map` kiểm ở 9 bề rộng.
 
 ## Ngân sách (CI fail khi QA cài check-budgets — nguồn: docs/04 mục 7.1)
-- JS tải đầu mỗi route ≤ 170 KB gz. Hiện tại (02/10/2026): 156,8–157,6 KB gz (`scripts/safe-build.sh` in bảng). GSAP/three
+- JS tải đầu mỗi route ≤ 170 KB gz. Hiện tại (02/10/2026, sau tích hợp): 156,9–164,9 KB gz — trang chủ 164,9 (bản đồ tương
+  tác), /mang-luoi 161,4, /kien-thuc/* 162,4 (next/image), còn lại 156,9–158,7 (`scripts/safe-build.sh` in bảng). GSAP/three
   KHÔNG được vào first-load: chỉ import động trong chunk phim.
 - Chunk 3D ≤ 290 KB gz (chỉ T-FULL/T-LITE; import sau ý định đầu tiên hoặc load + 2 s rảnh, KHÔNG ở lần render đầu).
 - Trang chủ mobile trước khi cuộn ≤ 600 KB byte truyền. Phim desktop T-FULL ≤ 2,2 MB · T-LITE ≤ 1,4 MB · shot 0–1 ≤ 1,2 MB.
@@ -156,7 +172,9 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 
 ## Phần động — contract-first (KHÔNG exception)
 - Form lead (B2B, thợ, bảo hành), API, DB, CMS, `/tra-cuu`: KHÔNG code khi `contracts/<feature>.md` chưa có `STATUS: APPROVED`.
-  Hiện tại CTA "Nhận báo giá" → `/lien-he#kinh-doanh`, "Đăng ký thợ" → `/doi-tac-tho#dang-ky` (`QUOTE_HREF`, `TECHNICIAN_SIGNUP_HREF`).
+  Hiện tại CTA "Nhận báo giá" → `/lien-he#kinh-doanh`, "Đăng ký thợ" → `/doi-tac-tho#dang-ky` (`QUOTE_HREF`, `TECHNICIAN_SIGNUP_HREF`);
+  "Đặt lịch demo 30 phút" / "Thảo luận tích hợp" dùng `DEMO_HREF` / `INTEGRATION_HREF` (tạm = `QUOTE_HREF`). Neo id tiếng Việt
+  cho cả hai ngôn ngữ (D-23).
 - API theo rules công ty: `/api/v1/...`, `{ success, data | error{code,message,details} }`, Zod, honeypot + Turnstile + rate-limit,
   correlationId, KHÔNG log SĐT/tên/email, consent theo Luật BVDLCN 91/2025 (câu chữ do pháp chế viết).
 
@@ -168,6 +186,7 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 
 ## Definition of Done (mỗi phần việc)
 - [ ] `npm run typecheck`, `npm run lint`, `npm run test` xanh; `scripts/safe-build.sh` xanh (ghi JS tải đầu của route đã chạm)
+  và `npm run check:draft -- <dist bản build không DRAFT_PREVIEW>` xanh
 - [ ] `ONLY_ROUTES=<route của mình> npm run test:overflow` + `test:seo` + `test:a11y` xanh trên dev server
 - [ ] Ảnh `npm run shot` ở 390 và 1440 (VI + EN) đã MỞ RA XEM và sửa đến khi đúng token
 - [ ] Không số liệu/chuỗi hardcode ngoài `content/` và `messages/`; claim đi qua `claim()`
