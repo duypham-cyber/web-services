@@ -25,7 +25,7 @@
     "redirects:gen": "node scripts/gen-openresty-map.mjs",
     "redirects:check": "node scripts/check-redirects.mjs",
     "check:draft": "node scripts/check-no-draft.mjs",
-    "budget": "node -e \"console.log('[budget] CHUA KIEM GI: agent QA se viet scripts/check-budgets.mjs + budgets.json theo docs/04 muc 3.3 va 7.1.')\""
+    "budget": "node scripts/check-budgets.mjs"
   },
   "dependencies": {
     "@react-three/drei": "10.7.9",

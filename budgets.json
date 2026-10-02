@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "updated": "2026-10-02",
+  "owner": "qa — đổi ngưỡng = sửa file này trong PR riêng, ghi lý do vào docs/DECISIONS.md",
+  "sources": [
+    "CLAUDE.md mục Ngân sách",
+    "docs/04-KE-HOACH-PHAT-TRIEN-CLAUDE-CODE.md mục 3.4, 3.5, 7.1 (NFR-PERF-06…10)",
+    "contracts/site-shell-p0.md AC-PERF-1, AC-PERF-3, AC-PERF-4",
+    "contracts/film-home.md mục 1.7 (ngân sách) và mục 3 (public/film/manifest.json)"
+  ],
+  "units": "KB = 1024 byte · gz = gzip -9 trên file của bản build (chưa qua brotli của openresty) · level fail = exit 1, warn = chỉ in",
+  "pages": {
+    "exclude": ["^/(vi|en)/dev(/|$)", "^/_global-error$", "^/_not-found$"],
+    "note": "Bỏ trang dev (404 ở production) và hai shell lỗi của Next (không có layout/font; nội dung 404 do client render — DECISIONS D-10)"
+  },
+  "firstLoadJs": {
+    "id": "NFR-PERF-06/AC-PERF-1",
+    "maxGzKb": 170,
+    "level": "fail"
+  },
+  "css": {
+    "id": "QA-CSS",
+    "maxGzKb": 20,
+    "level": "fail",
+    "note": "QA đặt 02/10/2026 (docs chưa có số): CSS chặn render; đo được 13,7–15,3 KB gz, chừa ~30% cho CSS phim"
+  },
+  "html": {
+    "id": "QA-HTML",
+    "maxGzKb": 60,
+    "level": "warn",
+    "note": "QA đặt 02/10/2026: HTML gồm payload RSC (mọi phần tử server render có mặt hai lần); chỉ cảnh báo"
+  },
+  "fonts": {
+    "id": "AC-PERF-3",
+    "level": "fail",
+    "preloadCount": 1,
+    "preloadFace": {
+      "family": "Be Vietnam Pro",
+      "weight": 700,
+      "subset": "vietnamese",
+      "unicodeRangeMarker": "U+1EA0-1EF9"
+    },
+    "allowedFamilies": ["Be Vietnam Pro"],
+    "allowedWeights": [400, 500, 600, 700]
+  },
+  "images": {
+    "id": "QA-IMG",
+    "preloadId": "AC-PERF-3",
+    "dimensionsId": "AC-PERF-3/NFR-PERF-03",
+    "formatId": "AC-PERF-3",
+    "level": "fail",
+    "maxPreload": 1,
+    "requireDimensions": true,
+    "maxKb": { "mobile": 90, "desktop": 150 },
+    "note": "Ảnh lớn nhất mỗi trang không nặng hơn poster (≤ 90 KB mobile / ≤ 150 KB desktop, CLAUDE.md). Khung mobile = Lighthouse mobile (412 px, DPR 1,75)",
+    "nextImageFormat": "avif",
+    "viewports": [
+      { "name": "mobile", "width": 412, "height": 823, "dpr": 1.75, "mobile": true },
+      { "name": "desktop", "width": 1440, "height": 900, "dpr": 1, "mobile": false }
+    ]
+  },
+  "thirdParty": {
+    "id": "AC-PERF-4/CLAUDE.md",
+    "level": "fail",
+    "firstPartyHosts": ["lapdattoanquoc.vn", "www.lapdattoanquoc.vn"],
+    "allowHosts": [],
+    "linkRels": ["stylesheet", "preload", "modulepreload", "prefetch", "preconnect", "dns-prefetch"],
+    "jsCdnPatterns": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "cdnjs.cloudflare.com",
+      "www.gstatic.com/draco",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "maps.googleapis.com",
+      "prod.spline.design"
+    ]
+  },
+  "signatures": {
+    "three": ["isWebGLRenderer", "isBufferGeometry", "isObject3D", "isVector3"],
+    "r3f": ["R3F: Hooks can only be used within the Canvas component"],
+    "gsap": ["GreenSockGlobals"],
+    "scrollTrigger": ["\"ScrollTrigger\""]
+  },
+  "firstLoadForbidden": {
+    "id": "NFR-PERF-06/07",
+    "level": "fail",
+    "libraries": ["three", "r3f", "gsap", "scrollTrigger"]
+  },
+  "chunk3d": {
+    "id": "NFR-PERF-07",
+    "level": "fail",
+    "maxGzKb": 290,
+    "libraries": ["three", "r3f"]
+  },
+  "film": {
+    "id": "film-home §3",
+    "dir": "public/film",
+    "glb": { "id": "NFR-PERF-10", "maxKb": 900, "maxTriangles": 150000, "maxDrawCalls": 60 },
+    "ktx2": { "id": "NFR-PERF-10", "maxSize": 2048, "largeAt": 2048, "maxLarge": 3 },
+    "screenTextures": {
+      "id": "film-home §1.7",
+      "totalKb": 400,
+      "formats": ["avif", "jpg", "jpeg"],
+      "screenMax": { "width": 1600, "height": 900 },
+      "screenHoldMax": { "width": 1600, "height": 3600 }
+    },
+    "hdri": { "id": "film-home §1.7", "maxKb": 250 },
+    "posters": { "id": "film-home §1.7", "maxKb": { "landscape": 150, "portrait": 90 }, "jpgFactor": 2 },
+    "mobileVideo": {
+      "id": "NFR-PERF-09",
+      "maxKbPerSecond": 110,
+      "firstShotKb": 400,
+      "maxGop": 8,
+      "allowedSizes": [[540, 960], [720, 1280]]
+    },
+    "desktopTotal": { "id": "NFR-PERF-09", "tFullKb": 2252.8, "tLiteKb": 1433.6 }
+  },
+  "live": {
+    "id": "NFR-PERF-08",
+    "level": "fail",
+    "homeMobileMaxKb": 600,
+    "waitAfterLoadMs": 5000,
+    "paths": ["/", "/en"],
+    "blockedHosts": ["lapdattoanquoc.vn"],
+    "chromiumPath": "/home/bbsw/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome",
+    "ldLibraryPath": "/home/bbsw/.local/chromium-libs/root/usr/lib/x86_64-linux-gnu",
+    "profiles": [
+      {
+        "name": "moto-g-power",
+        "viewport": { "width": 412, "height": 823 },
+        "deviceScaleFactor": 1.75,
+        "isMobile": true,
+        "hasTouch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36"
+      },
+      {
+        "name": "iphone-13",
+        "viewport": { "width": 390, "height": 844 },
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "hasTouch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Mobile/15E148 Safari/604.1"
+      }
+    ]
+  }
+}
