@@ -1,9 +1,11 @@
 import type { Article } from './schemas';
 
 /**
- * Bài viết /kien-thuc/[slug] (docs/03 mục 10.3): 6 bài sau khi gộp 2 bài robot và gỡ bài AI (giả định 410).
- * Slug VI giữ nguyên slug cũ; slug EN mới. Tiêu đề chuyển sang sentence case (docs/03 mục 11.5).
- * Chủ sở hữu: agent nội dung & SEO — chuyển nội dung bài (MDX hoặc content/articles/<slug>.ts) rồi đổi status.
+ * Bài viết /kien-thuc/[slug] (docs/03 mục 10.3): 8 bài cũ → 6 bài (gộp 2 bài robot, bài AI trả 410 — giả định Q10).
+ * Slug VI giữ nguyên slug cũ; slug EN mới. Tiêu đề (H1) chuyển sang sentence case (docs/03 mục 11.5).
+ * File này là REGISTRY (lib/routes.ts đọc để sinh route) — giữ đúng shape `Article` của content/schemas.ts.
+ * Thân bài, ngày đăng/sửa, mô tả, ảnh: content/articles/<key>.ts, gom ở content/articles/all.ts.
+ * Chủ sở hữu: agent nội dung & SEO.
  */
 export const articles = [
   {
@@ -15,7 +17,7 @@ export const articles = [
     },
     category: 'installation-guide',
     legacyPaths: ['/news/lap-dat-may-lanh-dung-cach-7-buoc', '/en/news/lap-dat-may-lanh-dung-cach-7-buoc'],
-    status: 'to-migrate',
+    status: 'migrated',
   },
   {
     key: '10-nguyen-nhan-may-lanh-khong-lanh',
@@ -26,7 +28,7 @@ export const articles = [
     },
     category: 'installation-guide',
     legacyPaths: ['/news/10-nguyen-nhan-may-lanh-khong-lanh', '/en/news/10-nguyen-nhan-may-lanh-khong-lanh'],
-    status: 'to-migrate',
+    status: 'migrated',
   },
   {
     key: 'rui-ro-lap-dat-may-giat-khong-dung-cach',
@@ -37,7 +39,7 @@ export const articles = [
     },
     category: 'installation-guide',
     legacyPaths: ['/news/rui-ro-lap-dat-may-giat-khong-dung-cach', '/en/news/rui-ro-lap-dat-may-giat-khong-dung-cach'],
-    status: 'to-migrate',
+    status: 'migrated',
   },
   {
     key: 'chuyen-doi-so-trong-lap-dat-toan-quoc',
@@ -48,7 +50,7 @@ export const articles = [
     },
     category: 'b2b',
     legacyPaths: ['/news/chuyen-doi-so-trong-lap-dat-toan-quoc', '/en/news/chuyen-doi-so-trong-lap-dat-toan-quoc'],
-    status: 'to-migrate',
+    status: 'migrated',
   },
   {
     key: 'tuong-lai-nganh-dien-lanh-2026',
@@ -59,7 +61,7 @@ export const articles = [
     },
     category: 'technical-knowledge',
     legacyPaths: ['/news/tuong-lai-nganh-dien-lanh-2026', '/en/news/tuong-lai-nganh-dien-lanh-2026'],
-    status: 'to-migrate',
+    status: 'migrated',
   },
   {
     key: 'robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai',
@@ -75,7 +77,7 @@ export const articles = [
       '/en/news/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai',
       '/en/news/robot-va-tu-dong-hoa-gia-dinh',
     ],
-    status: 'to-migrate',
+    status: 'migrated',
   },
 ] as const satisfies readonly Article[];
 

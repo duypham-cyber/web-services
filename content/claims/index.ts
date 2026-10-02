@@ -1,5 +1,6 @@
 import type { Claim } from '../schemas';
 import { coreClaims } from './core';
+import { knowledgeClaims } from './knowledge';
 import { homeClaims } from './home';
 import { partnerClaims } from './partner';
 
@@ -11,7 +12,7 @@ import { partnerClaims } from './partner';
  *
  * Đọc câu khẳng định CHỈ qua `claim(id, locale)` ở lib/claims.ts (không import trực tiếp text để render).
  */
-export const ALL_CLAIMS = [...coreClaims, ...homeClaims, ...partnerClaims] as const;
+export const ALL_CLAIMS = [...coreClaims, ...homeClaims, ...partnerClaims, ...knowledgeClaims] as const;
 
 export type ClaimId = (typeof ALL_CLAIMS)[number]['id'];
 
