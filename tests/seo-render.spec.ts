@@ -17,6 +17,8 @@ const norm = (u: string | null) => (u ?? '').replace(/\/$/, '');
 for (const { locale, path, route } of routeCases()) {
   test(`${route.key} [${locale}] ${path}`, async ({ page, browser }, testInfo) => {
     const res = await page.goto(path, { waitUntil: 'domcontentloaded' });
+    // Trang nội bộ /dev/* trả 404 ở bản production (DEV_PAGES tắt) — đúng thiết kế, không kiểm (giống tests/seo/seo-pages)
+    test.skip(!route.indexable && res?.status() === 404, `${path}: trang nội bộ tắt ở production`);
     expect(res?.status(), `HTTP ${path}`).toBe(200);
 
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
