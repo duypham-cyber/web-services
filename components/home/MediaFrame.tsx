@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import type { CSSProperties, ElementType } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/cn';
 import { isDraftPreview } from '@/lib/env';
@@ -15,17 +14,15 @@ const RATIO = {
 
 export type MediaRatio = keyof typeof RATIO;
 
-/** Ảnh thật: đường dẫn trong public/ (vd "/images/news/...") + kích thước gốc. alt="" khi ảnh chỉ minh họa cho chữ bên cạnh. */
-export type MediaImage = { src: string; width: number; height: number; alt: string };
+/** Ảnh thật: đường dẫn trong public/ (vd "/images/home/tho-lap-dieu-hoa.avif"); ảnh phủ kín khung (object-cover). */
+export type MediaImage = { src: string; alt: string };
 
 type MediaFrameProps = {
   ratio?: MediaRatio;
-  /** Ảnh thật — có thì luôn ưu tiên. */
+  /** Ảnh thật — có thì luôn ưu tiên. alt="" khi ảnh chỉ minh họa cho chữ ngay bên cạnh. */
   image?: MediaImage | null;
-  /** Minh họa SVG giữ chỗ (docs/03 mục 11.4: thiết bị cách điệu, không logo). */
-  illustration?: IllustrationName;
-  /** Hoặc icon Lucide giữ chỗ trên nền token. */
-  icon?: ElementType<{ size?: number; strokeWidth?: number; 'aria-hidden'?: boolean | 'true' }>;
+  /** Minh họa SVG giữ chỗ khi chưa có ảnh thật (docs/03 mục 11.4: thiết bị cách điệu, không logo, không chữ). */
+  illustration: IllustrationName;
   /** Nhãn "Ảnh thật sẽ chụp" — CHỈ hiện ở bản xem trước (DRAFT_PREVIEW=1), khi đang dùng ảnh giữ chỗ. */
   pendingLabel?: string;
   /** Thuộc tính sizes của ảnh thật (responsive). */
@@ -35,21 +32,15 @@ type MediaFrameProps = {
   className?: string;
 };
 
-const DOTS: CSSProperties = {
-  backgroundImage: 'radial-gradient(var(--color-blue-100) 1.3px, transparent 1.3px)',
-  backgroundSize: '16px 16px',
-};
-
 /**
  * KHUNG ẢNH CHUNG của trang chủ — một chỗ để thay ảnh thật sau này (truyền `image`), không phải sửa section.
- * Chưa có ảnh thật: giữ ĐÚNG tỉ lệ khung, hiện minh họa SVG hoặc icon trên nền token; bản xem trước gắn nhãn
+ * Chưa có ảnh thật: giữ ĐÚNG tỉ lệ khung, hiện minh họa SVG trên nền token; bản xem trước gắn nhãn
  * "Ảnh thật sẽ chụp". Không dùng stock lạc đề, không KHANG (docs/03 mục 11.4, docs/DECISIONS.md D-03).
  */
 export function MediaFrame({
   ratio = '16/10',
   image,
   illustration,
-  icon: Icon,
   pendingLabel,
   sizes = '(min-width: 1024px) 33vw, 100vw',
   rounded = true,
@@ -59,16 +50,10 @@ export function MediaFrame({
   return (
     <div className={cn('relative w-full overflow-hidden bg-blue-50', RATIO[ratio], rounded && 'rounded-lg', className)}>
       {image ? (
-        <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes={sizes} className="size-full object-cover" />
-      ) : illustration ? (
+        <Image src={image.src} alt={image.alt} fill sizes={sizes} className="object-cover" />
+      ) : (
         <HomeIllustration name={illustration} />
-      ) : Icon ? (
-        <div className="flex size-full items-center justify-center" style={DOTS}>
-          <span className="inline-flex size-16 items-center justify-center rounded-lg bg-white text-blue-600 shadow-1">
-            <Icon aria-hidden="true" size={30} strokeWidth={1.5} />
-          </span>
-        </div>
-      ) : null}
+      )}
       {showPending ? (
         <Badge variant="draft" className="absolute left-3 top-3">
           {pendingLabel}

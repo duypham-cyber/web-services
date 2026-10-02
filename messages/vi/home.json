@@ -273,14 +273,7 @@
     "eyebrow": "Kiến thức",
     "title": "Hướng dẫn và kinh nghiệm lắp đặt",
     "lead": "Bài viết cho người phụ trách hậu mãi, đội kỹ thuật và khách hàng.",
-    "cta": "Xem tất cả bài viết",
-    "read": "Đọc bài",
-    "readingTime": "{minutes} phút đọc",
-    "categories": {
-      "installation-guide": "Hướng dẫn lắp đặt",
-      "technical-knowledge": "Kiến thức kỹ thuật",
-      "b2b": "Cho doanh nghiệp"
-    }
+    "cta": "Xem tất cả bài viết"
   },
   "cta": {
     "eyebrow": "Hợp tác",

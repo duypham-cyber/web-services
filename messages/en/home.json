@@ -273,14 +273,7 @@
     "eyebrow": "Knowledge",
     "title": "Installation guides and insights",
     "lead": "Articles for after-sales managers, technical teams and customers.",
-    "cta": "See all articles",
-    "read": "Read article",
-    "readingTime": "{minutes} min read",
-    "categories": {
-      "installation-guide": "Installation guides",
-      "technical-knowledge": "Technical know-how",
-      "b2b": "For businesses"
-    }
+    "cta": "See all articles"
   },
   "cta": {
     "eyebrow": "Work with us",

@@ -14,10 +14,12 @@ import { StandardsSection } from '@/components/home/StandardsSection';
 import { TechnologySection } from '@/components/home/TechnologySection';
 import { TrustBand, trustBandVisible } from '@/components/home/TrustBand';
 import { QUOTE_HREF, TECHNICIAN_SIGNUP_HREF } from '@/components/layout/Header';
+import { JsonLd } from '@/components/seo/JsonLd';
 import type { SectionTone } from '@/components/ui/Section';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
 import { claim } from '@/lib/claims';
+import { organizationJsonLd, webSiteJsonLd } from '@/lib/jsonld';
 import { buildMetadata } from '@/lib/seo';
 
 export const generateStaticParams = localeStaticParams;
@@ -88,6 +90,8 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
 
   return (
     <>
+      {/* JSON-LD trang chủ (AC-LD-1): Organization + WebSite — helper của agent SEO (lib/jsonld.ts) */}
+      <JsonLd data={[organizationJsonLd(locale), webSiteJsonLd(locale)]} />
       <FilmHero
         locale={locale}
         eyebrow={eyebrow}
