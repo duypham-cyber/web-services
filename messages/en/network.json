@@ -1,10 +1,69 @@
 {
   "meta": {
-    "title": "Installation technician network",
-    "description": "Map of Bluebolt's installation technician network by province, with service levels by region."
+    "title": "Installation technician network by province",
+    "description": "Bluebolt's three dispatch regions on a map, a searchable list of all 34 provinces and service times by region."
   },
   "eyebrow": "Network",
-  "title": "The Bluebolt installation network",
-  "lead": "Map, list of provinces with technicians and service levels by region.",
-  "mapTitle": "Map of Vietnam, including the Hoang Sa (Paracel) and Truong Sa (Spratly) archipelagos"
+  "title": "The Bluebolt installation network, province by province",
+  "lead": "See our three dispatch regions, all 34 provinces and the number of active technicians in each. Figures appear only after they have been checked against operating data.",
+  "mapTitle": "Map of Vietnam, including the Hoang Sa (Paracel) and Truong Sa (Spratly) archipelagos",
+  "map": {
+    "hint": "Hover over or tap a province to see its region and technician count.",
+    "technicians": "Active technicians",
+    "noCount": "Not yet available",
+    "techniciansValue": "{count} technicians",
+    "updated": "Updated {date}",
+    "centralCity": "Centrally governed city",
+    "province": "Province",
+    "partOfCity": "Part of {name} City",
+    "partOfProvince": "Part of {name} Province",
+    "pinsLegend": "Technician pins",
+    "draftPinsNote": "Draft dots at the centre of each province show where pins will sit once real technician counts are available. The published site does not show these dots."
+  },
+  "stats": {
+    "hiddenNote": "Active technicians and provinces covered will appear here once operations supplies verified figures."
+  },
+  "regions": {
+    "provinceCount": "{count} provinces"
+  },
+  "table": {
+    "eyebrow": "Look up",
+    "title": "Find a province",
+    "intro": "Type the name of a province or city, with or without Vietnamese accents, then filter by region if you need to.",
+    "searchLabel": "Province or city name",
+    "searchHint": "For example: da nang, Can Tho, hai phong",
+    "regionFilter": "Filter by region",
+    "allRegions": "All",
+    "colProvince": "Province",
+    "colTechnicians": "Active technicians",
+    "typeCity": "City",
+    "typeProvince": "Province",
+    "resultCount": "Showing {count} of {total} provinces",
+    "empty": "No province matches. Try another name or choose All.",
+    "clear": "Clear search",
+    "former": "Includes former {names}"
+  },
+  "sla": {
+    "eyebrow": "Service levels",
+    "title": "Service times by region",
+    "intro": "Intake, scheduling and completion times for each region will appear here once Bluebolt publishes its official commitments.",
+    "pending": "Send us the provinces you need and our sales team will reply with specific times for each one.",
+    "colItem": "Item",
+    "colValue": "Commitment",
+    "reviewTitle": "Content review notes",
+    "reviewIntro": "Shown in the preview build only. This is what the old site and current policy say, not a commitment. Final values are set in content/sla.ts once approved.",
+    "reviewCurrent": "Currently stated"
+  },
+  "cta": {
+    "title": "Roll out installations in your provinces",
+    "body": "Tell us your product category, expected volume and the provinces you need covered. Our sales team will get in touch to agree the scope and rollout schedule.",
+    "primary": "Get started in your province",
+    "call": "Call {phone}"
+  },
+  "review": {
+    "title": "To be confirmed before publishing",
+    "regions": "The three regions follow the old technician recruitment page (north from Ha Tinh, central from Quang Tri to Quang Ngai, south from Gia Lai). Operations still needs to confirm these are also the service-time regions.",
+    "counts": "Technician counts per province stay empty until operations sends verified figures with an update date.",
+    "labels": "The English labels for the two archipelagos await legal review; legal signs off the 360 px map screenshot before launch."
+  }
 }

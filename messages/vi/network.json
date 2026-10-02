@@ -1,10 +1,69 @@
 {
   "meta": {
-    "title": "Mạng lưới thợ lắp đặt",
-    "description": "Bản đồ mạng lưới thợ lắp đặt của Bluebolt theo tỉnh/thành và SLA theo vùng."
+    "title": "Mạng lưới thợ lắp đặt theo tỉnh, thành",
+    "description": "Bản đồ ba vùng điều phối của Bluebolt, danh sách 34 tỉnh, thành có ô tìm kiếm và thời gian phục vụ theo vùng."
   },
   "eyebrow": "Mạng lưới",
-  "title": "Mạng lưới lắp đặt của Bluebolt",
-  "lead": "Bản đồ, bảng tỉnh/thành có thợ và SLA theo vùng.",
-  "mapTitle": "Bản đồ Việt Nam, gồm quần đảo Hoàng Sa và quần đảo Trường Sa"
+  "title": "Mạng lưới lắp đặt Bluebolt theo từng tỉnh, thành",
+  "lead": "Xem ba vùng điều phối, danh sách 34 tỉnh, thành và số thợ đang hoạt động ở từng nơi. Số liệu chỉ hiện khi đã được đối soát với dữ liệu vận hành.",
+  "mapTitle": "Bản đồ Việt Nam, gồm quần đảo Hoàng Sa và quần đảo Trường Sa",
+  "map": {
+    "hint": "Di chuột hoặc chạm vào một tỉnh để xem vùng và số thợ.",
+    "technicians": "Thợ đang hoạt động",
+    "noCount": "Chưa có số",
+    "techniciansValue": "{count} thợ",
+    "updated": "Cập nhật {date}",
+    "centralCity": "Thành phố trực thuộc trung ương",
+    "province": "Tỉnh",
+    "partOfCity": "Thuộc thành phố {name}",
+    "partOfProvince": "Thuộc tỉnh {name}",
+    "pinsLegend": "Ghim thợ",
+    "draftPinsNote": "Chấm nháp ở tâm mỗi tỉnh cho thấy ghim sẽ đặt ở đâu khi có số thợ thật. Bản chính thức không hiện chấm này."
+  },
+  "stats": {
+    "hiddenNote": "Số thợ đang hoạt động và số tỉnh có thợ sẽ hiện ở đây khi vận hành cung cấp số đã đối soát."
+  },
+  "regions": {
+    "provinceCount": "{count} tỉnh, thành"
+  },
+  "table": {
+    "eyebrow": "Tra cứu",
+    "title": "Tìm theo tỉnh, thành",
+    "intro": "Gõ tên tỉnh hoặc thành phố, có dấu hay không dấu đều được, rồi lọc theo vùng nếu cần.",
+    "searchLabel": "Tên tỉnh, thành",
+    "searchHint": "Ví dụ: da nang, Cần Thơ, hai phong",
+    "regionFilter": "Lọc theo vùng",
+    "allRegions": "Tất cả",
+    "colProvince": "Tỉnh, thành",
+    "colTechnicians": "Thợ đang hoạt động",
+    "typeCity": "Thành phố",
+    "typeProvince": "Tỉnh",
+    "resultCount": "Đang hiện {count}/{total} tỉnh, thành",
+    "empty": "Không có tỉnh, thành nào khớp. Thử tên khác hoặc chọn Tất cả.",
+    "clear": "Xóa tìm kiếm",
+    "former": "Gồm cả {names} cũ"
+  },
+  "sla": {
+    "eyebrow": "Cam kết dịch vụ",
+    "title": "Thời gian phục vụ theo vùng",
+    "intro": "Thời gian tiếp nhận, xác nhận lịch và hoàn thành đơn của từng vùng sẽ hiện ở đây khi Bluebolt công bố cam kết chính thức.",
+    "pending": "Gửi danh sách tỉnh bạn cần, bộ phận kinh doanh sẽ gửi lại thời gian cụ thể cho từng nơi.",
+    "colItem": "Hạng mục",
+    "colValue": "Cam kết",
+    "reviewTitle": "Ghi chú duyệt nội dung",
+    "reviewIntro": "Chỉ hiện ở bản xem trước. Đây là điều site cũ và chính sách hiện hành đang ghi, chưa phải cam kết. Anh Duy và pháp chế chốt giá trị chuẩn trong content/sla.ts.",
+    "reviewCurrent": "Đang ghi"
+  },
+  "cta": {
+    "title": "Triển khai lắp đặt tại tỉnh của bạn",
+    "body": "Cho chúng tôi biết ngành hàng, sản lượng dự kiến và các tỉnh cần phục vụ. Bộ phận kinh doanh sẽ liên hệ để thống nhất phạm vi và lịch triển khai.",
+    "primary": "Triển khai tại tỉnh của bạn",
+    "call": "Gọi {phone}"
+  },
+  "review": {
+    "title": "Chờ xác nhận trước khi công bố",
+    "regions": "Cách chia ba vùng lấy theo trang tuyển thợ của site cũ (Bắc từ Hà Tĩnh trở ra, Trung từ Quảng Trị tới Quảng Ngãi, Nam từ Gia Lai trở vào). Cần vận hành xác nhận đây cũng là vùng tính thời gian phục vụ.",
+    "counts": "Số thợ theo tỉnh để trống cho tới khi vận hành gửi số đã đối soát kèm ngày cập nhật.",
+    "labels": "Nhãn tiếng Anh của hai quần đảo chờ pháp chế duyệt chữ; pháp chế ký ảnh chụp bản đồ ở bề rộng 360 px trước khi ra mắt."
+  }
 }
