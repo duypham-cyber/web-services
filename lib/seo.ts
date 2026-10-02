@@ -21,10 +21,12 @@ import { absoluteUrl, getRoute, type RouteKey } from './routes';
  *
  * - title/description: content/seo.ts (route tĩnh, dịch vụ) hoặc content/articles/<key>.ts (bài viết) là NGUỒN DUY NHẤT.
  *   `title`/`description` truyền vào chỉ được dùng khi route chưa có mục SEO (route mới) — giữ chữ ký cũ để tương thích.
- * - canonical tuyệt đối https://lapdattoanquoc.vn/..., không "/" cuối (trang chủ VI = "https://lapdattoanquoc.vn/").
+ * - canonical tuyệt đối https://lapdattoanquoc.vn/..., không "/" cuối. Trang chủ VI: Next in "https://lapdattoanquoc.vn"
+ *   (bỏ "/"), sitemap dùng "https://lapdattoanquoc.vn/" (lib/routes.ts) — hai dạng là MỘT URL (RFC 3986, đường dẫn rỗng = "/").
  * - hreflang vi, en, x-default → VI, CHỈ khi cả hai bản đều là bản dịch thật (SeoEntry.translated).
  * - Open Graph + Twitter: ảnh riêng của bài > poster phim (public/film/og*|poster*.jpg|png) > ảnh OG mặc định.
- * - robots noindex: route không index (lib/routes.ts) hoặc SeoEntry.index === false.
+ * - robots: /dev/* → noindex, nofollow; SeoEntry.index === false hoặc trang pháp lý chưa duyệt ở production
+ *   (AC-LEGAL-1) → noindex, follow và bỏ khỏi sitemap (isIndexable).
  */
 
 type BuildMetadataInput = {
