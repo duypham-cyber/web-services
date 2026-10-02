@@ -1,20 +1,48 @@
 {
   "hub": {
-    "meta": {
-      "title": "Kiến thức lắp đặt và vận hành điện máy",
-      "description": "Hướng dẫn lắp đặt, kiến thức kỹ thuật điện lạnh và câu chuyện vận hành lắp đặt toàn quốc từ Bluebolt."
-    },
     "eyebrow": "Kiến thức",
     "title": "Kiến thức lắp đặt và vận hành",
-    "lead": "Hướng dẫn lắp đặt, kiến thức kỹ thuật và kinh nghiệm vận hành."
+    "lead": "Hướng dẫn lắp đặt máy lạnh, máy giặt, kiến thức kỹ thuật điện lạnh và kinh nghiệm vận hành đơn lắp đặt cho doanh nghiệp.",
+    "groupsLabel": "Nhóm bài viết",
+    "articleCount": "{count, plural, other {# bài}}",
+    "groups": {
+      "installation-guide": "Các bước lắp đặt đúng kỹ thuật và cách xử lý sự cố thường gặp với máy lạnh, máy giặt.",
+      "technical-knowledge": "Xu hướng thiết bị và dịch vụ trong ngành điện lạnh, điện máy và nhà thông minh.",
+      "b2b": "Cách hãng, sàn TMĐT và đơn vị lắp đặt vận hành đơn lắp đặt bằng quy trình và dữ liệu."
+    }
   },
   "article": {
-    "eyebrow": "Kiến thức",
-    "migrating": "Bài viết đang được chuyển sang website mới.",
     "categories": {
       "installation-guide": "Hướng dẫn lắp đặt",
       "technical-knowledge": "Kiến thức kỹ thuật",
       "b2b": "Vận hành cho doanh nghiệp"
+    },
+    "published": "Đăng ngày <time>{date}</time>",
+    "updated": "Cập nhật <time>{date}</time>",
+    "readingTime": "{minutes} phút đọc",
+    "toc": {
+      "title": "Trong bài này",
+      "label": "Mục lục bài viết",
+      "toggle": "Mục lục"
+    },
+    "related": {
+      "title": "Bài liên quan"
+    },
+    "imageNote": "Ảnh thật sẽ chụp",
+    "callout": {
+      "tip": "Mẹo",
+      "warning": "Lưu ý"
     }
+  },
+  "breadcrumb": {
+    "label": "Đường dẫn"
+  },
+  "cta": {
+    "eyebrow": "Dành cho doanh nghiệp",
+    "title": "Cần đơn vị lắp đặt cho hãng hoặc chuỗi bán lẻ?",
+    "body": "Bluebolt Services nhận đơn lắp đặt và bảo trì điều hòa, điện máy từ hãng, sàn thương mại điện tử và chuỗi bán lẻ. Khách lẻ cần hỗ trợ sau lắp đặt, xem trang hỗ trợ khách hàng.",
+    "primary": "Nhận báo giá cho doanh nghiệp",
+    "secondary": "Hỗ trợ khách lẻ",
+    "call": "Hoặc gọi {phone}"
   }
 }

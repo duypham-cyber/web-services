@@ -1,20 +1,48 @@
 {
   "hub": {
-    "meta": {
-      "title": "Installation and operations knowledge",
-      "description": "Installation guides, HVAC technical knowledge and nationwide installation operations from Bluebolt."
-    },
     "eyebrow": "Knowledge",
     "title": "Installation and operations knowledge",
-    "lead": "Installation guides, technical know-how and operating experience."
+    "lead": "Guides to installing air conditioners and washing machines, HVAC know-how and lessons from running installation work for businesses.",
+    "groupsLabel": "Article groups",
+    "articleCount": "{count, plural, one {# article} other {# articles}}",
+    "groups": {
+      "installation-guide": "Correct installation steps and fixes for common air conditioner and washing machine problems.",
+      "technical-knowledge": "Equipment and service trends in air conditioning, home appliances and smart homes.",
+      "b2b": "How brands, marketplaces and installers run installation work with processes and data."
+    }
   },
   "article": {
-    "eyebrow": "Knowledge",
-    "migrating": "This article is being moved to the new website.",
     "categories": {
       "installation-guide": "Installation guides",
       "technical-knowledge": "Technical knowledge",
       "b2b": "Operations for businesses"
+    },
+    "published": "Published <time>{date}</time>",
+    "updated": "Updated <time>{date}</time>",
+    "readingTime": "{minutes} min read",
+    "toc": {
+      "title": "In this article",
+      "label": "Table of contents",
+      "toggle": "Contents"
+    },
+    "related": {
+      "title": "Related articles"
+    },
+    "imageNote": "Real photo to come",
+    "callout": {
+      "tip": "Tip",
+      "warning": "Watch out"
     }
+  },
+  "breadcrumb": {
+    "label": "Breadcrumb"
+  },
+  "cta": {
+    "eyebrow": "For businesses",
+    "title": "Need an installation partner for your brand or retail chain?",
+    "body": "Bluebolt Services takes air conditioner and appliance installation and maintenance jobs from brands, online marketplaces and retail chains. If you need help after an installation, see our customer support page.",
+    "primary": "Get a quote for your business",
+    "secondary": "Customer support",
+    "call": "Or call {phone}"
   }
 }
