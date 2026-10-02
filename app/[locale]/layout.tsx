@@ -11,7 +11,7 @@ import { LogoSymbol } from '@/components/layout/Logo';
 import { MobileActionBar } from '@/components/layout/MobileActionBar';
 import { SkipLink } from '@/components/layout/SkipLink';
 import { MotionRuntime } from '@/components/motion/MotionRuntime';
-import { MOTION_BOOT_SCRIPT } from '@/components/motion/motion-script';
+import { MotionBootScript } from '@/components/motion/MotionBootScript';
 import { site } from '@/content/site';
 import { assertContentValid } from '@/content/validate';
 import { CLIENT_NAMESPACES } from '@/i18n/messages';
@@ -82,7 +82,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   return (
     <html lang={locale} className={`${fontSans.variable} ${fontDisplay.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: MOTION_BOOT_SCRIPT }} />
+        <MotionBootScript />
       </head>
       <body>
         <div data-scroll-sentinel="" aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px" />
