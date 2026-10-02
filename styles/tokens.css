@@ -1,0 +1,123 @@
+/*
+ * styles/tokens.css — NGUỒN DUY NHẤT của design tokens (docs/03 mục 11.1–11.3 và 12.1).
+ * Tailwind v4 đọc @theme để sinh utility: bg-blue-600, text-orange-700, text-h2, rounded-lg, shadow-2, ease-entry, ...
+ *
+ * Luật:
+ *  - CẤM màu ngoài bảng 11.1 (đã xóa palette mặc định của Tailwind bằng --color-*: initial).
+ *  - Cam #EF8426 (orange-500) CHỈ làm nền; chữ cam trên nền sáng dùng orange-700, trên navy dùng orange-200.
+ *  - Sửa hex ở đây → tests/unit/contrast.test.ts kiểm lại toàn bộ cặp tương phản trong bảng 11.1.
+ *  - `static`: luôn xuất mọi biến ra :root để component, phim (WebGL) và inline style đọc được var(--color-...).
+ */
+@theme static {
+  /* ---------- Màu (11.1) ---------- */
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-blue-600: #004aad; /* brand: logo, link, heading nhấn, nút xanh */
+  --color-blue-700: #003a8c; /* hover/pressed nút xanh */
+  --color-navy-900: #0a1f44; /* dải tối premium, footer, chữ trên nút cam */
+  --color-blue-300: #7faaf0; /* link và icon trên nền navy */
+  --color-blue-100: #e8f1fc; /* nền chip, nền thẻ */
+  --color-blue-50: #f2f8fc; /* nền section sáng */
+  --color-orange-500: #ef8426; /* brand: CHỈ fill (nền CTA, ghim bản đồ, icon) */
+  --color-orange-400: #f59a4a; /* hover nút cam */
+  --color-orange-700: #a94f00; /* CHỈ chữ cam trên nền sáng */
+  --color-orange-200: #ffb778; /* chữ cam trên nền navy */
+  --color-orange-50: #fff4ea; /* nền badge "Bảo hành" */
+  --color-ink-900: #0f172a; /* chữ chính */
+  --color-slate-600: #475569; /* chữ phụ */
+  --color-slate-500: #64748b; /* viền input, caption — CHỈ trên nền trắng */
+  --color-slate-300: #cbd5e1; /* đường kẻ trang trí (không dùng cho viền input) */
+  --color-danger-700: #b3261e; /* lỗi form */
+  --color-success-700: #1f7a3a; /* thành công */
+  --color-warning-text: #8a5a00; /* chữ cảnh báo, nhãn "Nháp" */
+
+  /* ---------- Font (11.2) — biến --font-bvp* do next/font gắn trên <html> ---------- */
+  --font-*: initial;
+  --font-sans: var(--font-bvp), 'Be Vietnam Pro', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial,
+    sans-serif;
+  /* Chữ đậm 700 (display, h1, kpi): họ font riêng chỉ có weight 700 — là file DUY NHẤT được preload */
+  --font-display: var(--font-bvp-display), var(--font-bvp), 'Be Vietnam Pro', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, Arial, sans-serif;
+
+  /* ---------- Cỡ chữ (11.2): line-height ≥ 1,1 cho dấu tiếng Việt, tracking âm tối đa −0,02em ---------- */
+  --text-*: initial;
+  --text-display: clamp(2.5rem, 4.6vw, 4.5rem);
+  --text-display--line-height: 1.1;
+  --text-display--font-weight: 700;
+  --text-display--letter-spacing: -0.02em;
+  --text-h1: clamp(2rem, 3.4vw, 3.25rem);
+  --text-h1--line-height: 1.15;
+  --text-h1--font-weight: 700;
+  --text-h1--letter-spacing: -0.015em;
+  --text-h2: clamp(1.625rem, 2.6vw, 2.5rem);
+  --text-h2--line-height: 1.2;
+  --text-h2--font-weight: 600;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: clamp(1.25rem, 1.6vw, 1.5rem);
+  --text-h3--line-height: 1.3;
+  --text-h3--font-weight: 600;
+  --text-lead: clamp(1.125rem, 1.4vw, 1.375rem);
+  --text-lead--line-height: 1.55;
+  --text-lead--font-weight: 500;
+  --text-body: 1rem;
+  --text-body--line-height: 1.65;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--font-weight: 600;
+  --text-eyebrow--letter-spacing: 0.14em;
+  --text-kpi: clamp(2.25rem, 4vw, 3.5rem);
+  --text-kpi--line-height: 1;
+  --text-kpi--font-weight: 700;
+
+  /* ---------- Khoảng cách (11.3): bội số 4 → p-1=4px, p-2=8px, p-3=12px, p-4=16px, p-6=24px, p-8=32px,
+     p-12=48px, p-16=64px, p-24=96px, p-32=128px. Chỉ dùng các bậc này. ---------- */
+  --spacing: 0.25rem;
+  --spacing-gutter: clamp(16px, 4vw, 64px); /* lề hai bên: đúng 16px ở 360–390px */
+  --spacing-section: clamp(64px, 10vw, 128px); /* padding dọc section */
+
+  /* ---------- Bề rộng nội dung ---------- */
+  --container-content: 80rem; /* 1280px */
+  --container-bleed: 90rem; /* 1440px — dải full-bleed */
+  --container-text: 45rem; /* 720px — đoạn văn, bài viết */
+
+  /* ---------- Bo góc (11.3) ---------- */
+  --radius-*: initial;
+  --radius-sm: 8px; /* input, chip */
+  --radius-md: 12px; /* card nhỏ */
+  --radius-lg: 20px; /* panel, ảnh, card */
+  --radius-xl: 28px; /* thẻ hero */
+  --radius-pill: 999px; /* nút */
+
+  /* ---------- Bóng pha navy (11.3) ---------- */
+  --shadow-*: initial;
+  --shadow-1: 0 1px 2px rgb(10 31 68 / 0.06), 0 2px 8px rgb(10 31 68 / 0.06);
+  --shadow-2: 0 8px 24px rgb(10 31 68 / 0.1);
+  --shadow-3: 0 24px 64px rgb(10 31 68 / 0.14);
+
+  /* ---------- Easing (12.1) ---------- */
+  --ease-*: initial;
+  --ease-entry: cubic-bezier(0.16, 1, 0.3, 1); /* vào cảnh */
+  --ease-glide: cubic-bezier(0.32, 0.72, 0, 1); /* hover, micro-interaction */
+  --ease-standard: cubic-bezier(0.65, 0, 0.35, 1); /* chuyển trạng thái */
+}
+
+/* Token không thuộc namespace của Tailwind: dùng qua var() hoặc utility dạng duration-(--dur-base) */
+:root {
+  --dur-fast: 160ms;
+  --dur-base: 240ms;
+  --dur-medium: 520ms;
+  --dur-slow: 880ms;
+  --stagger-card: 60ms;
+  --stagger-word: 40ms;
+  --rise-distance: 12px; /* mobile */
+  --header-h: 64px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --rise-distance: 24px; /* desktop */
+    --header-h: 76px;
+  }
+}

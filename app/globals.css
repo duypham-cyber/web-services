@@ -1,0 +1,321 @@
+/*
+ * app/globals.css — CSS toàn cục. Token ở styles/tokens.css; giao diện component viết bằng utility Tailwind
+ * ngay trong component. File này chỉ chứa: nền tảng (base), tông bề mặt, focus, motion engine, header theo
+ * vùng phim, prose. Thêm CSS ở đây phải có lý do (không làm được bằng utility).
+ */
+@import 'tailwindcss' source(none);
+@import '../styles/tokens.css';
+
+/* Chỉ quét mã nguồn thật (không quét docs/, reference/ — tránh sinh class thừa) */
+@source '../app';
+@source '../components';
+@source '../lib';
+
+/* ------------------------------------------------------------------------------------------------
+ * Tông bề mặt: Section/Card đặt data-tone → mọi thành phần con tự đổi màu chữ, link, focus ring.
+ * ---------------------------------------------------------------------------------------------- */
+@layer base {
+  :root,
+  [data-tone='light'],
+  [data-tone='blue-50'] {
+    --surface-fg: var(--color-ink-900);
+    --surface-heading: var(--color-navy-900);
+    --surface-muted: var(--color-slate-600);
+    --surface-accent: var(--color-orange-700);
+    --surface-link: var(--color-blue-600);
+    --surface-link-hover: var(--color-blue-700);
+    --surface-border: var(--color-slate-300);
+    --focus-ring: var(--color-blue-600);
+    --logo-blue: var(--color-blue-600);
+    --logo-sub: #a6b1b8; /* màu chữ "SERVICES" của logo gốc (tài sản thương hiệu, không phải token UI) */
+  }
+
+  [data-tone='navy'] {
+    --surface-fg: var(--color-white);
+    --surface-heading: var(--color-white);
+    --surface-muted: var(--color-slate-300);
+    --surface-accent: var(--color-orange-200);
+    --surface-link: var(--color-blue-300);
+    --surface-link-hover: var(--color-white);
+    --surface-border: rgb(203 213 225 / 0.28);
+    --focus-ring: var(--color-orange-200);
+    --logo-blue: var(--color-white);
+    --logo-sub: var(--color-slate-300);
+  }
+
+  [data-tone] {
+    color: var(--surface-fg);
+  }
+
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Neo #id không bị header dính che */
+    scroll-padding-top: calc(var(--header-h) + 16px);
+  }
+
+  body {
+    min-height: 100svh;
+    background-color: var(--color-white);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    /* Lưới an toàn chống tràn ngang (docs/03 mục 11.3). Test overflow vẫn bắt được phần tử tràn. */
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* Chữ đậm dùng họ font 700 đã preload (tokens: --font-display) */
+  strong,
+  b {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  /* Focus ring: 3px blue-600, offset 2 trên nền sáng; orange-200 trên navy (docs/03 mục 11.1) */
+  :focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-blue-100);
+    color: var(--color-navy-900);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Tiện ích riêng
+ * ---------------------------------------------------------------------------------------------- */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Eyebrow: chỗ DUY NHẤT được viết hoa (docs/03 mục 11.2) */
+@utility eyebrow {
+  font-size: var(--text-eyebrow);
+  line-height: var(--text-eyebrow--line-height);
+  font-weight: var(--text-eyebrow--font-weight);
+  letter-spacing: var(--text-eyebrow--letter-spacing);
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Motion engine (docs/03 mục 12): chỉ transform/opacity/clip-path; nội dung LUÔN hiện nếu JS lỗi.
+ *   - Script đầu <head> đặt html[data-motion=pending] khi được phép chuyển động, tự đổi sang "off" sau 4 s.
+ *   - components/motion/MotionRuntime đặt "ready" và gắn data-inview khi phần tử vào khung nhìn.
+ *   - Reduced-motion / Save-Data / không JS: không có data-motion → mọi thứ hiện ngay.
+ * KHÔNG dùng cho H1, phần tử LCP, giá, hotline, nội dung pháp lý, trường form, thông báo lỗi.
+ * ---------------------------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  html:is([data-motion='pending'], [data-motion='ready']) [data-motion-item='rise']:not([data-inview]) {
+    opacity: 0;
+    transform: translate3d(0, var(--rise-distance), 0);
+  }
+
+  html:is([data-motion='pending'], [data-motion='ready']) [data-motion-item='curtain']:not([data-inview]) > [data-curtain-mask] {
+    clip-path: inset(100% 0 0 0);
+    transform: scale(1.05);
+  }
+
+  html[data-motion='ready'] [data-motion-item='rise'] {
+    transition:
+      opacity var(--dur-medium) var(--ease-entry),
+      transform var(--dur-medium) var(--ease-entry);
+    transition-delay: calc(var(--i, 0) * var(--stagger-card));
+  }
+
+  html[data-motion='ready'] [data-motion-item='curtain'] > [data-curtain-mask] {
+    transition:
+      clip-path var(--dur-slow) var(--ease-entry),
+      transform var(--dur-slow) var(--ease-entry);
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Reduced motion: tắt mọi transition/animation (kể cả của thư viện)
+ * ---------------------------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Header theo vùng phim (docs/03 mục 13.1): trang có [data-film-zone] → header trong suốt chữ trắng
+ * cho tới khi cuộn qua phim (HeaderObserver đặt data-past-film). Không setState khi cuộn.
+ * ---------------------------------------------------------------------------------------------- */
+.site-header {
+  --header-bg: var(--color-white);
+  --header-fg: var(--color-ink-900);
+  --header-shadow: none;
+  background-color: var(--header-bg);
+  color: var(--header-fg);
+  box-shadow: var(--header-shadow);
+  transition:
+    background-color var(--dur-base) var(--ease-standard),
+    color var(--dur-base) var(--ease-standard),
+    box-shadow var(--dur-base) var(--ease-standard);
+}
+
+.site-header[data-scrolled='true'] {
+  --header-shadow: var(--shadow-1);
+}
+
+body:has([data-film-zone]) .site-header:not([data-past-film='true']) {
+  --header-bg: transparent;
+  --header-fg: var(--color-white);
+  --header-shadow: none;
+  --logo-blue: var(--color-white);
+  --logo-sub: var(--color-slate-300);
+  --focus-ring: var(--color-orange-200);
+  --surface-link: var(--color-white);
+}
+
+/* Menu mobile (<dialog> modal): khóa cuộn trang nền, trượt vào từ phải */
+html:has(dialog[data-mobile-menu][open]) {
+  overflow: hidden;
+}
+
+@keyframes bb-sheet-in {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.sheet-enter[open] {
+  animation: bb-sheet-in var(--dur-base) var(--ease-entry);
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Prose: bài viết và trang pháp lý (components/ui/Prose)
+ * ---------------------------------------------------------------------------------------------- */
+.prose-bb {
+  max-width: var(--container-text);
+  color: var(--surface-fg);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+}
+
+.prose-bb > * + * {
+  margin-top: 1rem;
+}
+
+.prose-bb :where(h2) {
+  margin-top: 3rem;
+  color: var(--surface-heading);
+  font-size: var(--text-h2);
+  line-height: var(--text-h2--line-height);
+  font-weight: var(--text-h2--font-weight);
+  letter-spacing: var(--text-h2--letter-spacing);
+}
+
+.prose-bb :where(h3) {
+  margin-top: 2rem;
+  color: var(--surface-heading);
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  font-weight: var(--text-h3--font-weight);
+}
+
+.prose-bb :where(h2, h3) + * {
+  margin-top: 0.75rem;
+}
+
+.prose-bb :where(a) {
+  color: var(--surface-link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.prose-bb :where(a:hover) {
+  color: var(--surface-link-hover);
+  text-decoration-thickness: 2px;
+}
+
+.prose-bb :where(ul, ol) {
+  padding-left: 1.5rem;
+}
+
+.prose-bb :where(ul) {
+  list-style: disc;
+}
+
+.prose-bb :where(ol) {
+  list-style: decimal;
+}
+
+.prose-bb :where(li) + :where(li) {
+  margin-top: 0.5rem;
+}
+
+.prose-bb :where(li)::marker {
+  color: var(--color-blue-600);
+}
+
+.prose-bb :where(blockquote) {
+  border-left: 4px solid var(--color-blue-600);
+  padding-left: 1rem;
+  color: var(--surface-muted);
+}
+
+.prose-bb :where(table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+}
+
+.prose-bb :where(th, td) {
+  border-bottom: 1px solid var(--color-slate-300);
+  padding: 0.75rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose-bb :where(th) {
+  color: var(--surface-heading);
+  font-weight: 600;
+}
+
+.prose-bb :where(hr) {
+  border: 0;
+  border-top: 1px solid var(--color-slate-300);
+  margin: 2.5rem 0;
+}
+
+.prose-bb :where(code) {
+  border-radius: var(--radius-sm);
+  background: var(--color-blue-50);
+  padding: 0.125rem 0.375rem;
+  font-size: 0.9em;
+}
