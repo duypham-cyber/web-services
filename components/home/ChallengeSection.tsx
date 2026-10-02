@@ -36,7 +36,7 @@ export async function ChallengeSection({ locale, tone }: { locale: Locale; tone:
         <div className="lg:sticky lg:top-[calc(var(--header-h)+2.5rem)] lg:col-span-5 lg:self-start">
           <SectionHeader id="van-de-title" eyebrow={t('challenge.eyebrow')} title={t('challenge.title')} lead={t('challenge.lead')} />
           <Rise className="mt-10">
-            <p className="text-small font-semibold text-(--surface-heading)">{t('challenge.painsLabel')}</p>
+            <p className="eyebrow text-(--surface-muted)">{t('challenge.painsLabel')}</p>
             <ul className="mt-4 divide-y divide-(--surface-border) border-y border-(--surface-border)">
               {PAINS.map((key) => (
                 <li key={key} className="flex gap-3 py-4 text-body text-(--surface-fg)">
