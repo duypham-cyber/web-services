@@ -80,7 +80,7 @@ export function SlaRegionTable({
         </p>
       ) : null}
       <div className="md:overflow-clip md:rounded-lg md:border md:border-slate-300 md:bg-white md:shadow-1">
-        <table role="table" className="w-full border-collapse text-left max-md:block">
+        <table role="table" className="w-full border-collapse text-left max-md:block md:table-fixed">
           <caption className="sr-only">{caption}</caption>
           <thead role="rowgroup" className="max-md:sr-only">
             <tr role="row" className="bg-navy-900 text-white">

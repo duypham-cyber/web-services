@@ -72,8 +72,8 @@
       "caption": "SLA by region: appointment confirmation, installation completion and installation fault fixes",
       "milestone": "Milestone",
       "regions": {
-        "inner": "Ho Chi Minh City and Hanoi (urban districts)",
-        "outer": "Ho Chi Minh City and Hanoi (outer districts)",
+        "inner": "HCMC and Hanoi (urban)",
+        "outer": "HCMC and Hanoi (outer districts)",
         "provinces": "Other provinces",
         "special": "Special areas"
       },

@@ -1,4 +1,16 @@
-import { AirVent, Bot, CalendarCheck, WashingMachine, type LucideIcon } from 'lucide-react';
+import {
+  AirVent,
+  Bot,
+  CalendarCheck,
+  CookingPot,
+  Droplets,
+  House,
+  Refrigerator,
+  Tv,
+  WashingMachine,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
 import type { IllustrationKey } from '@/components/solutions/kit/illustrations';
 import type { FaqSpec } from '@/components/solutions/kit/faq-entries';
 import type { ClaimId } from '@/content/claims';
@@ -59,6 +71,21 @@ export const SERVICE_PRESENTATION: Record<ServiceKey, ServicePresentation> = {
     heroClaims: ['b2b.warranty.installation-faults'],
     faq: [{ id: 'wifi' }, { id: 'account' }, WARRANTY_FAQ],
   },
+};
+
+/** Icon theo khóa thiết bị trong messages items.<key>.devices (thiếu → icon của dịch vụ). */
+export const DEVICE_ICONS: Record<string, LucideIcon> = {
+  wall: AirVent,
+  ceiling: AirVent,
+  ac: AirVent,
+  laundry: WashingMachine,
+  fridge: Refrigerator,
+  tv: Tv,
+  kitchen: CookingPot,
+  water: Droplets,
+  robot: Bot,
+  smart: House,
+  other: Wrench,
 };
 
 /** Câu khẳng định ở khối "Đã gồm / chưa gồm" và "Bảo hành" (giống nhau cho 4 dịch vụ). */

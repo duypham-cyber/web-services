@@ -4,7 +4,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { QUOTE_HREF } from '@/components/layout/Header';
 import { IncludedExcluded } from '@/components/services/IncludedExcluded';
-import { SCOPE_CLAIMS, SERVICE_PRESENTATION, WARRANTY_CLAIMS } from '@/components/services/service-config';
+import { DEVICE_ICONS, SCOPE_CLAIMS, SERVICE_PRESENTATION, WARRANTY_CLAIMS } from '@/components/services/service-config';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ClaimGroup, ClaimList, PendingPanel, PreviewNote } from '@/components/solutions/kit/draft';
@@ -101,19 +101,22 @@ export default async function ServiceDetailPage({ params }: PageProps<'/[locale]
         <SectionIntro eyebrow={t('detail.devicesEyebrow')} title={t('detail.devicesTitle')} titleId="pham-vi-title" />
         <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <ul className="flex flex-col gap-4">
-            {Object.entries(item.devices).map(([key, d]) => (
-              <li key={key}>
-                <Card className="flex items-start gap-4">
-                  <span aria-hidden="true" className="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-600">
-                    <p.icon size={22} strokeWidth={1.5} />
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="text-h3 text-navy-900">{d.title}</h3>
-                    <p className="mt-1.5 text-small text-slate-600">{d.body}</p>
-                  </div>
-                </Card>
-              </li>
-            ))}
+            {Object.entries(item.devices).map(([key, d]) => {
+              const DeviceIcon = DEVICE_ICONS[key] ?? p.icon;
+              return (
+                <li key={key}>
+                  <Card className="flex items-start gap-4">
+                    <span aria-hidden="true" className="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-600">
+                      <DeviceIcon size={22} strokeWidth={1.5} />
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="text-h3 text-navy-900">{d.title}</h3>
+                      <p className="mt-1.5 text-small text-slate-600">{d.body}</p>
+                    </div>
+                  </Card>
+                </li>
+              );
+            })}
           </ul>
           <div>
             <h3 className="text-h3 text-(--surface-heading)">{item.scopeTitle}</h3>

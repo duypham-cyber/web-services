@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/cn';
 import { Illustration, type IllustrationKey } from './illustrations';
@@ -48,9 +47,13 @@ export function MediaFrame({
   className,
 }: MediaFrameProps) {
   if (src) {
+    // <img> thường thay vì next/image: next/image là client component, thêm ~5 KB gz JS tải đầu cho MỌI trang dùng
+    // khung này (đo bằng safe-build 02/10/2026) trong khi chưa có ảnh thật nào. Ảnh thật phải xuất sẵn AVIF/WebP đúng
+    // kích thước (docs/03 mục 11.4); khi cần srcset tự động thì đổi sang next/image tại đây (một chỗ duy nhất).
     return (
       <figure className={cn('relative overflow-hidden rounded-lg bg-blue-50', RATIO[ratio], className)}>
-        <Image src={src} alt={alt ?? ''} width={width} height={height} sizes={sizes} className="size-full object-cover" />
+        {/* eslint-disable-next-line @next/next/no-img-element -- xem ghi chú phía trên */}
+        <img src={src} alt={alt ?? ''} width={width} height={height} sizes={sizes} loading="lazy" decoding="async" className="size-full object-cover" />
       </figure>
     );
   }
