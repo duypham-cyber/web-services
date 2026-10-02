@@ -87,6 +87,8 @@ for (const { locale, path, route } of routeCases()) {
   test(`${route.key} [${locale}] ${path}`, async ({ page, request }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-1440', 'metadata không phụ thuộc khổ màn hình');
     const res = await page.goto(path, { waitUntil: 'domcontentloaded' });
+    // Trang nội bộ /dev/* trả 404 ở bản production (DEV_PAGES tắt) — đúng thiết kế, không kiểm
+    test.skip(!route.indexable && res?.status() === 404, `${path}: trang nội bộ tắt ở production`);
     expect(res?.status(), `HTTP ${path}`).toBe(200);
     const head = await readHead(page);
     const seo = seoFor(route.key, locale);

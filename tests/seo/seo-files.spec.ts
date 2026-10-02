@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { legacyAssets, legacyRedirects } from '../../content/redirects';
 import { absoluteUrl, INDEXABLE_ROUTES, locales } from '../../lib/routes';
-import { isIndexable, isTranslated, lastModified } from '../../lib/seo';
+import { isTranslated, lastModified } from '../../lib/seo';
 
 /**
  * AC-SEO-5 (sitemap.xml, robots.txt) · AC-301-2 (301/410 ở tầng Next) — chạy trên dev server hoặc BASE_URL.
@@ -25,7 +25,7 @@ test('robots.txt chuẩn: có Sitemap tuyệt đối, không có Host:', async (
   }
 });
 
-test('sitemap.xml: đúng tập URL indexable VI/EN, lastmod thật, alternate vi/en/x-default', async ({ request }) => {
+test('sitemap.xml: URL indexable VI/EN, không URL noindex, lastmod thật, alternate vi/en/x-default', async ({ request }) => {
   const res = await request.get('/sitemap.xml');
   expect(res.status()).toBe(200);
   const xml = await res.text();
@@ -41,22 +41,34 @@ test('sitemap.xml: đúng tập URL indexable VI/EN, lastmod thật, alternate v
     };
   });
 
-  const expected = INDEXABLE_ROUTES.filter((r) => isIndexable(r.key)).flatMap((route) =>
-    locales
-      .filter((l) => isTranslated(route.key, l))
-      .map((l) => ({ route, loc: absoluteUrl(route.paths[l]) })),
+  // Ứng viên: route indexable (lib/routes.ts) có bản dịch thật. Trang có meta robots noindex (vd pháp lý chưa duyệt ở
+  // production, AC-LEGAL-1) phải KHÔNG nằm trong sitemap; mọi trang còn lại phải có mặt.
+  const candidates = INDEXABLE_ROUTES.flatMap((route) =>
+    locales.filter((l) => isTranslated(route.key, l)).map((l) => ({ route, path: route.paths[l], loc: absoluteUrl(route.paths[l]) })),
   );
-  expect(urls.map((u) => u.loc).sort()).toEqual(expected.map((e) => e.loc).sort());
-
-  for (const { route, loc } of expected) {
-    const u = urls.find((x) => x.loc === loc);
-    expect(u?.lastmod, `${loc} lastmod`).toBe(lastModified(route.key));
-    expect(u?.alternates, `${loc} alternates`).toEqual({
-      vi: absoluteUrl(route.paths.vi),
-      en: absoluteUrl(route.paths.en),
-      'x-default': absoluteUrl(route.paths.vi),
-    });
+  const listed = new Set(urls.map((u) => u.loc));
+  const problems: string[] = [];
+  for (const c of candidates) {
+    const page = await request.get(c.path);
+    const html = await page.text();
+    const noindex = /<meta name="robots" content="[^"]*noindex/.test(html);
+    if (noindex && listed.has(c.loc)) problems.push(`${c.loc}: noindex nhưng có trong sitemap`);
+    if (!noindex && !listed.has(c.loc)) problems.push(`${c.loc}: thiếu trong sitemap`);
+    const u = urls.find((x) => x.loc === c.loc);
+    if (u && u.lastmod !== lastModified(c.route.key)) problems.push(`${c.loc}: lastmod ${u.lastmod} ≠ ${lastModified(c.route.key)}`);
+    const both = locales.every((l) => isTranslated(c.route.key, l));
+    if (u && both) {
+      const want = {
+        vi: absoluteUrl(c.route.paths.vi),
+        en: absoluteUrl(c.route.paths.en),
+        'x-default': absoluteUrl(c.route.paths.vi),
+      };
+      if (JSON.stringify(u.alternates) !== JSON.stringify(want)) problems.push(`${c.loc}: alternates ${JSON.stringify(u.alternates)}`);
+    }
   }
+  const known = new Set(candidates.map((c) => c.loc));
+  for (const u of urls) if (!known.has(u.loc)) problems.push(`${u.loc}: không phải route indexable`);
+  expect(problems, problems.join('\n')).toEqual([]);
 });
 
 test('URL cũ: 301 một bước tới đích đúng (giữ query) và đích trả 200', async ({ request }) => {

@@ -3,9 +3,11 @@ import path from 'node:path';
 import type { Metadata } from 'next';
 import { articles } from '@/content/articles';
 import { ARTICLE_CONTENT } from '@/content/articles/all';
+import { isLegalDocPublished, legalDocs, type LegalDocKey } from '@/content/legal';
 import { DEFAULT_OG_IMAGE, OG_LOCALE, SEO_PAGES, type SeoEntry, type SeoPageKey } from '@/content/seo';
 import { site } from '@/content/site';
 import { locales, type AppPathname, type Locale } from '@/i18n/routing';
+import { isDraftPreview } from './env';
 import { absoluteUrl, getRoute, type RouteKey } from './routes';
 
 /**
@@ -92,10 +94,26 @@ export function isTranslated(routeKey: RouteKey, locale: Locale): boolean {
   return seoFor(routeKey, locale)?.translated[locale] ?? true;
 }
 
-/** Route có được index không (lib/routes.ts PAGE_META.indexable + content/seo.ts index). */
+const LEGAL_DOC: Partial<Record<string, LegalDocKey>> = {
+  'legal.privacy': 'privacy',
+  'legal.terms': 'terms',
+  'legal.warranty': 'warranty',
+};
+
+/**
+ * Trang pháp lý chưa được pháp chế duyệt: production chỉ hiện thông báo "đang cập nhật" + noindex (AC-LEGAL-1,
+ * components/legal/legal-metadata.ts) → cũng phải ra khỏi sitemap. Bản xem trước giữ nguyên (staging đã noindex).
+ */
+function legalPending(routeKey: RouteKey): boolean {
+  const doc = LEGAL_DOC[routeKey];
+  return !!doc && !isLegalDocPublished(legalDocs[doc]) && !isDraftPreview();
+}
+
+/** Route có được index không (lib/routes.ts PAGE_META.indexable + content/seo.ts index + pháp lý chưa duyệt). */
 export function isIndexable(routeKey: RouteKey): boolean {
   const route = getRoute(routeKey);
   if (!route.indexable) return false;
+  if (legalPending(routeKey)) return false;
   return seoFor(routeKey, 'vi')?.index ?? true;
 }
 
@@ -185,7 +203,12 @@ export function buildMetadata({ routeKey, locale, title, description, absoluteTi
   const finalDescription = seo?.description ?? description ?? '';
   const translated = seo?.translated ?? BOTH;
   const bothTranslated = locales.every((l) => translated[l]);
-  const indexable = route.indexable && (seo?.index ?? true);
+  // Trang nội bộ (/dev/*): noindex, nofollow · trang bị loại khỏi index vì nội dung chưa duyệt: noindex, follow
+  const robots = !route.indexable
+    ? { index: false, follow: false }
+    : !isIndexable(routeKey)
+      ? { index: false, follow: true }
+      : null;
   const og = ogImageFor(routeKey, locale);
   const otherLocale = locales.find((l) => l !== locale);
 
@@ -223,6 +246,6 @@ export function buildMetadata({ routeKey, locale, title, description, absoluteTi
       description: finalDescription,
       images: [{ url: og.url, alt: og.alt }],
     },
-    ...(indexable ? {} : { robots: { index: false, follow: false } }),
+    ...(robots ? { robots } : {}),
   };
 }
