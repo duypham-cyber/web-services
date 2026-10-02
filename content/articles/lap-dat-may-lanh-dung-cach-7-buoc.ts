@@ -20,40 +20,16 @@ export const lapDatMayLanhDungCach7Buoc = {
   },
   publishedAt: '2026-04-12',
   updatedAt: '2026-10-02',
-  hero: {
-    src: '/images/news/lap-dat-may-lanh-7-buoc.jpg',
-    width: 1024,
-    height: 572,
-    alt: {
-      vi: 'Thợ đứng trên thang lắp dàn lạnh máy lạnh treo tường trong căn hộ',
-      en: 'Technician on a ladder mounting a wall-mounted air conditioner in an apartment',
-    },
-  },
-  ogImage: { src: '/images/news/og/lap-dat-may-lanh-dung-cach-7-buoc.jpg', width: 1200, height: 630 },
+  // Ảnh đầu bài của site cũ là ảnh AI (dấu ✦ Gemini, thợ mặc áo "BLUEBOLT" giả) → gỡ (docs/03 mục 11.4). Chờ ảnh thật
+  // từ buổi chụp (docs/03 mục 15 dòng 10). og:image cũ /images/news/lap-dat-may-lanh-7-buoc.jpg → 301 (content/redirects.ts).
+  hero: null,
+  ogImage: null,
   intro: [
     {
       type: 'p',
       text: {
         vi: 'Nếu lắp sai kỹ thuật, máy lạnh có thể hao điện, kém lạnh, nhanh hỏng và thậm chí mất bảo hành từ hãng. Dưới đây là những kinh nghiệm quan trọng giúp bạn lắp đặt máy lạnh đúng cách ngay từ đầu.',
         en: "A poorly installed air conditioner can use more power, cool weakly, wear out quickly and even lose the manufacturer's warranty. Below are the key practices that help you get the installation right from day one.",
-      },
-    },
-    {
-      type: 'figure',
-      image: {
-        src: '/images/news/lap-dat-may-lanh-illustration.png',
-        width: 512,
-        height: 341,
-        alt: {
-          vi: 'Minh họa các bước lắp đặt máy lạnh đúng cách: chọn vị trí, đi ống đồng, hút chân không, điện an toàn, thoát nước, chạy thử',
-          en: 'Illustration of the correct air conditioner installation steps',
-        },
-        locales: ['vi'],
-        fit: 'contain',
-      },
-      caption: {
-        vi: 'Một bộ máy lạnh đạt hiệu suất tối đa khi tuân thủ đầy đủ quy chuẩn lắp đặt',
-        en: 'An air conditioner only reaches peak performance when every installation standard is followed',
       },
     },
   ],
@@ -320,6 +296,6 @@ export const lapDatMayLanhDungCach7Buoc = {
     'Bỏ đoạn mở đầu trùng gần nguyên văn với câu dẫn; tiêu đề viết hoa → sentence case; bỏ emoji 🚀, 💡.',
     'Bước 7: "quyết định 80% trải nghiệm" → "quyết định phần lớn trải nghiệm" (số không có nguồn).',
     'Mục gợi ý: "không phát sinh" và "bảo hành 12 tháng" chuyển thành claim nháp; bỏ câu kêu gọi gọi hotline (thay bằng khối CTA chung).',
-    'Ảnh minh họa có chữ tiếng Việt in sẵn: chỉ hiện ở bản VI.',
+    'Gỡ ảnh đầu bài (ảnh AI có dấu Gemini, thợ mặc áo in "BLUEBOLT") và infographic in sẵn khẩu hiệu tự khen + áo "BLUEBOLT SERVICES" (docs/03 mục 11.4, 11.5). Chờ ảnh thật; mục lục và 7 bước bằng chữ đủ ý.',
   ],
 } as const satisfies ArticleContent;

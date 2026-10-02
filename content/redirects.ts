@@ -187,9 +187,11 @@ export const legacyAssets: readonly LegacyAssetRow[] = [
   },
   {
     from: '/images/news/lap-dat-may-lanh-7-buoc.jpg',
-    to: '/images/news/lap-dat-may-lanh-7-buoc.jpg',
-    kind: 'keep',
-    note: 'og:image bài lap-dat-may-lanh-dung-cach-7-buoc (VI + EN)',
+    to: '/images/og/bluebolt-services-vi.jpg',
+    kind: 'redirect',
+    note:
+      'og:image bài lap-dat-may-lanh-dung-cach-7-buoc (VI + EN). Ảnh AI (dấu ✦ Gemini, thợ mặc áo in "BLUEBOLT" giả) → ' +
+      'không phục vụ file cũ; 301 sang ảnh OG mặc định. Có ảnh thật từ buổi chụp thì đặt lại đúng đường dẫn này và đổi về "keep"',
   },
   {
     from: '/images/news/nguyen-nhan-may-lanh-hero.png',
@@ -201,7 +203,9 @@ export const legacyAssets: readonly LegacyAssetRow[] = [
     from: '/images/news/may-giat-hero.png',
     to: '/images/news/may-giat-hero.png',
     kind: 'keep',
-    note: 'og:image bài rui-ro-lap-dat-may-giat (VI + EN), vẫn là ảnh đầu bài',
+    note:
+      'og:image bài rui-ro-lap-dat-may-giat (VI + EN). Từ 02/10/2026 không còn là ảnh đầu bài (stock lệch art direction, ' +
+      'docs/03 mục 11.4); giữ file để link cũ trả 200 (AC-301-3)',
   },
   {
     from: '/images/news-card5.jpg',
@@ -213,7 +217,9 @@ export const legacyAssets: readonly LegacyAssetRow[] = [
     from: '/images/news/tuong-lai-nganh-dien-lanh-2026.avif',
     to: '/images/news/tuong-lai-nganh-dien-lanh-2026.avif',
     kind: 'keep',
-    note: 'og:image bài tuong-lai-nganh-dien-lanh-2026 (VI + EN)',
+    note:
+      'og:image bài tuong-lai-nganh-dien-lanh-2026 (VI + EN). Từ 02/10/2026 không còn là ảnh đầu bài (ảnh ghép nhà máy lọc ' +
+      'dầu, lệch art direction); giữ file để link cũ trả 200 (AC-301-3)',
   },
   {
     from: '/images/news/robot-gia-dinh.jpg',

@@ -19,16 +19,10 @@ export const tuongLaiNganhDienLanh2026 = {
   },
   publishedAt: '2026-04-20',
   updatedAt: '2026-10-02',
-  hero: {
-    src: '/images/news/tuong-lai-nganh-dien-lanh-2026.avif',
-    width: 626,
-    height: 346,
-    alt: {
-      vi: 'Hình ghép nhà máy công nghiệp và kỹ sư đội mũ bảo hộ',
-      en: 'Double exposure of an industrial plant and an engineer in a hard hat',
-    },
-  },
-  ogImage: { src: '/images/news/og/tuong-lai-nganh-dien-lanh-2026.jpg', width: 1200, height: 630 },
+  // Ảnh đầu bài cũ là ảnh ghép nhà máy lọc dầu + kỹ sư (lệch art direction, docs/03 mục 11.4) → gỡ, chờ ảnh thiết bị
+  // không người, không logo, hoặc ảnh thật. File cũ vẫn ở public/ (og:image cũ, content/redirects.ts "keep").
+  hero: null,
+  ogImage: null,
   intro: [
     {
       type: 'p',
@@ -171,15 +165,15 @@ export const tuongLaiNganhDienLanh2026 = {
             {
               term: { vi: 'Bảo hành tay nghề', en: 'A workmanship warranty' },
               text: {
-                vi: 'Bảo hành 6–12 tháng cho phần lắp đặt, không chỉ bảo hành máy của hãng.',
-                en: "6–12 months of cover on the installation itself, not just the brand's warranty on the unit.",
+                vi: 'Bảo hành riêng cho phần lắp đặt, ghi rõ thời hạn, không chỉ dựa vào bảo hành máy của hãng.',
+                en: "A warranty on the installation itself, with a clearly stated term, not just the brand's warranty on the unit.",
               },
             },
             {
               term: { vi: 'Phản hồi nhanh', en: 'Fast response' },
               text: {
-                vi: 'Hỗ trợ trong vòng 24–48 giờ khi có sự cố.',
-                en: 'Help within 24–48 hours when there is a problem.',
+                vi: 'Có cam kết thời gian phản hồi khi có sự cố.',
+                en: 'A committed response time when something goes wrong.',
               },
             },
           ],
@@ -195,8 +189,8 @@ export const tuongLaiNganhDienLanh2026 = {
         {
           type: 'p',
           text: {
-            vi: 'Đây là “ngách vàng” cho các đơn vị có hệ thống: biết tổ chức mạng lưới thợ kỹ thuật chuẩn, có app quản lý đơn, có quy trình nghiệm thu minh bạch. Bluebolt Services đang xây dựng theo hướng này.',
-            en: 'This is a sweet spot for organised players: those who can build a network of trained technicians, manage jobs through an app and run a transparent sign-off process. Bluebolt Services is building in this direction.',
+            vi: 'Đây là “ngách vàng” cho các đơn vị có hệ thống: biết tổ chức mạng lưới thợ kỹ thuật chuẩn, có app quản lý đơn, có quy trình nghiệm thu minh bạch.',
+            en: 'This is a sweet spot for organised players: those who can build a network of trained technicians, manage jobs through an app and run a transparent sign-off process.',
           },
         },
         {
@@ -214,6 +208,7 @@ export const tuongLaiNganhDienLanh2026 = {
     'Bỏ ảnh tuong-lai-nganh-dien-illustration.png (có mascot KHANG).',
     'Bỏ tên hãng cụ thể (Panasonic, Daikin, LG, Casper, Toshiba) → "các hãng lớn": site B2B làm việc với hãng, chưa có văn bản dùng tên/logo.',
     '"Chênh nhau không quá 5%" → "không nhiều"; "Lắp đặt quyết định 70%" → "quyết định phần lớn" (số không có nguồn).',
-    '"Bluebolt Services đang đi đúng hướng này" (tự khen) → "đang xây dựng theo hướng này"; "bóng đá trách nhiệm" → "đá bóng trách nhiệm".',
+    '"Bluebolt Services đang đi đúng hướng này" (tự khen) → bỏ hẳn: đặt ngay sau "bảo hành 6–12 tháng", "phản hồi 24–48 giờ" khiến người đọc hiểu là cam kết của Bluebolt, mâu thuẫn chính sách hiện hành 02 tháng (D-25); hai mốc số → câu trung tính không số. "bóng đá trách nhiệm" → "đá bóng trách nhiệm".',
+    'Gỡ ảnh đầu bài (ảnh ghép nhà máy lọc dầu + kỹ sư, lệch art direction).',
   ],
 } as const satisfies ArticleContent;

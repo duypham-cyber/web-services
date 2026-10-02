@@ -23,16 +23,10 @@ export const ruiRoLapDatMayGiat = {
   },
   publishedAt: '2026-04-26',
   updatedAt: '2026-10-02',
-  hero: {
-    src: '/images/news/may-giat-hero.png',
-    width: 1920,
-    height: 1280,
-    alt: {
-      vi: 'Người dùng chỉnh máy giặt cửa trước đặt cạnh giỏ đồ trong phòng giặt',
-      en: 'A person setting a front-loading washing machine next to a laundry basket',
-    },
-  },
-  ogImage: { src: '/images/news/og/rui-ro-lap-dat-may-giat-khong-dung-cach.jpg', width: 1200, height: 630 },
+  // Ảnh đầu bài cũ là stock "phụ nữ phương Tây bên máy giặt" (docs/03 mục 11.4) → gỡ, chờ ảnh thiết bị không người,
+  // không logo, hoặc ảnh thật. File cũ vẫn ở public/ (og:image cũ, content/redirects.ts "keep").
+  hero: null,
+  ogImage: null,
   intro: [
     {
       type: 'p',
@@ -422,22 +416,6 @@ export const ruiRoLapDatMayGiat = {
             },
           ],
         },
-        {
-          type: 'figure',
-          image: {
-            src: '/images/news/may-giat-leak.png',
-            width: 1200,
-            height: 675,
-            alt: {
-              vi: 'Minh họa máy giặt bị chập cháy, nước và quần áo văng ra sàn',
-              en: 'Illustration of a washing machine sparking, with water and clothes spilling onto the floor',
-            },
-          },
-          caption: {
-            vi: 'Một sự cố nhỏ trong khâu lắp đặt có thể gây thiệt hại lớn cho máy và không gian sống',
-            en: 'A small installation mistake can do serious damage to the machine and your home',
-          },
-        },
       ],
     },
     {
@@ -543,5 +521,6 @@ export const ruiRoLapDatMayGiat = {
     'Cam kết "đúng quy trình của hãng — bảo hành 12 tháng — 24–48 giờ" chuyển thành claim nháp knowledge.washer-install-commitment.',
     '"Trả gấp 5–10 lần" → "trả nhiều hơn" (số không có nguồn); bỏ câu kêu gọi gọi hotline có "đội thợ toàn quốc" (claim phạm vi, thay bằng khối CTA chung).',
     'Chữ VIẾT HOA giữa câu ("TRƯỚC") → chữ đậm.',
+    'Gỡ ảnh đầu bài (stock phụ nữ phương Tây) và ảnh máy giặt bốc lửa may-giat-leak.png (lệch art direction, docs/03 mục 11.4).',
   ],
 } as const satisfies ArticleContent;

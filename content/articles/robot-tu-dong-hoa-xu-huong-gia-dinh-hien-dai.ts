@@ -263,22 +263,6 @@ export const robotTuDongHoaGiaDinh = {
             en: 'A good smart home is one you hardly have to think about: everything happens at the right time, in the right way.',
           },
         },
-        {
-          type: 'figure',
-          image: {
-            src: '/images/news/robot-4.png',
-            width: 626,
-            height: 351,
-            alt: {
-              vi: 'Robot hình người chuẩn bị rau củ trên bàn bếp',
-              en: 'A humanoid robot preparing vegetables on a kitchen counter',
-            },
-          },
-          caption: {
-            vi: 'Người dùng dành thời gian cho gia đình thay vì xử lý việc nhà — đó là giá trị thật mà tự động hóa mang lại',
-            en: 'Time spent with family instead of on chores — that is the real value of automation',
-          },
-        },
       ],
     },
     {
@@ -359,22 +343,6 @@ export const robotTuDongHoaGiaDinh = {
             en: 'People are shifting from operating their devices to designing how they want to live: say what you want, and the system takes care of the rest.',
           },
         },
-        {
-          type: 'figure',
-          image: {
-            src: '/images/news/robot-10.png',
-            width: 1368,
-            height: 1026,
-            alt: {
-              vi: 'Robot hình người dùng máy hút bụi trong phòng ngủ',
-              en: 'A humanoid robot vacuuming a bedroom',
-            },
-          },
-          caption: {
-            vi: 'Ngôi nhà của tương lai gần tự thích nghi theo lịch sinh hoạt của chủ nhân',
-            en: "The home of the near future adapts to its owners' routine",
-          },
-        },
       ],
     },
     {
@@ -418,5 +386,6 @@ export const robotTuDongHoaGiaDinh = {
     'Bỏ ảnh có logo/watermark hãng (robot hút bụi DEEBOT, camera Viettel, cảm biến E-TEK, robot LG) và ảnh robot giống sản phẩm nhận diện được; bỏ ảnh 3D robot-vacuum-broom.png (thuộc bộ icon dịch vụ).',
     'og:image cũ (tháp viễn thông em-telco..., ảnh gia đình phương Tây + robot) không dùng; 301 sang ảnh OG mới (content/redirects.ts → legacyAssets).',
     '"Một thợ — nhiều thiết bị — một điểm liên hệ" chuyển thành claim nháp knowledge.single-point-of-contact; bỏ "đồng hành cùng các gia đình Việt" (B2C nhánh A).',
+    'Gỡ 2 ảnh người máy AI (robot-4.png nấu ăn, robot-10.png hút bụi) — lệch art direction docs/03 mục 11.4; phần chữ đủ ý.',
   ],
 } as const satisfies ArticleContent;

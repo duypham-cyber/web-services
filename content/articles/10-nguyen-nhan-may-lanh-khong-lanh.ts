@@ -324,8 +324,8 @@ export const nguyenNhanMayLanhKhongLanh = {
             {
               term: { vi: 'Block (máy nén) hỏng', en: 'A failed compressor' },
               text: {
-                vi: 'Block là “trái tim” của máy lạnh. Khi hỏng, máy vẫn chạy quạt nhưng không lạnh. Chi phí thay thường bằng 30–60% giá máy mới.',
-                en: 'The compressor is the heart of the system. When it fails, the fan still runs but nothing cools. Replacing it typically costs 30–60% of a new unit.',
+                vi: 'Block là “trái tim” của máy lạnh. Khi hỏng, máy vẫn chạy quạt nhưng không lạnh. Chi phí thay block thường cao, nên kiểm tra kỹ nguyên nhân trước khi thay.',
+                en: 'The compressor is the heart of the system. When it fails, the fan still runs but nothing cools. A replacement is usually expensive, so confirm the cause before replacing it.',
               },
             },
             {
@@ -405,6 +405,7 @@ export const nguyenNhanMayLanhKhongLanh = {
     'Bỏ "chiếm 40% số ca không lạnh" (số không có nguồn) → "nguyên nhân phổ biến nhất".',
     'Bỏ mũi tên "→" trong câu, thay bằng câu đầy đủ; tiêu đề chi tiết viết lại sentence case.',
     'Mục dịch vụ cho khách lẻ gắn claim knowledge.b2c-ac-care-services (nhánh A chưa nhận đơn B2C trực tiếp): production ẩn cả mục.',
-    'Ảnh hero cũ (dàn nóng có logo hãng trên mái nhà) không dùng; dùng khung giữ chỗ. Infographic có chữ tiếng Việt chỉ hiện ở bản VI.',
+    'Ảnh hero cũ (dàn nóng có logo hãng trên mái nhà) không dùng; bài không có ảnh đầu bài (thẻ bài dùng bìa dựng từ token). Infographic có chữ tiếng Việt chỉ hiện ở bản VI.',
+    '"Chi phí thay block thường bằng 30–60% giá máy mới" → "thường cao, nên kiểm tra kỹ nguyên nhân trước khi thay" (số không có nguồn).',
   ],
 } as const satisfies ArticleContent;

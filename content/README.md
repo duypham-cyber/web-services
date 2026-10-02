@@ -17,6 +17,15 @@ Shape được thiết kế để sau này chuyển sang Payload CMS (P1, qua co
    production; bản xem trước (`DRAFT_PREVIEW=1`) hiện kèm `<DraftBadge />`.
 5. Mỗi chuỗi có bản VI và EN (`{ vi, en }`). EN là nháp cho tới khi người biên tập bản ngữ duyệt.
 6. Chữ giao diện (nút, tiêu đề, mô tả trang) KHÔNG để ở đây — để ở `messages/<locale>/<namespace>.json`.
+7. **Ảnh đưa vào `public/` (docs/03 mục 11.4).** Trước khi thêm hoặc dùng lại ảnh, mở ảnh ra xem cả khung và soát góc:
+   - CẤM ảnh AI/render có người mặc đồng phục, áo in chữ hoặc logo "BLUEBOLT"/tia chớp (giả làm thợ thật), và ảnh in sẵn
+     khẩu hiệu tự khen ("tay nghề cao", "uy tín"...). Thợ Bluebolt chỉ xuất hiện qua ảnh chụp thật (docs/03 mục 15 dòng 10).
+   - Soát dấu ảnh AI: hình ✦ của Gemini ở góc phải dưới, chữ ký/watermark công cụ; ảnh Google tạo còn có SynthID
+     (không nhìn thấy) — nguồn là ảnh AI thì coi như ảnh AI. Không chắc nguồn → không dùng.
+   - Không logo/kiểu dáng nhận diện của hãng; không stock "gia đình phương Tây + robot", người máy, cảnh cháy nổ; không
+     chữ trong ảnh. Chưa có ảnh đạt → để `hero: null` (bài viết không có ảnh đầu bài, thẻ bài dùng bìa dựng từ token).
+   - Ảnh cũ đang là og:image của URL cũ mà không còn dùng được → 301 sang ảnh OG mặc định trong `redirects.ts`
+     (`legacyAssets`), không để file cũ tiếp tục được phục vụ.
 
 ## Chủ sở hữu từng file
 
