@@ -13,6 +13,7 @@ import type { ClaimId } from '@/content/claims';
 import type { Locale } from '@/i18n/routing';
 import { claim } from '@/lib/claims';
 import { cn } from '@/lib/cn';
+import { keepCompounds } from '@/lib/vn-wrap';
 import { InlineText } from './InlineText';
 import { MediaFrame } from './MediaFrame';
 
@@ -53,7 +54,7 @@ function SectionView({ entry, locale, labels }: { entry: OutlineSection; locale:
   return (
     <section aria-labelledby={entry.id} className="mt-14 first:mt-0 md:mt-16">
       <h2 id={entry.id} className="text-h2 text-(--surface-heading)">
-        {entry.title}
+        {keepCompounds(entry.title)}
         {entry.draft ? <DraftBadge className="ml-3 align-middle" /> : null}
       </h2>
       <div className="mt-5 space-y-6">
@@ -89,7 +90,7 @@ function StepsView({ steps, locale, labels }: { steps: OutlineStep[]; locale: Lo
           </span>
           <div className="min-w-0 space-y-4 pt-2 md:pt-3">
             <h3 id={entry.id} className="text-h3 text-(--surface-heading)">
-              {entry.title}
+              {keepCompounds(entry.title)}
             </h3>
             {entry.step.blocks.map((block, j) => (
               <BlockView key={j} block={block} locale={locale} labels={labels} />

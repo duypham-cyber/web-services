@@ -21,6 +21,7 @@ import { localeStaticParams } from '@/i18n/static-params';
 import { claim } from '@/lib/claims';
 import { organizationJsonLd, webSiteJsonLd } from '@/lib/jsonld';
 import { buildMetadata } from '@/lib/seo';
+import { keepCompounds } from '@/lib/vn-wrap';
 
 export const generateStaticParams = localeStaticParams;
 
@@ -99,7 +100,8 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
       <FilmHero
         locale={locale}
         eyebrow={eyebrow}
-        title={t('hero.title')}
+        // H1 render trong FilmHero (không sửa phần hero): từ ghép giữ cùng dòng ngay từ chuỗi truyền vào (lib/vn-wrap.ts)
+        title={keepCompounds(t('hero.title'))}
         lead={t('hero.lead')}
         primaryCta={{ label: tc('cta.quoteBusiness'), href: QUOTE_HREF }}
         secondaryCta={{ label: tc('cta.registerTechnician'), href: TECHNICIAN_SIGNUP_HREF }}

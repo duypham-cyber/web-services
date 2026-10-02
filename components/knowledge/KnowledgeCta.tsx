@@ -7,6 +7,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Section } from '@/components/ui/Section';
 import { site } from '@/content/site';
 import type { Locale } from '@/i18n/routing';
+import { keepCompounds } from '@/lib/vn-wrap';
 
 /**
  * Khối CTA cuối duy nhất của trang Kiến thức (AC-SH-7): thẻ navy trên nền sáng (tách khỏi footer navy).
@@ -27,7 +28,7 @@ export async function KnowledgeCta({ locale }: { locale: Locale }) {
           <div className="max-w-text">
             <Eyebrow>{t('cta.eyebrow')}</Eyebrow>
             <h2 id="kien-thuc-cta-title" className="mt-3 text-h2 text-(--surface-heading)">
-              {t('cta.title')}
+              {keepCompounds(t('cta.title'))}
             </h2>
             <p className="mt-4 text-lead text-(--surface-muted)">{t('cta.body')}</p>
           </div>

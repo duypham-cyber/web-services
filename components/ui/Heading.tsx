@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { keepCompounds } from '@/lib/vn-wrap';
 
 export type HeadingSize = 'display' | 'h1' | 'h2' | 'h3';
 
@@ -21,12 +22,23 @@ const SIZE_CLASS: Record<HeadingSize, string> = {
   h3: 'text-h3',
 };
 
-/** Tiêu đề dùng token chữ; màu theo tông bề mặt (navy → trắng). */
+/** Chuỗi con giữ từ ghép tiếng Việt cùng dòng (lib/vn-wrap.ts); phần tử React giữ nguyên. */
+function wrapText(children: ReactNode): ReactNode {
+  if (typeof children === 'string') return keepCompounds(children);
+  if (Array.isArray(children)) return children.map((c: ReactNode) => (typeof c === 'string' ? keepCompounds(c) : c));
+  return children;
+}
+
+/**
+ * Tiêu đề dùng token chữ; màu theo tông bề mặt (navy → trắng). Chữ đi qua keepCompounds (NBSP giữa âm tiết của từ ghép)
+ * để `text-wrap: balance` không ngắt "thu | nhập", "lắp | đặt".
+ * CHỈ dùng trong Server Component (từ điển từ ghép không vào JS tải đầu) — client component viết thẻ h với class tương ứng.
+ */
 export function Heading({ level, size, className, children, ...rest }: HeadingProps) {
   const Tag = `h${level}` as const;
   return (
     <Tag className={cn(SIZE_CLASS[size ?? DEFAULT_SIZE[level]], 'text-(--surface-heading)', className)} {...rest}>
-      {children}
+      {wrapText(children)}
     </Tag>
   );
 }
