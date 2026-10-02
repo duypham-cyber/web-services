@@ -13,6 +13,7 @@ import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Heading } from '@/components/ui/Heading';
+import { DraftLine } from '@/components/ui/DraftLine';
 import { Section } from '@/components/ui/Section';
 import { articles } from '@/content/articles';
 import {
@@ -27,6 +28,7 @@ import type { ClaimId } from '@/content/claims';
 import { resolveLocale } from '@/i18n/params';
 import { isLocale, type Locale } from '@/i18n/routing';
 import { claim } from '@/lib/claims';
+import { cn } from '@/lib/cn';
 import { isDraftPreview } from '@/lib/env';
 import { articleJsonLd } from '@/lib/jsonld';
 import type { RouteKey } from '@/lib/routes';
@@ -104,22 +106,28 @@ export default async function ArticlePage({ params }: PageProps<'/[locale]/kien-
         </div>
       </Section>
 
-      <Section tone="light" spacing="none" className="pb-section">
+      <Section tone="light" spacing="none" className={hero ? 'pb-section' : 'pt-12 pb-section md:pt-16'}>
         <div className={WRAP}>
-          <div className="relative -mt-8 md:-mt-14" style={hero ? { maxWidth: Math.max(720, hero.width) } : undefined}>
-            <MediaFrame
-              image={hero}
-              locale={locale}
-              ratio="16 / 9"
-              sizes="(min-width: 1120px) 1056px, 100vw"
-              priority
-              placeholderIcon={ARTICLE_ICONS[article.key]}
-              previewNote={previewNote}
-              className="shadow-2"
-            />
-          </div>
+          {/* Chỉ dựng khung ảnh khi bài có ảnh đạt; hero = null → thân bài lên ngay, không khung giữ chỗ (production) */}
+          {hero ? (
+            <div className="relative -mt-8 md:-mt-14" style={{ maxWidth: Math.max(720, hero.width) }}>
+              <MediaFrame
+                image={hero}
+                locale={locale}
+                ratio="16 / 9"
+                sizes="(min-width: 1120px) 1056px, 100vw"
+                priority
+                placeholderIcon={ARTICLE_ICONS[article.key]}
+                className="shadow-2"
+              />
+            </div>
+          ) : (
+            <DraftLine label={t('article.heroLabel')} className="mb-8">
+              {t('article.imageNote')}
+            </DraftLine>
+          )}
 
-          <div className="mt-10 grid gap-10 lg:mt-16 lg:grid-cols-[15rem_minmax(0,45rem)] lg:gap-14 xl:gap-20">
+          <div className={cn('grid gap-10 lg:grid-cols-[15rem_minmax(0,45rem)] lg:gap-14 xl:gap-20', hero && 'mt-10 lg:mt-16')}>
             <aside className="max-lg:hidden">
               <TocSidebar outline={outline} title={t('article.toc.title')} {...tocLabels} />
             </aside>

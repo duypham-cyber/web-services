@@ -6,16 +6,16 @@ import type { Locale } from '@/i18n/routing';
 import { cn } from '@/lib/cn';
 
 type MediaFrameProps = {
-  /** Ảnh trong public/. null → khung giữ chỗ đúng tỉ lệ (chưa có ảnh thật). */
+  /** Ảnh trong public/. null → bìa dựng từ token đúng tỉ lệ (chưa có ảnh đạt). */
   image: ImageAsset | null;
   locale: Locale;
-  /** Tỉ lệ khung CSS, vd "16 / 9". Mặc định: tỉ lệ thật của ảnh; khung giữ chỗ: 16 / 9. */
+  /** Tỉ lệ khung CSS, vd "16 / 9". Mặc định: tỉ lệ thật của ảnh; bìa token: 16 / 9. */
   ratio?: string;
   /** Thuộc tính sizes của next/image (bắt buộc với ảnh fill để tải đúng cỡ). */
   sizes: string;
   /** Ảnh LCP (ảnh đầu bài): tải ngay, ưu tiên cao. Mỗi trang tối đa 1 ảnh (AC-PERF-3). */
   priority?: boolean;
-  /** Icon Lucide cho khung giữ chỗ. */
+  /** Icon Lucide cho bìa token. */
   placeholderIcon: LucideIcon;
   /** Ghi chú "ảnh thật sẽ chụp" — CHỈ truyền khi DRAFT_PREVIEW (trang quyết định), production để null. */
   previewNote?: string | null;
@@ -27,8 +27,10 @@ type MediaFrameProps = {
 /**
  * Khung ảnh chung của khu vực Kiến thức (thẻ bài, ảnh đầu bài, ảnh trong bài). Thay ảnh thật sau này = đổi `src`
  * trong content/articles/<key>.ts, không sửa component.
- *  - Có ảnh: next/image (AVIF/WebP, đúng cỡ theo `sizes`), `fit` cover (ảnh chụp) hoặc contain (infographic).
- *  - Không có ảnh: nền token + họa tiết lưới + icon Lucide, aria-hidden (trang trí), không chữ trong ảnh.
+ *  - Có ảnh: next/image (AVIF/WebP, đúng cỡ theo `sizes`), `fit` cover (ảnh chụp) hoặc contain (infographic). Ảnh chụp
+ *    phủ một lớp navy-900 10% để các ảnh bài thành một họ ảnh (docs/03 mục 11.4).
+ *  - Không có ảnh (CHỈ thẻ bài — trang bài không dựng khung khi hero = null): bìa dựng từ token (nền navy-900, vệt sáng
+ *    blue-600, tia chớp nét blue-300, icon của bài), aria-hidden, không chữ trong ảnh. Không còn "khung giữ chỗ" lưới.
  */
 export function MediaFrame({
   image,
@@ -45,22 +47,16 @@ export function MediaFrame({
 
   if (!image) {
     return (
-      <div
-        aria-hidden="true"
-        className={cn(
-          frame,
-          'border border-blue-100 bg-blue-50 bg-size-[24px_24px]',
-          'bg-[linear-gradient(to_right,var(--color-blue-100)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-blue-100)_1px,transparent_1px)]',
-        )}
-        style={{ aspectRatio: ratio ?? '16 / 9' }}
-      >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="flex size-16 items-center justify-center rounded-pill bg-white shadow-1 md:size-20">
-            <Icon size={32} strokeWidth={1.5} className="text-blue-600" />
-          </span>
-        </div>
+      <div aria-hidden="true" className={cn(frame, 'bg-navy-900')} style={{ aspectRatio: ratio ?? '16 / 9' }}>
+        <div className="absolute -right-16 -top-20 size-72 rounded-pill bg-[radial-gradient(circle,var(--color-blue-600)_0%,transparent_70%)] opacity-70" />
+        <svg viewBox="0 0 120 200" className="absolute -bottom-6 right-[8%] h-[115%] w-auto text-blue-300 opacity-25">
+          <path d="M72 4 L20 112 H58 L44 196 L104 76 H64 Z" fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" />
+        </svg>
+        <span className="absolute bottom-5 left-5 flex size-14 items-center justify-center rounded-md border border-blue-300/40 bg-navy-900/60 md:bottom-6 md:left-6 md:size-16">
+          <Icon size={30} strokeWidth={1.5} className="text-blue-300" />
+        </span>
         {previewNote ? (
-          <span className="absolute bottom-3 left-3">
+          <span className="absolute left-3 top-3">
             <Badge variant="illustration">{previewNote}</Badge>
           </span>
         ) : null}
@@ -82,6 +78,7 @@ export function MediaFrame({
         {...(priority ? { preload: true } : {})}
         className={fit === 'contain' ? 'object-contain p-2' : 'object-cover'}
       />
+      {fit === 'cover' ? <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-navy-900/10" /> : null}
     </div>
   );
 }

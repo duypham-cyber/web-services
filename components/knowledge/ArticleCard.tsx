@@ -6,6 +6,7 @@ import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n/routing';
 import { cn } from '@/lib/cn';
 import { formatDate } from '@/lib/format';
+import { keepCompounds } from '@/lib/vn-wrap';
 import { ARTICLE_ICONS } from './icons';
 import { MediaFrame } from './MediaFrame';
 
@@ -18,10 +19,16 @@ type ArticleCardProps = {
   previewNote?: string | null;
   /** horizontal = ảnh trái, chữ phải từ 768px (nhóm chỉ có 1 bài); mặc định ảnh trên, chữ dưới. */
   layout?: 'vertical' | 'horizontal';
+  /**
+   * false = thẻ chỉ có chữ (không ảnh, không bìa) — trang chủ dùng cho tới khi ảnh bài đạt art direction (docs/03 mục 11.4).
+   * Mặc định true: ảnh bài, hoặc bìa dựng từ token khi bài chưa có ảnh.
+   */
+  media?: boolean;
 };
 
 /**
- * Thẻ bài viết: ảnh 16:9 (hoặc khung giữ chỗ) · nhóm · tiêu đề (cả thẻ bấm được) · trích 2 dòng · ngày · phút đọc.
+ * Thẻ bài viết: ảnh 16:9 (hoặc bìa token, hoặc không ảnh khi media=false) · nhóm · tiêu đề (cả thẻ bấm được) · trích
+ * 2 dòng · ngày · phút đọc.
  * Link tiêu đề phủ cả thẻ bằng ::after (Card relative). Không motion trên chữ.
  */
 export async function ArticleCard({
@@ -30,6 +37,7 @@ export async function ArticleCard({
   headingLevel = 3,
   previewNote,
   layout = 'vertical',
+  media = true,
 }: ArticleCardProps) {
   const t = await getTranslations({ locale, namespace: 'knowledge' });
   const { content } = article;
@@ -40,18 +48,20 @@ export async function ArticleCard({
       as="article"
       padding="none"
       interactive
-      className={cn('flex h-full flex-col overflow-clip', layout === 'horizontal' && 'md:flex-row')}
+      className={cn('flex h-full flex-col overflow-clip', media && layout === 'horizontal' && 'md:flex-row')}
     >
-      <MediaFrame
-        image={content.hero}
-        locale={locale}
-        ratio="16 / 9"
-        sizes="(min-width: 1280px) 400px, (min-width: 768px) 50vw, 100vw"
-        placeholderIcon={ARTICLE_ICONS[article.key]}
-        previewNote={previewNote}
-        rounded={false}
-        className={layout === 'horizontal' ? 'md:w-1/2 md:shrink-0 md:self-stretch md:[aspect-ratio:auto]!' : undefined}
-      />
+      {media ? (
+        <MediaFrame
+          image={content.hero}
+          locale={locale}
+          ratio="16 / 9"
+          sizes="(min-width: 1280px) 400px, (min-width: 768px) 50vw, 100vw"
+          placeholderIcon={ARTICLE_ICONS[article.key]}
+          previewNote={previewNote}
+          rounded={false}
+          className={layout === 'horizontal' ? 'md:w-1/2 md:shrink-0 md:self-stretch md:[aspect-ratio:auto]!' : undefined}
+        />
+      ) : null}
       <div className={cn('flex flex-1 flex-col p-6', layout === 'horizontal' && 'md:p-10')}>
         <div>
           <Chip variant="blue">{t(`article.categories.${article.category}`)}</Chip>
@@ -61,7 +71,7 @@ export async function ArticleCard({
             href={{ pathname: '/kien-thuc/[slug]', params: { slug: article.slug[locale] } }}
             className="no-underline after:absolute after:inset-0 after:content-[''] hover:text-blue-600 hover:underline"
           >
-            {article.title[locale]}
+            {keepCompounds(article.title[locale])}
           </Link>
         </Heading>
         <p className="mt-3 line-clamp-2 text-small text-slate-600">{content.description[locale]}</p>

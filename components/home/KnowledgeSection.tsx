@@ -5,7 +5,6 @@ import { Section, type SectionTone } from '@/components/ui/Section';
 import { TextLink } from '@/components/ui/TextLink';
 import { listArticles } from '@/content/articles/all';
 import type { Locale } from '@/i18n/routing';
-import { isDraftPreview } from '@/lib/env';
 import { SectionHeader } from './SectionHeader';
 
 /** Số bài trên trang chủ (docs/03 mục 13.4 P7). */
@@ -13,14 +12,14 @@ const HOME_ARTICLES = 3;
 
 /**
  * P7 KIẾN THỨC (P1): 3 bài MỚI NHẤT theo ngày đăng — dữ liệu và thẻ bài của khu vực Kiến thức (agent SEO, CHỈ ĐỌC):
- * listArticles() (content/articles/all.ts, đã sắp mới nhất trước) + <ArticleCard/> (components/knowledge) để thẻ trên
- * trang chủ giống hệt trang /kien-thuc: ảnh bài cũ được giữ, nhóm · tiêu đề · trích 2 dòng · ngày · phút đọc.
+ * listArticles() (content/articles/all.ts, đã sắp mới nhất trước) + <ArticleCard/> (components/knowledge).
+ * Thẻ CHỈ CÓ CHỮ (media={false}): ảnh bài cũ lệch art direction (docs/03 mục 11.4: stock, ảnh AI) nên trang chủ không
+ * dùng ảnh bài cho tới khi có ảnh đạt — nhóm · tiêu đề · trích 2 dòng · ngày · phút đọc.
  */
 export async function KnowledgeSection({ locale, tone }: { locale: Locale; tone: SectionTone }) {
   const t = await getTranslations('home');
   const latest = listArticles().slice(0, HOME_ARTICLES);
   if (latest.length === 0) return null;
-  const previewNote = isDraftPreview() ? t('media.photoPending') : null;
 
   return (
     <Section id="kien-thuc" tone={tone} aria-labelledby="kien-thuc-title">
@@ -38,7 +37,7 @@ export async function KnowledgeSection({ locale, tone }: { locale: Locale; tone:
 
       <StaggerGrid as="ul" className="mt-12 grid gap-6 md:grid-cols-3 lg:mt-16" itemClassName="grid">
         {latest.map((article) => (
-          <ArticleCard key={article.key} article={article} locale={locale} headingLevel={3} previewNote={previewNote} />
+          <ArticleCard key={article.key} article={article} locale={locale} headingLevel={3} media={false} />
         ))}
       </StaggerGrid>
     </Section>
