@@ -150,3 +150,23 @@ cũ). `components/layout/Logo.tsx` khai báo path một lần (`<symbol>`), dùn
 - Chưa có: sitemap.ts, robots.ts, JSON-LD, ảnh OG (agent SEO); check-budgets + Lighthouse CI (agent QA); phim A+ (agent phim);
   bản đồ thật (agent bản đồ); form/API (chờ contract APPROVED).
 
+
+## Quyết định của anh Duy (trả lời 3 câu hỏi, 02/10/2026)
+
+### D-19 · 02/10/2026 · Ngoại lệ quy trình: build staging phần tĩnh trước khi contract APPROVED (anh Duy chọn)
+- Câu hỏi: "Build staging ngay, ghi ngoại lệ" hay "viết contract trước, anh duyệt rồi build". **Anh Duy chọn: build staging ngay,
+  ghi ngoại lệ.**
+- Phạm vi ngoại lệ: CHỈ phần tĩnh — phim trang chủ và khung site P0 dùng dữ liệu mẫu, không backend. `contracts/film-home.md` và
+  `contracts/site-shell-p0.md` (DRAFT) được dùng làm tiêu chí nghiệm thu khi build.
+- KHÔNG thuộc ngoại lệ: form gửi lead, API `/api/v1/leads`, DB, CMS, `/tra-cuu` — vẫn chờ `contracts/lead-b2b.md` và
+  `contracts/lead-technician.md` có `STATUS: APPROVED`.
+
+### D-20 · 02/10/2026 · Kênh lead (anh Duy chọn)
+- **Lưu DB (Postgres) trước, sau đó email cho bộ phận** (Kinh doanh B2B / Tuyển thợ) — phương án (a) trong contract lead.
+- Còn thiếu để duyệt contract: địa chỉ email nhận của từng bộ phận, câu chữ đồng ý (pháp chế), các điểm D-01…D-19 trong contract.
+
+### D-21 · 02/10/2026 · Cổng xem bản build (anh Duy chọn 9515)
+- Anh Duy chọn cổng 9515. Kiểm 02/10/2026: từ Internet `<IP công cộng của văn phòng>:9515` vẫn trả trang "Mention — Social Listening" của MÁY
+  KHÁC (listener nhận dạng của bbsw không nhận được) → NAT router chưa trỏ 9515 về bbsw (<IP LAN của máy chủ>).
+- Bản xem trước chạy trên bbsw cổng 9515 (Basic Auth). Truy cập được ngay qua Tailscale `http://<IP Tailscale của máy chủ>:9515` và LAN
+  `http://<IP LAN của máy chủ>:9515`. Muốn public cần đổi NAT 9515 → <IP LAN của máy chủ> (dịch vụ Mention sẽ mất cổng này).
