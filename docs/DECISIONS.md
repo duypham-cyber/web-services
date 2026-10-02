@@ -170,3 +170,10 @@ cũ). `components/layout/Logo.tsx` khai báo path một lần (`<symbol>`), dùn
   KHÁC (listener nhận dạng của bbsw không nhận được) → NAT router chưa trỏ 9515 về bbsw (<IP LAN của máy chủ>).
 - Bản xem trước chạy trên bbsw cổng 9515 (Basic Auth). Truy cập được ngay qua Tailscale `http://<IP Tailscale của máy chủ>:9515` và LAN
   `http://<IP LAN của máy chủ>:9515`. Muốn public cần đổi NAT 9515 → <IP LAN của máy chủ> (dịch vụ Mention sẽ mất cổng này).
+
+### D-22 · 02/10/2026 · Hero 3D trang chủ: chờ anh Duy chọn
+- Sáng 02/10 có thêm nhánh "5 mẫu 3D làm riêng" ở `../website-services-3d/` (khuyến nghị Mẫu 02 "Bản đồ sống", có thể + mở màn
+  tia chớp Mẫu 01). Hỏi anh Duy chọn hero: A+, Mẫu 02, Mẫu 02 + 01 — **anh trả lời: "Anh xem 5 mẫu rồi báo sau".**
+- Trong lúc chờ: build toàn bộ phần không phụ thuộc hero (trang, nội dung, bản đồ SVG, SEO, QA, bản xem trước 9515).
+  Hero giữ `FilmHero` khung tạm (H1 + CTA + poster). Đổi hero sau này chỉ thay ruột `FilmHero` (giữ `FilmHeroProps`).
+- Một repo duy nhất `bluebolt-web` cho mọi hướng hero; mẫu ở `website-services-3d/mau/` là bản tham khảo HTML + three.js.
