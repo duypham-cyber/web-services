@@ -6,6 +6,7 @@ import { site } from '@/content/site';
 import type { Locale } from '@/i18n/routing';
 import { isDraftPreview } from '@/lib/env';
 import { ContactButtons } from './ContactButtons';
+import { DraftBadge } from '@/components/ui/DraftBadge';
 import { DraftNote } from './DraftNote';
 import { FinalCta } from './FinalCta';
 
@@ -74,10 +75,32 @@ export async function RegisterSection({ locale }: { locale: Locale }) {
       }
     >
       {preview ? (
-        <div className="grid gap-4 lg:grid-cols-3">
-          <DraftNote>{t('register.formPending')}</DraftNote>
-          {hasAppLinks ? null : <DraftNote>{t('register.appPending')}</DraftNote>}
-          <DraftNote>{t('register.testimonialsPending')}</DraftNote>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+          {/* Khung form tương lai — CHỈ bản xem trước, không phải form thật (không input, không submit). */}
+          <div className="rounded-lg border-2 border-dashed border-slate-500 bg-white p-6 text-ink-900 md:p-8" data-tone="light">
+            <p className="flex flex-wrap items-center gap-2 text-body font-semibold">
+              {t('register.formFrameTitle')} <DraftBadge />
+            </p>
+            <div aria-hidden="true" className="mt-5 grid gap-4 sm:grid-cols-2">
+              {FIELD_KEYS.map((key) => (
+                <div key={key} className="flex flex-col gap-1.5">
+                  <span className="text-small font-semibold text-slate-600">{t(`register.fields.${key}`)}</span>
+                  <span className="block h-11 rounded-sm border border-slate-300 bg-blue-50" />
+                </div>
+              ))}
+            </div>
+            <span
+              aria-hidden="true"
+              className="mt-5 inline-flex min-h-11 items-center rounded-pill border border-slate-300 bg-blue-50 px-6 text-body font-semibold text-slate-600"
+            >
+              {t('register.formFrameSubmit')}
+            </span>
+            <p className="mt-5 text-small text-slate-600">{t('register.formPending')}</p>
+          </div>
+          <div className="flex flex-col gap-4">
+            {hasAppLinks ? null : <DraftNote>{t('register.appPending')}</DraftNote>}
+            <DraftNote>{t('register.testimonialsPending')}</DraftNote>
+          </div>
         </div>
       ) : null}
     </FinalCta>

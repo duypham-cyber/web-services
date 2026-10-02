@@ -193,6 +193,8 @@
     "appAndroid": "Get the app on Google Play",
     "appIos": "Download on the App Store",
     "formPending": "The four-field sign-up form (full name, mobile number, province, main skill) will go live here once contracts/lead-technician.md is approved.",
+    "formFrameTitle": "Sign-up form frame (not active yet)",
+    "formFrameSubmit": "Sign up",
     "appPending": "Download links for the technician app will be added once real Google Play and App Store links exist (content/partners.ts).",
     "testimonialsPending": "Technician testimonials will only be added with real people who agree to be featured (name, photo, quote). There are none yet, so this block stays empty."
   }

@@ -193,6 +193,8 @@
     "appAndroid": "Tải app trên Google Play",
     "appIos": "Tải app trên App Store",
     "formPending": "Form đăng ký 4 trường (họ và tên, số di động, tỉnh/thành, kỹ năng chính) sẽ bật tại đây sau khi anh Duy duyệt contracts/lead-technician.md.",
+    "formFrameTitle": "Khung form đăng ký (chưa hoạt động)",
+    "formFrameSubmit": "Đăng ký",
     "appPending": "Link tải app thợ sẽ thêm khi có link thật trên Google Play và App Store (content/partners.ts).",
     "testimonialsPending": "Lời chứng thực của thợ chỉ thêm khi có người thật đồng ý (tên, ảnh, nội dung). Hiện chưa có nên khối này để trống."
   }
