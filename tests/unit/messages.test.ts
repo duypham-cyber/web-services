@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { NAMESPACES } from '@/i18n/messages';
+import { NAMESPACES, pickClientMessages, SERVER_ONLY_COMMON_KEYS } from '@/i18n/messages';
+import type { AppMessages } from '@/i18n/types';
 
 type Tree = { [k: string]: string | Tree };
 
@@ -51,6 +52,22 @@ describe.each(NAMESPACES.map((ns) => [ns]))('messages/*/%s.json', (ns) => {
   it('không viết hoa cả câu giữa dòng, không "!!" hay "?!" (docs/03 mục 11.5)', () => {
     for (const [k, v] of [...Object.entries(vi), ...Object.entries(en)]) {
       expect(/!!|\?!/.test(v), k).toBe(false);
+    }
+  });
+});
+
+describe('payload messages gửi xuống trình duyệt (i18n/messages.ts → pickClientMessages)', () => {
+  it('không mang nhánh chỉ-server của common (status, dev, kpi) — production không có chữ "Nháp" trong payload RSC', () => {
+    for (const locale of ['vi', 'en'] as const) {
+      const all = Object.fromEntries(NAMESPACES.map((ns) => [ns, load(locale, ns)])) as unknown as AppMessages;
+      const client = pickClientMessages(all);
+      expect(Object.keys(client).sort()).toEqual(['common', 'errors']);
+      for (const key of SERVER_ONLY_COMMON_KEYS) expect(client.common, `${locale}: common.${key}`).not.toHaveProperty(key);
+      const payload = JSON.stringify(client);
+      for (const value of Object.values(flatten(load(locale, 'common').status as Tree))) {
+        expect(payload, `${locale}: "${value}"`).not.toContain(`"${value}"`);
+      }
+      expect(client.common.cta.quote).toBe(all.common.cta.quote);
     }
   });
 });

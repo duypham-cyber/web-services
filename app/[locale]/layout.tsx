@@ -14,7 +14,7 @@ import { MotionRuntime } from '@/components/motion/MotionRuntime';
 import { MotionBootScript } from '@/components/motion/MotionBootScript';
 import { site } from '@/content/site';
 import { assertContentValid } from '@/content/validate';
-import { CLIENT_NAMESPACES } from '@/i18n/messages';
+import { pickClientMessages } from '@/i18n/messages';
 import { routing, type Locale } from '@/i18n/routing';
 import { isDraftPreview } from '@/lib/env';
 import '../globals.css';
@@ -74,13 +74,21 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   assertContentValid();
 
   const messages = await getMessages();
-  const clientMessages = Object.fromEntries(CLIENT_NAMESPACES.map((ns) => [ns, messages[ns]]));
+  // Client chỉ nhận common (trừ nhánh chỉ-server: status, dev, kpi) + errors — i18n/messages.ts
+  const clientMessages = pickClientMessages(messages);
   const t = await getTranslations('common');
   const preview = isDraftPreview();
   const zaloApproved = (site.zalo.status as string) === 'approved';
 
   return (
-    <html lang={locale} className={`${fontSans.variable} ${fontDisplay.variable}`} suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={`${fontSans.variable} ${fontDisplay.variable}`}
+      // Dấu hiệu bản xem trước (DRAFT_PREVIEW=1 lúc build) để test biết server đang kiểm là bản nào. Trải có điều kiện để
+      // production không mang cả TÊN thuộc tính trong payload RSC (scripts/check-no-draft.mjs dò chuỗi này)
+      {...(preview ? { 'data-draft-preview': '' } : {})}
+      suppressHydrationWarning
+    >
       <head>
         <MotionBootScript />
       </head>
