@@ -33,3 +33,6 @@ npm-debug.log*
 Thumbs.db
 .idea/
 .vscode/settings.json
+
+# tsconfig tạm do scripts/safe-build.sh sinh
+tsconfig.build-*.json
