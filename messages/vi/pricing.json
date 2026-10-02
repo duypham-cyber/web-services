@@ -40,11 +40,11 @@
   },
   "filters": {
     "legend": "Lọc bảng giá",
-    "device": "Thiết bị",
+    "device": "Thiết bị (điều hòa)",
     "region": "Vùng",
     "allDevices": "Tất cả",
     "allRegions": "Tất cả vùng",
-    "acCapacity": "Điều hòa {capacity} BTU",
+    "acCapacity": "{capacity} BTU",
     "count": "Đang hiện {shown} trên {total} dòng",
     "reset": "Bỏ lọc",
     "empty": "Không có dòng nào khớp bộ lọc.",

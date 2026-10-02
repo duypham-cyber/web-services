@@ -40,11 +40,11 @@
   },
   "filters": {
     "legend": "Filter the price list",
-    "device": "Appliance",
+    "device": "Appliance (air conditioner)",
     "region": "Region",
     "allDevices": "All",
     "allRegions": "All regions",
-    "acCapacity": "{capacity} BTU air conditioner",
+    "acCapacity": "{capacity} BTU",
     "count": "Showing {shown} of {total} rows",
     "reset": "Clear filters",
     "empty": "No rows match the filters.",

@@ -45,6 +45,7 @@ const CHIP =
   'inline-flex min-h-11 cursor-pointer select-none items-center rounded-pill border border-slate-500 bg-white px-4 text-small font-medium text-navy-900 ' +
   'transition-colors duration-(--dur-fast) ease-glide hover:border-blue-600 hover:bg-blue-50 ' +
   'peer-checked:border-blue-600 peer-checked:bg-blue-600 peer-checked:text-white ' +
+  'peer-checked:hover:border-blue-700 peer-checked:hover:bg-blue-700 ' +
   'peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blue-600 peer-focus-visible:outline-solid';
 
 function ChipGroup({

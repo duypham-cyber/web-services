@@ -98,15 +98,15 @@ export default async function PricingPage({ params }: PageProps<'/[locale]/bang-
           showTable ? (
             <dl aria-label={t('facts.label')} className="grid gap-px overflow-clip rounded-lg border border-blue-100 bg-blue-100 sm:grid-cols-2 lg:grid-cols-4">
               {facts.map(({ key, icon: Icon, label, value, draft }) => (
-                <div key={key} className="flex items-start gap-3 bg-white p-4 md:p-5">
-                  <Icon aria-hidden="true" size={20} strokeWidth={1.5} className="mt-0.5 shrink-0 text-blue-600" />
-                  <div className="min-w-0">
-                    <dt className="text-small text-slate-600">{label}</dt>
-                    <dd className="mt-0.5 flex flex-wrap items-center gap-2 text-body font-semibold text-navy-900">
-                      {value}
-                      {draft ? <DraftBadge /> : null}
-                    </dd>
-                  </div>
+                <div key={key} className="bg-white p-4 md:p-5">
+                  <dt className="flex items-center gap-2 text-small text-slate-600">
+                    <Icon aria-hidden="true" size={18} strokeWidth={1.5} className="shrink-0 text-blue-600" />
+                    {label}
+                  </dt>
+                  <dd className="mt-1 flex flex-wrap items-center gap-2 text-body font-semibold text-navy-900">
+                    {value}
+                    {draft ? <DraftBadge /> : null}
+                  </dd>
                 </div>
               ))}
             </dl>
