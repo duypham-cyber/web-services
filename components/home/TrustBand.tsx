@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { DraftBadge } from '@/components/ui/DraftBadge';
 import { Heading } from '@/components/ui/Heading';
 import { Section } from '@/components/ui/Section';
+import { partnersWithConsent } from '@/content/partners';
 import type { StatId } from '@/content/schemas';
 import type { Locale } from '@/i18n/routing';
 import { claim } from '@/lib/claims';
@@ -11,18 +12,15 @@ import { hasVisibleKpis, KpiGroup } from './Kpis';
 const TRUST_KPIS: readonly StatId[] = ['K1', 'K2', 'K3', 'K4'];
 
 /**
- * Logo hãng/sàn ĐÃ CÓ VĂN BẢN ĐỒNG Ý (AC-DATA-4). Hiện rỗng → dải logo ẩn ở production.
- * Khi có: thêm { name, src (SVG/AVIF trong public/), width, height } VÀ duyệt claim 'home.partner-logos'.
- * (Nguồn dữ liệu đối tác dùng chung đề xuất: content/partners.ts của agent partner — xem báo cáo.)
+ * Logo hãng/sàn: nguồn DUY NHẤT là content/partners.ts (agent partner) — chỉ đối tác có văn bản đồng ý
+ * (partnersWithConsent(), AC-DATA-4). Dải logo trên trang chủ còn cần claim 'home.partner-logos' được duyệt.
  */
-const APPROVED_PARTNER_LOGOS: readonly { name: string; src: string; width: number; height: number }[] = [];
-
 /** Số ô giữ chỗ logo ở bản xem trước. */
 const LOGO_SLOTS = 5;
 
 function logosState(locale: Locale): 'show' | 'draft' | 'hidden' {
   const c = claim('home.partner-logos', locale);
-  if (c && !c.draft && APPROVED_PARTNER_LOGOS.length > 0) return 'show';
+  if (c && !c.draft && partnersWithConsent().length > 0) return 'show';
   return isDraftPreview() ? 'draft' : 'hidden';
 }
 
@@ -63,10 +61,10 @@ export async function TrustBand({ locale }: { locale: Locale }) {
           </p>
           <ul className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {logos === 'show'
-              ? APPROVED_PARTNER_LOGOS.map((logo) => (
-                  <li key={logo.name} className="flex h-16 items-center justify-center rounded-md bg-white px-4">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- logo SVG nhỏ, không cần tối ưu ảnh */}
-                    <img src={logo.src} alt={logo.name} width={logo.width} height={logo.height} className="max-h-10 w-auto" />
+              ? partnersWithConsent().map((partner) => (
+                  <li key={partner.name} className="flex h-16 items-center justify-center rounded-md bg-white px-4">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- logo SVG/AVIF nhỏ, khung cao cố định */}
+                    <img src={partner.logo} alt={partner.name} width={160} height={40} className="h-10 w-auto max-w-full object-contain" />
                   </li>
                 ))
               : Array.from({ length: LOGO_SLOTS }, (_, i) => (

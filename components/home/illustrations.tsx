@@ -5,7 +5,7 @@ import { cn } from '@/lib/cn';
  * Minh họa GIỮ CHỖ cho khung ảnh trang chủ (MediaFrame) khi chưa có ảnh thật (docs/03 mục 11.4).
  * Quy tắc: thiết bị cách điệu, KHÔNG logo, KHÔNG kiểu dáng nhận ra được hãng nào, KHÔNG KHANG, KHÔNG chữ trong hình
  * (chữ raster/SVG không dịch được). Chỉ màu token (var(--color-*)). Nét chính 2,5 navy, mảng phẳng.
- * viewBox 480×300 (16:10), `slice` để phủ được khung 4:3 hoặc 3:2 mà vẫn giữ chủ thể ở giữa.
+ * viewBox 480×300 (16:10), `meet` + nền vẽ tràn ra ngoài viewBox: khung khác tỉ lệ vẫn thấy trọn cảnh, không bị cắt.
  */
 export type IllustrationName = 'brands' | 'technicians' | 'consumers';
 
@@ -34,8 +34,9 @@ function Backdrop({ id, blobX, blobY }: { id: string; blobX: number; blobY: numb
           <circle cx="2" cy="2" r="1.3" fill={C.blue300} opacity="0.35" />
         </pattern>
       </defs>
-      <rect width="480" height="300" fill={C.blue50} />
-      <rect width="480" height="300" fill={`url(#${id}-dots)`} />
+      {/* Nền vẽ rộng hơn viewBox: khung khác tỉ lệ 16:10 (vd 768–1023px) hiện trọn cảnh, phần dư vẫn là nền chấm */}
+      <rect x="-480" y="-300" width="1440" height="900" fill={C.blue50} />
+      <rect x="-480" y="-300" width="1440" height="900" fill={`url(#${id}-dots)`} />
       <circle cx={blobX} cy={blobY} r="128" fill={C.blue100} />
       <ellipse cx="240" cy="250" rx="214" ry="9" fill={C.blue100} />
     </>
@@ -185,7 +186,7 @@ function Consumers() {
   return (
     <>
       <Backdrop id="hi-home" blobX={292} blobY={140} />
-      <rect y="238" width="480" height="62" fill={C.blue100} />
+      <rect x="-480" y="238" width="1440" height="400" fill={C.blue100} />
       {/* Cửa sổ */}
       <g transform="translate(40 60)">
         <rect width="92" height="116" rx="6" fill={C.blue100} {...STROKE} />
@@ -258,7 +259,7 @@ export function HomeIllustration({ name, className }: { name: IllustrationName; 
   return (
     <svg
       viewBox="0 0 480 300"
-      preserveAspectRatio="xMidYMid slice"
+      preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       focusable="false"
       className={cn('block size-full', className)}
