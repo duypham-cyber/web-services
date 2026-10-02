@@ -148,12 +148,14 @@ for (const { locale, path, route } of routeCases()) {
       types.push(...typesOf(data));
     }
     for (const t of FORBIDDEN_TYPES) expect(types, `không được có ${t}`).not.toContain(t);
+    // AC-LD-1 (bảng 1.1 site-shell-p0): Organization ở trang chủ; BreadcrumbList ở MỌI trang index được trừ trang chủ;
+    // Service ở 2 landing giải pháp chi tiết + 4 trang dịch vụ; Article ở bài viết.
     if (route.key === 'home') expect(types).toContain('Organization');
-    if (route.key.startsWith('knowledge')) expect(types).toContain('BreadcrumbList');
-    if (route.key.startsWith('knowledge.')) expect(types).toContain('Article');
-    if (route.key !== 'home' && !types.includes('BreadcrumbList')) {
-      testInfo.annotations.push({ type: 'thiếu BreadcrumbList', description: `${path} (AC-LD-1: mọi trang trừ trang chủ)` });
+    if (route.key !== 'home' && route.indexable) expect(types, 'BreadcrumbList (AC-LD-1)').toContain('BreadcrumbList');
+    if (route.key === 'solutions.brands' || route.key === 'solutions.retail' || route.key.startsWith('services.')) {
+      expect(types, 'Service (AC-LD-1)').toContain('Service');
     }
+    if (route.key.startsWith('knowledge.')) expect(types).toContain('Article');
 
     // /en: không chữ tiếng Việt có dấu (text, alt, title, aria-label, meta, JSON-LD) trừ tên pháp nhân + địa chỉ.
     // Trang /dev/* (noindex, 404 ở production) không áp dụng.

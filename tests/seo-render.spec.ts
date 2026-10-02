@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { absoluteUrl } from '../lib/routes';
+import { isIndexable } from '../lib/seo';
 import { routeCases } from './helpers';
 
 /**
@@ -39,10 +40,13 @@ for (const { locale, path, route } of routeCases()) {
       expect(norm(href), `hreflang ${lang}`).toBe(norm(absoluteUrl(expected)));
     }
 
-    // Đọc trực tiếp (meta robots có thể không tồn tại → không dùng locator để khỏi chờ tới timeout)
+    // Đọc trực tiếp (meta robots có thể không tồn tại → không dùng locator để khỏi chờ tới timeout).
+    // Kỳ vọng theo lib/seo.ts isIndexable với CHẾ ĐỘ CỦA SERVER đang kiểm: production → 3 trang pháp lý chưa được pháp
+    // chế duyệt là noindex (AC-LEGAL-1); bản xem trước (<html data-draft-preview>) → vẫn index như route thường.
     const robots = await page.evaluate(() => document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? '');
-    if (!route.indexable) expect(robots).toContain('noindex');
-    else expect(robots).not.toContain('noindex');
+    const preview = await page.evaluate(() => document.documentElement.hasAttribute('data-draft-preview'));
+    if (!isIndexable(route.key, { draftPreview: preview })) expect(robots, 'meta robots').toContain('noindex');
+    else expect(robots, 'meta robots').not.toContain('noindex');
 
     if (testInfo.project.name === 'mobile-390') {
       // HTML server render, không JS, UA Googlebot smartphone: vẫn đúng 1 H1 và H1 nhìn thấy (opacity ≥ 0,9)

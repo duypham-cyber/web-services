@@ -106,16 +106,20 @@ const LEGAL_DOC: Partial<Record<string, LegalDocKey>> = {
  * Trang pháp lý chưa được pháp chế duyệt: production chỉ hiện thông báo "đang cập nhật" + noindex (AC-LEGAL-1,
  * components/legal/legal-metadata.ts) → cũng phải ra khỏi sitemap. Bản xem trước giữ nguyên (staging đã noindex).
  */
-function legalPending(routeKey: RouteKey): boolean {
+function legalPending(routeKey: RouteKey, draftPreview: boolean): boolean {
   const doc = LEGAL_DOC[routeKey];
-  return !!doc && !isLegalDocPublished(legalDocs[doc]) && !isDraftPreview();
+  return !!doc && !isLegalDocPublished(legalDocs[doc]) && !draftPreview;
 }
 
-/** Route có được index không (lib/routes.ts PAGE_META.indexable + content/seo.ts index + pháp lý chưa duyệt). */
-export function isIndexable(routeKey: RouteKey): boolean {
+/**
+ * Route có được index không (lib/routes.ts PAGE_META.indexable + content/seo.ts index + pháp lý chưa duyệt).
+ * `draftPreview` mặc định đọc DRAFT_PREVIEW của tiến trình; test Playwright truyền chế độ của SERVER đang kiểm
+ * (thuộc tính `data-draft-preview` trên <html>, root layout).
+ */
+export function isIndexable(routeKey: RouteKey, options?: { draftPreview?: boolean }): boolean {
   const route = getRoute(routeKey);
   if (!route.indexable) return false;
-  if (legalPending(routeKey)) return false;
+  if (legalPending(routeKey, options?.draftPreview ?? isDraftPreview())) return false;
   return seoFor(routeKey, 'vi')?.index ?? true;
 }
 
