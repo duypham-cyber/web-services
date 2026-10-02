@@ -75,36 +75,36 @@ export async function FilmHero({
       </div>
 
       <div className="relative order-1 w-full">
-      <Container className="pb-12 pt-[calc(var(--header-h)+2.5rem)] lg:py-[calc(var(--header-h)+3rem)]">
-        <div className="flex max-w-[38rem] flex-col xl:max-w-[42rem]">
-          {/* DOM: link bỏ qua đứng ĐẦU để là phần tử focus đầu tiên sau header; hiển thị ở cuối khối chữ */}
-          <a
-            href={`#${skipTargetId}`}
-            className="order-last mt-8 inline-flex w-fit items-center gap-2 rounded-sm text-small font-semibold text-blue-300 underline-offset-4 hover:text-white hover:underline"
-          >
-            {skipLabel.replace(/\s*↓\s*$/, '')}
-            <ArrowDown aria-hidden="true" size={16} strokeWidth={1.75} />
-          </a>
-          {eyebrow ? (
-            <p className="eyebrow flex flex-wrap items-center gap-2 text-orange-200">
-              {eyebrow.text}
-              {eyebrow.draft ? <Badge variant="draft">{t('status.draft')}</Badge> : null}
-            </p>
-          ) : null}
-          <h1 id="hero-title" className="mt-4 font-display text-display text-white">
-            {title}
-          </h1>
-          <p className="mt-6 max-w-[34rem] text-lead text-slate-300">{lead}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button href={primaryCta.href} variant="primary" size="lg">
-              {primaryCta.label}
-            </Button>
-            <Button href={secondaryCta.href} variant="on-dark" size="lg">
-              {secondaryCta.label}
-            </Button>
+        <Container className="pb-12 pt-[calc(var(--header-h)+2.5rem)] lg:py-[calc(var(--header-h)+3rem)]">
+          <div className="flex max-w-[38rem] flex-col xl:max-w-[42rem]">
+            {/* DOM: link bỏ qua đứng ĐẦU để là phần tử focus đầu tiên sau header; hiển thị ở cuối khối chữ */}
+            <a
+              href={`#${skipTargetId}`}
+              className="order-last mt-8 inline-flex w-fit items-center gap-2 rounded-sm text-small font-semibold text-blue-300 underline-offset-4 hover:text-white hover:underline"
+            >
+              {skipLabel.replace(/\s*↓\s*$/, '')}
+              <ArrowDown aria-hidden="true" size={16} strokeWidth={1.75} />
+            </a>
+            {eyebrow ? (
+              <p className="eyebrow flex flex-wrap items-center gap-2 text-orange-200">
+                {eyebrow.text}
+                {eyebrow.draft ? <Badge variant="draft">{t('status.draft')}</Badge> : null}
+              </p>
+            ) : null}
+            <h1 id="hero-title" className="mt-4 font-display text-display text-white">
+              {title}
+            </h1>
+            <p className="mt-6 max-w-[34rem] text-lead text-slate-300">{lead}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button href={primaryCta.href} variant="primary" size="lg">
+                {primaryCta.label}
+              </Button>
+              <Button href={secondaryCta.href} variant="on-dark" size="lg">
+                {secondaryCta.label}
+              </Button>
+            </div>
           </div>
-        </div>
-      </Container>
+        </Container>
       </div>
     </section>
   );

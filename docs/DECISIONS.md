@@ -109,7 +109,7 @@ giản, not-found lồng, và một app Next 16.3.8 tối giản riêng. Không 
 `scripts/safe-build.sh`: khóa `/tmp/bluebolt-web-build.lock`, distDir `.next-check-<pid>` (env `NEXT_DIST_DIR`), tsconfig tạm
 `tsconfig.build-<dist>.json` qua `NEXT_TSCONFIG_PATH` (nếu không, Next ghi đường dẫn distDir tạm vào `tsconfig.json` mỗi lần build),
 khôi phục `next-env.d.ts` sau build. Next 16 bỏ cột "First Load JS" → `scripts/route-sizes.mjs` đo từ HTML prerender
-(gzip -9, bỏ polyfill `noModule`), ghi `<dist>/route-sizes.json`. Đo ngày 02/10/2026: **156,8–157,6 KB gz/route** (ngân sách 170).
+(gzip -9, bỏ polyfill `noModule`), ghi `<dist>/route-sizes.json`. Đo ngày 02/10/2026 (build cuối của nền móng): **156,9 KB gz** mọi trang con, **157,6 KB gz** trang chủ (ngân sách 170); CSS 8,7 KB gz; HTML 20,6–28,4 KB gz (gồm payload RSC; logo inline chiếm ~6 KB gz — có thể giảm sau bằng sprite ngoài hoặc giảm độ chính xác path).
 
 ### D-14 · 02/10/2026 · Font
 Be Vietnam Pro qua `next/font/google` (tự host lúc build), subset latin/latin-ext/vietnamese, 400/500/600/700, `display: swap`.
@@ -132,9 +132,21 @@ cũ). `components/layout/Logo.tsx` khai báo path một lần (`<symbol>`), dùn
   không nhân đôi link. Đổi được nếu anh Duy muốn accordion.
 - Motion ngoài phim không dùng GSAP: một IntersectionObserver (`MotionRuntime`) + CSS; `html[data-motion]` pending → ready, tự
   "off" sau 4 s nếu JS lỗi. `Curtain` đặt clip-path ở lớp trong (Chrome không báo giao cho phần tử bị clip 100%).
+- Script khởi động motion nằm ĐẦU `<head>` nhưng chỉ render ở server (`MotionBootScript`, client trả null): chạy trước lần vẽ
+  đầu (không nháy), và không gây lỗi "script tag" của React khi Next render lại layout ở client cho trang 404 (D-10).
+  Đã thử `next/script` beforeInteractive: Next đẩy script vào hàng đợi chạy SAU bundle → quá muộn, bỏ.
 
 ### D-17 · 02/10/2026 · Ghi chú cho deploy và SEO (chưa làm, để agent tương ứng)
 - 301 ở tầng Next dùng `statusCode: 301` (không `permanent: true` vì ra 308). Biến thể có "/" cuối (`/news/`) ở tầng Next đi
   2 bước (308 rồi 301); production làm 1 bước ở openresty (`docs/04` mục 2.7).
 - Script đầu `<head>` (`MOTION_BOOT_SCRIPT`) cần hash trong CSP khi bật CSP.
 - `output: 'standalone'`: `next start` in cảnh báo (vẫn chạy) — production dùng `node .next/standalone/server.js` (xem D-09).
+
+### D-18 · 02/10/2026 · Trạng thái nền móng khi bàn giao cho các agent
+- Nhánh `feat/s1-1.4-p0-build`; dev server dùng chung `http://127.0.0.1:3091` (systemd `bluebolt-web-dev`, DRAFT_PREVIEW=1).
+- Kiểm xanh: typecheck, lint (89+ file), Vitest 120 test, build production (56 trang prerender), Playwright trên dev server
+  (overflow 54 route×ngôn ngữ × 9 bề rộng, SEO render 108, axe 108) và trên bản production (SEO 100, overflow 50, axe 100).
+- Mọi trang ngoài trang chủ là KHUNG (H1 + lead + ghi chú dựng trang ở dev/preview). FilmHero, VietnamMap là STUB giữ props.
+- Chưa có: sitemap.ts, robots.ts, JSON-LD, ảnh OG (agent SEO); check-budgets + Lighthouse CI (agent QA); phim A+ (agent phim);
+  bản đồ thật (agent bản đồ); form/API (chờ contract APPROVED).
+
