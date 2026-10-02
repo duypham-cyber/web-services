@@ -88,11 +88,15 @@ test('URL cũ: 301 một bước tới đích đúng (giữ query) và đích tr
   expect(problems, problems.join('\n')).toEqual([]);
 });
 
-test('bài AI đã gỡ trả 410 + noindex (VI và EN)', async ({ request }) => {
+test('bài AI đã gỡ trả 410 + noindex (VI và EN), trang báo đúng ngôn ngữ của URL', async ({ request }) => {
   for (const row of legacyRedirects.filter((r) => r.kind === 'gone')) {
     const res = await request.get(row.from, { maxRedirects: 0 });
     expect(res.status(), row.from).toBe(410);
     expect(res.headers()['x-robots-tag'] ?? '', row.from).toContain('noindex');
+    const lang = row.from === '/en' || row.from.startsWith('/en/') ? 'en' : 'vi';
+    const html = await res.text();
+    expect(html, `${row.from}: <html lang="${lang}">`).toContain(`<html lang="${lang}">`);
+    if (lang === 'en') expect(html, `${row.from}: không chữ tiếng Việt`).not.toMatch(/[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/i);
   }
 });
 
