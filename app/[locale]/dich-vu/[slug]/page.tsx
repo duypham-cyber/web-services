@@ -5,7 +5,8 @@ import { notFound } from 'next/navigation';
 import { QUOTE_HREF } from '@/components/layout/Header';
 import { IncludedExcluded } from '@/components/services/IncludedExcluded';
 import { SCOPE_CLAIMS, SERVICE_PRESENTATION, WARRANTY_CLAIMS } from '@/components/services/service-config';
-import { Breadcrumb } from '@/components/solutions/kit/Breadcrumb';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { ClaimGroup, ClaimList, PendingPanel, PreviewNote } from '@/components/solutions/kit/draft';
 import { EndCta } from '@/components/solutions/kit/EndCta';
 import { buildFaqEntries } from '@/components/solutions/kit/faq-entries';
@@ -23,6 +24,7 @@ import { services } from '@/content/services';
 import { resolveLocale } from '@/i18n/params';
 import { isLocale, type Locale } from '@/i18n/routing';
 import { isDraftPreview } from '@/lib/env';
+import { serviceJsonLd } from '@/lib/jsonld';
 import { buildMetadata } from '@/lib/seo';
 
 /** Chỉ 4 slug trong content/services.ts (slug VI cho /dich-vu/…, slug EN cho /en/services/…); còn lại 404. */
@@ -75,17 +77,9 @@ export default async function ServiceDetailPage({ params }: PageProps<'/[locale]
 
   return (
     <>
+      <JsonLd data={serviceJsonLd({ routeKey: `services.${service.key}`, locale })} />
       <SubpageHero
-        breadcrumb={
-          <Breadcrumb
-            label={ts('kit.breadcrumbLabel')}
-            items={[
-              { label: ts('kit.home'), href: '/' },
-              { label: t('hub.eyebrow'), href: '/dich-vu' },
-              { label: service.title[locale] },
-            ]}
-          />
-        }
+        breadcrumb={<Breadcrumbs routeKey={`services.${service.key}`} locale={locale} />}
         eyebrow={t('eyebrow')}
         title={service.title[locale]}
         lead={item.lead}

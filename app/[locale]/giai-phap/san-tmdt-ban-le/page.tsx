@@ -16,7 +16,8 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { QUOTE_HREF } from '@/components/layout/Header';
 import { StaggerGrid } from '@/components/motion/StaggerGrid';
 import { IntegrationDiagram } from '@/components/solutions/IntegrationDiagram';
-import { Breadcrumb } from '@/components/solutions/kit/Breadcrumb';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { ClaimGroup, ClaimList, PendingPanel } from '@/components/solutions/kit/draft';
 import { EndCta } from '@/components/solutions/kit/EndCta';
 import { buildFaqEntries, type FaqSpec } from '@/components/solutions/kit/faq-entries';
@@ -34,6 +35,7 @@ import { site } from '@/content/site';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
 import { isDraftPreview } from '@/lib/env';
+import { serviceJsonLd } from '@/lib/jsonld';
 import { buildMetadata } from '@/lib/seo';
 
 export const generateStaticParams = localeStaticParams;
@@ -89,17 +91,9 @@ export default async function SolutionsRetailPage({ params }: PageProps<'/[local
 
   return (
     <>
+      <JsonLd data={serviceJsonLd({ routeKey: 'solutions.retail', locale })} />
       <SubpageHero
-        breadcrumb={
-          <Breadcrumb
-            label={t('kit.breadcrumbLabel')}
-            items={[
-              { label: t('kit.home'), href: '/' },
-              { label: t('hub.eyebrow'), href: '/giai-phap' },
-              { label: t('retail.breadcrumb') },
-            ]}
-          />
-        }
+        breadcrumb={<Breadcrumbs routeKey="solutions.retail" locale={locale} />}
         eyebrow={t('retail.eyebrow')}
         title={t('retail.title')}
         lead={t('retail.lead')}
@@ -147,11 +141,16 @@ export default async function SolutionsRetailPage({ params }: PageProps<'/[local
         <StaggerGrid as="ul" className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {GROUPS.map(({ key, icon: Icon, hasPartsTable }) => (
             <Card key={key} as="article" className="flex h-full flex-col">
-              <span aria-hidden="true" className="inline-flex size-11 items-center justify-center rounded-md bg-blue-100 text-blue-600">
-                <Icon size={22} strokeWidth={1.5} />
-              </span>
-              <h3 className="mt-4 text-h3 text-navy-900">{t(`retail.groups.items.${key}.title`)}</h3>
-              <p className="mt-1 text-small text-slate-600">{t(`retail.groups.items.${key}.examples`)}</p>
+              <div className="flex items-start gap-4 lg:flex-col lg:gap-0">
+                <span aria-hidden="true" className="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-600">
+                  <Icon size={22} strokeWidth={1.5} />
+                </span>
+                <div className="min-w-0 lg:mt-4">
+                  <h3 className="text-h3 text-navy-900">{t(`retail.groups.items.${key}.title`)}</h3>
+                  <p className="mt-1 text-small text-slate-600">{t(`retail.groups.items.${key}.examples`)}</p>
+                </div>
+              </div>
+              <div aria-hidden="true" className="flex-1" />
               <dl className="mt-5 grid gap-2 border-t border-slate-300 pt-4 text-small">
                 <div className="flex items-baseline justify-between gap-3">
                   <dt className="text-slate-600">{t('retail.groups.feeLabel')}</dt>

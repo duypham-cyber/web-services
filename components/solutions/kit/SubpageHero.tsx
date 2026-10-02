@@ -6,8 +6,8 @@ import { cn } from '@/lib/cn';
 
 type SubpageHeroProps = {
   /**
-   * Breadcrumb: <Breadcrumb label items /> của kit (hiện tại). Khi components/seo/Breadcrumbs (agent SEO, kèm
-   * JSON-LD BreadcrumbList) ổn định, trang chỉ cần truyền <Breadcrumbs routeKey locale /> vào đây.
+   * Breadcrumb hiển thị: <Breadcrumbs routeKey locale /> của agent SEO (components/seo/Breadcrumbs.tsx) — cùng một
+   * nguồn với JSON-LD BreadcrumbList (AC-LD-1), nhãn ở content/seo.ts.
    */
   breadcrumb: ReactNode;
   eyebrow: string;

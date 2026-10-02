@@ -76,7 +76,12 @@ export function ProcessTimeline({ locale, stepLabel, triggerLabel, variant = 'de
       <StaggerGrid as="ol" className="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-5">
         {steps.map((step, i) => (
           <div key={step.id} className="flex h-full flex-col">
-            <MediaFrame illustration={STEP_STILL[step.id as keyof typeof STEP_STILL]} ratio="4/3" previewLabel={stillLabel} />
+            <MediaFrame
+              illustration={STEP_STILL[step.id as keyof typeof STEP_STILL]}
+              ratio="4/3"
+              className="max-sm:aspect-[16/10]"
+              previewLabel={stillLabel}
+            />
             <div className="mt-5 flex items-center gap-3" aria-hidden="true">
               <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-pill border-2 border-blue-600 bg-white text-small font-semibold text-blue-600 tabular">
                 {step.id}

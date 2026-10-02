@@ -4,7 +4,8 @@ import type { CSSProperties } from 'react';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { QUOTE_HREF } from '@/components/layout/Header';
 import { BillingSplit } from '@/components/solutions/BillingSplit';
-import { Breadcrumb } from '@/components/solutions/kit/Breadcrumb';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { CompareTable } from '@/components/solutions/kit/CompareTable';
 import { getCompareData } from '@/components/solutions/kit/compare-data';
 import { ClaimGroup, ClaimList, PendingPanel, PreviewNote } from '@/components/solutions/kit/draft';
@@ -23,6 +24,7 @@ import { TextLink } from '@/components/ui/TextLink';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
 import { isDraftPreview } from '@/lib/env';
+import { serviceJsonLd } from '@/lib/jsonld';
 import { buildMetadata } from '@/lib/seo';
 
 export const generateStaticParams = localeStaticParams;
@@ -77,12 +79,9 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
 
   return (
     <>
+      <JsonLd data={serviceJsonLd({ routeKey: 'solutions.brands', locale })} />
       <SubpageHero
-        breadcrumb={<Breadcrumb label={t('kit.breadcrumbLabel')} items={[
-          { label: t('kit.home'), href: '/' },
-          { label: t('hub.eyebrow'), href: '/giai-phap' },
-          { label: t('brands.breadcrumb') },
-        ]} />}
+        breadcrumb={<Breadcrumbs routeKey="solutions.brands" locale={locale} />}
         eyebrow={t('brands.eyebrow')}
         title={t('brands.title')}
         lead={t('brands.lead')}

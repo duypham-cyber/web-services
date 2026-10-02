@@ -1,7 +1,5 @@
 {
   "kit": {
-    "breadcrumbLabel": "Breadcrumb",
-    "home": "Home",
     "imagePending": "Illustration, real photo to follow",
     "stillPending": "Still frame placeholder",
     "callPrefix": "Or call",
@@ -172,7 +170,6 @@
       "title": "Installation for appliance brands",
       "description": "Bluebolt takes installation orders from appliance brands, dispatches technicians, signs off with photos and reconciles per job, with SLAs by region."
     },
-    "breadcrumb": "Appliance brands",
     "eyebrow": "For appliance brands",
     "title": "Installation and warranty work for appliance brands",
     "lead": "One partner to dispatch technicians, sign off jobs and reconcile your installation orders.",
@@ -324,7 +321,6 @@
       "title": "Marketplace and retail installation",
       "description": "Add post-purchase installation to your marketplace or retail order flow, with job status sent back to your system."
     },
-    "breadcrumb": "Marketplaces and retail",
     "eyebrow": "For marketplaces and retail",
     "title": "Post-purchase installation for marketplaces and retail chains",
     "lead": "Orders flow from your system to our technicians, and job status flows back.",
@@ -368,7 +364,7 @@
       "lead": "Installation fees are set per appliance group and region in your contract. Extra parts follow a separate reference price list and are collected on site by the technician.",
       "feeLabel": "Installation fee",
       "materialsLabel": "Extra parts",
-      "materialsTable": "In the reference parts price list",
+      "materialsTable": "In the price list",
       "materialsOnSite": "Agreed on site",
       "items": {
         "ac": {

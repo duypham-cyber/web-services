@@ -5,7 +5,7 @@ import { QUOTE_HREF } from '@/components/layout/Header';
 import { StaggerGrid } from '@/components/motion/StaggerGrid';
 import { ServiceCard } from '@/components/services/ServiceCard';
 import { SERVICE_PRESENTATION } from '@/components/services/service-config';
-import { Breadcrumb } from '@/components/solutions/kit/Breadcrumb';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { PendingPanel } from '@/components/solutions/kit/draft';
 import { EndCta } from '@/components/solutions/kit/EndCta';
 import { MediaFrame } from '@/components/solutions/kit/MediaFrame';
@@ -61,7 +61,7 @@ export default async function ServicesHubPage({ params }: PageProps<'/[locale]/d
   return (
     <>
       <SubpageHero
-        breadcrumb={<Breadcrumb label={ts('kit.breadcrumbLabel')} items={[{ label: ts('kit.home'), href: '/' }, { label: t('hub.eyebrow') }]} />}
+        breadcrumb={<Breadcrumbs routeKey="services" locale={locale} />}
         eyebrow={t('hub.eyebrow')}
         title={t('hub.title')}
         lead={t('hub.lead')}

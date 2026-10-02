@@ -53,8 +53,8 @@
         }
       }
     },
-    "audience": "Bluebolt nhận đơn từ hãng, sàn TMĐT và chuỗi bán lẻ. Khách lẻ cần hỗ trợ sau khi lắp đặt xem trang Hỗ trợ khách hàng.",
-    "audienceLink": "Hỗ trợ khách hàng",
+    "audience": "Bluebolt nhận đơn từ hãng, sàn TMĐT và chuỗi bán lẻ. Khách lẻ cần hỗ trợ sau khi lắp đặt:",
+    "audienceLink": "xem trang Hỗ trợ khách hàng",
     "cta": {
       "title": "Cần lắp đặt cho đơn hàng của doanh nghiệp?",
       "body": "Gửi nhóm thiết bị, số lượng và các tỉnh cần phục vụ. Bộ phận kinh doanh của Bluebolt sẽ liên hệ để báo giá theo hợp đồng."

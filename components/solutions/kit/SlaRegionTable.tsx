@@ -120,7 +120,7 @@ export function SlaRegionTable({
                     </span>
                     <span
                       className={cn(
-                        'tabular',
+                        'tabular max-md:shrink-0 max-md:whitespace-nowrap max-md:text-right',
                         value ? 'text-body font-semibold text-navy-900' : 'text-small text-slate-600',
                         value?.draft && 'underline decoration-warning-text decoration-dashed underline-offset-4',
                       )}

@@ -1,7 +1,5 @@
 {
   "kit": {
-    "breadcrumbLabel": "Đường dẫn",
-    "home": "Trang chủ",
     "imagePending": "Ảnh minh họa, ảnh thật sẽ chụp sau",
     "stillPending": "Khung ảnh tĩnh, chờ ảnh thật",
     "callPrefix": "Hoặc gọi",
@@ -172,7 +170,6 @@
       "title": "Giải pháp lắp đặt cho hãng điện máy",
       "description": "Bluebolt nhận đơn lắp đặt từ hãng điện máy, điều phối thợ, nghiệm thu bằng ảnh và đối soát theo từng đơn, với SLA ghi theo vùng."
     },
-    "breadcrumb": "Hãng điện máy",
     "eyebrow": "Cho hãng điện máy",
     "title": "Lắp đặt và bảo hành cho hãng điện máy",
     "lead": "Một đầu mối điều phối thợ, nghiệm thu và đối soát cho đơn lắp đặt của hãng.",
@@ -324,7 +321,6 @@
       "title": "Lắp đặt cho sàn TMĐT và chuỗi bán lẻ",
       "description": "Tích hợp lắp đặt sau bán hàng vào luồng đơn của sàn TMĐT và chuỗi bán lẻ, trạng thái đơn trả về hệ thống của bạn."
     },
-    "breadcrumb": "Sàn TMĐT và bán lẻ",
     "eyebrow": "Cho sàn TMĐT và bán lẻ",
     "title": "Lắp đặt sau bán hàng cho sàn TMĐT và chuỗi bán lẻ",
     "lead": "Đơn từ hệ thống của bạn đi tới thợ, trạng thái lắp đặt quay về hệ thống của bạn.",
@@ -368,7 +364,7 @@
       "lead": "Phí lắp đặt tính theo nhóm thiết bị và vùng, ghi trong hợp đồng với sàn. Vật tư phát sinh có khung giá tham khảo riêng, thợ thu tại chỗ.",
       "feeLabel": "Phí lắp đặt",
       "materialsLabel": "Vật tư phát sinh",
-      "materialsTable": "Có trong bảng giá vật tư",
+      "materialsTable": "Có trong bảng giá",
       "materialsOnSite": "Thỏa thuận tại chỗ",
       "items": {
         "ac": {

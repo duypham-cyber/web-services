@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { QUOTE_HREF } from '@/components/layout/Header';
 import { assertPricingValid } from '@/components/pricing/pricing-schema';
 import { PriceTable, type PriceTableRow } from '@/components/pricing/PriceTable';
-import { Breadcrumb } from '@/components/solutions/kit/Breadcrumb';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { PendingPanel } from '@/components/solutions/kit/draft';
 import { SectionIntro } from '@/components/solutions/kit/SectionIntro';
 import { SubpageHero } from '@/components/solutions/kit/SubpageHero';
@@ -90,7 +90,7 @@ export default async function PricingPage({ params }: PageProps<'/[locale]/bang-
   return (
     <>
       <SubpageHero
-        breadcrumb={<Breadcrumb label={ts('kit.breadcrumbLabel')} items={[{ label: ts('kit.home'), href: '/' }, { label: t('breadcrumb') }]} />}
+        breadcrumb={<Breadcrumbs routeKey="pricing" locale={locale} />}
         eyebrow={t('eyebrow')}
         title={t('title')}
         lead={t('lead')}
@@ -217,7 +217,7 @@ export default async function PricingPage({ params }: PageProps<'/[locale]/bang-
               </ul>
             </div>
             <div className="flex min-w-0 flex-col gap-4">
-              <Button href={QUOTE_HREF} variant="primary" size="lg">
+              <Button href={QUOTE_HREF} variant="primary" size="lg" className="self-start">
                 {ts('kit.cta.quote')}
               </Button>
               <div className="flex flex-wrap gap-x-6 gap-y-2">

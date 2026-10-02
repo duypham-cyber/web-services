@@ -53,8 +53,8 @@
         }
       }
     },
-    "audience": "Bluebolt takes orders from brands, marketplaces and retail chains. Consumers who need help after an installation can visit the Customer support page.",
-    "audienceLink": "Customer support",
+    "audience": "Bluebolt takes orders from brands, marketplaces and retail chains. Consumers who need help after an installation:",
+    "audienceLink": "visit Customer support",
     "cta": {
       "title": "Need installation for your company's orders?",
       "body": "Tell us the appliance groups, volumes and provinces you need covered. The Bluebolt sales team will contact you with contract pricing."

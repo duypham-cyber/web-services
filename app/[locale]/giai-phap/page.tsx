@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { QUOTE_HREF } from '@/components/layout/Header';
 import { StaggerGrid } from '@/components/motion/StaggerGrid';
-import { Breadcrumb } from '@/components/solutions/kit/Breadcrumb';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { CompareTable } from '@/components/solutions/kit/CompareTable';
-import { PendingPanel } from '@/components/solutions/kit/draft';
+import { ClaimList, PendingPanel } from '@/components/solutions/kit/draft';
 import { EndCta } from '@/components/solutions/kit/EndCta';
 import { MediaFrame } from '@/components/solutions/kit/MediaFrame';
 import { SectionIntro } from '@/components/solutions/kit/SectionIntro';
@@ -59,7 +59,7 @@ export default async function SolutionsHubPage({ params }: PageProps<'/[locale]/
   return (
     <>
       <SubpageHero
-        breadcrumb={<Breadcrumb label={t('kit.breadcrumbLabel')} items={[{ label: t('kit.home'), href: '/' }, { label: t('hub.eyebrow') }]} />}
+        breadcrumb={<Breadcrumbs routeKey="solutions" locale={locale} />}
         eyebrow={t('hub.eyebrow')}
         title={t('hub.title')}
         lead={t('hub.lead')}
@@ -73,6 +73,8 @@ export default async function SolutionsHubPage({ params }: PageProps<'/[locale]/
             </Button>
           </>
         }
+        highlights={<ClaimList ids={['coverage.provinces-34']} locale={locale} />}
+        media={<MediaFrame illustration="hub-flow" ratio="4/3" previewLabel={preview ? t('kit.imagePending') : null} />}
       />
 
       <Section aria-labelledby="hai-mo-hinh-title">

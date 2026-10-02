@@ -165,10 +165,10 @@ export function PriceTable({ rows, regions, deviceOptions, regionOptions, labels
                     'max-md:grid max-md:grid-cols-2 max-md:gap-x-4 max-md:gap-y-3 max-md:rounded-lg max-md:border max-md:bg-white max-md:p-4 max-md:shadow-1',
                   )}
                 >
-                  <th role="rowheader" scope="row" className="px-5 py-4 align-top text-body font-semibold text-navy-900 max-md:col-span-2 max-md:p-0">
+                  <th role="rowheader" scope="row" className="px-5 py-4 align-middle text-body font-semibold text-navy-900 max-md:col-span-2 max-md:p-0">
                     {r.label}
                   </th>
-                  <td role="cell" className="px-5 py-4 align-top text-small text-ink-900 max-md:col-span-2 max-md:p-0">
+                  <td role="cell" className="px-5 py-4 align-middle text-small text-ink-900 max-md:col-span-2 max-md:p-0">
                     <span aria-hidden="true" className="text-slate-600 md:hidden">
                       {labels.capacity}:{' '}
                     </span>
@@ -179,7 +179,7 @@ export function PriceTable({ rows, regions, deviceOptions, regionOptions, labels
                       </span>
                     ) : null}
                   </td>
-                  <td role="cell" className="px-5 py-4 align-top text-small text-slate-600 max-md:hidden">
+                  <td role="cell" className="px-5 py-4 align-middle text-small text-slate-600 max-md:hidden">
                     {r.unitLabel}
                   </td>
                   {visibleRegions.map((reg) => (
@@ -187,7 +187,7 @@ export function PriceTable({ rows, regions, deviceOptions, regionOptions, labels
                       key={reg.key}
                       role="cell"
                       className={cn(
-                        'px-5 py-4 text-right align-top max-md:flex max-md:flex-col max-md:items-start max-md:gap-0.5 max-md:rounded-md max-md:bg-blue-50 max-md:px-3 max-md:py-2 max-md:text-left',
+                        'px-5 py-4 text-right align-middle max-md:flex max-md:flex-col max-md:items-start max-md:gap-0.5 max-md:rounded-md max-md:bg-blue-50 max-md:px-3 max-md:py-2 max-md:text-left',
                         singleRegion && 'max-md:col-span-2',
                       )}
                     >

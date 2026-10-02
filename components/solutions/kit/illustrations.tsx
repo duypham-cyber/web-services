@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
  * Thay bằng ảnh thật: truyền `src` cho <MediaFrame> (components/solutions/kit/MediaFrame.tsx), không sửa file này.
  */
 export type IllustrationKey =
+  | 'hub-flow'
   | 'ac-split'
   | 'appliances'
   | 'maintenance'
@@ -68,15 +69,61 @@ function AcIndoor({ x, y, w = 236, h = 76, led = true }: { x: number; y: number;
   );
 }
 
+function HubFlow() {
+  const outs = [
+    { x: 392, y: 96 },
+    { x: 404, y: 186 },
+    { x: 392, y: 276 },
+  ];
+  return (
+    <Svg viewBox="0 0 480 360">
+      {/* Hai nguồn đơn: hãng (tòa nhà) và sàn/bán lẻ (cửa hàng) */}
+      <rect x={30} y={62} width={132} height={92} rx={14} className="fill-white stroke-blue-600" strokeWidth={2} />
+      <rect x={50} y={84} width={38} height={50} rx={4} className="fill-blue-100" />
+      {[0, 1, 2].map((r) =>
+        [0, 1].map((c) => <rect key={`${r}-${c}`} x={57 + c * 14} y={92 + r * 13} width={8} height={7} rx={1.5} className="fill-blue-600" />),
+      )}
+      <rect x={100} y={94} width={44} height={7} rx={3.5} className="fill-blue-100" />
+      <rect x={100} y={110} width={32} height={7} rx={3.5} className="fill-blue-100" />
+      <rect x={30} y={206} width={132} height={92} rx={14} className="fill-white stroke-blue-600" strokeWidth={2} />
+      <path d="M50 226 H106 V236 q-7 8 -14 0 q-7 8 -14 0 q-7 8 -14 0 q-7 8 -14 0 Z" className="fill-orange-500" />
+      <rect x={53} y={244} width={50} height={36} rx={3} className="fill-blue-100" />
+      <rect x={70} y={256} width={16} height={24} rx={2} className="fill-white stroke-blue-600" strokeWidth={1.5} />
+      <rect x={116} y={240} width={30} height={7} rx={3.5} className="fill-blue-100" />
+      <rect x={116} y={256} width={22} height={7} rx={3.5} className="fill-blue-100" />
+      {/* Đường đơn vào trung tâm điều phối */}
+      <path d="M162 108 C204 108 178 180 186 180" className={LINE} strokeWidth={2.5} />
+      <path d="M162 252 C204 252 178 180 186 180" className={LINE} strokeWidth={2.5} />
+      {/* Trung tâm điều phối */}
+      <circle cx={240} cy={180} r={74} className="fill-none stroke-blue-100" strokeWidth={2} strokeDasharray="4 7" />
+      <circle cx={240} cy={180} r={54} className="fill-blue-600" />
+      <path d="M248 144 L224 188 H241 L232 218 L260 172 H243 Z" className="fill-white" />
+      {/* Đường giao việc tới thợ và nhà khách */}
+      {outs.map((o) => (
+        <path
+          key={o.y}
+          d={`M294 180 C334 180 ${o.x - 44} ${o.y} ${o.x - 14} ${o.y}`}
+          className="fill-none stroke-blue-600 opacity-60"
+          strokeWidth={2}
+          strokeDasharray="2 7"
+        />
+      ))}
+      {outs.map((o) => (
+        <g key={`h-${o.y}`}>
+          <path d={`M${o.x} ${o.y + 2} l20 -17 l20 17 v22 h-40 Z`} className="fill-white stroke-blue-600" strokeWidth={2} />
+          <rect x={o.x + 15} y={o.y + 10} width={10} height={14} rx={2} className="fill-blue-100" />
+          <circle cx={o.x - 4} cy={o.y + 22} r={8} className="fill-orange-500 stroke-white" strokeWidth={2} />
+        </g>
+      ))}
+    </Svg>
+  );
+}
+
 function AcSplit() {
   const pipe = 'M308 122 H318 Q330 122 330 134 V238 Q330 250 342 250 H360';
   return (
     <Svg viewBox="0 0 480 360">
       <path d="M36 52 H300" className="fill-none stroke-slate-300" strokeWidth={2} />
-      <g className="fill-none stroke-slate-500" strokeWidth={1.5}>
-        <path d="M54 58 V82" strokeDasharray="3 4" />
-        <path d="M48 58 H60 M48 82 H60" />
-      </g>
       <AcIndoor x={72} y={84} />
       <g className={SOFT} strokeWidth={2}>
         {[120, 160, 200, 240].map((cx) => (
@@ -462,6 +509,7 @@ function StepReconcile() {
 }
 
 const ILLUSTRATIONS: Record<IllustrationKey, () => ReactNode> = {
+  'hub-flow': HubFlow,
   'ac-split': AcSplit,
   appliances: Appliances,
   maintenance: Maintenance,
