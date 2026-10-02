@@ -162,7 +162,7 @@ export const legacyRedirects: readonly RedirectRow[] = [
  * Ảnh cũ đang được dùng làm og:image (crawl 02/10/2026: og:image của 18 trang + 8 bài viết) — AC-301-3: phải trả 200
  * (giữ file ở public/ đúng đường dẫn) hoặc 301 sang ảnh mới, để preview Zalo/Facebook của link cũ không vỡ.
  * Ngoài 34 dòng sitemap ở trên (content/validate.ts kiểm đúng 34 dòng), nên tách thành bảng riêng.
- * kind "gone": ảnh bị gỡ vì nội dung (KHANG chưa rõ quyền, bài AI đã gỡ) → 410.
+ * kind "gone": ảnh của nội dung đã gỡ (bài AI) → 410. Ảnh KHANG (chưa rõ quyền) và bản đồ cũ → 301 sang ảnh mới (AC-301-3).
  * Tầng Next: app/images/[...asset]/route.ts (301/410); production: openresty xử lý trước (1 hop).
  */
 export type LegacyAssetRow = {
@@ -235,15 +235,19 @@ export const legacyAssets: readonly LegacyAssetRow[] = [
   },
   {
     from: '/images/khang-3d-poster.webp',
-    to: null,
-    kind: 'gone',
-    note: 'Ảnh KHANG (quyền chưa xác nhận, D-03) — không phục vụ trên site mới',
+    to: '/images/og/bluebolt-services-vi.jpg',
+    kind: 'redirect',
+    note:
+      'Ảnh KHANG (quyền chưa xác nhận, D-03) — không phục vụ file cũ; 301 sang ảnh OG mặc định (không KHANG) vì AC-301-3 ' +
+      'liệt kê đích danh ảnh này phải trả 200/301 (preview link cũ trên Zalo/Facebook không vỡ)',
   },
   {
     from: '/images/vn-map-workers.svg',
-    to: null,
-    kind: 'gone',
-    note: 'Bản đồ cũ (số thợ theo vùng chưa duyệt). Bản đồ mới do agent bản đồ dựng ở /mang-luoi',
+    to: '/data/vn34-map.svg',
+    kind: 'redirect',
+    note:
+      'Bản đồ cũ (số thợ theo vùng chưa duyệt) → 301 sang bản đồ SVG mới 34 tỉnh có đủ QĐ. Hoàng Sa, QĐ. Trường Sa ' +
+      '(scripts/make-map.mjs). AC-301-3 yêu cầu ảnh cũ trả 200/301, không 410 (đề xuất của agent bản đồ, 02/10/2026)',
   },
 ];
 

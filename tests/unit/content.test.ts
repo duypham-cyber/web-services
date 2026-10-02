@@ -1,9 +1,9 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { articles } from '@/content/articles';
 import { claims } from '@/content/claims';
 import { provinces } from '@/content/provinces';
-import { buildNextRedirects, GONE_PATHS, legacyRedirects } from '@/content/redirects';
+import { buildNextRedirects, GONE_PATHS, legacyAssets, legacyRedirects } from '@/content/redirects';
 import { claimSchema, statSchema } from '@/content/schemas';
 import { services } from '@/content/services';
 import { site } from '@/content/site';
@@ -82,6 +82,11 @@ describe('redirects.ts (docs/03 mục 10.3)', () => {
   });
   it('dòng "keep" là route đang sống', () => {
     for (const r of legacyRedirects.filter((x) => x.kind === 'keep')) expect(livePaths).toContain(r.from);
+  });
+  it('ảnh og:image cũ: đích "keep"/301 là file có thật trong public/ (AC-301-3)', () => {
+    for (const a of legacyAssets.filter((x) => x.kind !== 'gone')) {
+      expect(existsSync(`public${a.to ?? ''}`), `${a.from} → ${a.to}`).toBe(true);
+    }
   });
   it('410: bài AI (giả định Q10), cả VI và EN', () => {
     expect([...GONE_PATHS].sort()).toEqual([

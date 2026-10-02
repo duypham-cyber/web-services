@@ -43,5 +43,5 @@ A07,og-image,/images/news/tuong-lai-nganh-dien-lanh-2026.avif,/images/news/tuong
 A08,og-image,/images/news/robot-gia-dinh.jpg,/images/news/og/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai.jpg,301,redirect,"og:image bài robot-va-tu-dong-hoa (đã gộp). Ảnh stock ""gia đình phương Tây + robot"" (docs/03 mục 11.4) → 301 sang ảnh OG bài gộp"
 A09,og-image,/images/news/em-telco-tect-image-web-1024x690.jpg,/images/news/og/robot-tu-dong-hoa-xu-huong-gia-dinh-hien-dai.jpg,301,redirect,"og:image bài robot-tu-dong-hoa: ảnh tháp viễn thông lạc đề, tên file của website khác → 301 sang ảnh OG bài gộp"
 A10,og-image,/images/news-card10.jpg,,410,gone,"og:image bài AI (410). Ảnh stock ""cô gái headset vs robot"" (docs/03 mục 11.4)"
-A11,og-image,/images/khang-3d-poster.webp,,410,gone,"Ảnh KHANG (quyền chưa xác nhận, D-03) — không phục vụ trên site mới"
-A12,og-image,/images/vn-map-workers.svg,,410,gone,Bản đồ cũ (số thợ theo vùng chưa duyệt). Bản đồ mới do agent bản đồ dựng ở /mang-luoi
+A11,og-image,/images/khang-3d-poster.webp,/images/og/bluebolt-services-vi.jpg,301,redirect,"Ảnh KHANG (quyền chưa xác nhận, D-03) — không phục vụ file cũ; 301 sang ảnh OG mặc định (không KHANG) vì AC-301-3 liệt kê đích danh ảnh này phải trả 200/301 (preview link cũ trên Zalo/Facebook không vỡ)"
+A12,og-image,/images/vn-map-workers.svg,/data/vn34-map.svg,301,redirect,"Bản đồ cũ (số thợ theo vùng chưa duyệt) → 301 sang bản đồ SVG mới 34 tỉnh có đủ QĐ. Hoàng Sa, QĐ. Trường Sa (scripts/make-map.mjs). AC-301-3 yêu cầu ảnh cũ trả 200/301, không 410 (đề xuất của agent bản đồ, 02/10/2026)"
