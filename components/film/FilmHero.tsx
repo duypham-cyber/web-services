@@ -63,7 +63,7 @@ export async function FilmHero({
           className="absolute inset-0 hidden lg:block"
           style={{
             background:
-              'linear-gradient(90deg, rgb(10 31 68 / 0.92) 0%, rgb(10 31 68 / 0.78) 34%, rgb(10 31 68 / 0) 66%), linear-gradient(180deg, rgb(10 31 68 / 0.7) 0%, rgb(10 31 68 / 0) 22%)',
+              'linear-gradient(90deg, rgb(10 31 68 / 0.95) 0%, rgb(10 31 68 / 0.88) 38%, rgb(10 31 68 / 0.4) 58%, rgb(10 31 68 / 0) 74%), linear-gradient(180deg, rgb(10 31 68 / 0.7) 0%, rgb(10 31 68 / 0) 22%)',
           }}
         />
         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-16 bg-linear-to-b from-navy-900 to-transparent lg:hidden" />
@@ -76,7 +76,7 @@ export async function FilmHero({
 
       <div className="relative order-1 w-full">
       <Container className="pb-12 pt-[calc(var(--header-h)+2.5rem)] lg:py-[calc(var(--header-h)+3rem)]">
-        <div className="flex max-w-[38rem] flex-col">
+        <div className="flex max-w-[38rem] flex-col xl:max-w-[42rem]">
           {/* DOM: link bỏ qua đứng ĐẦU để là phần tử focus đầu tiên sau header; hiển thị ở cuối khối chữ */}
           <a
             href={`#${skipTargetId}`}

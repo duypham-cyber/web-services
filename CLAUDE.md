@@ -27,7 +27,8 @@ Mọi quyết định và giả định: `docs/DECISIONS.md`. Đường dẫn ri
   KHÔNG chạy `npm run dev` thứ hai. Sửa next.config.ts → `systemctl --user restart bluebolt-web-dev`.
 - `npm run typecheck` (next typegen + tsc) · `npm run lint` · `npm run test` (Vitest, tests/unit)
 - `scripts/safe-build.sh` — build production có khóa flock, distDir `.next-check-<pid>`, in bảng JS tải đầu mỗi route.
-  `SAFE_BUILD_CLEAN=1` để tự xóa; `DRAFT_PREVIEW=1` / `DEV_PAGES=1` phải đặt LÚC BUILD. KHÔNG gọi `next build` trực tiếp.
+  `SAFE_BUILD_CLEAN=1` để tự xóa; `DRAFT_PREVIEW=1` / `DEV_PAGES=1` / `STAGING=1` (thêm X-Robots-Tag noindex) phải đặt
+  LÚC BUILD (trang tĩnh và header được đóng băng khi build). KHÔNG gọi `next build` trực tiếp.
 - Xem bản build: `NEXT_DIST_DIR=.next-check-<pid> PORT=3092 npm run start` (127.0.0.1:3092). Xong thì dừng theo PID.
 - Playwright (chạy trên dev server; `BASE_URL=http://127.0.0.1:3092` cho bản build; tối đa 2 worker):
   `npm run test:overflow` (9 bề rộng × mọi route × VI/EN) · `npm run test:seo` · `npm run test:a11y` · `npm run test:e2e` (tất cả)
@@ -107,7 +108,7 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
   `Button variant="primary|blue|ghost|on-dark" size="sm|md|lg"` + `href` (nội bộ) | `externalHref` (tel/mailto/https/#id) | không
   (button) · `TextLink variant="inline|arrow"` · `IconButton label` · `Card tone padding interactive` · `Chip` · `Badge
   variant="info|warranty|success|danger|draft|illustration"` · `DraftBadge` · `Field` + `TextInput|TextArea|Select` (CHỈ trình bày)
-  · `KpiTile` · `Prose`. Xem tất cả ở `/dev/ui`.
+  · `KpiTile` · `Prose` · `TableScroll label` (bảng rộng cuộn ngang trong khung, focus được). Xem tất cả ở `/dev/ui`.
 - `className` của primitive chỉ cho bố cục (margin, width, grid). Ẩn/hiện theo breakpoint dùng `max-md:hidden`,
   `max-xl:hidden` (KHÔNG `hidden md:flex` trên primitive đã có display — Tailwind không gộp class xung đột).
 - Phần tử trang trí `absolute` phải nằm trong wrapper `overflow-clip`. Mọi trang phải qua `npm run test:overflow`.

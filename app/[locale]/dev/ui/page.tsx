@@ -19,6 +19,7 @@ import { IconButton } from '@/components/ui/IconButton';
 import { KpiTile } from '@/components/ui/KpiTile';
 import { Prose } from '@/components/ui/Prose';
 import { Section, type SectionTone } from '@/components/ui/Section';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { TextLink } from '@/components/ui/TextLink';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
@@ -209,7 +210,7 @@ export default async function DevUiPage({ params }: PageProps<'/[locale]/dev/ui'
         </ul>
 
         <h3 className="eyebrow mt-12 text-orange-700">Cặp tương phản (tính lại từ tokens.css)</h3>
-        <div className="mt-4 overflow-x-auto rounded-md border border-slate-300">
+        <TableScroll label="Bảng cặp tương phản" className="mt-4">
           <table className="w-full min-w-[40rem] border-collapse text-left text-small">
             <thead className="bg-blue-50 text-navy-900">
               <tr>
@@ -247,7 +248,7 @@ export default async function DevUiPage({ params }: PageProps<'/[locale]/dev/ui'
               })}
             </tbody>
           </table>
-        </div>
+        </TableScroll>
       </Section>
 
       <Section tone="blue-50" aria-labelledby="dev-type">

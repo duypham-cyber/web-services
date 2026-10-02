@@ -8,7 +8,7 @@ export function PosterPlaceholder({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 1600 900"
-      preserveAspectRatio="xMidYMid slice"
+      preserveAspectRatio="xMaxYMid slice"
       aria-hidden="true"
       focusable="false"
       className={className}

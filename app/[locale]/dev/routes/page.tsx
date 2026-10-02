@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Heading } from '@/components/ui/Heading';
 import { Section } from '@/components/ui/Section';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
 import { devPagesEnabled } from '@/lib/env';
@@ -42,7 +43,7 @@ export default async function DevRoutesPage({ params }: PageProps<'/[locale]/dev
         </p>
       </Section>
       <Section spacing="compact" aria-label="Bảng route">
-        <div className="overflow-x-auto rounded-md border border-slate-300">
+        <TableScroll label="Bảng route">
           <table className="w-full min-w-[56rem] border-collapse text-left text-small" data-routes-table="">
             <thead className="bg-blue-50 text-navy-900">
               <tr>
@@ -83,7 +84,7 @@ export default async function DevRoutesPage({ params }: PageProps<'/[locale]/dev
               ))}
             </tbody>
           </table>
-        </div>
+        </TableScroll>
       </Section>
     </>
   );
