@@ -11,8 +11,18 @@ import { MobileMenu } from './MobileMenu';
 import { NavLink } from './NavLink';
 import { SolutionsMenu } from './SolutionsMenu';
 
-/** Đích của CTA "Nhận báo giá" cho tới khi form B2B có contract APPROVED (docs/DECISIONS.md). */
+/**
+ * Đích của các CTA cho tới khi form có contract APPROVED (docs/DECISIONS.md D-04, D-19). Neo dùng id tiếng Việt cho
+ * CẢ HAI ngôn ngữ (một id cho mỗi khối, D-23) — next-intl tự đổi đường dẫn sang /en/contact#kinh-doanh.
+ *   QUOTE_HREF       "Nhận báo giá"                → /lien-he#kinh-doanh
+ *   DEMO_HREF        "Đặt lịch demo 30 phút"       → tạm = QUOTE_HREF (form B2B intent "demo" khi lead-b2b APPROVED)
+ *   INTEGRATION_HREF "Thảo luận tích hợp" (sàn)    → tạm = QUOTE_HREF (intent "integration")
+ *   TECHNICIAN_SIGNUP_HREF "Đăng ký thợ"           → /doi-tac-tho#dang-ky
+ * Khi form B2B có contract: chỉ đổi giá trị ở đây (tách được demo/tích hợp), không sửa từng trang.
+ */
 export const QUOTE_HREF: AppHref = { pathname: '/lien-he', hash: 'kinh-doanh' };
+export const DEMO_HREF: AppHref = QUOTE_HREF;
+export const INTEGRATION_HREF: AppHref = QUOTE_HREF;
 export const TECHNICIAN_SIGNUP_HREF: AppHref = { pathname: '/doi-tac-tho', hash: 'dang-ky' };
 
 const NAV_LINK =

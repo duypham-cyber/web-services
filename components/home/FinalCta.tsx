@@ -1,6 +1,6 @@
 import { CalendarClock, Phone } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
-import { QUOTE_HREF } from '@/components/layout/Header';
+import { DEMO_HREF, QUOTE_HREF } from '@/components/layout/Header';
 import { Rise } from '@/components/motion/Rise';
 import { Button } from '@/components/ui/Button';
 import { DraftBadge } from '@/components/ui/DraftBadge';
@@ -62,7 +62,7 @@ export async function FinalCta({ locale, tone }: { locale: Locale; tone: Section
               {t('cta.quote')}
             </Button>
             <Button
-              href={QUOTE_HREF}
+              href={DEMO_HREF}
               variant="on-dark"
               size="lg"
               className="w-full sm:w-auto lg:w-full"

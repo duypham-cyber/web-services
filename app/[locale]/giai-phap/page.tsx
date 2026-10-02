@@ -1,7 +1,7 @@
 import { ArrowDown, BookOpenText, MapIcon, ReceiptText } from 'lucide-react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { QUOTE_HREF } from '@/components/layout/Header';
+import { DEMO_HREF, QUOTE_HREF } from '@/components/layout/Header';
 import { StaggerGrid } from '@/components/motion/StaggerGrid';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { CompareTable } from '@/components/solutions/kit/CompareTable';
@@ -149,7 +149,7 @@ export default async function SolutionsHubPage({ params }: PageProps<'/[locale]/
             <Button href={QUOTE_HREF} variant="primary" size="lg">
               {t('kit.cta.quote')}
             </Button>
-            <Button href={QUOTE_HREF} variant="on-dark" size="lg">
+            <Button href={DEMO_HREF} variant="on-dark" size="lg">
               {t('kit.cta.demo')}
             </Button>
           </>

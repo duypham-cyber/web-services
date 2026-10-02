@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import type { Metadata } from 'next';
 import { getMessages, getTranslations } from 'next-intl/server';
-import { QUOTE_HREF } from '@/components/layout/Header';
+import { INTEGRATION_HREF } from '@/components/layout/Header';
 import { StaggerGrid } from '@/components/motion/StaggerGrid';
 import { IntegrationDiagram } from '@/components/solutions/IntegrationDiagram';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
@@ -99,7 +99,7 @@ export default async function SolutionsRetailPage({ params }: PageProps<'/[local
         lead={t('retail.lead')}
         actions={
           <>
-            <Button href={QUOTE_HREF} variant="primary" size="lg">
+            <Button href={INTEGRATION_HREF} variant="primary" size="lg">
               {t('kit.cta.integration')}
             </Button>
             <Button externalHref="#tich-hop" variant="ghost" size="lg" iconEnd={<ArrowDown aria-hidden="true" size={18} strokeWidth={1.75} />}>
@@ -226,7 +226,7 @@ export default async function SolutionsRetailPage({ params }: PageProps<'/[local
         callLabel={t('kit.callPrefix')}
         actions={
           <>
-            <Button href={QUOTE_HREF} variant="primary" size="lg">
+            <Button href={INTEGRATION_HREF} variant="primary" size="lg">
               {t('kit.cta.integration')}
             </Button>
             <Button href="/bang-gia" variant="on-dark" size="lg">

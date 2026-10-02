@@ -2,7 +2,7 @@ import { BadgeCheck, CalendarClock, Gauge, ReceiptText, Users } from 'lucide-rea
 import type { Metadata } from 'next';
 import type { CSSProperties } from 'react';
 import { getMessages, getTranslations } from 'next-intl/server';
-import { QUOTE_HREF } from '@/components/layout/Header';
+import { DEMO_HREF, QUOTE_HREF } from '@/components/layout/Header';
 import { BillingSplit } from '@/components/solutions/BillingSplit';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -87,7 +87,7 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
         lead={t('brands.lead')}
         actions={
           <>
-            <Button href={QUOTE_HREF} variant="primary" size="lg">
+            <Button href={DEMO_HREF} variant="primary" size="lg">
               {t('kit.cta.demo')}
             </Button>
             <Button externalHref="#sla" variant="ghost" size="lg">
@@ -188,7 +188,7 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
         callLabel={t('kit.callPrefix')}
         actions={
           <>
-            <Button href={QUOTE_HREF} variant="primary" size="lg">
+            <Button href={DEMO_HREF} variant="primary" size="lg">
               {t('kit.cta.demo')}
             </Button>
             <Button href={QUOTE_HREF} variant="on-dark" size="lg">
