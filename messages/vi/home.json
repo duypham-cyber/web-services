@@ -1,45 +1,294 @@
 {
   "meta": {
-    "title": "Bluebolt Services: hạ tầng lắp đặt toàn quốc cho hãng điện máy",
+    "title": "Lắp đặt điện máy toàn quốc cho hãng | Bluebolt Services",
     "description": "Bluebolt Services điều phối lắp đặt và bảo hành điện máy cho Hãng, Sàn TMĐT và chuỗi bán lẻ: nhận đơn, giao thợ, nghiệm thu và đối soát trên một nền tảng."
   },
   "hero": {
+    "eyebrowFallback": "Nhanh · Chuẩn · Minh bạch",
     "title": "Hạ tầng lắp đặt toàn quốc cho hãng điện máy",
     "lead": "Một đầu mối điều phối lắp đặt và bảo hành điện máy cho Hãng, Sàn TMĐT và chuỗi bán lẻ: nhận đơn, giao thợ, nghiệm thu và đối soát.",
     "skipIntro": "Bỏ qua phần giới thiệu ↓"
   },
+  "media": {
+    "photoPending": "Ảnh thật sẽ chụp"
+  },
   "doors": {
-    "eyebrow": "Ba nhóm khách",
-    "title": "Bluebolt làm việc với ai",
+    "eyebrow": "Bắt đầu từ đây",
+    "title": "Hãng, thợ và khách hàng trên cùng một mạng lưới",
+    "lead": "Hãng và Sàn giao đơn, thợ đối tác nhận việc qua app, khách hàng có một đầu mối để được hỗ trợ sau khi lắp.",
     "brands": {
-      "title": "Hãng & Sàn",
-      "body": "Một đầu mối điều phối lắp đặt, nghiệm thu và đối soát cho đơn hàng của bạn.",
-      "cta": "Giải pháp cho hãng"
+      "label": "Hãng & Sàn TMĐT",
+      "title": "Giao đơn lắp đặt cho một đầu mối",
+      "body": "Bluebolt nhận đơn, điều phối thợ, nghiệm thu bằng ảnh và đối soát với bạn theo từng đơn.",
+      "cta": "Giải pháp cho hãng điện máy",
+      "secondary": "Cho Sàn TMĐT & bán lẻ"
     },
     "technicians": {
-      "title": "Thợ kỹ thuật",
-      "body": "Nhận đơn lắp đặt quanh khu vực của bạn qua app, quy trình rõ ràng.",
-      "cta": "Đăng ký đối tác thợ"
+      "label": "Thợ kỹ thuật",
+      "title": "Nhận đơn ổn định quanh khu vực của bạn",
+      "body": "App gợi ý đơn theo khu vực, kỹ năng và lịch trống. Nghiệm thu và thu nhập của từng đơn xem ngay trên app.",
+      "cta": "Trở thành đối tác thợ"
     },
     "consumers": {
-      "title": "Khách lẻ",
-      "body": "Gọi, nhắn Zalo hoặc đăng ký bảo hành sau khi lắp đặt.",
-      "cta": "Hỗ trợ khách lẻ"
+      "label": "Khách hàng",
+      "title": "Đã lắp đặt và cần hỗ trợ?",
+      "body": "Gọi hotline hoặc đăng ký bảo hành cho lần lắp đặt vừa nhận. Chúng tôi làm đầu mối giữa bạn, thợ và hãng.",
+      "cta": "Hỗ trợ khách hàng"
+    }
+  },
+  "network": {
+    "eyebrow": "Mạng lưới",
+    "title": "Mạng lưới thợ quản lý theo từng tỉnh/thành",
+    "lead": "Bluebolt chia mạng lưới theo tỉnh/thành và vùng. Mỗi đơn được giao cho thợ gần nhất có đúng kỹ năng; bản đồ và bảng tỉnh/thành có thợ cập nhật theo số liệu vận hành.",
+    "cta": "Xem mạng lưới"
+  },
+  "kpi": {
+    "updated": "cập nhật {date}",
+    "pendingValue": "Chưa có số",
+    "pendingNote": "Chờ số liệu vận hành"
+  },
+  "trust": {
+    "title": "Số liệu vận hành",
+    "lead": "Mỗi con số có định nghĩa và ngày cập nhật. Số nào chưa đo được thì chúng tôi không hiển thị.",
+    "logosTitle": "Hãng và sàn đang hợp tác",
+    "logoSlot": "Logo đối tác",
+    "logosNote": "Logo chỉ hiện khi có văn bản đồng ý của từng đối tác."
+  },
+  "challenge": {
+    "eyebrow": "Bài toán của hãng",
+    "title": "Vì sao hãng khó kiểm soát chất lượng lắp đặt?",
+    "lead": "Sản phẩm bán ra khắp nơi, còn việc lắp đặt thường chia cho nhiều đội thợ nhỏ, mỗi đội một cách làm.",
+    "painsLabel": "Những điều hãng thường gặp",
+    "pains": {
+      "quality": "Chất lượng khác nhau giữa các tỉnh và giữa các đội thợ",
+      "visibility": "Không biết đơn đang ở bước nào; trễ hẹn chỉ lộ ra khi khách phàn nàn",
+      "cost": "Chi phí, chứng từ và bảo hành nằm rải rác, khó đối soát"
+    },
+    "solutionLabel": "Cách Bluebolt xử lý",
+    "evidenceLabel": "Bằng chứng",
+    "benefits": {
+      "onePartner": {
+        "title": "Một đầu mối, một quy trình",
+        "body": "Bạn giao đơn cho Bluebolt. Mọi đơn đi qua cùng 5 bước, từ tiếp nhận tới đối soát."
+      },
+      "matching": {
+        "title": "Thợ được chọn theo kỹ năng và khu vực",
+        "body": "Hệ thống giao đơn cho thợ gần nhất có đúng kỹ năng với thiết bị và còn lịch trống."
+      },
+      "photoProof": {
+        "title": "Nghiệm thu có ảnh, trạng thái rõ từng bước",
+        "body": "Thợ chụp ảnh nghiệm thu trên app. Hãng/Sàn xem trạng thái và ảnh của từng đơn trên dashboard."
+      },
+      "reconcile": {
+        "title": "Đối soát theo từng đơn",
+        "body": "Bluebolt đối soát với Hãng/Sàn trên các đơn đã nghiệm thu. Vật tư phát sinh, nếu có, khách trả trực tiếp cho thợ theo khung giá tham khảo công khai."
+      }
     }
   },
   "process": {
     "eyebrow": "Quy trình",
-    "title": "Một đơn lắp đặt đi qua 5 bước",
-    "stepLabel": "Bước {n}"
+    "title": "Mỗi đơn lắp đặt đi qua cùng 5 bước",
+    "lead": "Bước 00 là lúc khách mua hàng tại Hãng hoặc Sàn. Từ bước 01, đơn nằm trong quy trình của Bluebolt cho tới khi đối soát xong.",
+    "triggerLabel": "sự kiện kích hoạt, chưa tính là một bước",
+    "stepLabel": "Bước {n}",
+    "pendingNote": "Thứ tự bước 02 → 03 và kênh nhận đơn ở bước 01 đang chờ anh Duy xác nhận (docs/03 mục 14.1)."
   },
-  "kpi": {
-    "title": "Số liệu vận hành",
-    "hiddenNote": "Các ô KPI K1–K4 đang ẩn vì content/stats.ts chưa có số thật (docs/03 mục 14.2)."
+  "technology": {
+    "eyebrow": "Công nghệ",
+    "title": "Dashboard cho hãng, app cho thợ, chung một dữ liệu đơn",
+    "lead": "Dashboard của Hãng/Sàn và app của thợ dùng chung một dữ liệu đơn, nên hai bên luôn thấy cùng một trạng thái.",
+    "caption": "Giao diện minh họa",
+    "captionNote": "Dữ liệu trong hình là ví dụ, không phải đơn thật.",
+    "dashboard": {
+      "title": "Dashboard cho Hãng & Sàn",
+      "features": {
+        "status": "Trạng thái từng đơn, từ tiếp nhận tới nghiệm thu",
+        "photos": "Ảnh nghiệm thu đính kèm mỗi đơn",
+        "payments": "Lịch sử thanh toán và file đối soát"
+      }
+    },
+    "app": {
+      "title": "App cho thợ",
+      "features": {
+        "jobs": "Đơn gợi ý theo khu vực, kỹ năng và lịch trống",
+        "signoff": "Khách nghiệm thu trực tiếp trên app",
+        "earnings": "Thu nhập tính theo từng đơn, xem lại bất cứ lúc nào"
+      }
+    },
+    "mock": {
+      "windowTitle": "Bảng điều phối · [Hãng A]",
+      "nav": {
+        "overview": "Tổng quan",
+        "jobs": "Đơn lắp đặt",
+        "signoff": "Nghiệm thu",
+        "reconcile": "Đối soát",
+        "reports": "Báo cáo"
+      },
+      "heading": "Đơn lắp đặt hôm nay",
+      "filters": {
+        "all": "Tất cả",
+        "pending": "Chờ điều phối",
+        "installing": "Đang lắp",
+        "done": "Đã nghiệm thu"
+      },
+      "cols": {
+        "id": "Mã đơn",
+        "device": "Thiết bị",
+        "area": "Khu vực",
+        "slot": "Lịch hẹn",
+        "status": "Trạng thái"
+      },
+      "rows": {
+        "r1": {
+          "id": "BB-24051",
+          "device": "Điều hòa treo tường 1 HP",
+          "area": "TP. Hồ Chí Minh",
+          "slot": "09:00–10:00"
+        },
+        "r2": {
+          "id": "BB-24052",
+          "device": "Máy giặt cửa trước 9 kg",
+          "area": "Hà Nội",
+          "slot": "10:30–11:30"
+        },
+        "r3": {
+          "id": "BB-24053",
+          "device": "Tivi treo tường 65 inch",
+          "area": "Đà Nẵng",
+          "slot": "14:00–15:00"
+        },
+        "r4": {
+          "id": "BB-24054",
+          "device": "Điều hòa âm trần 2 HP",
+          "area": "Cần Thơ",
+          "slot": "15:30–17:00"
+        }
+      },
+      "status": {
+        "done": "Đã nghiệm thu",
+        "installing": "Đang lắp",
+        "confirmed": "Đã hẹn lịch",
+        "pending": "Chờ điều phối"
+      },
+      "photos": {
+        "title": "Ảnh nghiệm thu · BB-24051",
+        "before": "Trước",
+        "after": "Sau",
+        "signed": "Chữ ký khách"
+      },
+      "reconcile": {
+        "title": "Đối soát tháng 9",
+        "ready": "Sẵn sàng xuất file",
+        "export": "Xuất file"
+      },
+      "phone": {
+        "time": "09:41",
+        "greeting": "Đơn gợi ý cho bạn",
+        "today": "Hôm nay",
+        "badge": "Đơn mới",
+        "distance": "2,4 km",
+        "jobTitle": "Lắp điều hòa treo tường 1 HP",
+        "jobMeta": "[Hãng A] · TP. Hồ Chí Minh",
+        "jobSlot": "Hôm nay, 14:00–15:00",
+        "accept": "Nhận đơn",
+        "later": "Để sau",
+        "checklist": "Nghiệm thu",
+        "before": "Ảnh trước khi lắp",
+        "after": "Ảnh sau khi lắp",
+        "confirm": "Khách xác nhận",
+        "tabs": {
+          "jobs": "Đơn",
+          "schedule": "Lịch",
+          "earnings": "Ví",
+          "account": "Hồ sơ"
+        }
+      }
+    }
   },
-  "map": {
-    "eyebrow": "Mạng lưới",
-    "title": "Mạng lưới lắp đặt trên bản đồ",
-    "body": "Bản đồ và bảng tỉnh/thành có thợ cập nhật theo số liệu vận hành.",
-    "cta": "Xem mạng lưới"
+  "services": {
+    "eyebrow": "Dịch vụ",
+    "title": "Lắp đặt và bảo trì cho bốn nhóm thiết bị",
+    "lead": "Thợ được phân nhóm theo thiết bị, nên mỗi đơn đến tay người có đúng kỹ năng.",
+    "all": "Tất cả dịch vụ",
+    "pricing": "Khung giá vật tư",
+    "cta": "Xem chi tiết",
+    "items": {
+      "lap-dat-dieu-hoa": {
+        "body": "Điều hòa treo tường và âm trần của mọi thương hiệu, lắp và chạy thử trước khi nghiệm thu."
+      },
+      "lap-dat-dien-may": {
+        "body": "Máy giặt, tủ lạnh, máy sấy, bình nóng lạnh, tivi, bếp từ, máy hút mùi và máy lọc nước."
+      },
+      "bao-tri-dinh-ky": {
+        "body": "Bảo trì theo lịch cho chuỗi cửa hàng và văn phòng, phát hiện sớm hư hỏng, giữ thiết bị chạy ổn định."
+      },
+      "lap-dat-robot-hut-bui": {
+        "body": "Lắp đặt, cài đặt và hướng dẫn sử dụng robot hút bụi và thiết bị nhà thông minh."
+      }
+    }
+  },
+  "proof": {
+    "eyebrow": "Bằng chứng",
+    "title": "Dự án đã triển khai",
+    "lead": "Video, case study và logo đối tác chỉ xuất hiện khi có văn bản đồng ý của đối tác.",
+    "videoSlot": "Video Bluebolt × Panasonic",
+    "videoNote": "Chờ văn bản cho phép dùng video. Khi được duyệt, video hiện bằng ảnh bìa và chỉ tải khi người xem bấm phát.",
+    "caseSlot": "Case study: [Hãng] triển khai tại [N] tỉnh/thành trong [M] tuần",
+    "caseNote": "Cần một chỉ số kết quả, trích dẫn của người thật và văn bản đồng ý của hãng."
+  },
+  "standards": {
+    "eyebrow": "Tiêu chuẩn thợ",
+    "title": "Tiêu chuẩn Bluebolt đặt ra cho thợ đối tác",
+    "lead": "Bốn nhóm tiêu chuẩn dùng khi tuyển chọn, đào tạo và đánh giá thợ.",
+    "cta": "Xem tiêu chuẩn đầy đủ",
+    "citationNote": "Số hiệu TCVN/QCVN lấy từ site cũ, chưa được kiểm chứng.",
+    "groups": {
+      "qualification": {
+        "title": "Trình độ và kinh nghiệm",
+        "a": "Trung cấp hoặc chứng chỉ nghề điện, điện lạnh, cơ điện tử",
+        "b": "Thợ chính từ 1–2 năm lắp đặt thực tế",
+        "c": "Ưu tiên chứng chỉ an toàn điện và làm việc trên cao"
+      },
+      "skills": {
+        "title": "Kỹ năng kỹ thuật",
+        "a": "Điều hòa: hàn ống đồng, thử áp, hút chân không, nạp gas",
+        "b": "Máy giặt, tủ lạnh: cân bằng, cấp thoát nước, nối đất",
+        "c": "Tivi: khoan tường, lắp giá treo, cài đặt và kết nối mạng"
+      },
+      "conduct": {
+        "title": "Tác phong phục vụ",
+        "a": "Đến đúng giờ đã hẹn với khách",
+        "b": "Đồng phục gọn gàng, giao tiếp lịch sự",
+        "c": "Dọn sạch khu vực thi công, hướng dẫn khách sử dụng"
+      },
+      "safety": {
+        "title": "An toàn và quy chuẩn",
+        "a": "Đồ bảo hộ khi làm việc trên cao",
+        "b": "Kiểm tra rò điện trước khi thao tác",
+        "c": "Vật tư đúng chuẩn: độ dày ống đồng, tiết diện dây điện"
+      }
+    }
+  },
+  "knowledge": {
+    "eyebrow": "Kiến thức",
+    "title": "Hướng dẫn và kinh nghiệm lắp đặt",
+    "lead": "Bài viết cho người phụ trách hậu mãi, đội kỹ thuật và khách hàng.",
+    "cta": "Xem tất cả bài viết",
+    "read": "Đọc bài",
+    "readingTime": "{minutes} phút đọc",
+    "categories": {
+      "installation-guide": "Hướng dẫn lắp đặt",
+      "technical-knowledge": "Kiến thức kỹ thuật",
+      "b2b": "Cho doanh nghiệp"
+    }
+  },
+  "cta": {
+    "eyebrow": "Hợp tác",
+    "title": "Sẵn sàng triển khai lắp đặt cho hãng của bạn?",
+    "lead": "Cho chúng tôi biết ngành hàng, sản lượng mỗi tháng và khu vực cần lắp đặt. Bluebolt gửi báo giá và đề xuất cách triển khai.",
+    "quote": "Nhận báo giá",
+    "demo": "Đặt lịch demo 30 phút",
+    "call": "Gọi {phone}",
+    "formPending": "Form báo giá sẽ bật sau khi duyệt contract lead-b2b. Trong lúc chờ, hai nút trên dẫn tới mục Kinh doanh của trang Liên hệ."
   }
 }

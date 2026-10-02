@@ -1,45 +1,294 @@
 {
   "meta": {
-    "title": "Bluebolt Services: Vietnam's nationwide installation network for appliance brands",
-    "description": "Bluebolt Services coordinates appliance installation and warranty work for brands, marketplaces and retail chains: order intake, technician dispatch, sign-off and reconciliation on one platform."
+    "title": "Appliance installation across Vietnam | Bluebolt Services",
+    "description": "Bluebolt Services runs appliance installation and warranty work for brands, marketplaces and retailers: intake, dispatch, sign-off and reconciliation."
   },
   "hero": {
+    "eyebrowFallback": "Fast · Precise · Transparent",
     "title": "Vietnam's nationwide installation network for appliance brands",
     "lead": "One dispatch partner for appliance installation and warranty work for brands, marketplaces and retail chains: order intake, technician dispatch, sign-off and reconciliation.",
     "skipIntro": "Skip the intro ↓"
   },
+  "media": {
+    "photoPending": "Real photo to be shot"
+  },
   "doors": {
-    "eyebrow": "Who we serve",
-    "title": "Who Bluebolt works with",
+    "eyebrow": "Start here",
+    "title": "Brands, technicians and customers on one network",
+    "lead": "Brands and marketplaces hand over orders, partner technicians take jobs through the app, and customers have one point of contact after installation.",
     "brands": {
-      "title": "Brands & retailers",
-      "body": "One partner to dispatch, sign off and reconcile installation jobs for your orders.",
-      "cta": "Solutions for brands"
+      "label": "Brands & marketplaces",
+      "title": "Hand installation orders to one partner",
+      "body": "Bluebolt takes the order, dispatches a technician, records photo sign-off and reconciles with you job by job.",
+      "cta": "Solutions for appliance brands",
+      "secondary": "For marketplaces & retail"
     },
     "technicians": {
-      "title": "Technicians",
-      "body": "Get installation jobs near you through the app, with a clear process.",
+      "label": "Technicians",
+      "title": "Steady work in the area you know",
+      "body": "The app suggests jobs by area, skills and availability. Sign-off and earnings for every job are right there in the app.",
       "cta": "Become a technician partner"
     },
     "consumers": {
-      "title": "Customers",
-      "body": "Call, message on Zalo or register your warranty after installation.",
+      "label": "Customers",
+      "title": "Had an installation and need help?",
+      "body": "Call our hotline or register the warranty for a recent installation. We coordinate between you, the technician and the brand.",
       "cta": "Customer support"
+    }
+  },
+  "network": {
+    "eyebrow": "Network",
+    "title": "A technician network managed province by province",
+    "lead": "We organise our network by province and region. Each job goes to the nearest technician with the right skills, and the map and province table follow our operating data.",
+    "cta": "View the network"
+  },
+  "kpi": {
+    "updated": "updated {date}",
+    "pendingValue": "No figure yet",
+    "pendingNote": "Awaiting operating data"
+  },
+  "trust": {
+    "title": "Operating figures",
+    "lead": "Every figure comes with a definition and an update date. If we cannot measure something yet, we do not show it.",
+    "logosTitle": "Brands and marketplaces we work with",
+    "logoSlot": "Partner logo",
+    "logosNote": "Logos appear only with each partner's written consent."
+  },
+  "challenge": {
+    "eyebrow": "The challenge",
+    "title": "Why is installation quality so hard for brands to control?",
+    "lead": "Your products sell everywhere, but installation is usually split across many small crews, each with its own way of working.",
+    "painsLabel": "What brands typically face",
+    "pains": {
+      "quality": "Quality varies between provinces and between crews",
+      "visibility": "No view of where each job stands; missed appointments surface only when customers complain",
+      "cost": "Costs, paperwork and warranty claims are scattered and hard to reconcile"
+    },
+    "solutionLabel": "How Bluebolt solves it",
+    "evidenceLabel": "Evidence",
+    "benefits": {
+      "onePartner": {
+        "title": "One partner, one process",
+        "body": "You hand orders to Bluebolt. Every job follows the same five steps, from intake to reconciliation."
+      },
+      "matching": {
+        "title": "Technicians matched by skill and location",
+        "body": "The system assigns each job to the nearest technician with the right skills for the appliance and an open slot."
+      },
+      "photoProof": {
+        "title": "Photo sign-off and a clear status at every step",
+        "body": "Technicians record sign-off photos in the app. You see the status and photos of every job on your dashboard."
+      },
+      "reconcile": {
+        "title": "Reconciliation job by job",
+        "body": "We reconcile with you on signed-off jobs only. Any extra materials are paid by the customer directly to the technician, using our published reference prices."
+      }
     }
   },
   "process": {
     "eyebrow": "How it works",
-    "title": "Five steps from order to sign-off",
-    "stepLabel": "Step {n}"
+    "title": "Every job follows the same five steps",
+    "lead": "Step 00 is the customer's purchase from a brand or marketplace. From step 01, the job runs through Bluebolt's process until it is reconciled.",
+    "triggerLabel": "the trigger, not counted as a step",
+    "stepLabel": "Step {n}",
+    "pendingNote": "The order of steps 02 and 03 and the intake channel in step 01 are awaiting the owner's confirmation (docs/03 section 14.1)."
   },
-  "kpi": {
-    "title": "Operating figures",
-    "hiddenNote": "KPI tiles K1–K4 are hidden because content/stats.ts has no verified figures yet (docs/03 section 14.2)."
+  "technology": {
+    "eyebrow": "Technology",
+    "title": "A dashboard for brands, an app for technicians, one job record",
+    "lead": "The brand dashboard and the technician app share the same job record, so both sides always see the same status.",
+    "caption": "Illustrative UI",
+    "captionNote": "The data shown is an example, not a real job.",
+    "dashboard": {
+      "title": "Dashboard for brands & marketplaces",
+      "features": {
+        "status": "The status of every job, from intake to sign-off",
+        "photos": "Sign-off photos attached to each job",
+        "payments": "Payment history and reconciliation files"
+      }
+    },
+    "app": {
+      "title": "App for technicians",
+      "features": {
+        "jobs": "Jobs suggested by area, skills and availability",
+        "signoff": "Customers sign off directly in the app",
+        "earnings": "Earnings tracked job by job, available any time"
+      }
+    },
+    "mock": {
+      "windowTitle": "Dispatch board · [Brand A]",
+      "nav": {
+        "overview": "Overview",
+        "jobs": "Jobs",
+        "signoff": "Sign-off",
+        "reconcile": "Reconciliation",
+        "reports": "Reports"
+      },
+      "heading": "Today's jobs",
+      "filters": {
+        "all": "All",
+        "pending": "Awaiting dispatch",
+        "installing": "Installing",
+        "done": "Signed off"
+      },
+      "cols": {
+        "id": "Job ID",
+        "device": "Appliance",
+        "area": "Area",
+        "slot": "Time slot",
+        "status": "Status"
+      },
+      "rows": {
+        "r1": {
+          "id": "BB-24051",
+          "device": "Wall-mounted AC, 1 HP",
+          "area": "Ho Chi Minh City",
+          "slot": "09:00–10:00"
+        },
+        "r2": {
+          "id": "BB-24052",
+          "device": "Front-load washer, 9 kg",
+          "area": "Hanoi",
+          "slot": "10:30–11:30"
+        },
+        "r3": {
+          "id": "BB-24053",
+          "device": "65-inch wall-mounted TV",
+          "area": "Da Nang",
+          "slot": "14:00–15:00"
+        },
+        "r4": {
+          "id": "BB-24054",
+          "device": "Ceiling cassette AC, 2 HP",
+          "area": "Can Tho",
+          "slot": "15:30–17:00"
+        }
+      },
+      "status": {
+        "done": "Signed off",
+        "installing": "Installing",
+        "confirmed": "Scheduled",
+        "pending": "Awaiting dispatch"
+      },
+      "photos": {
+        "title": "Sign-off photos · BB-24051",
+        "before": "Before",
+        "after": "After",
+        "signed": "Signature"
+      },
+      "reconcile": {
+        "title": "September reconciliation",
+        "ready": "Ready to export",
+        "export": "Export"
+      },
+      "phone": {
+        "time": "09:41",
+        "greeting": "Jobs for you",
+        "today": "Today",
+        "badge": "New job",
+        "distance": "2.4 km",
+        "jobTitle": "Install a wall-mounted AC, 1 HP",
+        "jobMeta": "[Brand A] · Ho Chi Minh City",
+        "jobSlot": "Today, 14:00–15:00",
+        "accept": "Accept",
+        "later": "Later",
+        "checklist": "Sign-off",
+        "before": "Photo before installation",
+        "after": "Photo after installation",
+        "confirm": "Customer confirmation",
+        "tabs": {
+          "jobs": "Jobs",
+          "schedule": "Schedule",
+          "earnings": "Wallet",
+          "account": "Profile"
+        }
+      }
+    }
   },
-  "map": {
-    "eyebrow": "Network",
-    "title": "Our installation network on the map",
-    "body": "The map and the list of provinces with technicians follow verified operating data.",
-    "cta": "View the network"
+  "services": {
+    "eyebrow": "Services",
+    "title": "Installation and maintenance across four product groups",
+    "lead": "Technicians are grouped by appliance type, so each job reaches someone with the right skills.",
+    "all": "All services",
+    "pricing": "Materials price list",
+    "cta": "View details",
+    "items": {
+      "lap-dat-dieu-hoa": {
+        "body": "Wall-mounted and ceiling cassette units from any brand, installed and test-run before sign-off."
+      },
+      "lap-dat-dien-may": {
+        "body": "Washing machines, fridges, dryers, water heaters, TVs, induction hobs, cooker hoods and water purifiers."
+      },
+      "bao-tri-dinh-ky": {
+        "body": "Scheduled maintenance for store chains and offices that catches faults early and keeps equipment running."
+      },
+      "lap-dat-robot-hut-bui": {
+        "body": "Setup, configuration and handover for robot vacuums and smart-home devices."
+      }
+    }
+  },
+  "proof": {
+    "eyebrow": "Proof",
+    "title": "Work we have delivered",
+    "lead": "Videos, case studies and partner logos appear only with the partner's written consent.",
+    "videoSlot": "Bluebolt × Panasonic video",
+    "videoNote": "Awaiting written permission to use the video. Once approved, it will show as a cover image and load only when played.",
+    "caseSlot": "Case study: [Brand] rolled out in [N] provinces in [M] weeks",
+    "caseNote": "Needs one result metric, a quote from a real person and the brand's written consent."
+  },
+  "standards": {
+    "eyebrow": "Technician standards",
+    "title": "The standards we set for partner technicians",
+    "lead": "Four groups of standards we use to recruit, train and assess technicians.",
+    "cta": "See the full standards",
+    "citationNote": "The TCVN/QCVN references come from the old site and have not been verified.",
+    "groups": {
+      "qualification": {
+        "title": "Qualifications and experience",
+        "a": "Vocational diploma or certificate in electrical, refrigeration or mechatronics work",
+        "b": "Lead technicians: 1–2 years of hands-on installation",
+        "c": "Electrical safety and work-at-height certificates preferred"
+      },
+      "skills": {
+        "title": "Technical skills",
+        "a": "Air conditioners: brazing copper pipe, pressure testing, vacuuming, charging refrigerant",
+        "b": "Washers and fridges: levelling, water connections, earthing",
+        "c": "TVs: wall drilling, bracket mounting, setup and network connection"
+      },
+      "conduct": {
+        "title": "Service conduct",
+        "a": "Arrive at the time agreed with the customer",
+        "b": "Neat uniform and courteous communication",
+        "c": "Clean up the work area and show customers how to use the appliance"
+      },
+      "safety": {
+        "title": "Safety and compliance",
+        "a": "Protective gear when working at height",
+        "b": "Check for electrical leakage before touching the unit",
+        "c": "Correct materials: copper pipe thickness, cable cross-section"
+      }
+    }
+  },
+  "knowledge": {
+    "eyebrow": "Knowledge",
+    "title": "Installation guides and insights",
+    "lead": "Articles for after-sales managers, technical teams and customers.",
+    "cta": "See all articles",
+    "read": "Read article",
+    "readingTime": "{minutes} min read",
+    "categories": {
+      "installation-guide": "Installation guides",
+      "technical-knowledge": "Technical know-how",
+      "b2b": "For businesses"
+    }
+  },
+  "cta": {
+    "eyebrow": "Work with us",
+    "title": "Ready to roll out installation for your brand?",
+    "lead": "Tell us your product categories, monthly volumes and the regions you need covered. We will send a quote and a proposed rollout plan.",
+    "quote": "Get a quote",
+    "demo": "Book a 30-minute demo",
+    "call": "Call {phone}",
+    "formPending": "The quote form goes live once the lead-b2b contract is approved. Until then, both buttons lead to the Sales section of the Contact page."
   }
 }
