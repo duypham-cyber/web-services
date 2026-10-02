@@ -57,6 +57,30 @@ function CardBody({ data }: { data: MapCard }) {
   );
 }
 
+/** Bản gọn cho dải dưới bản đồ (mobile): 2 dòng, không đẩy nội dung trang xuống nhiều. */
+function StripBody({ data }: { data: MapCard }) {
+  return (
+    <>
+      <p className={styles.stripTop}>
+        <span className={styles.cardTitle}>{data.title}</span>
+        <span className={styles.cardRegion}>
+          <span className={cn(styles.swatch, SWATCH[data.region.id])} />
+          {data.region.name}
+        </span>
+      </p>
+      <p className={styles.cardMeta}>
+        {data.meta}
+        {data.stat ? (
+          <>
+            {' · '}
+            {data.stat.label}: <span className={styles.cardStatValue}>{data.stat.value}</span>
+          </>
+        ) : null}
+      </p>
+    </>
+  );
+}
+
 /**
  * Tương tác bản đồ (đảo client nhỏ, không kéo d3): rê chuột (desktop) hoặc chạm (mobile) vào tỉnh/quần đảo →
  * tên, loại, vùng, số thợ hoặc "chưa có số".
@@ -67,6 +91,7 @@ function CardBody({ data }: { data: MapCard }) {
  */
 export function MapInteractions({ cards, hint }: MapInteractionsProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
   const activeElRef = useRef<Element | null>(null);
   const pointerTypeRef = useRef<string>('mouse');
   const [activeKey, setActiveKey] = useState<string | null>(null);
@@ -127,20 +152,27 @@ export function MapInteractions({ cards, hint }: MapInteractionsProps) {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') close();
     };
+    // Đổi bề rộng (xoay máy, kéo cửa sổ) → đóng thẻ. Bỏ qua đổi chiều cao (thanh địa chỉ mobile co/giãn khi cuộn).
+    let lastWidth = window.innerWidth;
+    const onResize = () => {
+      if (Math.abs(window.innerWidth - lastWidth) < 2) return;
+      lastWidth = window.innerWidth;
+      close();
+    };
 
     frame.addEventListener('pointerover', onPointerOver);
     frame.addEventListener('pointerleave', onPointerLeave);
     frame.addEventListener('click', onClick);
     document.addEventListener('pointerdown', onDocPointerDown);
     document.addEventListener('keydown', onKey);
-    window.addEventListener('resize', close);
+    window.addEventListener('resize', onResize);
     return () => {
       frame.removeEventListener('pointerover', onPointerOver);
       frame.removeEventListener('pointerleave', onPointerLeave);
       frame.removeEventListener('click', onClick);
       document.removeEventListener('pointerdown', onDocPointerDown);
       document.removeEventListener('keydown', onKey);
-      window.removeEventListener('resize', close);
+      window.removeEventListener('resize', onResize);
       delete frame.dataset.mapInteractive;
     };
   }, [cards, close, markActive]);
@@ -237,16 +269,29 @@ export function MapInteractions({ cards, hint }: MapInteractionsProps) {
     else legend?.removeAttribute('data-covered');
   }, [activeKey, cards]);
 
+  // Mobile: thông tin vừa chạm phải nhìn thấy được (dải nằm dưới bản đồ, có thể bị thanh đáy che) → cuộn tối thiểu
+  useEffect(() => {
+    if (!inStrip || !activeKey) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    stripRef.current?.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  }, [inStrip, activeKey]);
+
   const data = activeKey ? cards[activeKey] : undefined;
   return (
     <>
       <div ref={cardRef} className={styles.card} data-map-card="" aria-hidden="true">
         {data ? <CardBody data={data} /> : null}
       </div>
-      <div className={styles.strip} data-map-strip="" data-active={data && inStrip ? '' : undefined} aria-hidden="true">
+      <div
+        ref={stripRef}
+        className={styles.strip}
+        data-map-strip=""
+        data-active={data && inStrip ? '' : undefined}
+        aria-hidden="true"
+      >
         {data && inStrip ? (
           <div className={styles.stripCard}>
-            <CardBody data={data} />
+            <StripBody data={data} />
           </div>
         ) : (
           <p className={styles.hint}>{hint}</p>

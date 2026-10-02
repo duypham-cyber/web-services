@@ -125,7 +125,8 @@ export async function VietnamMap({ locale, variant = 'home', title, className }:
                 className={styles.prov}
                 d={shape.d}
                 data-code={shape.code}
-                data-region={shape.region}
+                // vùng đọc trực tiếp từ content/provinces.ts (nguồn duy nhất), không từ file sinh
+                data-region={byCode.get(shape.code)?.region ?? shape.region}
                 data-card-key={shape.code}
                 style={{ '--rise': shape.rise } as CSSProperties}
               />
@@ -170,7 +171,6 @@ export async function VietnamMap({ locale, variant = 'home', title, className }:
               className={cn(styles.label, shape.label.place === 'above' ? styles.labelAbove : styles.labelBelow)}
               style={{ left: pct(shape.label.x, W), top: pct(shape.label.y, H) }}
               data-arch-label={shape.id}
-              lang={locale}
             >
               {arch.label[locale]}
             </span>
@@ -198,7 +198,6 @@ export async function VietnamMap({ locale, variant = 'home', title, className }:
             </span>
           ) : null}
         </div>
-
       </figure>
       <MapInteractions cards={cards} hint={t('map.hint')} />
     </div>

@@ -329,6 +329,20 @@
 .strip {
   margin-top: 0.75rem;
   min-height: 2.75rem;
+  /* chừa chỗ cho thanh hành động dính đáy mobile (~64px) khi cuộn tới dải */
+  scroll-margin-bottom: 5.5rem;
+}
+
+.stripTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: 0.75rem;
+}
+
+.stripTop .cardRegion {
+  margin-top: 0;
 }
 
 .hint {
