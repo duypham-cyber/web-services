@@ -1,0 +1,35 @@
+# --- Phụ thuộc ---
+node_modules/
+
+# --- Next.js: mọi thư mục build (.next, .next-check-<pid>, .next-test...) ---
+.next/
+.next*/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# --- Biến môi trường, khóa, credential (KHÔNG bao giờ commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Ghi chú riêng của máy (đường dẫn Chromium/ffmpeg) ---
+CLAUDE.local.md
+
+# --- Kết quả test, ảnh tự soát, cache công cụ ---
+test-results/
+playwright-report/
+blob-report/
+coverage/
+.cache/
+
+# --- Log, hệ điều hành, IDE ---
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/settings.json
