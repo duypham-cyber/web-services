@@ -24,7 +24,7 @@ export async function HotlineCard({ locale }: { locale: Locale }) {
   return (
     <div data-tone="navy" className="relative overflow-clip rounded-xl bg-navy-900 p-6 text-white shadow-3 md:p-8">
       <p className="eyebrow text-orange-200">{t('hotlineCard.title')}</p>
-      <p className="mt-4 flex items-center gap-3 font-display text-h1 tabular text-white">
+      <p className="mt-4 flex items-center gap-3 whitespace-nowrap font-display text-h2 tabular text-white">
         <Phone aria-hidden="true" size={32} strokeWidth={1.5} className="shrink-0 text-orange-200" />
         <span>{site.hotline.display[locale]}</span>
       </p>
