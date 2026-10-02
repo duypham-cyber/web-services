@@ -104,7 +104,7 @@ export const chuyenDoiSoTrongLapDat = {
           type: 'p',
           text: {
             vi: 'Một trong những thách thức lớn nhất của ngành là làm sao quản lý hàng trăm, hàng nghìn thợ ở nhiều tỉnh thành.',
-            en: 'One of the industry’s biggest challenges is managing hundreds or even thousands of technicians spread across many provinces.',
+            en: "One of the industry's biggest challenges is managing hundreds or even thousands of technicians spread across many provinces.",
           },
         },
         {
@@ -126,7 +126,7 @@ export const chuyenDoiSoTrongLapDat = {
           type: 'p',
           text: {
             vi: 'Cách làm này giúp chuẩn hóa chất lượng dịch vụ, tăng tính minh bạch và tối ưu hiệu suất làm việc của thợ.',
-            en: 'This standardises service quality, increases transparency and makes better use of each technician’s time.',
+            en: "This standardises service quality, increases transparency and makes better use of each technician's time.",
           },
         },
       ],

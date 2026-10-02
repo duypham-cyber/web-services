@@ -56,7 +56,7 @@ export const robotTuDongHoaGiaDinh = {
           type: 'p',
           text: {
             vi: 'Sự phát triển mạnh mẽ của trí tuệ nhân tạo (AI) và Internet vạn vật (IoT) đã tạo nền tảng cho một thế hệ thiết bị gia dụng thông minh, có khả năng vận hành độc lập và thích nghi với thói quen của người dùng.',
-            en: 'Rapid progress in artificial intelligence (AI) and the Internet of Things (IoT) has laid the groundwork for a generation of smart appliances that can work independently and learn their owners’ habits.',
+            en: "Rapid progress in artificial intelligence (AI) and the Internet of Things (IoT) has laid the groundwork for a generation of smart appliances that can work independently and learn their owners' habits.",
           },
         },
         {
@@ -372,7 +372,7 @@ export const robotTuDongHoaGiaDinh = {
           },
           caption: {
             vi: 'Ngôi nhà của tương lai gần tự thích nghi theo lịch sinh hoạt của chủ nhân',
-            en: 'The home of the near future adapts to its owners’ routine',
+            en: "The home of the near future adapts to its owners' routine",
           },
         },
       ],
