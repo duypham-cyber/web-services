@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "title": "Bluebolt Services: Vietnam's nationwide installation network for appliance brands",
+    "description": "Bluebolt Services coordinates appliance installation and warranty work for brands, marketplaces and retail chains: order intake, technician dispatch, sign-off and reconciliation on one platform."
+  },
+  "hero": {
+    "title": "Vietnam's nationwide installation network for appliance brands",
+    "lead": "One dispatch partner for appliance installation and warranty work for brands, marketplaces and retail chains: order intake, technician dispatch, sign-off and reconciliation.",
+    "skipIntro": "Skip the intro ↓"
+  },
+  "doors": {
+    "eyebrow": "Who we serve",
+    "title": "Who Bluebolt works with",
+    "brands": {
+      "title": "Brands & retailers",
+      "body": "One partner to dispatch, sign off and reconcile installation jobs for your orders.",
+      "cta": "Solutions for brands"
+    },
+    "technicians": {
+      "title": "Technicians",
+      "body": "Get installation jobs near you through the app, with a clear process.",
+      "cta": "Become a technician partner"
+    },
+    "consumers": {
+      "title": "Customers",
+      "body": "Call, message on Zalo or register your warranty after installation.",
+      "cta": "Customer support"
+    }
+  },
+  "process": {
+    "eyebrow": "How it works",
+    "title": "Five steps from order to sign-off",
+    "stepLabel": "Step {n}"
+  },
+  "kpi": {
+    "title": "Operating figures",
+    "hiddenNote": "KPI tiles K1–K4 are hidden because content/stats.ts has no verified figures yet (docs/03 section 14.2)."
+  },
+  "map": {
+    "eyebrow": "Network",
+    "title": "Our installation network on the map",
+    "body": "The map and the list of provinces with technicians follow verified operating data.",
+    "cta": "View the network"
+  }
+}

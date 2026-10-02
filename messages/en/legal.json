@@ -1,0 +1,25 @@
+{
+  "eyebrow": "Legal",
+  "pendingNotice": "This content is written and approved by our legal team. The website version will be updated once signed off.",
+  "privacy": {
+    "meta": {
+      "title": "Privacy policy",
+      "description": "How Bluebolt Services collects, uses and protects personal data."
+    },
+    "title": "Privacy policy"
+  },
+  "terms": {
+    "meta": {
+      "title": "Terms of use",
+      "description": "Terms of use for the lapdattoanquoc.vn website operated by Bluebolt Services."
+    },
+    "title": "Terms of use"
+  },
+  "warranty": {
+    "meta": {
+      "title": "Warranty policy",
+      "description": "Terms, registration and scope of the Bluebolt Services installation warranty."
+    },
+    "title": "Warranty policy"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "hub": {
+    "meta": {
+      "title": "Giải pháp lắp đặt cho Hãng và Sàn",
+      "description": "So sánh tự quản đội thợ, thuê đơn vị địa phương và dùng mạng lưới Bluebolt cho đơn lắp đặt điện máy của Hãng và Sàn TMĐT."
+    },
+    "eyebrow": "Giải pháp",
+    "title": "Giải pháp lắp đặt cho Hãng và Sàn",
+    "lead": "Chọn cách triển khai lắp đặt và bảo hành phù hợp với mô hình bán hàng của bạn."
+  },
+  "brands": {
+    "meta": {
+      "title": "Giải pháp lắp đặt cho hãng điện máy",
+      "description": "Bluebolt nhận đơn lắp đặt từ hãng điện máy, điều phối thợ, nghiệm thu bằng ảnh và đối soát hằng tháng."
+    },
+    "eyebrow": "Cho hãng điện máy",
+    "title": "Lắp đặt và bảo hành cho hãng điện máy",
+    "lead": "Một đầu mối điều phối thợ, nghiệm thu và đối soát cho đơn lắp đặt của hãng."
+  },
+  "retail": {
+    "meta": {
+      "title": "Giải pháp lắp đặt cho sàn TMĐT và chuỗi bán lẻ",
+      "description": "Tích hợp lắp đặt sau bán hàng vào luồng đơn của sàn TMĐT và chuỗi bán lẻ, trạng thái đơn trả về hệ thống của bạn."
+    },
+    "eyebrow": "Cho sàn TMĐT và bán lẻ",
+    "title": "Lắp đặt sau bán hàng cho sàn TMĐT và chuỗi bán lẻ",
+    "lead": "Đơn từ hệ thống của bạn đi tới thợ, trạng thái lắp đặt quay về hệ thống của bạn."
+  }
+}

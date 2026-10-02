@@ -1,0 +1,79 @@
+{
+  "brand": {
+    "name": "Bluebolt Services",
+    "homeLink": "Bluebolt Services, về trang chủ"
+  },
+  "a11y": {
+    "skipToContent": "Bỏ qua tới nội dung chính",
+    "mainNav": "Điều hướng chính",
+    "mobileNav": "Menu điều hướng",
+    "footerNav": "Liên kết cuối trang",
+    "openMenu": "Mở menu",
+    "closeMenu": "Đóng menu",
+    "languageSwitch": "Chọn ngôn ngữ",
+    "quickActions": "Liên hệ nhanh",
+    "solutionsMenu": "Các giải pháp"
+  },
+  "nav": {
+    "solutions": "Giải pháp",
+    "solutionsOverview": "Tổng quan giải pháp",
+    "brands": "Hãng điện máy",
+    "brandsDesc": "Lắp đặt và bảo hành cho đơn của hãng, một đầu mối điều phối.",
+    "retail": "Sàn TMĐT & bán lẻ",
+    "retailDesc": "Lắp đặt sau bán hàng, trạng thái đơn trả về hệ thống của bạn.",
+    "support": "Hỗ trợ khách lẻ",
+    "supportDesc": "Gọi, nhắn Zalo, đăng ký bảo hành sau khi lắp đặt.",
+    "services": "Dịch vụ",
+    "pricing": "Bảng giá",
+    "network": "Mạng lưới",
+    "partners": "Đối tác thợ",
+    "knowledge": "Kiến thức",
+    "about": "Về chúng tôi",
+    "contact": "Liên hệ"
+  },
+  "language": {
+    "vi": "VI",
+    "en": "EN",
+    "viName": "Tiếng Việt",
+    "enName": "English"
+  },
+  "cta": {
+    "quote": "Nhận báo giá",
+    "quoteBusiness": "Nhận báo giá cho doanh nghiệp",
+    "registerTechnician": "Đăng ký làm đối tác thợ",
+    "registerTechnicianShort": "Đăng ký thợ",
+    "call": "Gọi",
+    "callNumber": "Gọi {phone}",
+    "zalo": "Zalo",
+    "learnMore": "Xem chi tiết",
+    "backHome": "Về trang chủ"
+  },
+  "footer": {
+    "solutions": "Giải pháp",
+    "services": "Dịch vụ",
+    "company": "Công ty",
+    "legal": "Pháp lý",
+    "taxCode": "MST",
+    "address": "Địa chỉ",
+    "hotline": "Hotline",
+    "email": "Email",
+    "zalo": "Zalo",
+    "copyright": "© {year} {legalName} (Bluebolt Services). Bảo lưu mọi quyền."
+  },
+  "status": {
+    "draft": "Nháp",
+    "illustration": "Minh họa",
+    "pending": "Chờ xác nhận"
+  },
+  "units": {
+    "hours": "giờ"
+  },
+  "dev": {
+    "panelTitle": "Ghi chú dựng trang",
+    "owner": "{agent} sẽ dựng trang này.",
+    "priority": "Ưu tiên",
+    "plan": "Khối dự kiến",
+    "docs": "Tài liệu",
+    "previewOnly": "Chỉ hiện ở bản dev hoặc bản xem trước (DRAFT_PREVIEW=1)."
+  }
+}

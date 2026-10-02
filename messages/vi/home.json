@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "title": "Bluebolt Services: hạ tầng lắp đặt toàn quốc cho hãng điện máy",
+    "description": "Bluebolt Services điều phối lắp đặt và bảo hành điện máy cho Hãng, Sàn TMĐT và chuỗi bán lẻ: nhận đơn, giao thợ, nghiệm thu và đối soát trên một nền tảng."
+  },
+  "hero": {
+    "title": "Hạ tầng lắp đặt toàn quốc cho hãng điện máy",
+    "lead": "Một đầu mối điều phối lắp đặt và bảo hành điện máy cho Hãng, Sàn TMĐT và chuỗi bán lẻ: nhận đơn, giao thợ, nghiệm thu và đối soát.",
+    "skipIntro": "Bỏ qua phần giới thiệu ↓"
+  },
+  "doors": {
+    "eyebrow": "Ba nhóm khách",
+    "title": "Bluebolt làm việc với ai",
+    "brands": {
+      "title": "Hãng & Sàn",
+      "body": "Một đầu mối điều phối lắp đặt, nghiệm thu và đối soát cho đơn hàng của bạn.",
+      "cta": "Giải pháp cho hãng"
+    },
+    "technicians": {
+      "title": "Thợ kỹ thuật",
+      "body": "Nhận đơn lắp đặt quanh khu vực của bạn qua app, quy trình rõ ràng.",
+      "cta": "Đăng ký đối tác thợ"
+    },
+    "consumers": {
+      "title": "Khách lẻ",
+      "body": "Gọi, nhắn Zalo hoặc đăng ký bảo hành sau khi lắp đặt.",
+      "cta": "Hỗ trợ khách lẻ"
+    }
+  },
+  "process": {
+    "eyebrow": "Quy trình",
+    "title": "Một đơn lắp đặt đi qua 5 bước",
+    "stepLabel": "Bước {n}"
+  },
+  "kpi": {
+    "title": "Số liệu vận hành",
+    "hiddenNote": "Các ô KPI K1–K4 đang ẩn vì content/stats.ts chưa có số thật (docs/03 mục 14.2)."
+  },
+  "map": {
+    "eyebrow": "Mạng lưới",
+    "title": "Mạng lưới lắp đặt trên bản đồ",
+    "body": "Bản đồ và bảng tỉnh/thành có thợ cập nhật theo số liệu vận hành.",
+    "cta": "Xem mạng lưới"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "hub": {
+    "meta": {
+      "title": "Appliance installation and maintenance services",
+      "description": "Bluebolt's four service groups: air conditioner installation, appliance installation, scheduled maintenance and robot vacuum installation."
+    },
+    "eyebrow": "Services",
+    "title": "Installation and maintenance services",
+    "lead": "Four service groups for brand, marketplace and retail orders."
+  },
+  "eyebrow": "Services",
+  "items": {
+    "lap-dat-dieu-hoa": {
+      "description": "Wall-mounted and other common air conditioner installation for brand and marketplace orders: scope, reference parts pricing and warranty.",
+      "lead": "Scope of work, reference parts pricing and warranty for air conditioner installation."
+    },
+    "lap-dat-dien-may": {
+      "description": "Installation of washing machines, wall-mounted TVs, refrigerators and other appliances for brand and marketplace orders.",
+      "lead": "Washing machines, wall-mounted TVs, refrigerators and other appliances."
+    },
+    "bao-tri-dinh-ky": {
+      "description": "Scheduled maintenance of cooling equipment for store chains and offices.",
+      "lead": "Scheduled maintenance plans for store chains and offices."
+    },
+    "lap-dat-robot-hut-bui": {
+      "description": "Robot vacuum installation and handover for brand and marketplace customers.",
+      "lead": "Installation, setup and handover of robot vacuums."
+    }
+  }
+}

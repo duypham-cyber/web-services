@@ -1,0 +1,29 @@
+{
+  "hub": {
+    "meta": {
+      "title": "Installation solutions for brands and retailers",
+      "description": "Compare running your own technicians, hiring local contractors and using the Bluebolt network for appliance installation orders."
+    },
+    "eyebrow": "Solutions",
+    "title": "Installation solutions for brands and retailers",
+    "lead": "Choose the installation and warranty setup that fits how you sell."
+  },
+  "brands": {
+    "meta": {
+      "title": "Installation services for appliance brands",
+      "description": "Bluebolt takes installation orders from appliance brands, dispatches technicians, signs off with photos and reconciles monthly."
+    },
+    "eyebrow": "For appliance brands",
+    "title": "Installation and warranty work for appliance brands",
+    "lead": "One partner to dispatch technicians, sign off jobs and reconcile your installation orders."
+  },
+  "retail": {
+    "meta": {
+      "title": "Installation for marketplaces and retail chains",
+      "description": "Add post-purchase installation to your marketplace or retail order flow, with job status sent back to your system."
+    },
+    "eyebrow": "For marketplaces and retail",
+    "title": "Post-purchase installation for marketplaces and retail chains",
+    "lead": "Orders flow from your system to our technicians, and job status flows back."
+  }
+}

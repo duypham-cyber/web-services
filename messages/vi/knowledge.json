@@ -1,0 +1,20 @@
+{
+  "hub": {
+    "meta": {
+      "title": "Kiến thức lắp đặt và vận hành điện máy",
+      "description": "Hướng dẫn lắp đặt, kiến thức kỹ thuật điện lạnh và câu chuyện vận hành lắp đặt toàn quốc từ Bluebolt."
+    },
+    "eyebrow": "Kiến thức",
+    "title": "Kiến thức lắp đặt và vận hành",
+    "lead": "Hướng dẫn lắp đặt, kiến thức kỹ thuật và kinh nghiệm vận hành."
+  },
+  "article": {
+    "eyebrow": "Kiến thức",
+    "migrating": "Bài viết đang được chuyển sang website mới.",
+    "categories": {
+      "installation-guide": "Hướng dẫn lắp đặt",
+      "technical-knowledge": "Kiến thức kỹ thuật",
+      "b2b": "Vận hành cho doanh nghiệp"
+    }
+  }
+}

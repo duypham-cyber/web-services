@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "title": "Mạng lưới thợ lắp đặt",
+    "description": "Bản đồ mạng lưới thợ lắp đặt của Bluebolt theo tỉnh/thành và SLA theo vùng."
+  },
+  "eyebrow": "Mạng lưới",
+  "title": "Mạng lưới lắp đặt của Bluebolt",
+  "lead": "Bản đồ, bảng tỉnh/thành có thợ và SLA theo vùng.",
+  "mapTitle": "Bản đồ Việt Nam, gồm quần đảo Hoàng Sa và quần đảo Trường Sa"
+}

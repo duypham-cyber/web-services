@@ -1,0 +1,20 @@
+{
+  "hub": {
+    "meta": {
+      "title": "Installation and operations knowledge",
+      "description": "Installation guides, HVAC technical knowledge and nationwide installation operations from Bluebolt."
+    },
+    "eyebrow": "Knowledge",
+    "title": "Installation and operations knowledge",
+    "lead": "Installation guides, technical know-how and operating experience."
+  },
+  "article": {
+    "eyebrow": "Knowledge",
+    "migrating": "This article is being moved to the new website.",
+    "categories": {
+      "installation-guide": "Installation guides",
+      "technical-knowledge": "Technical knowledge",
+      "b2b": "Operations for businesses"
+    }
+  }
+}

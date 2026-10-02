@@ -1,0 +1,30 @@
+{
+  "hub": {
+    "meta": {
+      "title": "Dịch vụ lắp đặt và bảo trì điện máy",
+      "description": "Bốn nhóm dịch vụ của Bluebolt: lắp đặt điều hòa, lắp đặt điện máy, bảo trì định kỳ và lắp đặt robot hút bụi."
+    },
+    "eyebrow": "Dịch vụ",
+    "title": "Dịch vụ lắp đặt và bảo trì",
+    "lead": "Bốn nhóm dịch vụ cho đơn của Hãng, Sàn TMĐT và chuỗi bán lẻ."
+  },
+  "eyebrow": "Dịch vụ",
+  "items": {
+    "lap-dat-dieu-hoa": {
+      "description": "Lắp đặt điều hòa treo tường và các dòng phổ biến cho đơn của Hãng và Sàn TMĐT: phạm vi, vật tư tham khảo, bảo hành.",
+      "lead": "Phạm vi công việc, vật tư tham khảo và bảo hành dịch vụ lắp đặt điều hòa."
+    },
+    "lap-dat-dien-may": {
+      "description": "Lắp đặt máy giặt, TV treo tường, tủ lạnh và thiết bị điện máy khác cho đơn của Hãng và Sàn TMĐT.",
+      "lead": "Máy giặt, TV treo tường, tủ lạnh và các thiết bị điện máy khác."
+    },
+    "bao-tri-dinh-ky": {
+      "description": "Bảo trì định kỳ thiết bị điện lạnh cho chuỗi cửa hàng và văn phòng.",
+      "lead": "Lịch bảo trì định kỳ cho chuỗi cửa hàng và văn phòng."
+    },
+    "lap-dat-robot-hut-bui": {
+      "description": "Lắp đặt và hướng dẫn sử dụng robot hút bụi cho khách của Hãng và Sàn TMĐT.",
+      "lead": "Lắp đặt, cài đặt và hướng dẫn sử dụng robot hút bụi."
+    }
+  }
+}

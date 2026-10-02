@@ -1,0 +1,25 @@
+{
+  "eyebrow": "Pháp lý",
+  "pendingNotice": "Nội dung do pháp chế soạn và duyệt. Bản trên website sẽ cập nhật khi được ký duyệt.",
+  "privacy": {
+    "meta": {
+      "title": "Chính sách bảo mật",
+      "description": "Cách Bluebolt Services thu thập, sử dụng và bảo vệ dữ liệu cá nhân."
+    },
+    "title": "Chính sách bảo mật"
+  },
+  "terms": {
+    "meta": {
+      "title": "Điều khoản sử dụng",
+      "description": "Điều khoản sử dụng website lapdattoanquoc.vn của Bluebolt Services."
+    },
+    "title": "Điều khoản sử dụng"
+  },
+  "warranty": {
+    "meta": {
+      "title": "Chính sách bảo hành",
+      "description": "Thời hạn, cách đăng ký và phạm vi bảo hành dịch vụ lắp đặt của Bluebolt Services."
+    },
+    "title": "Chính sách bảo hành"
+  }
+}

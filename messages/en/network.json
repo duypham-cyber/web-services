@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "title": "Installation technician network",
+    "description": "Map of Bluebolt's installation technician network by province, with service levels by region."
+  },
+  "eyebrow": "Network",
+  "title": "The Bluebolt installation network",
+  "lead": "Map, list of provinces with technicians and service levels by region.",
+  "mapTitle": "Map of Vietnam, including the Hoang Sa (Paracel) and Truong Sa (Spratly) archipelagos"
+}

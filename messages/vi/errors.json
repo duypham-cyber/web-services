@@ -1,0 +1,24 @@
+{
+  "notFound": {
+    "meta": {
+      "title": "Không tìm thấy trang",
+      "description": "Trang bạn tìm không tồn tại hoặc đã được chuyển sang địa chỉ mới."
+    },
+    "eyebrow": "Lỗi 404",
+    "title": "Không tìm thấy trang",
+    "lead": "Trang bạn tìm không tồn tại hoặc đã chuyển sang địa chỉ mới. Bạn có thể bắt đầu từ một trong các trang dưới đây.",
+    "links": {
+      "home": "Trang chủ",
+      "solutions": "Giải pháp cho hãng điện máy",
+      "partners": "Đăng ký đối tác thợ",
+      "contact": "Liên hệ"
+    }
+  },
+  "error": {
+    "title": "Đã có lỗi xảy ra",
+    "lead": "Trang chưa tải được. Bạn thử lại sau ít giây, hoặc gọi hotline nếu cần hỗ trợ ngay.",
+    "retry": "Thử lại",
+    "home": "Về trang chủ",
+    "reference": "Mã tham chiếu: {digest}"
+  }
+}

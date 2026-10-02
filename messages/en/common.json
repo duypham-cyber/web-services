@@ -1,0 +1,79 @@
+{
+  "brand": {
+    "name": "Bluebolt Services",
+    "homeLink": "Bluebolt Services, go to home page"
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "mainNav": "Main navigation",
+    "mobileNav": "Navigation menu",
+    "footerNav": "Footer links",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "languageSwitch": "Choose language",
+    "quickActions": "Quick contact",
+    "solutionsMenu": "Solutions"
+  },
+  "nav": {
+    "solutions": "Solutions",
+    "solutionsOverview": "All solutions",
+    "brands": "Appliance brands",
+    "brandsDesc": "Installation and warranty work for your orders, through one dispatch partner.",
+    "retail": "Marketplaces & retail",
+    "retailDesc": "Post-purchase installation with job status sent back to your system.",
+    "support": "Customer support",
+    "supportDesc": "Call, message on Zalo, or register the warranty after installation.",
+    "services": "Services",
+    "pricing": "Pricing",
+    "network": "Network",
+    "partners": "Technicians",
+    "knowledge": "Knowledge",
+    "about": "About us",
+    "contact": "Contact"
+  },
+  "language": {
+    "vi": "VI",
+    "en": "EN",
+    "viName": "Tiếng Việt",
+    "enName": "English"
+  },
+  "cta": {
+    "quote": "Get a quote",
+    "quoteBusiness": "Get a quote for your business",
+    "registerTechnician": "Become a technician partner",
+    "registerTechnicianShort": "Join as technician",
+    "call": "Call",
+    "callNumber": "Call {phone}",
+    "zalo": "Zalo",
+    "learnMore": "Learn more",
+    "backHome": "Back to home"
+  },
+  "footer": {
+    "solutions": "Solutions",
+    "services": "Services",
+    "company": "Company",
+    "legal": "Legal",
+    "taxCode": "Tax code",
+    "address": "Address",
+    "hotline": "Hotline",
+    "email": "Email",
+    "zalo": "Zalo",
+    "copyright": "© {year} {legalName} (Bluebolt Services). All rights reserved."
+  },
+  "status": {
+    "draft": "Draft",
+    "illustration": "Illustration",
+    "pending": "Pending confirmation"
+  },
+  "units": {
+    "hours": "h"
+  },
+  "dev": {
+    "panelTitle": "Build notes",
+    "owner": "{agent} will build this page.",
+    "priority": "Priority",
+    "plan": "Planned blocks",
+    "docs": "Docs",
+    "previewOnly": "Shown only in dev or preview builds (DRAFT_PREVIEW=1)."
+  }
+}
