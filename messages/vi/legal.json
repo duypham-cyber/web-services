@@ -1,25 +1,44 @@
 {
   "eyebrow": "Pháp lý",
-  "pendingNotice": "Nội dung do pháp chế soạn và duyệt. Bản trên website sẽ cập nhật khi được ký duyệt.",
+  "toc": "Mục lục",
+  "version": "Phiên bản",
+  "effectiveFrom": "Hiệu lực từ",
+  "notIssued": "Chưa ban hành",
+  "updating": {
+    "title": "Nội dung đang được cập nhật",
+    "body": "Bluebolt đang hoàn thiện {doc}. Nếu bạn cần thông tin ngay, hãy liên hệ:",
+    "hotline": "Hotline",
+    "email": "Email"
+  },
+  "legacyBanner": "Bản đang áp dụng theo website cũ — chờ pháp chế rà soát",
+  "legacyIntro": "Nội dung chuyển nguyên ý từ website cũ, chỉ sắp xếp lại cho dễ đọc; chưa thay đổi điều khoản.",
+  "sectionPending": "Pháp chế soạn mục này.",
+  "reviewNoteLabel": "Ghi chú cho pháp chế",
   "privacy": {
     "meta": {
       "title": "Chính sách bảo mật",
-      "description": "Cách Bluebolt Services thu thập, sử dụng và bảo vệ dữ liệu cá nhân."
+      "description": "Cách Bluebolt Services thu thập, sử dụng và bảo vệ dữ liệu cá nhân của khách hàng, đối tác thợ và người dùng website."
     },
-    "title": "Chính sách bảo mật"
+    "title": "Chính sách bảo mật",
+    "docName": "chính sách bảo mật",
+    "outlineBanner": "Nội dung do pháp chế soạn theo Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và nghị định hướng dẫn. Trang này hiện chỉ là khung mục."
   },
   "terms": {
     "meta": {
       "title": "Điều khoản sử dụng",
-      "description": "Điều khoản sử dụng website lapdattoanquoc.vn của Bluebolt Services."
+      "description": "Điều khoản sử dụng website lapdattoanquoc.vn của Bluebolt Services: phạm vi dịch vụ, quyền và trách nhiệm của người dùng."
     },
-    "title": "Điều khoản sử dụng"
+    "title": "Điều khoản sử dụng",
+    "docName": "điều khoản sử dụng",
+    "outlineBanner": "Nội dung do pháp chế soạn theo quy định hiện hành, gồm cả Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và nghị định hướng dẫn. Trang này hiện chỉ là khung mục."
   },
   "warranty": {
     "meta": {
       "title": "Chính sách bảo hành",
-      "description": "Thời hạn, cách đăng ký và phạm vi bảo hành dịch vụ lắp đặt của Bluebolt Services."
+      "description": "Thời hạn, cách đăng ký và phạm vi bảo hành dịch vụ lắp đặt của Bluebolt Services, kèm quy định dịch vụ cho thợ và hãng."
     },
-    "title": "Chính sách bảo hành"
+    "title": "Chính sách bảo hành",
+    "docName": "chính sách bảo hành",
+    "lead": "Thời hạn và cách đăng ký bảo hành, cùng quy định dịch vụ cho khách hàng, đối tác thợ và hãng."
   }
 }

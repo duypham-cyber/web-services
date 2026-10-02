@@ -1,9 +1,61 @@
 {
   "meta": {
-    "title": "Customer support",
-    "description": "Bought an appliance? Call or message Bluebolt, register your installation warranty and check warranty terms."
+    "title": "Customer support after installation",
+    "description": "Had an appliance installed by Bluebolt? Call our hotline for help, see how to register your installation warranty and read our payment safety tips."
   },
   "eyebrow": "Customer support",
-  "title": "Customer support",
-  "lead": "Call or message Bluebolt and register your installation warranty after sign-off."
+  "title": "Support after installation",
+  "lead": "Bluebolt installs appliances on behalf of the brand or store you bought from. If you need a check-up, want to register your warranty or have a question about your appointment, call our hotline.",
+  "hotlineCard": {
+    "title": "Customer care hotline",
+    "callNow": "Call now",
+    "hoursLabel": "Support hours",
+    "hoursPending": "Support hours are being updated on the website.",
+    "hoursCurrent": "The old website states: {value}",
+    "emailLabel": "Or send an email"
+  },
+  "register": {
+    "eyebrow": "Warranty",
+    "title": "Register your installation warranty",
+    "lead": "The service warranty covers the installation work done by Bluebolt technicians.",
+    "stepLabel": "Step {n}",
+    "steps": {
+      "prepare": {
+        "title": "Have your details ready",
+        "body": "Your name, phone number, installation address, sign-off date and appliance. Add the order code or purchase receipt if you have it."
+      },
+      "contact": {
+        "title": "Call the hotline",
+        "body": "Call {phone} and say you want to register your installation warranty."
+      },
+      "confirm": {
+        "title": "Get confirmation",
+        "body": "Customer care records your request and books a check-up if one is needed."
+      }
+    },
+    "formPending": "A warranty form on the website (P1) will go live once its own contract is approved."
+  },
+  "terms": {
+    "eyebrow": "Coverage",
+    "title": "Warranty periods",
+    "tableLabel": "Service warranty periods",
+    "colItem": "Service",
+    "colTerm": "Period",
+    "currentValue": "Currently stated: {value}",
+    "fallback": "Warranty periods depend on the type of service and are being updated on the website. Call our hotline to confirm the period for your job.",
+    "policyLink": "Read the warranty policy",
+    "conflictNote": "Conflict to resolve: the old policy gives new installations a 2-month warranty, while an old article says 12 months. The table appears in the live version only once content/sla.ts holds an approved value."
+  },
+  "payment": {
+    "eyebrow": "Stay safe",
+    "title": "A note on payments",
+    "tip": "Before sending money to anyone who claims to act for Bluebolt, call {phone} to check.",
+    "materialsLink": "See the reference price list for materials"
+  },
+  "final": {
+    "eyebrow": "Contact",
+    "title": "Didn't find what you need?",
+    "body": "Call our hotline or see other ways to reach Bluebolt.",
+    "contactLink": "All contact options"
+  }
 }

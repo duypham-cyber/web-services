@@ -1,9 +1,66 @@
 {
   "meta": {
     "title": "Contact Bluebolt Services",
-    "description": "Contact Bluebolt by team: business sales, technician recruitment or customer care. Hotline +84 902 808 049."
+    "description": "Contact Bluebolt by team: business sales, technician recruitment or customer care. Hotline {phone}, office in Ho Chi Minh City."
   },
   "eyebrow": "Contact",
   "title": "Contact Bluebolt",
-  "lead": "Reach the right team for a faster reply: business sales, technician recruitment or customer care."
+  "lead": "Reach the right team for a faster reply: business sales, technician recruitment or customer care.",
+  "jumpLabel": "Go to a team",
+  "departments": {
+    "sales": {
+      "title": "Business sales",
+      "audience": "For appliance brands, e-commerce marketplaces and retail chains.",
+      "i1": "Installation quotes under contract",
+      "i2": "The areas and volumes you need covered",
+      "i3": "Job-by-job reconciliation and reporting",
+      "prepare": "For a faster quote, have ready: your product category, monthly installation volume and the areas you need covered.",
+      "emailSubject": "Installation quote for business",
+      "link": "See our solution for appliance brands"
+    },
+    "recruitment": {
+      "title": "Technician recruitment",
+      "audience": "For technicians who want to take jobs with Bluebolt.",
+      "i1": "Signing up as a technician partner",
+      "i2": "Which areas need technicians",
+      "i3": "Guidance on the onboarding steps",
+      "emailSubject": "Technician partner sign-up",
+      "link": "See the technician partner page"
+    },
+    "care": {
+      "title": "Customer care",
+      "audience": "For customers whose appliance Bluebolt installed.",
+      "i1": "Registering your installation warranty",
+      "i2": "Check-ups after installation",
+      "i3": "Questions about your installation appointment",
+      "emailSubject": "Support after installation",
+      "link": "See support after installation"
+    },
+    "handles": "We can help with",
+    "email": "Send an email",
+    "zalo": "Message on Zalo",
+    "sharedNote": "All three teams currently share the hotline and email in content/site.ts. Waiting for team-specific phone numbers and email addresses (lead contract, D-20).",
+    "formPending": "The business quote form will go live here once contracts/lead-b2b.md is approved."
+  },
+  "office": {
+    "eyebrow": "Office",
+    "title": "Ho Chi Minh City office",
+    "addressLabel": "Address",
+    "openMaps": "Open in Google Maps",
+    "newTab": "(opens in a new tab)",
+    "mapNote": "Illustrative sketch, not to scale. Select \"Open in Google Maps\" for the map and directions.",
+    "addressNote": "Address taken from the old website; to be checked against the latest business registration certificate before launch."
+  },
+  "hours": {
+    "eyebrow": "Availability",
+    "title": "Opening hours",
+    "fallback": "Opening hours are being updated on the website. You can still call our hotline or send an email, and the right team will reply during business hours.",
+    "tableLabel": "Hours currently stated on the old website",
+    "colItem": "Item",
+    "colHours": "Hours",
+    "colCurrent": "The old website states",
+    "colStatus": "Status",
+    "pendingValue": "To be confirmed",
+    "pendingNote": "The hours on the old website do not match: the footer says the hotline runs 24/7, Monday to Sunday, while the contact page says 9:00–18:00, Monday to Friday. Mr Duy to confirm one set of hours in content/sla.ts."
+  }
 }

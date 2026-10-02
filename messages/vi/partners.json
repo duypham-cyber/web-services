@@ -1,9 +1,194 @@
 {
   "meta": {
     "title": "Đối tác thợ: đăng ký nhận đơn lắp đặt",
-    "description": "Trở thành đối tác thợ của Bluebolt: thu nhập tham khảo, cách nhận tiền, tiêu chuẩn, lộ trình gia nhập và đăng ký."
+    "description": "Trở thành đối tác thợ của Bluebolt: cách nhận tiền công, lộ trình gia nhập 4 bước, tiêu chuẩn thợ, việc đang tuyển và cách đăng ký."
   },
   "eyebrow": "Đối tác thợ",
-  "title": "Trở thành đối tác thợ của Bluebolt",
-  "lead": "Nhận đơn lắp đặt quanh khu vực của bạn, quy trình và thu nhập rõ ràng."
+  "title": "Đơn ổn định, thu nhập minh bạch",
+  "lead": "Nhận đơn lắp đặt điện máy quanh khu vực của bạn, theo kỹ năng và lịch trống. Tiền công tính theo từng đơn và xem lại được trên app thợ.",
+  "hero": {
+    "callRecruitment": "Gọi tuyển thợ",
+    "existingPartner": "Đã là đối tác? Gọi {phone} để được hỗ trợ đơn đang làm."
+  },
+  "media": {
+    "photoPending": "Ảnh thật sẽ chụp",
+    "illustration": "Minh họa giao diện"
+  },
+  "mockup": {
+    "caption": "Minh họa giao diện app thợ, không phải ảnh chụp màn hình thật.",
+    "appName": "App thợ",
+    "status": "Đang nhận đơn",
+    "eyebrow": "Việc mới gần bạn",
+    "jobTitle": "Lắp điều hòa treo tường",
+    "jobArea": "Gần khu vực bạn chọn",
+    "jobTime": "Hẹn chiều nay",
+    "chipPipe": "Ống đồng",
+    "chipBracket": "Giá đỡ",
+    "chipVacuum": "Hút chân không",
+    "accept": "Nhận việc",
+    "nextTv": "Treo tivi",
+    "nextService": "Bảo dưỡng máy lạnh",
+    "tabJobs": "Việc",
+    "tabSchedule": "Lịch",
+    "tabEarnings": "Thu nhập",
+    "tabMe": "Tôi"
+  },
+  "earnings": {
+    "eyebrow": "Thu nhập",
+    "title": "Bạn được trả tiền thế nào",
+    "lead": "Mỗi đơn có tiền công riêng và được đối soát theo đơn trên app thợ.",
+    "referenceLabel": "Thu nhập tham khảo mỗi tháng",
+    "referencePending": "Chờ số liệu thật từ vận hành",
+    "referenceUnit": "đồng/tháng",
+    "platformFeeLabel": "Phí nền tảng",
+    "platformFeePending": "Chờ vận hành công bố mức phí và cách tính",
+    "updated": "Cập nhật {date}",
+    "items": {
+      "payout": "Tiền công theo đơn",
+      "materials": "Vật tư thu tại chỗ",
+      "urgent": "Phụ phí đơn gấp",
+      "wallet": "Ví Top-up trên app"
+    },
+    "pricingLink": "Xem khung giá vật tư tham khảo",
+    "fallback": "Khi gọi lại, bộ phận tuyển thợ sẽ giải thích cách tính tiền công, các khoản phí và lịch đối soát cho bạn.",
+    "draftNote": "Thu nhập tham khảo và phí nền tảng chỉ hiện khi vận hành cung cấp số thật (content/partners.ts). Các dòng có nhãn Nháp lấy từ chính sách cũ, chờ duyệt (content/claims/partner.ts)."
+  },
+  "onboarding": {
+    "eyebrow": "Gia nhập",
+    "title": "Bốn bước để nhận đơn đầu tiên",
+    "stepLabel": "Bước {n}",
+    "steps": {
+      "register": {
+        "title": "Đăng ký",
+        "body": "Gọi hotline tuyển thợ, cho biết kỹ năng chính và tỉnh/thành bạn muốn nhận việc."
+      },
+      "verify": {
+        "title": "Xác thực danh tính",
+        "body": "Tạo tài khoản trên app thợ và xác thực danh tính bằng giấy tờ tùy thân còn hiệu lực."
+      },
+      "training": {
+        "title": "Đào tạo",
+        "body": "Nắm cách nhận đơn, xác nhận lịch với khách, lắp đặt và nghiệm thu bằng ảnh trên app."
+      },
+      "jobs": {
+        "title": "Nhận đơn",
+        "body": "Nhận đơn gần khu vực của bạn, gọi khách chốt lịch hẹn rồi lắp đặt và nghiệm thu cùng khách."
+      }
+    }
+  },
+  "standards": {
+    "eyebrow": "Tiêu chuẩn",
+    "title": "Tiêu chuẩn thợ Bluebolt",
+    "lead": "Bốn nhóm tiêu chuẩn dưới đây áp dụng cho thợ chính. Thợ phụ và học việc cần có kiến thức cơ bản và sẵn sàng học thêm.",
+    "groups": {
+      "qualification": {
+        "title": "Trình độ và giấy tờ",
+        "i1": "Tốt nghiệp trung cấp hoặc có chứng chỉ nghề: điện tử – điện lạnh, kỹ thuật điện hoặc cơ điện tử.",
+        "i2": "Thợ chính có kinh nghiệm lắp đặt thực tế.",
+        "i3": "Ưu tiên có chứng chỉ an toàn lao động, nhất là an toàn điện và làm việc trên cao.",
+        "i4": "Giấy tờ cần chuẩn bị: căn cước còn hiệu lực, chứng chỉ nghề hoặc giấy xác nhận kinh nghiệm, lý lịch tư pháp."
+      },
+      "skills": {
+        "title": "Kỹ năng kỹ thuật",
+        "i1": "Điều hòa: đọc sơ đồ mạch, hàn ống đồng, nạp gas, thử áp, hút chân không, đặt dàn nóng và dàn lạnh đúng vị trí.",
+        "i2": "Tủ lạnh, máy giặt: cân chỉnh mặt phẳng, đấu nối cấp thoát nước, nối dây tiếp địa để chống giật.",
+        "i3": "Tivi: khoan tường, lắp giá treo thẳng, nghiêng hoặc xoay, cài đặt và kết nối mạng.",
+        "i4": "Dùng đồng hồ vạn năng, máy dò âm tường và app trên điện thoại để nhận việc, gửi ảnh hiện trường."
+      },
+      "conduct": {
+        "title": "Tác phong phục vụ",
+        "i1": "Đúng giờ hẹn với khách.",
+        "i2": "Đồng phục gọn gàng, sạch sẽ.",
+        "i3": "Giao tiếp lịch sự, tư vấn vị trí lắp đặt và hướng dẫn khách dùng thiết bị sau khi lắp.",
+        "i4": "Dọn sạch khu vực thi công trước khi bàn giao."
+      },
+      "safety": {
+        "title": "An toàn và quy chuẩn",
+        "i1": "Dùng đủ đồ bảo hộ: mũ, giày, dây an toàn khi làm trên cao.",
+        "i2": "Kiểm tra rò điện bằng bút thử điện trước khi chạm vào thiết bị.",
+        "i3": "Dùng vật tư đúng chuẩn về độ dày ống đồng và tiết diện dây điện.",
+        "i4": "Giữ gìn nhà của khách: che chắn khi khoan, cắt và không làm hư tường, sàn, đồ đạc."
+      }
+    },
+    "tools": {
+      "title": "Dụng cụ cần có",
+      "t1": "Máy khoan",
+      "t2": "Bơm chân không",
+      "t3": "Đồng hồ đo áp suất",
+      "t4": "Máy hàn ống đồng",
+      "t5": "Máy cắt ống",
+      "t6": "Bộ loe ống",
+      "t7": "Phương tiện đi lại",
+      "t8": "Điện thoại thông minh"
+    },
+    "standardsNote": "Số hiệu tiêu chuẩn TCVN, QCVN lấy từ site cũ và chưa được kiểm chứng; chờ bộ phận kỹ thuật xác nhận trước khi đưa lên bản chính thức."
+  },
+  "jobs": {
+    "eyebrow": "Tuyển dụng",
+    "title": "Việc đang tuyển",
+    "lead": "Mọi vị trí đều nhận đăng ký qua cùng một kênh ở cuối trang.",
+    "employment": "Cộng tác viên",
+    "openings": "{count} vị trí",
+    "openingsPending": "Số vị trí chờ xác nhận",
+    "apply": "Ứng tuyển",
+    "applyLabel": "Ứng tuyển vị trí {title} tại {province}",
+    "empty": "Hiện chưa có tin tuyển đăng trên website.",
+    "emptyHint": "Gọi hotline tuyển thợ để hỏi khu vực đang cần thêm thợ.",
+    "networkLink": "Xem mạng lưới theo tỉnh",
+    "draftNote": "Tin lấy từ site cũ (crawl 01/10/2026), tất cả đều ghi \"hết hạn\" và không có hạn nộp. Site cũ dùng chung mã BBSV0924561 cho cả 6 tin nên mã không hiển thị; 2 tin cùng chức danh ở TP. Hồ Chí Minh (3 và 6 vị trí) đã gộp. Chờ bộ phận tuyển thợ xác nhận (content/jobs.ts)."
+  },
+  "faq": {
+    "eyebrow": "Hỏi đáp",
+    "title": "Câu hỏi thường gặp",
+    "items": {
+      "howToRegister": {
+        "q": "Đăng ký làm đối tác thợ thế nào?",
+        "a": "Gọi {phone} và cho biết bạn muốn đăng ký làm đối tác thợ. Chuẩn bị sẵn họ tên, số di động, tỉnh/thành nhận việc chính và kỹ năng chính; bộ phận tuyển thợ sẽ hướng dẫn các bước tiếp theo."
+      },
+      "noCertificate": {
+        "q": "Chưa có chứng chỉ nghề thì có đăng ký được không?",
+        "a": "Bạn vẫn có thể đăng ký làm thợ phụ hoặc học việc nếu có kiến thức cơ bản. Bộ phận tuyển thợ sẽ trao đổi vai trò phù hợp khi gọi lại."
+      },
+      "chooseArea": {
+        "q": "Tôi có được chọn khu vực nhận việc không?",
+        "a": "Có. Bạn chọn tỉnh/thành nhận việc khi đăng ký, và đơn được gợi ý theo khu vực, kỹ năng và lịch trống của bạn."
+      },
+      "whenPaid": {
+        "q": "Khi nào tôi nhận được tiền công?"
+      },
+      "materials": {
+        "q": "Khách trả tiền vật tư cho ai?"
+      },
+      "hours": {
+        "q": "Khung giờ làm việc tại nhà khách thế nào?"
+      },
+      "urgent": {
+        "q": "Đơn gấp được tính thế nào?"
+      },
+      "violations": {
+        "q": "Trường hợp nào thợ bị xử lý vi phạm?"
+      },
+      "existing": {
+        "q": "Tôi đang là đối tác, cần hỗ trợ một đơn đang làm thì gọi ai?",
+        "a": "Gọi {phone}, cho biết bạn là đối tác thợ và mã đơn để được chuyển tới đúng người phụ trách."
+      }
+    }
+  },
+  "register": {
+    "eyebrow": "Đăng ký",
+    "title": "Đăng ký làm đối tác thợ",
+    "body": "Gọi hotline tuyển thợ và chuẩn bị sẵn bốn thông tin để đăng ký nhanh:",
+    "fields": {
+      "name": "Họ và tên",
+      "phone": "Số di động (Zalo)",
+      "province": "Tỉnh/thành nhận việc chính",
+      "skill": "Kỹ năng chính"
+    },
+    "zalo": "Nhắn Zalo tuyển thợ",
+    "appAndroid": "Tải app trên Google Play",
+    "appIos": "Tải app trên App Store",
+    "formPending": "Form đăng ký 4 trường (họ và tên, số di động, tỉnh/thành, kỹ năng chính) sẽ bật tại đây sau khi anh Duy duyệt contracts/lead-technician.md.",
+    "appPending": "Link tải app thợ sẽ thêm khi có link thật trên Google Play và App Store (content/partners.ts).",
+    "testimonialsPending": "Lời chứng thực của thợ chỉ thêm khi có người thật đồng ý (tên, ảnh, nội dung). Hiện chưa có nên khối này để trống."
+  }
 }

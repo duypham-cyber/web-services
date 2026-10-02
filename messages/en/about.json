@@ -1,9 +1,67 @@
 {
   "meta": {
     "title": "About Bluebolt Services",
-    "description": "Bluebolt Services: our story, team, legal entity and milestones."
+    "description": "Bluebolt Services connects appliance brands, marketplaces and retail chains with installation technicians. Our mission, how we work and company details."
   },
   "eyebrow": "About us",
-  "title": "About Bluebolt Services",
-  "lead": "The story, team and legal entity behind the Bluebolt installation network."
+  "title": "Standardizing after-sales installation",
+  "lead": "Bluebolt Services connects appliance brands, e-commerce marketplaces and retail chains with a network of installation and maintenance technicians, through one dispatch system and one shared process.",
+  "media": {
+    "team": "dispatch team at work in the office",
+    "office": "Ho Chi Minh City office"
+  },
+  "story": {
+    "eyebrow": "Our story",
+    "title": "More than a middleman",
+    "p1": "An installation job passes through many hands: the brand or store, the dispatch team, the technician and the customer. Bluebolt brings them into one process, so brands and marketplaces do not have to find and manage technicians in every locality themselves.",
+    "p2": "We combine automated dispatch with job-by-job quality control: we assign the nearest technician with the right skills, the technician confirms the appointment with the customer, the work is signed off with photos, and we reconcile with the brand once the job is done.",
+    "p3": "For businesses, Bluebolt is a single point of contact for installation, service warranty and reconciliation. For technicians, it is a source of jobs close to home. For customers, it is one hotline to call when they need help."
+  },
+  "values": {
+    "eyebrow": "How we work",
+    "title": "Fast, reliable, transparent",
+    "fast": {
+      "title": "Fast",
+      "body": "Each job goes to the nearest technician with a free slot, who then calls the customer to fix the appointment time."
+    },
+    "standard": {
+      "title": "Reliable",
+      "body": "Technicians install to the brand's technical guidelines and sign off with the customer when the job is done."
+    },
+    "transparent": {
+      "title": "Transparent",
+      "body": "Job status, sign-off photos and reconciliation are recorded for every job."
+    }
+  },
+  "kpi": {
+    "title": "Bluebolt in numbers",
+    "pending": "This band appears once there is a real figure for K4 (brand and retail partners) in content/stats.ts."
+  },
+  "milestones": {
+    "eyebrow": "Our journey",
+    "title": "Milestones",
+    "pending": "Only milestones with a source will be shown: founding year per the business registration certificate, first brand contract, technician app launch date. Waiting for input from Mr Duy.",
+    "slot": "Milestone {n}: source needed"
+  },
+  "company": {
+    "eyebrow": "Legal entity",
+    "title": "Company information",
+    "legalName": "Registered name",
+    "brand": "Brand",
+    "taxCode": "Tax code",
+    "office": "Ho Chi Minh City office",
+    "hotline": "Hotline",
+    "email": "Email",
+    "addressNote": "Address taken from the old website; to be checked against the latest business registration certificate before launch.",
+    "contactLink": "Directions and contact"
+  },
+  "partners": {
+    "title": "Our partners",
+    "pending": "Brand and marketplace partner logos appear only with written permission (content/partners.ts). There is none yet, so the partner block is hidden."
+  },
+  "final": {
+    "eyebrow": "Work with us",
+    "title": "Work with Bluebolt",
+    "body": "Looking for an installation partner for your business, or a steady flow of jobs as a technician? Choose the door that fits you."
+  }
 }

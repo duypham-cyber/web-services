@@ -1,9 +1,67 @@
 {
   "meta": {
     "title": "Về Bluebolt Services",
-    "description": "Bluebolt Services (Công ty Cổ phần Công nghệ Tia Chớp Xanh): câu chuyện, đội ngũ, pháp nhân và các mốc phát triển."
+    "description": "Bluebolt Services kết nối hãng điện máy, sàn TMĐT và chuỗi bán lẻ với thợ lắp đặt điện máy. Sứ mệnh, cách làm việc và thông tin pháp nhân."
   },
   "eyebrow": "Về chúng tôi",
-  "title": "Về Bluebolt Services",
-  "lead": "Câu chuyện, đội ngũ và pháp nhân đứng sau mạng lưới lắp đặt Bluebolt."
+  "title": "Chuẩn hóa dịch vụ lắp đặt sau bán hàng",
+  "lead": "Bluebolt Services kết nối hãng điện máy, sàn thương mại điện tử và chuỗi bán lẻ với mạng lưới thợ lắp đặt, bảo trì điện máy, qua một hệ thống điều phối và một quy trình chung.",
+  "media": {
+    "team": "đội điều phối làm việc tại văn phòng",
+    "office": "văn phòng TP. Hồ Chí Minh"
+  },
+  "story": {
+    "eyebrow": "Câu chuyện",
+    "title": "Không chỉ là đơn vị trung gian",
+    "p1": "Một đơn lắp đặt đi qua nhiều bên: hãng hoặc nơi bán, bộ phận điều phối, người thợ và khách hàng. Bluebolt gom các bên đó về một quy trình, để hãng và sàn không phải tự tìm, tự quản lý thợ ở từng địa phương.",
+    "p2": "Chúng tôi kết hợp điều phối tự động với kiểm soát chất lượng theo từng đơn: chọn thợ gần nhất có kỹ năng phù hợp, thợ xác nhận lịch với khách, nghiệm thu bằng ảnh và đối soát với hãng sau khi hoàn tất.",
+    "p3": "Với doanh nghiệp, Bluebolt là một đầu mối cho lắp đặt, bảo hành dịch vụ và đối soát. Với thợ, đó là nguồn đơn quanh nơi họ sống. Với khách hàng, đó là một số hotline để gọi khi cần."
+  },
+  "values": {
+    "eyebrow": "Cách làm việc",
+    "title": "Nhanh, chuẩn, minh bạch",
+    "fast": {
+      "title": "Nhanh",
+      "body": "Đơn được giao cho thợ gần nhất còn lịch trống, thợ gọi khách để chốt giờ hẹn."
+    },
+    "standard": {
+      "title": "Chuẩn",
+      "body": "Thợ lắp theo hướng dẫn kỹ thuật của hãng và nghiệm thu cùng khách sau khi hoàn tất."
+    },
+    "transparent": {
+      "title": "Minh bạch",
+      "body": "Trạng thái đơn, ảnh nghiệm thu và đối soát được ghi nhận theo từng đơn."
+    }
+  },
+  "kpi": {
+    "title": "Bluebolt qua các con số",
+    "pending": "Dải số liệu sẽ hiện khi có số thật cho K4 (Hãng và Sàn đang hợp tác) trong content/stats.ts."
+  },
+  "milestones": {
+    "eyebrow": "Hành trình",
+    "title": "Mốc phát triển",
+    "pending": "Chỉ đưa lên các mốc có nguồn: năm thành lập theo giấy chứng nhận đăng ký doanh nghiệp, hợp đồng hãng đầu tiên, ngày ra mắt app thợ. Chờ anh Duy cung cấp.",
+    "slot": "Mốc {n}: chờ nguồn"
+  },
+  "company": {
+    "eyebrow": "Pháp nhân",
+    "title": "Thông tin doanh nghiệp",
+    "legalName": "Tên doanh nghiệp",
+    "brand": "Thương hiệu",
+    "taxCode": "Mã số thuế",
+    "office": "Văn phòng TP. Hồ Chí Minh",
+    "hotline": "Hotline",
+    "email": "Email",
+    "addressNote": "Địa chỉ lấy từ website cũ, cần đối chiếu giấy chứng nhận đăng ký doanh nghiệp mới nhất trước khi ra mắt.",
+    "contactLink": "Chỉ đường và liên hệ"
+  },
+  "partners": {
+    "title": "Đối tác của Bluebolt",
+    "pending": "Logo hãng và sàn đối tác chỉ hiện khi có văn bản đồng ý (content/partners.ts). Hiện chưa có nên khối đối tác được ẩn."
+  },
+  "final": {
+    "eyebrow": "Hợp tác",
+    "title": "Làm việc cùng Bluebolt",
+    "body": "Doanh nghiệp cần đối tác lắp đặt, hay thợ muốn có nguồn đơn đều đặn: chọn cửa phù hợp với bạn."
+  }
 }

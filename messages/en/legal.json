@@ -1,25 +1,44 @@
 {
   "eyebrow": "Legal",
-  "pendingNotice": "This content is written and approved by our legal team. The website version will be updated once signed off.",
+  "toc": "Contents",
+  "version": "Version",
+  "effectiveFrom": "Effective from",
+  "notIssued": "Not yet issued",
+  "updating": {
+    "title": "This page is being updated",
+    "body": "Bluebolt is finalizing its {doc}. If you need information now, please contact us:",
+    "hotline": "Hotline",
+    "email": "Email"
+  },
+  "legacyBanner": "Version currently in force on the old website, pending legal review",
+  "legacyIntro": "Content carried over from the old website and reorganized for readability; the terms themselves have not changed.",
+  "sectionPending": "To be drafted by the legal team.",
+  "reviewNoteLabel": "Notes for the legal team",
   "privacy": {
     "meta": {
       "title": "Privacy policy",
-      "description": "How Bluebolt Services collects, uses and protects personal data."
+      "description": "How Bluebolt Services collects, uses and protects the personal data of customers, technician partners and website visitors."
     },
-    "title": "Privacy policy"
+    "title": "Privacy policy",
+    "docName": "privacy policy",
+    "outlineBanner": "Content will be drafted by our legal team in line with Personal Data Protection Law No. 91/2025/QH15 and its implementing decrees. For now, this page is only an outline."
   },
   "terms": {
     "meta": {
       "title": "Terms of use",
-      "description": "Terms of use for the lapdattoanquoc.vn website operated by Bluebolt Services."
+      "description": "Terms of use for the lapdattoanquoc.vn website operated by Bluebolt Services: scope of services and the rights and duties of users."
     },
-    "title": "Terms of use"
+    "title": "Terms of use",
+    "docName": "terms of use",
+    "outlineBanner": "Content will be drafted by our legal team under current regulations, including Personal Data Protection Law No. 91/2025/QH15 and its implementing decrees. For now, this page is only an outline."
   },
   "warranty": {
     "meta": {
       "title": "Warranty policy",
-      "description": "Terms, registration and scope of the Bluebolt Services installation warranty."
+      "description": "Periods, registration and scope of the Bluebolt Services installation warranty, plus service rules for technicians and brands."
     },
-    "title": "Warranty policy"
+    "title": "Warranty policy",
+    "docName": "warranty policy",
+    "lead": "Warranty periods and how to register, plus service rules for customers, technician partners and brands."
   }
 }

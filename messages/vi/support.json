@@ -1,9 +1,61 @@
 {
   "meta": {
-    "title": "Hỗ trợ khách hàng",
-    "description": "Khách đã mua thiết bị: gọi hoặc nhắn Zalo cho Bluebolt, đăng ký bảo hành dịch vụ lắp đặt và xem thời hạn bảo hành."
+    "title": "Hỗ trợ khách hàng sau lắp đặt",
+    "description": "Khách đã được Bluebolt lắp đặt: gọi hotline để được hỗ trợ, cách đăng ký bảo hành dịch vụ lắp đặt và lưu ý khi thanh toán cho thợ."
   },
   "eyebrow": "Hỗ trợ khách lẻ",
-  "title": "Hỗ trợ khách hàng",
-  "lead": "Gọi hoặc nhắn tin cho Bluebolt, đăng ký bảo hành dịch vụ lắp đặt sau khi nghiệm thu."
+  "title": "Hỗ trợ sau lắp đặt",
+  "lead": "Bluebolt lắp đặt thiết bị theo đơn của hãng hoặc nơi bạn mua hàng. Khi cần kiểm tra lại, đăng ký bảo hành hay hỏi về lịch hẹn, hãy gọi hotline để được hỗ trợ.",
+  "hotlineCard": {
+    "title": "Hotline chăm sóc khách hàng",
+    "callNow": "Gọi ngay",
+    "hoursLabel": "Giờ hỗ trợ",
+    "hoursPending": "Giờ hỗ trợ đang được cập nhật trên website.",
+    "hoursCurrent": "Website cũ đang ghi: {value}",
+    "emailLabel": "Hoặc gửi email"
+  },
+  "register": {
+    "eyebrow": "Bảo hành",
+    "title": "Đăng ký bảo hành dịch vụ lắp đặt",
+    "lead": "Bảo hành dịch vụ áp dụng cho phần việc lắp đặt do thợ Bluebolt thực hiện.",
+    "stepLabel": "Bước {n}",
+    "steps": {
+      "prepare": {
+        "title": "Chuẩn bị thông tin",
+        "body": "Họ tên, số điện thoại, địa chỉ lắp đặt, ngày nghiệm thu và tên thiết bị. Nếu có, thêm mã đơn hoặc hóa đơn mua hàng."
+      },
+      "contact": {
+        "title": "Gọi hotline",
+        "body": "Gọi {phone} và cho biết bạn muốn đăng ký bảo hành dịch vụ lắp đặt."
+      },
+      "confirm": {
+        "title": "Nhận xác nhận",
+        "body": "Bộ phận chăm sóc khách hàng ghi nhận yêu cầu và hẹn thời gian kiểm tra nếu cần."
+      }
+    },
+    "formPending": "Form đăng ký bảo hành trên website (P1) sẽ bật sau khi có contract riêng được duyệt."
+  },
+  "terms": {
+    "eyebrow": "Phạm vi bảo hành",
+    "title": "Thời hạn bảo hành",
+    "tableLabel": "Bảng thời hạn bảo hành dịch vụ",
+    "colItem": "Hạng mục",
+    "colTerm": "Thời hạn",
+    "currentValue": "Đang ghi: {value}",
+    "fallback": "Thời hạn bảo hành tùy loại dịch vụ và đang được cập nhật trên website. Gọi hotline để được xác nhận theo đơn của bạn.",
+    "policyLink": "Xem chính sách bảo hành",
+    "conflictNote": "Mâu thuẫn cần chốt: chính sách cũ ghi bảo hành lắp đặt mới 02 tháng, một bài viết cũ ghi 12 tháng. Bảng chỉ hiện ở bản chính thức khi content/sla.ts có giá trị đã duyệt."
+  },
+  "payment": {
+    "eyebrow": "An toàn",
+    "title": "Lưu ý khi thanh toán",
+    "tip": "Trước khi chuyển tiền cho bất kỳ ai nhân danh Bluebolt, hãy gọi {phone} để xác minh.",
+    "materialsLink": "Xem khung giá vật tư tham khảo"
+  },
+  "final": {
+    "eyebrow": "Liên hệ",
+    "title": "Chưa tìm thấy điều bạn cần?",
+    "body": "Gọi hotline hoặc xem các kênh liên hệ khác của Bluebolt.",
+    "contactLink": "Các kênh liên hệ"
+  }
 }

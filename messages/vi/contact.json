@@ -1,9 +1,66 @@
 {
   "meta": {
     "title": "Liên hệ Bluebolt Services",
-    "description": "Liên hệ Bluebolt theo bộ phận: kinh doanh doanh nghiệp, tuyển thợ, chăm sóc khách hàng. Hotline 0902 808 049."
+    "description": "Liên hệ Bluebolt theo bộ phận: kinh doanh doanh nghiệp, tuyển thợ, chăm sóc khách hàng. Hotline {phone}, văn phòng tại TP. Hồ Chí Minh."
   },
   "eyebrow": "Liên hệ",
   "title": "Liên hệ Bluebolt",
-  "lead": "Chọn đúng bộ phận để được phản hồi nhanh: kinh doanh doanh nghiệp, tuyển thợ hoặc chăm sóc khách hàng."
+  "lead": "Chọn đúng bộ phận để được phản hồi nhanh: kinh doanh doanh nghiệp, tuyển thợ hoặc chăm sóc khách hàng.",
+  "jumpLabel": "Đi tới bộ phận",
+  "departments": {
+    "sales": {
+      "title": "Kinh doanh doanh nghiệp",
+      "audience": "Dành cho hãng điện máy, sàn thương mại điện tử và chuỗi bán lẻ.",
+      "i1": "Báo giá lắp đặt theo hợp đồng",
+      "i2": "Trao đổi khu vực và sản lượng cần triển khai",
+      "i3": "Đối soát và báo cáo theo đơn",
+      "prepare": "Để báo giá nhanh, hãy chuẩn bị: ngành hàng, sản lượng lắp đặt mỗi tháng và khu vực cần phủ.",
+      "emailSubject": "Báo giá lắp đặt cho doanh nghiệp",
+      "link": "Xem giải pháp cho hãng điện máy"
+    },
+    "recruitment": {
+      "title": "Tuyển thợ",
+      "audience": "Dành cho thợ kỹ thuật muốn nhận đơn cùng Bluebolt.",
+      "i1": "Đăng ký làm đối tác thợ",
+      "i2": "Hỏi khu vực đang cần thợ",
+      "i3": "Hướng dẫn các bước gia nhập",
+      "emailSubject": "Đăng ký làm đối tác thợ",
+      "link": "Xem trang đối tác thợ"
+    },
+    "care": {
+      "title": "Chăm sóc khách hàng",
+      "audience": "Dành cho khách đã được Bluebolt lắp đặt.",
+      "i1": "Đăng ký bảo hành dịch vụ lắp đặt",
+      "i2": "Kiểm tra lại sau lắp đặt",
+      "i3": "Hỏi về lịch hẹn lắp đặt",
+      "emailSubject": "Hỗ trợ sau lắp đặt",
+      "link": "Xem hướng dẫn hỗ trợ sau lắp đặt"
+    },
+    "handles": "Hỗ trợ về",
+    "email": "Gửi email",
+    "zalo": "Nhắn Zalo",
+    "sharedNote": "Ba bộ phận đang dùng chung hotline và email trong content/site.ts. Chờ số điện thoại, email riêng của từng bộ phận (contract lead, D-20).",
+    "formPending": "Form báo giá cho doanh nghiệp sẽ bật tại đây sau khi anh Duy duyệt contracts/lead-b2b.md."
+  },
+  "office": {
+    "eyebrow": "Văn phòng",
+    "title": "Văn phòng TP. Hồ Chí Minh",
+    "addressLabel": "Địa chỉ",
+    "openMaps": "Mở Google Maps",
+    "newTab": "(mở thẻ mới)",
+    "mapNote": "Sơ đồ minh họa, không theo tỷ lệ. Bấm \"Mở Google Maps\" để xem bản đồ và chỉ đường.",
+    "addressNote": "Địa chỉ lấy từ website cũ, cần đối chiếu giấy chứng nhận đăng ký doanh nghiệp mới nhất trước khi ra mắt."
+  },
+  "hours": {
+    "eyebrow": "Thời gian",
+    "title": "Giờ làm việc",
+    "fallback": "Giờ làm việc đang được cập nhật trên website. Bạn vẫn có thể gọi hotline hoặc gửi email; bộ phận phụ trách sẽ phản hồi trong giờ làm việc.",
+    "tableLabel": "Giờ làm việc đang ghi trên website cũ",
+    "colItem": "Hạng mục",
+    "colHours": "Thời gian",
+    "colCurrent": "Website cũ đang ghi",
+    "colStatus": "Trạng thái",
+    "pendingValue": "Chờ chốt",
+    "pendingNote": "Các mốc giờ trên website cũ chưa thống nhất: chân trang ghi hotline 24/7 từ thứ Hai đến Chủ nhật, trang liên hệ ghi 9:00–18:00 từ thứ Hai đến thứ Sáu. Anh Duy chốt một bộ giờ chuẩn trong content/sla.ts."
+  }
 }

@@ -1,9 +1,194 @@
 {
   "meta": {
     "title": "Technician partners: get installation jobs",
-    "description": "Become a Bluebolt technician partner: reference earnings, payouts, standards, onboarding steps and sign-up."
+    "description": "Become a Bluebolt technician partner: how you get paid, the four onboarding steps, our technician standards, open positions and how to sign up."
   },
   "eyebrow": "Technician partners",
-  "title": "Become a Bluebolt technician partner",
-  "lead": "Get installation jobs near you, with a clear process and clear earnings."
+  "title": "Steady jobs, transparent earnings",
+  "lead": "Take appliance installation jobs near you, matched to your skills and free time. Pay is set per job, and you can review it in the technician app.",
+  "hero": {
+    "callRecruitment": "Call recruitment",
+    "existingPartner": "Already a partner? Call {phone} for help with a job in progress."
+  },
+  "media": {
+    "photoPending": "Real photo to be taken",
+    "illustration": "Interface illustration"
+  },
+  "mockup": {
+    "caption": "Illustration of the technician app, not a real screenshot.",
+    "appName": "Technician app",
+    "status": "Available",
+    "eyebrow": "New jobs near you",
+    "jobTitle": "Wall-mounted AC installation",
+    "jobArea": "Near your chosen area",
+    "jobTime": "Appointment this afternoon",
+    "chipPipe": "Copper pipe",
+    "chipBracket": "Bracket",
+    "chipVacuum": "Line evacuation",
+    "accept": "Accept job",
+    "nextTv": "TV wall mounting",
+    "nextService": "AC servicing",
+    "tabJobs": "Jobs",
+    "tabSchedule": "Schedule",
+    "tabEarnings": "Earnings",
+    "tabMe": "Me"
+  },
+  "earnings": {
+    "eyebrow": "Earnings",
+    "title": "How you get paid",
+    "lead": "Every job has its own pay, reconciled job by job in the technician app.",
+    "referenceLabel": "Reference monthly earnings",
+    "referencePending": "Waiting for real figures from operations",
+    "referenceUnit": "VND per month",
+    "platformFeeLabel": "Platform fee",
+    "platformFeePending": "Waiting for operations to publish the rate and how it is calculated",
+    "updated": "Updated {date}",
+    "items": {
+      "payout": "Pay per job",
+      "materials": "Materials paid on site",
+      "urgent": "Urgent-job fee",
+      "wallet": "Top-up wallet in the app"
+    },
+    "pricingLink": "See the reference price list for materials",
+    "fallback": "When the recruitment team calls you back, they will explain how pay is calculated, which fees apply and when payments are reconciled.",
+    "draftNote": "Reference earnings and the platform fee appear only once operations provides real figures (content/partners.ts). Lines marked Draft come from the old policy and are awaiting approval (content/claims/partner.ts)."
+  },
+  "onboarding": {
+    "eyebrow": "Onboarding",
+    "title": "Four steps to your first job",
+    "stepLabel": "Step {n}",
+    "steps": {
+      "register": {
+        "title": "Sign up",
+        "body": "Call the recruitment hotline and tell us your main skill and the province where you want to work."
+      },
+      "verify": {
+        "title": "Verify your identity",
+        "body": "Create an account in the technician app and verify your identity with a valid ID document."
+      },
+      "training": {
+        "title": "Training",
+        "body": "Learn how to accept jobs, confirm appointments with customers, install, and sign off with photos in the app."
+      },
+      "jobs": {
+        "title": "Take jobs",
+        "body": "Accept jobs near you, call the customer to confirm the appointment, then install and sign off together."
+      }
+    }
+  },
+  "standards": {
+    "eyebrow": "Standards",
+    "title": "Bluebolt technician standards",
+    "lead": "These four groups apply to lead technicians. Assistants and trainees need basic knowledge and a willingness to learn.",
+    "groups": {
+      "qualification": {
+        "title": "Qualifications and documents",
+        "i1": "A vocational diploma or trade certificate in electronics and refrigeration, electrical engineering or mechatronics.",
+        "i2": "Lead technicians have hands-on installation experience.",
+        "i3": "A work safety certificate is a plus, especially for electrical safety and working at height.",
+        "i4": "Documents to bring: a valid ID card, a trade certificate or proof of experience, and a criminal record certificate."
+      },
+      "skills": {
+        "title": "Technical skills",
+        "i1": "Air conditioners: reading wiring diagrams, brazing copper pipe, charging refrigerant, pressure testing, evacuating the lines and positioning indoor and outdoor units correctly.",
+        "i2": "Fridges and washing machines: levelling, connecting water supply and drainage, and earthing to prevent electric shock.",
+        "i3": "TVs: drilling, fitting fixed, tilting or swivel brackets, then setting up and connecting to the internet.",
+        "i4": "Using a multimeter, a wall scanner and the phone app to receive jobs and send on-site photos."
+      },
+      "conduct": {
+        "title": "Service conduct",
+        "i1": "On time for every appointment.",
+        "i2": "A clean, tidy uniform.",
+        "i3": "Polite communication, advice on the best mounting spot and a quick walkthrough of the appliance after installation.",
+        "i4": "Cleaning up the work area before handover."
+      },
+      "safety": {
+        "title": "Safety and compliance",
+        "i1": "Full protective gear: helmet, safety shoes and a harness when working at height.",
+        "i2": "Checking for current leakage with a voltage tester before touching any appliance.",
+        "i3": "Using materials of the right specification for copper pipe thickness and cable size.",
+        "i4": "Protecting the customer's home: covering surfaces when drilling or cutting, and not damaging walls, floors or furniture."
+      }
+    },
+    "tools": {
+      "title": "Tools you need",
+      "t1": "Drill",
+      "t2": "Vacuum pump",
+      "t3": "Manifold gauge",
+      "t4": "Pipe brazing kit",
+      "t5": "Pipe cutter",
+      "t6": "Flaring tool",
+      "t7": "Own transport",
+      "t8": "Smartphone"
+    },
+    "standardsNote": "The TCVN and QCVN standard codes come from the old site and have not been verified; awaiting confirmation from the technical team before they appear in the final version."
+  },
+  "jobs": {
+    "eyebrow": "Careers",
+    "title": "Open positions",
+    "lead": "Every position uses the same sign-up channel at the bottom of this page.",
+    "employment": "Freelance partner",
+    "openings": "{count, plural, one {# opening} other {# openings}}",
+    "openingsPending": "Number of openings to be confirmed",
+    "apply": "Apply",
+    "applyLabel": "Apply for {title} in {province}",
+    "empty": "There are no open positions posted on the website right now.",
+    "emptyHint": "Call the recruitment hotline to ask which areas need more technicians.",
+    "networkLink": "See our network by province",
+    "draftNote": "Positions copied from the old site (crawled 1 Oct 2026); all were marked as expired and had no closing date. The old site used the same code (BBSV0924561) for all six posts, so codes are hidden, and two Ho Chi Minh City posts with the same title (3 and 6 openings) were merged. Awaiting confirmation from the recruitment team (content/jobs.ts)."
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Frequently asked questions",
+    "items": {
+      "howToRegister": {
+        "q": "How do I sign up as a technician partner?",
+        "a": "Call {phone} and say you want to join as a technician partner. Have your full name, mobile number, main working province and main skill ready, and the recruitment team will guide you through the next steps."
+      },
+      "noCertificate": {
+        "q": "Can I sign up without a trade certificate?",
+        "a": "You can still apply as an assistant or trainee if you have basic knowledge. The recruitment team will discuss the right role with you when they call back."
+      },
+      "chooseArea": {
+        "q": "Can I choose where I work?",
+        "a": "Yes. You choose your working province when you sign up, and jobs are suggested based on your area, skills and availability."
+      },
+      "whenPaid": {
+        "q": "When do I get paid?"
+      },
+      "materials": {
+        "q": "Who does the customer pay for materials?"
+      },
+      "hours": {
+        "q": "What are the on-site working hours?"
+      },
+      "urgent": {
+        "q": "How do urgent jobs work?"
+      },
+      "violations": {
+        "q": "What counts as a violation?"
+      },
+      "existing": {
+        "q": "I'm already a partner. Who do I call about a job in progress?",
+        "a": "Call {phone}, say you are a technician partner and give the job code so we can connect you with the right person."
+      }
+    }
+  },
+  "register": {
+    "eyebrow": "Sign up",
+    "title": "Join as a technician partner",
+    "body": "Call the recruitment hotline and have these four details ready to sign up quickly:",
+    "fields": {
+      "name": "Full name",
+      "phone": "Mobile number (Zalo)",
+      "province": "Main working province",
+      "skill": "Main skill"
+    },
+    "zalo": "Message recruitment on Zalo",
+    "appAndroid": "Get the app on Google Play",
+    "appIos": "Download on the App Store",
+    "formPending": "The four-field sign-up form (full name, mobile number, province, main skill) will go live here once contracts/lead-technician.md is approved.",
+    "appPending": "Download links for the technician app will be added once real Google Play and App Store links exist (content/partners.ts).",
+    "testimonialsPending": "Technician testimonials will only be added with real people who agree to be featured (name, photo, quote). There are none yet, so this block stays empty."
+  }
 }
