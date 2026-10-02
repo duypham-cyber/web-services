@@ -15,7 +15,7 @@
   "doors": {
     "eyebrow": "Start here",
     "title": "Brands, technicians and customers on one network",
-    "lead": "Brands and marketplaces hand over orders, partner technicians take jobs through the app, and customers have one point of contact after installation.",
+    "lead": "Brands and marketplaces hand over orders, partner technicians take jobs through the app, and end customers have one point of contact after installation.",
     "brands": {
       "label": "Brands & marketplaces",
       "title": "Hand installation orders to one partner",
@@ -30,7 +30,7 @@
       "cta": "Become a technician partner"
     },
     "consumers": {
-      "label": "Customers",
+      "label": "End customers",
       "title": "Had an installation and need help?",
       "body": "Call our hotline or register the warranty for a recent installation. We coordinate between you, the technician and the brand.",
       "cta": "Customer support"

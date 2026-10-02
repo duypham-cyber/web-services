@@ -15,7 +15,7 @@
   "doors": {
     "eyebrow": "Bắt đầu từ đây",
     "title": "Hãng, thợ và khách hàng trên cùng một mạng lưới",
-    "lead": "Hãng và Sàn giao đơn, thợ đối tác nhận việc qua app, khách hàng có một đầu mối để được hỗ trợ sau khi lắp.",
+    "lead": "Hãng và Sàn giao đơn, thợ đối tác nhận việc qua app, khách lẻ có một đầu mối để được hỗ trợ sau khi lắp.",
     "brands": {
       "label": "Hãng & Sàn TMĐT",
       "title": "Giao đơn lắp đặt cho một đầu mối",
@@ -30,10 +30,10 @@
       "cta": "Trở thành đối tác thợ"
     },
     "consumers": {
-      "label": "Khách hàng",
+      "label": "Khách lẻ",
       "title": "Đã lắp đặt và cần hỗ trợ?",
       "body": "Gọi hotline hoặc đăng ký bảo hành cho lần lắp đặt vừa nhận. Chúng tôi làm đầu mối giữa bạn, thợ và hãng.",
-      "cta": "Hỗ trợ khách hàng"
+      "cta": "Hỗ trợ khách lẻ"
     }
   },
   "network": {
