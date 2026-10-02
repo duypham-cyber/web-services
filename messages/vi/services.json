@@ -6,25 +6,350 @@
     },
     "eyebrow": "Dịch vụ",
     "title": "Dịch vụ lắp đặt và bảo trì",
-    "lead": "Bốn nhóm dịch vụ cho đơn của Hãng, Sàn TMĐT và chuỗi bán lẻ."
+    "lead": "Bốn nhóm dịch vụ cho đơn của Hãng, Sàn TMĐT và chuỗi bán lẻ.",
+    "toDevices": "Thiết bị Bluebolt lắp đặt",
+    "grid": {
+      "eyebrow": "Bốn nhóm",
+      "title": "Chọn nhóm dịch vụ"
+    },
+    "devices": {
+      "eyebrow": "Thiết bị",
+      "title": "Thiết bị Bluebolt lắp đặt",
+      "lead": "Thợ được giao việc theo nhóm thiết bị và kỹ năng.",
+      "groups": {
+        "cooling": {
+          "title": "Điện lạnh",
+          "items": "Điều hòa treo tường, điều hòa âm trần, tủ lạnh, máy giặt, máy sấy"
+        },
+        "home": {
+          "title": "Điện máy gia dụng",
+          "items": "TV treo tường, bếp từ, máy hút mùi, máy lọc nước, bình nóng lạnh"
+        },
+        "smart": {
+          "title": "Thiết bị thông minh",
+          "items": "Robot hút bụi, robot lau nhà"
+        }
+      }
+    },
+    "common": {
+      "eyebrow": "Mọi dịch vụ",
+      "title": "Điều giống nhau ở mọi đơn",
+      "items": {
+        "process": {
+          "title": "Quy trình 5 bước",
+          "body": "Tiếp nhận đơn, điều phối thợ, xác nhận lịch, lắp đặt và nghiệm thu, đối soát và bảo hành."
+        },
+        "signoff": {
+          "title": "Nghiệm thu bằng ảnh",
+          "body": "Thợ chụp ảnh khi lắp xong và nghiệm thu với khách ngay tại nhà."
+        },
+        "materials": {
+          "title": "Vật tư theo khung giá",
+          "body": "Vật tư phát sinh theo khung giá tham khảo công khai, khách trả trực tiếp cho thợ."
+        },
+        "warranty": {
+          "title": "Bảo hành dịch vụ",
+          "body": "Thời hạn và cách đăng ký bảo hành theo chính sách bảo hành."
+        }
+      }
+    },
+    "audience": "Bluebolt nhận đơn từ hãng, sàn TMĐT và chuỗi bán lẻ. Khách lẻ cần hỗ trợ sau khi lắp đặt xem trang Hỗ trợ khách hàng.",
+    "audienceLink": "Hỗ trợ khách hàng",
+    "cta": {
+      "title": "Cần lắp đặt cho đơn hàng của doanh nghiệp?",
+      "body": "Gửi nhóm thiết bị, số lượng và các tỉnh cần phục vụ. Bộ phận kinh doanh của Bluebolt sẽ liên hệ để báo giá theo hợp đồng."
+    },
+    "pending": {
+      "images": "Ảnh trên các thẻ dịch vụ là minh họa, chờ ảnh thật."
+    }
   },
   "eyebrow": "Dịch vụ",
   "items": {
     "lap-dat-dieu-hoa": {
-      "description": "Lắp đặt điều hòa treo tường và các dòng phổ biến cho đơn của Hãng và Sàn TMĐT: phạm vi, vật tư tham khảo, bảo hành.",
-      "lead": "Phạm vi công việc, vật tư tham khảo và bảo hành dịch vụ lắp đặt điều hòa."
+      "description": "Lắp đặt điều hòa treo tường và âm trần cho đơn của Hãng và Sàn TMĐT: phạm vi công việc, vật tư tham khảo và bảo hành.",
+      "lead": "Điều hòa treo tường và âm trần cho đơn của hãng, sàn TMĐT và chuỗi bán lẻ: khảo sát vị trí, đi ống gọn, hút chân không, chạy thử rồi mới nghiệm thu.",
+      "metaTitle": "Lắp đặt điều hòa cho hãng và sàn TMĐT",
+      "card": "Treo tường và âm trần: khảo sát vị trí, hút chân không, chạy thử trước khi nghiệm thu.",
+      "devices": {
+        "wall": {
+          "title": "Điều hòa treo tường",
+          "body": "Dàn lạnh treo tường, dàn nóng đặt ngoài trời trên giá đỡ hoặc sàn mái."
+        },
+        "ceiling": {
+          "title": "Điều hòa âm trần",
+          "body": "Dàn lạnh lắp trong trần, cần khảo sát trần và đường ống trước khi lắp."
+        }
+      },
+      "scopeTitle": "Thợ làm gì tại nhà khách",
+      "scope": {
+        "survey": "Khảo sát và thống nhất với khách vị trí dàn lạnh, dàn nóng và đường đi ống.",
+        "mount": "Treo dàn lạnh cách trần đủ khoảng cho gió hồi; đặt dàn nóng nơi thoáng, có mái che, đủ khoảng tản nhiệt.",
+        "pipe": "Đi ống đồng, dây điện và ống thoát nước gọn, hạn chế nối ống và gấp khúc, ống thoát nước đủ độ dốc.",
+        "vacuum": "Hút chân không đường ống trước khi mở van gas.",
+        "power": "Đấu điện vào CB riêng, dây đúng tiết diện.",
+        "test": "Chạy thử, kiểm tra làm lạnh, rò nước, rò gas và tiếng ồn; hướng dẫn khách sử dụng và nghiệm thu bằng ảnh."
+      },
+      "included": {
+        "labor": "Công lắp dàn lạnh và dàn nóng theo phạm vi tiêu chuẩn",
+        "vacuum": "Hút chân không và kiểm tra rò gas",
+        "test": "Chạy thử và hướng dẫn khách sử dụng",
+        "signoff": "Nghiệm thu bằng ảnh với khách",
+        "cleanup": "Thu dọn khu vực thi công trước khi bàn giao"
+      },
+      "excluded": {
+        "materials": "Vật tư phát sinh: ống đồng và gen cách nhiệt, dây điện, ống thoát nước, giá đỡ khi cần thêm",
+        "site": "Vị trí thi công khó, như trên cao hoặc không có chỗ thao tác an toàn: thỏa thuận với khách trước khi làm",
+        "product": "Lỗi kỹ thuật, linh kiện của máy: theo bảo hành của hãng sản xuất"
+      },
+      "faq": {
+        "vacuum": {
+          "q": "Vì sao phải hút chân không khi lắp điều hòa?",
+          "a": "Hút chân không loại bỏ không khí và hơi ẩm trong đường ống, tránh nghẹt gas và giúp máy nén bền hơn. Bỏ qua bước này, máy dễ kém lạnh sau một thời gian sử dụng."
+        },
+        "pipe": {
+          "q": "Vì sao không nên đi ống quá ngắn hoặc gấp khúc?",
+          "a": "Ống quá ngắn, gấp khúc hoặc nối nhiều đoạn làm máy kém lạnh, tốn điện và dễ rò gas. Chiều dài tối thiểu theo hướng dẫn của từng hãng."
+        },
+        "materials": {
+          "q": "Vật tư phát sinh tính thế nào?",
+          "a": "Khách và thợ thỏa thuận tại chỗ theo khung giá vật tư tham khảo, khách trả trực tiếp cho thợ.",
+          "more": "Xem khung giá vật tư"
+        },
+        "prepare": {
+          "q": "Khách cần chuẩn bị gì trước khi thợ tới?",
+          "a": "Nguồn điện, lối đi và không gian thi công an toàn; có người phối hợp kiểm tra và nghiệm thu khi lắp xong."
+        },
+        "warranty": {
+          "q": "Bảo hành dịch vụ lắp đặt bao lâu?",
+          "a": "Thời hạn bảo hành theo từng loại dịch vụ, ghi trong chính sách bảo hành.",
+          "more": "Đọc chính sách bảo hành"
+        }
+      },
+      "cta": {
+        "title": "Cần lắp điều hòa cho đơn hàng của bạn?",
+        "body": "Gửi số lượng máy, công suất và các tỉnh cần lắp. Bộ phận kinh doanh sẽ báo giá theo hợp đồng."
+      },
+      "pending": {
+        "scope": "Phạm vi công việc viết lại từ bài hướng dẫn lắp máy lạnh và tiêu chuẩn thợ trên site cũ.",
+        "warranty": "Thời hạn bảo hành lắp mới đang khác nhau giữa chính sách hiện hành và bài viết cũ.",
+        "images": "Ảnh hero là khung minh họa, chờ ảnh thật hoặc video loop."
+      }
     },
     "lap-dat-dien-may": {
       "description": "Lắp đặt máy giặt, TV treo tường, tủ lạnh và thiết bị điện máy khác cho đơn của Hãng và Sàn TMĐT.",
-      "lead": "Máy giặt, TV treo tường, tủ lạnh và các thiết bị điện máy khác."
+      "lead": "Máy giặt, máy sấy, tủ lạnh, TV treo tường và thiết bị nhà bếp: lắp chắc chắn, đấu nối an toàn, chạy thử và hướng dẫn khách sử dụng.",
+      "metaTitle": "Lắp đặt máy giặt, TV, tủ lạnh",
+      "card": "Máy giặt, máy sấy, tủ lạnh, TV treo tường, bếp từ, máy hút mùi, máy lọc nước, bình nóng lạnh.",
+      "devices": {
+        "laundry": {
+          "title": "Máy giặt, máy sấy",
+          "body": "Tháo bu-lông vận chuyển, cân bằng chân máy, đấu cấp và thoát nước, nối dây tiếp địa."
+        },
+        "fridge": {
+          "title": "Tủ lạnh",
+          "body": "Cân chỉnh mặt phẳng, chừa khoảng thoát nhiệt, kiểm tra nguồn điện và tiếp địa."
+        },
+        "tv": {
+          "title": "TV treo tường",
+          "body": "Khoan tường, lắp giá treo thẳng, nghiêng hoặc xoay; kết nối mạng và chỉnh góc nhìn."
+        },
+        "kitchen": {
+          "title": "Bếp từ, máy hút mùi",
+          "body": "Đấu nối nguồn điện phù hợp công suất, cố định thiết bị chắc chắn, chạy thử."
+        },
+        "water": {
+          "title": "Máy lọc nước, bình nóng lạnh",
+          "body": "Đấu nối đường nước, kiểm tra rò rỉ, đấu điện và tiếp địa an toàn."
+        }
+      },
+      "scopeTitle": "Thợ làm gì tại nhà khách",
+      "scope": {
+        "check": "Kiểm tra vị trí lắp, nguồn điện, đường cấp và thoát nước trước khi làm.",
+        "fix": "Lắp đặt, cân chỉnh và cố định thiết bị chắc chắn.",
+        "connect": "Đấu nối điện, nước theo hướng dẫn của hãng; nối dây tiếp địa cho thiết bị dùng nước.",
+        "test": "Chạy thử, hướng dẫn khách sử dụng và nghiệm thu bằng ảnh."
+      },
+      "included": {
+        "labor": "Công lắp đặt và đấu nối theo phạm vi tiêu chuẩn",
+        "test": "Chạy thử và hướng dẫn khách sử dụng",
+        "signoff": "Nghiệm thu bằng ảnh với khách",
+        "cleanup": "Thu dọn khu vực thi công trước khi bàn giao"
+      },
+      "excluded": {
+        "materials": "Vật tư phát sinh: ống cấp, ống xả nối dài, dây điện, giá đỡ khi cần thêm",
+        "site": "Vị trí thi công khó: thỏa thuận với khách trước khi làm",
+        "product": "Lỗi kỹ thuật, linh kiện của máy: theo bảo hành của hãng sản xuất"
+      },
+      "faq": {
+        "grounding": {
+          "q": "Vì sao máy giặt cần dây tiếp địa?",
+          "a": "Máy giặt dùng cả nước và điện trong môi trường ẩm. Không có dây tiếp địa, vỏ máy có thể rò điện và gây giật."
+        },
+        "bolts": {
+          "q": "Có cần tháo bu-lông vận chuyển khi lắp máy giặt không?",
+          "a": "Có. Bu-lông giữ lồng giặt khi vận chuyển phải tháo trước khi cắm điện; để nguyên sẽ làm máy rung mạnh và hỏng hệ treo lồng giặt."
+        },
+        "tv": {
+          "q": "Lắp TV treo tường cần chuẩn bị gì?",
+          "a": "Chọn mảng tường chịu lực, gần ổ điện và đường mạng. Thợ kiểm tra tường và tư vấn kiểu giá treo trước khi khoan."
+        },
+        "warranty": {
+          "q": "Bảo hành dịch vụ lắp đặt bao lâu?",
+          "a": "Thời hạn bảo hành theo từng loại dịch vụ, ghi trong chính sách bảo hành.",
+          "more": "Đọc chính sách bảo hành"
+        }
+      },
+      "cta": {
+        "title": "Cần lắp điện máy cho đơn hàng của bạn?",
+        "body": "Gửi danh sách thiết bị, số lượng và các tỉnh cần lắp. Bộ phận kinh doanh sẽ báo giá theo nhóm thiết bị."
+      },
+      "pending": {
+        "scope": "Phạm vi cho bếp từ, máy hút mùi, máy lọc nước, bình nóng lạnh viết mới theo danh mục thiết bị trên site cũ, chờ xác nhận.",
+        "images": "Ảnh hero là khung minh họa, chờ ảnh thật."
+      }
     },
     "bao-tri-dinh-ky": {
-      "description": "Bảo trì định kỳ thiết bị điện lạnh cho chuỗi cửa hàng và văn phòng.",
-      "lead": "Lịch bảo trì định kỳ cho chuỗi cửa hàng và văn phòng."
+      "description": "Bảo trì điều hòa định kỳ cho chuỗi cửa hàng và văn phòng: vệ sinh, kiểm tra theo danh mục và ghi nhận tình trạng thiết bị bằng ảnh.",
+      "lead": "Vệ sinh và kiểm tra điều hòa theo lịch cho chuỗi cửa hàng và văn phòng, ghi nhận tình trạng từng thiết bị bằng ảnh.",
+      "metaTitle": "Bảo trì điều hòa định kỳ cho chuỗi",
+      "card": "Vệ sinh, kiểm tra điều hòa theo lịch cho chuỗi cửa hàng và văn phòng, ghi nhận tình trạng bằng ảnh.",
+      "devices": {
+        "ac": {
+          "title": "Điều hòa treo tường, âm trần",
+          "body": "Vệ sinh dàn lạnh, dàn nóng, lưới lọc; kiểm tra áp gas, quạt, tụ điện và nguồn điện."
+        },
+        "other": {
+          "title": "Thiết bị khác",
+          "body": "Theo danh mục thiết bị thống nhất trong hợp đồng."
+        }
+      },
+      "scopeTitle": "Cách triển khai bảo trì",
+      "scopeIntro": "Bảo trì định kỳ giúp kéo dài tuổi thọ thiết bị, phát hiện sớm hư hỏng và giữ hiệu suất làm lạnh.",
+      "scope": {
+        "plan": "Thống nhất danh sách điểm, thiết bị và tần suất bảo trì trong hợp đồng.",
+        "schedule": "Lên lịch bảo trì theo đợt cho từng điểm.",
+        "service": "Thợ vệ sinh, kiểm tra theo danh mục và ghi nhận tình trạng thiết bị bằng ảnh.",
+        "settle": "Đối soát theo đợt bảo trì, tách riêng các việc phát sinh."
+      },
+      "included": {
+        "clean": "Vệ sinh dàn lạnh, dàn nóng và lưới lọc",
+        "check": "Kiểm tra áp gas, quạt, tụ điện và nguồn điện",
+        "record": "Ghi nhận tình trạng từng thiết bị bằng ảnh"
+      },
+      "excluded": {
+        "parts": "Thay linh kiện, nạp gas bổ sung, sửa chữa phát sinh: ngoài lần bảo trì định kỳ",
+        "product": "Lỗi linh kiện còn trong thời hạn bảo hành của hãng: theo bảo hành của hãng"
+      },
+      "faq": {
+        "frequency": {
+          "q": "Bao lâu nên vệ sinh điều hòa một lần?",
+          "a": "Tùy mức sử dụng và môi trường. Lưới lọc nên được làm sạch thường xuyên; vệ sinh tổng thể dàn lạnh, dàn nóng theo lịch thống nhất trong hợp đồng."
+        },
+        "gas": {
+          "q": "Bảo trì định kỳ có gồm nạp gas không?",
+          "a": "Lần bảo trì có kiểm tra áp gas. Nạp gas bổ sung hoặc thay linh kiện là việc phát sinh, nằm ngoài lần bảo trì định kỳ."
+        },
+        "chains": {
+          "q": "Chuỗi có nhiều điểm ở nhiều tỉnh có dùng được không?",
+          "a": "Danh sách điểm được đối chiếu với mạng lưới thợ trước khi ký hợp đồng.",
+          "more": "Xem mạng lưới theo tỉnh"
+        },
+        "warranty": {
+          "q": "Bảo hành sau bảo trì thế nào?",
+          "a": "Thời hạn bảo hành theo từng loại dịch vụ, ghi trong chính sách bảo hành.",
+          "more": "Đọc chính sách bảo hành"
+        }
+      },
+      "cta": {
+        "title": "Cần lịch bảo trì cho chuỗi cửa hàng hoặc văn phòng?",
+        "body": "Gửi danh sách điểm, số thiết bị và tần suất mong muốn. Bộ phận kinh doanh sẽ đề xuất lịch và báo giá."
+      },
+      "pending": {
+        "scope": "Site cũ chỉ có một câu mô tả dịch vụ này; phạm vi và cách triển khai viết mới, chờ xác nhận.",
+        "images": "Ảnh hero là khung minh họa, chờ ảnh thật."
+      }
     },
     "lap-dat-robot-hut-bui": {
-      "description": "Lắp đặt và hướng dẫn sử dụng robot hút bụi cho khách của Hãng và Sàn TMĐT.",
-      "lead": "Lắp đặt, cài đặt và hướng dẫn sử dụng robot hút bụi."
+      "description": "Lắp đặt robot hút bụi cho khách của Hãng và Sàn TMĐT: đặt dock sạc, kết nối ứng dụng, quét bản đồ nhà và hướng dẫn sử dụng.",
+      "lead": "Đặt dock sạc, kết nối ứng dụng, quét bản đồ nhà lần đầu và hướng dẫn khách sử dụng robot hút bụi.",
+      "metaTitle": "Lắp đặt robot hút bụi cho hãng và sàn",
+      "card": "Đặt dock sạc, kết nối Wi-Fi và ứng dụng, quét bản đồ nhà lần đầu, hướng dẫn khách sử dụng.",
+      "devices": {
+        "robot": {
+          "title": "Robot hút bụi, lau nhà",
+          "body": "Các dòng điều khiển qua ứng dụng trên điện thoại."
+        },
+        "smart": {
+          "title": "Thiết bị nhà thông minh",
+          "body": "Cấu hình theo danh mục thống nhất trong hợp đồng với hãng."
+        }
+      },
+      "scopeTitle": "Thợ làm gì khi lắp đặt",
+      "scope": {
+        "dock": "Chọn vị trí đặt dock sạc thoáng, gần ổ điện, đủ khoảng trống phía trước.",
+        "app": "Kết nối Wi-Fi và ứng dụng của hãng trên điện thoại của khách.",
+        "map": "Chạy quét bản đồ nhà lần đầu, thiết lập vùng cấm và lịch dọn.",
+        "handover": "Hướng dẫn khách vệ sinh chổi, hộp bụi, giẻ lau và cách cập nhật phần mềm."
+      },
+      "included": {
+        "setup": "Đặt dock, kết nối ứng dụng, quét bản đồ lần đầu",
+        "guide": "Hướng dẫn sử dụng và bảo dưỡng cơ bản",
+        "signoff": "Nghiệm thu bằng ảnh với khách"
+      },
+      "excluded": {
+        "network": "Lắp mới hoặc sửa mạng Wi-Fi của nhà khách",
+        "product": "Lỗi kỹ thuật, linh kiện của máy: theo bảo hành của hãng sản xuất"
+      },
+      "faq": {
+        "wifi": {
+          "q": "Robot cần mạng Wi-Fi thế nào?",
+          "a": "Robot cần Wi-Fi ổn định ở vị trí dock và các phòng cần dọn. Thợ kiểm tra kết nối khi cài đặt; lắp thêm thiết bị mạng không thuộc phạm vi dịch vụ."
+        },
+        "account": {
+          "q": "Tài khoản ứng dụng nên đứng tên ai?",
+          "a": "Nên để tài khoản đứng tên khách và khách tự đăng nhập trên điện thoại của mình."
+        },
+        "warranty": {
+          "q": "Bảo hành dịch vụ lắp đặt bao lâu?",
+          "a": "Thời hạn bảo hành theo từng loại dịch vụ, ghi trong chính sách bảo hành.",
+          "more": "Đọc chính sách bảo hành"
+        }
+      },
+      "cta": {
+        "title": "Cần lắp robot hút bụi cho khách của bạn?",
+        "body": "Gửi dòng sản phẩm, số lượng và các tỉnh cần phục vụ. Bộ phận kinh doanh sẽ liên hệ lại."
+      },
+      "pending": {
+        "scope": "Trang ưu tiên P2. Mô tả dịch vụ trên site cũ không đúng, nội dung viết mới, chờ xác nhận phạm vi.",
+        "images": "Ảnh hero là khung minh họa, chờ ảnh thật."
+      }
     }
+  },
+  "detail": {
+    "toScope": "Xem phạm vi công việc",
+    "devicesEyebrow": "Phạm vi",
+    "devicesTitle": "Thiết bị và phạm vi công việc",
+    "includedEyebrow": "Đã gồm và chưa gồm",
+    "includedTitle": "Trong phí lắp đặt có gì",
+    "included": "Đã gồm",
+    "excluded": "Chưa gồm, tính hoặc xử lý riêng",
+    "materialsLink": "Xem khung giá vật tư",
+    "warrantyEyebrow": "Bảo hành",
+    "warrantyTitle": "Bảo hành dịch vụ lắp đặt",
+    "warrantyLead": "Bảo hành dịch vụ áp dụng cho lỗi do kỹ thuật lắp đặt. Lỗi của sản phẩm theo bảo hành của hãng sản xuất.",
+    "warrantyPolicyLink": "Đọc chính sách bảo hành",
+    "warrantyClaimsTitle": "Theo chính sách hiện hành",
+    "warrantyTable": {
+      "caption": "Thời hạn và cam kết bảo hành dịch vụ",
+      "item": "Hạng mục",
+      "value": "Cam kết",
+      "pendingValue": "Đang ghi ở chính sách hiện hành",
+      "draftCaption": "Chưa chốt: bản chính thức chỉ hiện giá trị đã duyệt.",
+      "fallback": "Thời hạn bảo hành của từng loại dịch vụ và cách đăng ký bảo hành được ghi trong chính sách bảo hành."
+    },
+    "processEyebrow": "Quy trình",
+    "processTitle": "Một đơn đi qua 5 bước",
+    "faqTitle": "Câu hỏi thường gặp",
+    "otherTitle": "Dịch vụ khác"
   }
 }

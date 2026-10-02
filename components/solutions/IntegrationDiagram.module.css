@@ -1,0 +1,103 @@
+/*
+ * Chuyển động nhẹ cho sơ đồ tích hợp (/giai-phap/san-tmdt-ban-le), docs/03 mục 12.2:
+ *  - CHỈ transform / opacity / clip-path; chạy khi vào khung nhìn, số lượt hữu hạn (không loop vô hạn);
+ *  - trạng thái mặc định = trạng thái cuối, gói tin ẩn (không JS, reduced-motion, JS lỗi → sơ đồ tĩnh đầy đủ);
+ *  - kích hoạt bằng data-inview do MotionRuntime (một IntersectionObserver cho cả trang) gắn lên [data-motion-item].
+ * CSS Module trong khu vực B2B — không đụng app/globals.css của nền móng.
+ */
+
+/* Gói tin: tọa độ % trong transform tính theo khung SVG (transform-box: view-box) = chiều dài đường nối */
+.packet {
+  opacity: 0;
+  transform-box: view-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :global(html:is([data-motion='pending'], [data-motion='ready'])) .diagram:not([data-inview]) .node {
+    opacity: 0;
+    transform: translate3d(0, var(--rise-distance), 0);
+  }
+
+  :global(html:is([data-motion='pending'], [data-motion='ready'])) .diagram:not([data-inview]) .wire {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  :global(html:is([data-motion='pending'], [data-motion='ready'])) .diagram:not([data-inview]) .wireDown {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  :global(html:is([data-motion='pending'], [data-motion='ready'])) .diagram:not([data-inview]) .wireLeft {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  :global(html[data-motion='ready']) .diagram .node {
+    transition:
+      opacity var(--dur-medium) var(--ease-entry),
+      transform var(--dur-medium) var(--ease-entry);
+    transition-delay: calc(var(--i, 0) * 160ms);
+  }
+
+  :global(html[data-motion='ready']) .diagram .wire,
+  :global(html[data-motion='ready']) .diagram .wireDown,
+  :global(html[data-motion='ready']) .diagram .wireLeft {
+    transition: clip-path var(--dur-slow) var(--ease-standard);
+    transition-delay: calc(var(--i, 0) * 160ms + 240ms);
+  }
+
+  :global(html[data-motion='ready']) .diagram[data-inview] .packetRight {
+    animation: packet-right 1.4s var(--ease-standard) calc(var(--i, 0) * 160ms + 1100ms) 3 both;
+  }
+
+  :global(html[data-motion='ready']) .diagram[data-inview] .packetDown {
+    animation: packet-down 1.2s var(--ease-standard) calc(var(--i, 0) * 160ms + 1100ms) 3 both;
+  }
+
+  :global(html[data-motion='ready']) .diagram[data-inview] .packetLeft {
+    animation: packet-left 2.6s var(--ease-standard) 2.2s 2 both;
+  }
+}
+
+@keyframes packet-right {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes packet-down {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes packet-left {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  12%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}

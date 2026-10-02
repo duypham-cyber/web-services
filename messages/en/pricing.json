@@ -1,9 +1,106 @@
 {
   "meta": {
-    "title": "Installation pricing and reference parts prices",
-    "description": "Reference prices for parts collected on site by technicians, and contract pricing for businesses."
+    "title": "Reference parts prices for installation",
+    "description": "Reference prices by region for parts used in air conditioner installation, collected on site, plus contract pricing for brands and marketplaces."
   },
   "eyebrow": "Pricing",
-  "title": "Service and reference parts pricing",
-  "lead": "Reference parts prices collected on site, and contract pricing for brands and marketplaces."
+  "title": "Reference parts prices (collected on site by the technician)",
+  "lead": "Bluebolt does not sell parts. The table below gives reference prices for extra parts used during installation; customers pay the technician directly on site.",
+  "breadcrumb": "Pricing",
+  "facts": {
+    "label": "Terms of this price list",
+    "unit": "Unit",
+    "unitValue": "VND per metre",
+    "vat": "VAT",
+    "vatExcluded": "Prices exclude VAT",
+    "vatIncluded": "Prices include VAT",
+    "effective": "Effective",
+    "effectivePending": "Effective date to be confirmed",
+    "collected": "Collected by",
+    "collectedValue": "The technician, on site"
+  },
+  "table": {
+    "eyebrow": "Parts",
+    "title": "Pipework parts for air conditioner installation",
+    "caption": "Reference parts prices by region, VND per metre, excluding VAT",
+    "region": "Pricing region",
+    "item": "Item",
+    "capacity": "Unit capacity",
+    "capacityValue": "{capacity} BTU",
+    "capacityUnknown": "Not stated",
+    "unit": "Unit",
+    "perMetre": "metre",
+    "regions": {
+      "HCM": "Ho Chi Minh City",
+      "HN": "Hanoi",
+      "OTHER": "Other provinces",
+      "SPECIAL": "Special areas"
+    },
+    "noteCapacityUnknown": "The old price list does not state a unit capacity for this row.",
+    "specialAreas": "Special areas: islands, border areas and remote areas."
+  },
+  "filters": {
+    "legend": "Filter the price list",
+    "device": "Appliance",
+    "region": "Region",
+    "allDevices": "All",
+    "allRegions": "All regions",
+    "acCapacity": "{capacity} BTU air conditioner",
+    "count": "Showing {shown} of {total} rows",
+    "reset": "Clear filters",
+    "empty": "No rows match the filters.",
+    "unknownIncluded": "Rows without a stated capacity are always shown, with a note."
+  },
+  "notes": {
+    "title": "Please note",
+    "reference": "Reference prices only; they may change depending on actual site conditions.",
+    "agree": "The customer and the technician agree on any extra parts on site, using this price list.",
+    "quote": "For a quote for a specific site, call <tel>{phone}</tel>."
+  },
+  "hidden": {
+    "title": "The reference parts price list is being updated",
+    "body": "The price list will appear once it has an official effective date. For a parts quote for a specific site, call {phone}."
+  },
+  "contract": {
+    "eyebrow": "Business",
+    "title": "Contract pricing for brands, marketplaces and retail chains",
+    "body": "Installation fees for businesses are set by appliance group and region, written into the contract and reconciled per job. Extra parts still follow the reference prices above.",
+    "points": {
+      "groups": "Rates by appliance group and region",
+      "settle": "Reconciled per job, with sign-off photos",
+      "separate": "Service fees and parts kept separate"
+    },
+    "brands": "Solutions for brands",
+    "retail": "Solutions for marketplaces and retail"
+  },
+  "policy": {
+    "eyebrow": "Policy",
+    "title": "Service policy",
+    "lead": "The full text is on the Warranty policy page. The policy has four parts:",
+    "parts": {
+      "general": {
+        "title": "Part 1. General terms",
+        "body": "Service area, special areas, order intake hours and limits of liability."
+      },
+      "customers": {
+        "title": "Part 2. For customers",
+        "body": "Complaints and technician changes, parts costs, warranty registration and periods."
+      },
+      "technicians": {
+        "title": "Part 3. For technician partners",
+        "body": "Working hours on site, urgent jobs, penalties and compensation."
+      },
+      "brands": {
+        "title": "Part 4. For brands",
+        "body": "Division of responsibilities and joint incident response times."
+      }
+    },
+    "link": "Read the full policy"
+  },
+  "pending": {
+    "effective": "Effective date: the old price list only states a year; the live site hides the table until an effective date is set and the prices are re-approved.",
+    "capacity": "The first copper pipe row on the old price list does not state a unit capacity.",
+    "service": "The \"service prices\" (labour) tab on the old website was empty; this page only covers parts.",
+    "pdf": "The PDF download button (P1) is not built yet."
+  }
 }

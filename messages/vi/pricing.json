@@ -1,9 +1,106 @@
 {
   "meta": {
-    "title": "Bảng giá lắp đặt và vật tư tham khảo",
-    "description": "Khung giá vật tư tham khảo do thợ thu tại chỗ và giá theo hợp đồng cho doanh nghiệp."
+    "title": "Khung giá vật tư lắp đặt tham khảo",
+    "description": "Khung giá vật tư tham khảo khi lắp đặt điều hòa theo vùng, thợ thu tại chỗ, và giá dịch vụ theo hợp đồng cho Hãng, Sàn TMĐT."
   },
   "eyebrow": "Bảng giá",
-  "title": "Bảng giá dịch vụ và vật tư tham khảo",
-  "lead": "Khung giá vật tư tham khảo thợ thu tại chỗ, và giá theo hợp đồng cho Hãng, Sàn TMĐT."
+  "title": "Khung giá vật tư tham khảo (thợ thu tại chỗ)",
+  "lead": "Bluebolt không bán vật tư. Bảng dưới là khung giá tham khảo cho vật tư phát sinh khi lắp đặt; khách thanh toán trực tiếp cho thợ tại chỗ.",
+  "breadcrumb": "Bảng giá",
+  "facts": {
+    "label": "Điều kiện áp dụng của bảng giá",
+    "unit": "Đơn vị",
+    "unitValue": "VNĐ mỗi mét",
+    "vat": "Thuế VAT",
+    "vatExcluded": "Giá chưa gồm VAT",
+    "vatIncluded": "Giá đã gồm VAT",
+    "effective": "Hiệu lực",
+    "effectivePending": "Chờ xác nhận ngày hiệu lực",
+    "collected": "Người thu",
+    "collectedValue": "Thợ thu tại chỗ"
+  },
+  "table": {
+    "eyebrow": "Vật tư",
+    "title": "Vật tư đường ống khi lắp điều hòa",
+    "caption": "Khung giá vật tư tham khảo theo vùng, VNĐ mỗi mét, chưa gồm VAT",
+    "region": "Khu vực tính giá",
+    "item": "Hạng mục",
+    "capacity": "Công suất máy",
+    "capacityValue": "{capacity} BTU",
+    "capacityUnknown": "Không ghi",
+    "unit": "Đơn vị",
+    "perMetre": "mét",
+    "regions": {
+      "HCM": "TP. HCM",
+      "HN": "TP. Hà Nội",
+      "OTHER": "Tỉnh, thành khác",
+      "SPECIAL": "Khu vực đặc thù"
+    },
+    "noteCapacityUnknown": "Bảng giá cũ không ghi công suất máy cho dòng này.",
+    "specialAreas": "Khu vực đặc thù: hải đảo, biên giới, vùng sâu vùng xa."
+  },
+  "filters": {
+    "legend": "Lọc bảng giá",
+    "device": "Thiết bị",
+    "region": "Vùng",
+    "allDevices": "Tất cả",
+    "allRegions": "Tất cả vùng",
+    "acCapacity": "Điều hòa {capacity} BTU",
+    "count": "Đang hiện {shown} trên {total} dòng",
+    "reset": "Bỏ lọc",
+    "empty": "Không có dòng nào khớp bộ lọc.",
+    "unknownIncluded": "Dòng không ghi công suất luôn được hiện kèm ghi chú."
+  },
+  "notes": {
+    "title": "Lưu ý",
+    "reference": "Giá tham khảo, có thể thay đổi theo tình trạng thực tế của công trình.",
+    "agree": "Khách và thợ thỏa thuận vật tư phát sinh tại chỗ, theo khung giá này.",
+    "quote": "Cần báo giá cho công trình cụ thể, gọi <tel>{phone}</tel>."
+  },
+  "hidden": {
+    "title": "Khung giá vật tư đang được cập nhật",
+    "body": "Bảng giá sẽ hiện khi có ngày hiệu lực chính thức. Cần báo giá vật tư cho công trình cụ thể, gọi {phone}."
+  },
+  "contract": {
+    "eyebrow": "Doanh nghiệp",
+    "title": "Giá theo hợp đồng cho Hãng, Sàn TMĐT và chuỗi bán lẻ",
+    "body": "Phí lắp đặt cho doanh nghiệp tính theo nhóm thiết bị và vùng, ghi trong hợp đồng và đối soát theo từng đơn. Vật tư phát sinh vẫn theo khung giá tham khảo ở trên.",
+    "points": {
+      "groups": "Đơn giá theo nhóm thiết bị và vùng",
+      "settle": "Đối soát theo từng đơn, kèm ảnh nghiệm thu",
+      "separate": "Phí dịch vụ và vật tư tách bạch"
+    },
+    "brands": "Giải pháp cho hãng",
+    "retail": "Giải pháp cho sàn và bán lẻ"
+  },
+  "policy": {
+    "eyebrow": "Chính sách",
+    "title": "Chính sách dịch vụ",
+    "lead": "Bản đầy đủ nằm ở trang Chính sách bảo hành. Chính sách gồm bốn phần:",
+    "parts": {
+      "general": {
+        "title": "Phần 1. Quy định chung",
+        "body": "Phạm vi phục vụ, khu vực đặc thù, giờ tiếp nhận đơn, giới hạn trách nhiệm."
+      },
+      "customers": {
+        "title": "Phần 2. Dành cho khách hàng",
+        "body": "Quyền khiếu nại và đổi thợ, chi phí vật tư, đăng ký và thời hạn bảo hành."
+      },
+      "technicians": {
+        "title": "Phần 3. Dành cho đối tác thợ",
+        "body": "Khung giờ thi công, đơn gấp, chế tài và đền bù."
+      },
+      "brands": {
+        "title": "Phần 4. Dành cho hãng",
+        "body": "Phân định trách nhiệm, thời gian phối hợp xử lý sự cố."
+      }
+    },
+    "link": "Đọc chính sách đầy đủ"
+  },
+  "pending": {
+    "effective": "Ngày hiệu lực: bảng giá cũ chỉ ghi năm; bản chính thức sẽ ẩn bảng cho tới khi có ngày hiệu lực và giá được duyệt lại.",
+    "capacity": "Dòng ống đồng đầu tiên trên bảng giá cũ không ghi công suất máy.",
+    "service": "Tab \"Bảng giá dịch vụ\" (giá công) trên site cũ để trống; trang này chỉ có vật tư.",
+    "pdf": "Nút tải PDF bảng giá (P1) chưa làm."
+  }
 }

@@ -1,30 +1,355 @@
 {
   "hub": {
     "meta": {
-      "title": "Appliance installation and maintenance services",
+      "title": "Installation and maintenance services",
       "description": "Bluebolt's four service groups: air conditioner installation, appliance installation, scheduled maintenance and robot vacuum installation."
     },
     "eyebrow": "Services",
     "title": "Installation and maintenance services",
-    "lead": "Four service groups for brand, marketplace and retail orders."
+    "lead": "Four service groups for brand, marketplace and retail orders.",
+    "toDevices": "Appliances we install",
+    "grid": {
+      "eyebrow": "Four groups",
+      "title": "Choose a service group"
+    },
+    "devices": {
+      "eyebrow": "Appliances",
+      "title": "Appliances Bluebolt installs",
+      "lead": "Technicians are assigned by appliance group and skill.",
+      "groups": {
+        "cooling": {
+          "title": "Cooling and laundry",
+          "items": "Wall-mounted and ceiling cassette air conditioners, refrigerators, washing machines, dryers"
+        },
+        "home": {
+          "title": "Home appliances",
+          "items": "Wall-mounted TVs, induction hobs, cooker hoods, water purifiers, water heaters"
+        },
+        "smart": {
+          "title": "Smart devices",
+          "items": "Robot vacuums and robot mops"
+        }
+      }
+    },
+    "common": {
+      "eyebrow": "Every service",
+      "title": "What every job has in common",
+      "items": {
+        "process": {
+          "title": "A five-step process",
+          "body": "Order intake, technician dispatch, appointment confirmation, installation and sign-off, reconciliation and warranty."
+        },
+        "signoff": {
+          "title": "Photo sign-off",
+          "body": "The technician takes photos once the work is done and signs off with the customer on site."
+        },
+        "materials": {
+          "title": "Parts at reference prices",
+          "body": "Extra parts follow the published reference prices, and the customer pays the technician directly."
+        },
+        "warranty": {
+          "title": "Service warranty",
+          "body": "The warranty period and how to register are set out in the warranty policy."
+        }
+      }
+    },
+    "audience": "Bluebolt takes orders from brands, marketplaces and retail chains. Consumers who need help after an installation can visit the Customer support page.",
+    "audienceLink": "Customer support",
+    "cta": {
+      "title": "Need installation for your company's orders?",
+      "body": "Tell us the appliance groups, volumes and provinces you need covered. The Bluebolt sales team will contact you with contract pricing."
+    },
+    "pending": {
+      "images": "Images on the service cards are illustrations, awaiting real photos."
+    }
   },
   "eyebrow": "Services",
   "items": {
     "lap-dat-dieu-hoa": {
-      "description": "Wall-mounted and other common air conditioner installation for brand and marketplace orders: scope, reference parts pricing and warranty.",
-      "lead": "Scope of work, reference parts pricing and warranty for air conditioner installation."
+      "description": "Wall-mounted and ceiling cassette air conditioner installation for brand and marketplace orders: scope of work, reference parts prices and warranty.",
+      "lead": "Wall-mounted and ceiling cassette units for brand, marketplace and retail orders: site survey, tidy pipe runs, vacuuming and a test run before sign-off.",
+      "metaTitle": "Air conditioner installation for brands",
+      "card": "Wall-mounted and ceiling cassette units: site survey, vacuuming and a test run before sign-off.",
+      "devices": {
+        "wall": {
+          "title": "Wall-mounted air conditioners",
+          "body": "Indoor unit on the wall, outdoor unit outside on a bracket or on the roof."
+        },
+        "ceiling": {
+          "title": "Ceiling cassette air conditioners",
+          "body": "Indoor unit built into the ceiling; the ceiling and pipe route are surveyed first."
+        }
+      },
+      "scopeTitle": "What the technician does on site",
+      "scope": {
+        "survey": "Survey the site and agree with the customer where the indoor and outdoor units and the pipe run go.",
+        "mount": "Hang the indoor unit with enough clearance below the ceiling for return air; place the outdoor unit somewhere ventilated and sheltered, with room to shed heat.",
+        "pipe": "Run the copper pipe, power cable and drain pipe neatly, with as few joints and bends as possible and enough fall on the drain.",
+        "vacuum": "Vacuum the pipework before opening the refrigerant valves.",
+        "power": "Connect power to a dedicated circuit breaker with correctly sized cable.",
+        "test": "Test-run the unit and check cooling, water leaks, gas leaks and noise; show the customer how to use it and sign off with photos."
+      },
+      "included": {
+        "labor": "Labour to install the indoor and outdoor units within the standard scope",
+        "vacuum": "Vacuuming and a gas leak check",
+        "test": "A test run and a handover to the customer",
+        "signoff": "Photo sign-off with the customer",
+        "cleanup": "Cleaning up the work area before handover"
+      },
+      "excluded": {
+        "materials": "Extra parts: insulated copper pipe, power cable, drain pipe and brackets when more are needed",
+        "site": "Difficult positions, such as working at height or without safe access: agreed with the customer before work starts",
+        "product": "Product or component faults: covered by the manufacturer's warranty"
+      },
+      "faq": {
+        "vacuum": {
+          "q": "Why does the pipework need to be vacuumed?",
+          "a": "Vacuuming removes air and moisture from the pipes, prevents refrigerant blockages and helps the compressor last longer. Skip it and the unit tends to lose cooling after a while."
+        },
+        "pipe": {
+          "q": "Why shouldn't the pipe run be too short or have sharp bends?",
+          "a": "Pipes that are too short, sharply bent or joined in many places make the unit cool poorly, use more power and leak refrigerant more easily. The minimum length depends on each brand's guidelines."
+        },
+        "materials": {
+          "q": "How are extra parts charged?",
+          "a": "The customer and the technician agree on site using the reference parts prices, and the customer pays the technician directly.",
+          "more": "See reference parts prices"
+        },
+        "prepare": {
+          "q": "What should the customer prepare before the technician arrives?",
+          "a": "A power supply, clear access and a safe work area, plus someone on hand to check and sign off the work when it is done."
+        },
+        "warranty": {
+          "q": "How long is the installation warranty?",
+          "a": "The warranty period depends on the type of service and is set out in the warranty policy.",
+          "more": "Read the warranty policy"
+        }
+      },
+      "cta": {
+        "title": "Need air conditioners installed for your orders?",
+        "body": "Tell us the number of units, their capacity and the provinces involved. The sales team will quote under a contract."
+      },
+      "pending": {
+        "scope": "The scope of work is rewritten from the old air conditioner installation guide and technician standards.",
+        "warranty": "The new-installation warranty period differs between the current policy and an old article.",
+        "images": "The hero image is an illustration placeholder, awaiting a real photo or video loop."
+      }
     },
     "lap-dat-dien-may": {
       "description": "Installation of washing machines, wall-mounted TVs, refrigerators and other appliances for brand and marketplace orders.",
-      "lead": "Washing machines, wall-mounted TVs, refrigerators and other appliances."
+      "lead": "Washing machines, dryers, refrigerators, wall-mounted TVs and kitchen appliances: securely installed, safely connected, test-run and explained to the customer.",
+      "metaTitle": "Appliance installation for brands",
+      "card": "Washing machines, dryers, refrigerators, wall-mounted TVs, induction hobs, cooker hoods, water purifiers and water heaters.",
+      "devices": {
+        "laundry": {
+          "title": "Washing machines and dryers",
+          "body": "Remove the transit bolts, level the feet, connect the water supply and drain, and fit the earth wire."
+        },
+        "fridge": {
+          "title": "Refrigerators",
+          "body": "Level the unit, leave space for heat to escape, and check the power supply and earthing."
+        },
+        "tv": {
+          "title": "Wall-mounted TVs",
+          "body": "Drill the wall, fit a fixed, tilting or swivel bracket, connect to the network and set the viewing angle."
+        },
+        "kitchen": {
+          "title": "Induction hobs and cooker hoods",
+          "body": "Connect a power supply rated for the appliance, secure it firmly and test-run it."
+        },
+        "water": {
+          "title": "Water purifiers and water heaters",
+          "body": "Connect the water lines, check for leaks, and wire and earth the unit safely."
+        }
+      },
+      "scopeTitle": "What the technician does on site",
+      "scope": {
+        "check": "Check the position, power supply, water supply and drain before starting.",
+        "fix": "Install, level and secure the appliance firmly.",
+        "connect": "Connect power and water to the brand's guidelines; fit an earth wire on appliances that use water.",
+        "test": "Test-run the appliance, show the customer how to use it and sign off with photos."
+      },
+      "included": {
+        "labor": "Labour to install and connect within the standard scope",
+        "test": "A test run and a handover to the customer",
+        "signoff": "Photo sign-off with the customer",
+        "cleanup": "Cleaning up the work area before handover"
+      },
+      "excluded": {
+        "materials": "Extra parts: supply and drain hose extensions, power cable and brackets when more are needed",
+        "site": "Difficult positions: agreed with the customer before work starts",
+        "product": "Product or component faults: covered by the manufacturer's warranty"
+      },
+      "faq": {
+        "grounding": {
+          "q": "Why does a washing machine need an earth wire?",
+          "a": "A washing machine uses water and electricity in a damp environment. Without an earth wire, the casing can become live and give an electric shock."
+        },
+        "bolts": {
+          "q": "Do the transit bolts need to come out when installing a washing machine?",
+          "a": "Yes. The bolts that hold the drum in transit must be removed before the machine is plugged in; left in place, they make the machine shake violently and damage the drum suspension."
+        },
+        "tv": {
+          "q": "What is needed to wall-mount a TV?",
+          "a": "Pick a load-bearing wall near a power socket and a network point. The technician checks the wall and advises on the bracket type before drilling."
+        },
+        "warranty": {
+          "q": "How long is the installation warranty?",
+          "a": "The warranty period depends on the type of service and is set out in the warranty policy.",
+          "more": "Read the warranty policy"
+        }
+      },
+      "cta": {
+        "title": "Need appliances installed for your orders?",
+        "body": "Send the list of appliances, volumes and provinces involved. The sales team will quote by appliance group."
+      },
+      "pending": {
+        "scope": "Scope for induction hobs, cooker hoods, water purifiers and water heaters is newly written from the appliance list on the old website and awaits confirmation.",
+        "images": "The hero image is an illustration placeholder, awaiting a real photo."
+      }
     },
     "bao-tri-dinh-ky": {
-      "description": "Scheduled maintenance of cooling equipment for store chains and offices.",
-      "lead": "Scheduled maintenance plans for store chains and offices."
+      "description": "Scheduled air conditioner maintenance for store chains and offices: cleaning, checks against an agreed list and photo records of each unit.",
+      "lead": "Scheduled cleaning and checks of air conditioners for store chains and offices, with the condition of every unit recorded in photos.",
+      "metaTitle": "Scheduled air conditioner maintenance",
+      "card": "Scheduled air conditioner cleaning and checks for store chains and offices, with photo records.",
+      "devices": {
+        "ac": {
+          "title": "Wall-mounted and ceiling cassette air conditioners",
+          "body": "Clean the indoor unit, outdoor unit and filters; check refrigerant pressure, fans, capacitors and the power supply."
+        },
+        "other": {
+          "title": "Other equipment",
+          "body": "As listed in the contract."
+        }
+      },
+      "scopeTitle": "How maintenance is run",
+      "scopeIntro": "Scheduled maintenance helps equipment last longer, catches faults early and keeps cooling performance up.",
+      "scope": {
+        "plan": "Agree the list of sites, units and maintenance frequency in the contract.",
+        "schedule": "Schedule maintenance rounds for each site.",
+        "service": "The technician cleans and checks against the list and records the condition of each unit in photos.",
+        "settle": "Reconcile per maintenance round, with any extra work listed separately."
+      },
+      "included": {
+        "clean": "Cleaning of the indoor unit, outdoor unit and filters",
+        "check": "Checks of refrigerant pressure, fans, capacitors and the power supply",
+        "record": "Photo records of every unit's condition"
+      },
+      "excluded": {
+        "parts": "Part replacement, refrigerant top-ups and repairs: outside the scheduled visit",
+        "product": "Component faults still under the manufacturer's warranty: covered by that warranty"
+      },
+      "faq": {
+        "frequency": {
+          "q": "How often should an air conditioner be cleaned?",
+          "a": "It depends on usage and the environment. Filters should be cleaned regularly; full cleaning of the indoor and outdoor units follows the schedule agreed in the contract."
+        },
+        "gas": {
+          "q": "Does scheduled maintenance include a refrigerant top-up?",
+          "a": "Each visit checks the refrigerant pressure. A top-up or part replacement is extra work, outside the scheduled visit."
+        },
+        "chains": {
+          "q": "Can a chain with sites in many provinces use the service?",
+          "a": "The list of sites is checked against the technician network before the contract is signed.",
+          "more": "See the network by province"
+        },
+        "warranty": {
+          "q": "What warranty applies after maintenance?",
+          "a": "The warranty period depends on the type of service and is set out in the warranty policy.",
+          "more": "Read the warranty policy"
+        }
+      },
+      "cta": {
+        "title": "Need a maintenance schedule for your stores or offices?",
+        "body": "Send the list of sites, the number of units and how often you want them serviced. The sales team will propose a schedule and a quote."
+      },
+      "pending": {
+        "scope": "The old website has only one sentence about this service; the scope and delivery model are newly written and await confirmation.",
+        "images": "The hero image is an illustration placeholder, awaiting a real photo."
+      }
     },
     "lap-dat-robot-hut-bui": {
-      "description": "Robot vacuum installation and handover for brand and marketplace customers.",
-      "lead": "Installation, setup and handover of robot vacuums."
+      "description": "Robot vacuum installation for brand and marketplace customers: dock placement, app connection, first home mapping and a handover.",
+      "lead": "Place the charging dock, connect the app, run the first home mapping and show the customer how to use their robot vacuum.",
+      "metaTitle": "Robot vacuum installation for brands",
+      "card": "Dock placement, Wi-Fi and app connection, first home mapping and a handover to the customer.",
+      "devices": {
+        "robot": {
+          "title": "Robot vacuums and mops",
+          "body": "Models controlled through a smartphone app."
+        },
+        "smart": {
+          "title": "Smart home devices",
+          "body": "Set up as listed in the contract with the brand."
+        }
+      },
+      "scopeTitle": "What the technician does during installation",
+      "scope": {
+        "dock": "Choose an open spot for the charging dock near a power socket, with clear space in front.",
+        "app": "Connect the robot to Wi-Fi and to the brand's app on the customer's phone.",
+        "map": "Run the first mapping of the home and set no-go zones and a cleaning schedule.",
+        "handover": "Show the customer how to clean the brushes, dust bin and mop, and how to update the software."
+      },
+      "included": {
+        "setup": "Dock placement, app connection and first mapping",
+        "guide": "A handover on use and basic upkeep",
+        "signoff": "Photo sign-off with the customer"
+      },
+      "excluded": {
+        "network": "Installing or repairing the home Wi-Fi network",
+        "product": "Product or component faults: covered by the manufacturer's warranty"
+      },
+      "faq": {
+        "wifi": {
+          "q": "What Wi-Fi does the robot need?",
+          "a": "The robot needs a stable Wi-Fi signal at the dock and in the rooms it cleans. The technician checks the connection during setup; adding network equipment is outside the service scope."
+        },
+        "account": {
+          "q": "Whose name should the app account be in?",
+          "a": "The account is best kept in the customer's name, with the customer signing in on their own phone."
+        },
+        "warranty": {
+          "q": "How long is the installation warranty?",
+          "a": "The warranty period depends on the type of service and is set out in the warranty policy.",
+          "more": "Read the warranty policy"
+        }
+      },
+      "cta": {
+        "title": "Need robot vacuums installed for your customers?",
+        "body": "Tell us the product line, volumes and the provinces you serve. The sales team will get back to you."
+      },
+      "pending": {
+        "scope": "P2 page. The service description on the old website was incorrect; this content is newly written and the scope awaits confirmation.",
+        "images": "The hero image is an illustration placeholder, awaiting a real photo."
+      }
     }
+  },
+  "detail": {
+    "toScope": "See the scope of work",
+    "devicesEyebrow": "Scope",
+    "devicesTitle": "Appliances and scope of work",
+    "includedEyebrow": "Included and excluded",
+    "includedTitle": "What the installation fee covers",
+    "included": "Included",
+    "excluded": "Not included, charged or handled separately",
+    "materialsLink": "See reference parts prices",
+    "warrantyEyebrow": "Warranty",
+    "warrantyTitle": "Installation warranty",
+    "warrantyLead": "The service warranty covers faults caused by the installation work. Product faults are covered by the manufacturer's warranty.",
+    "warrantyPolicyLink": "Read the warranty policy",
+    "warrantyClaimsTitle": "Under the current policy",
+    "warrantyTable": {
+      "caption": "Service warranty periods and commitments",
+      "item": "Item",
+      "value": "Commitment",
+      "pendingValue": "As stated in the current policy",
+      "draftCaption": "Not confirmed: the live site only shows approved values.",
+      "fallback": "The warranty period for each type of service and how to register a warranty are set out in the warranty policy."
+    },
+    "processEyebrow": "Process",
+    "processTitle": "Every job goes through five steps",
+    "faqTitle": "Frequently asked questions",
+    "otherTitle": "Other services"
   }
 }

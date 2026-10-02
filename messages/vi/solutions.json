@@ -1,4 +1,106 @@
 {
+  "kit": {
+    "breadcrumbLabel": "Đường dẫn",
+    "home": "Trang chủ",
+    "imagePending": "Ảnh minh họa, ảnh thật sẽ chụp sau",
+    "stillPending": "Khung ảnh tĩnh, chờ ảnh thật",
+    "callPrefix": "Hoặc gọi",
+    "byContract": "Theo hợp đồng",
+    "pendingTitle": "Nội dung chờ xác nhận",
+    "pendingIntro": "Chỉ hiện ở bản xem trước. Bản chính thức tự ẩn mọi nội dung nháp.",
+    "kpiHidden": "Các ô số liệu {ids} đang ẩn vì chưa có số đo thật.",
+    "formPending": "Form gửi yêu cầu sẽ có khi contract form lead được duyệt. Hiện các nút dẫn tới trang Liên hệ, mục Kinh doanh.",
+    "faqEyebrow": "Câu hỏi thường gặp",
+    "process": {
+      "step": "Bước {n}",
+      "trigger": "Sự kiện kích hoạt",
+      "pending": "Thứ tự bước 02 và 03, kênh nhận đơn ở bước 01 đang chờ xác nhận."
+    },
+    "cta": {
+      "eyebrow": "Bắt đầu",
+      "quote": "Nhận báo giá",
+      "demo": "Đặt lịch demo 30 phút",
+      "integration": "Thảo luận tích hợp",
+      "pricing": "Xem khung giá vật tư"
+    },
+    "compare": {
+      "caption": "So sánh ba cách triển khai lắp đặt: tự quản đội thợ, thuê đơn vị địa phương và Bluebolt",
+      "criterion": "Tiêu chí",
+      "columns": {
+        "self": "Tự quản đội thợ",
+        "local": "Thuê đơn vị địa phương",
+        "bluebolt": "Bluebolt"
+      },
+      "rows": {
+        "coverage": {
+          "label": "Phạm vi phục vụ",
+          "self": "Chỉ ở nơi có đội thợ của bạn",
+          "local": "Mỗi tỉnh một hợp đồng, một đầu mối",
+          "bluebolt": "Một hợp đồng cho các tỉnh có thợ trong mạng lưới"
+        },
+        "fixedCost": {
+          "label": "Chi phí cố định",
+          "self": "Lương, đào tạo, dụng cụ, phương tiện cho cả đội",
+          "local": "Thấp, nhưng đơn giá mỗi nơi một khác",
+          "bluebolt": "Trả theo đơn, đơn giá ghi trong hợp đồng"
+        },
+        "quality": {
+          "label": "Kiểm soát chất lượng",
+          "self": "Tự xây quy trình và tự kiểm tra",
+          "local": "Mỗi đơn vị một cách làm, khó kiểm tra",
+          "bluebolt": "Một quy trình 5 bước chung, nghiệm thu bằng ảnh"
+        },
+        "tracking": {
+          "label": "Theo dõi đơn",
+          "self": "Tùy công cụ nội bộ",
+          "local": "Qua điện thoại và tin nhắn",
+          "bluebolt": "Mỗi đơn có trạng thái trên hệ thống điều phối"
+        },
+        "billing": {
+          "label": "Đối soát và chứng từ",
+          "self": "Tự lo lương, bảo hiểm, thuế cho từng thợ",
+          "local": "Nhiều đầu mối, nhiều hóa đơn",
+          "bluebolt": "Một đầu mối đối soát, tách bạch phí dịch vụ và vật tư"
+        },
+        "expansion": {
+          "label": "Mở rộng sang tỉnh mới",
+          "self": "Tuyển và đào tạo thợ mới",
+          "local": "Tìm và thẩm định đơn vị mới",
+          "bluebolt": "Dùng thợ sẵn có ở tỉnh đã có trong mạng lưới"
+        }
+      }
+    },
+    "sla": {
+      "caption": "SLA theo vùng: xác nhận lịch, hoàn thành lắp đặt và xử lý lỗi lắp đặt",
+      "milestone": "Mốc",
+      "regions": {
+        "inner": "TP. HCM, Hà Nội (nội thành)",
+        "outer": "TP. HCM, Hà Nội (ngoại thành)",
+        "provinces": "Tỉnh, thành khác",
+        "special": "Khu vực đặc thù"
+      },
+      "milestones": {
+        "confirm": {
+          "label": "Xác nhận lịch với khách",
+          "hint": "Sau khi nhận đơn"
+        },
+        "completion": {
+          "label": "Hoàn thành lắp đặt",
+          "hint": "Tính từ lúc khách đặt lịch"
+        },
+        "fix": {
+          "label": "Xử lý lỗi lắp đặt",
+          "hint": "Cử thợ tới khắc phục"
+        }
+      },
+      "draftCaption": "Giá trị theo chính sách hiện hành và site cũ, đang chờ chốt. Bản chính thức chỉ hiện ô đã duyệt.",
+      "fallbackTitle": "SLA ghi trong hợp đồng",
+      "fallback": "Thời gian xác nhận lịch, hoàn thành lắp đặt và xử lý lỗi lắp đặt được thỏa thuận theo từng vùng và ghi trong hợp đồng dịch vụ.",
+      "networkLink": "Xem mạng lưới theo tỉnh",
+      "notesTitle": "Ghi chú",
+      "intakeLabel": "Giờ tiếp nhận đơn"
+    }
+  },
   "hub": {
     "meta": {
       "title": "Giải pháp lắp đặt cho Hãng và Sàn",
@@ -6,24 +108,363 @@
     },
     "eyebrow": "Giải pháp",
     "title": "Giải pháp lắp đặt cho Hãng và Sàn",
-    "lead": "Chọn cách triển khai lắp đặt và bảo hành phù hợp với mô hình bán hàng của bạn."
+    "lead": "Chọn cách triển khai lắp đặt và bảo hành phù hợp với mô hình bán hàng của bạn.",
+    "toCompare": "So sánh ba cách triển khai",
+    "cards": {
+      "eyebrow": "Hai mô hình",
+      "title": "Hai cách đơn đi vào Bluebolt, một mạng lưới thợ",
+      "lead": "Hãng và sàn bán hàng khác nhau, nên đơn lắp đặt tới Bluebolt theo hai cách. Phần việc tại nhà khách đi qua cùng một quy trình.",
+      "brands": {
+        "eyebrow": "Cho hãng điện máy, điện lạnh",
+        "title": "Lắp đặt và bảo hành cho đơn của hãng",
+        "body": "Hãng gửi đơn lắp đặt, Bluebolt giao thợ gần nhất, nghiệm thu bằng ảnh và đối soát với hãng.",
+        "points": {
+          "a": "Nhận đơn lắp đặt ở nhiều tỉnh qua một đầu mối",
+          "b": "Điều phối thợ theo khu vực và kỹ năng",
+          "c": "Báo cáo và đối soát theo từng đơn"
+        },
+        "cta": "Xem giải pháp cho hãng"
+      },
+      "retail": {
+        "eyebrow": "Cho sàn TMĐT và chuỗi bán lẻ",
+        "title": "Lắp đặt sau bán hàng cho khách của sàn",
+        "body": "Đơn có kèm lắp đặt đi từ hệ thống của bạn tới thợ, trạng thái lắp đặt quay về hệ thống của bạn.",
+        "points": {
+          "a": "Gắn dịch vụ lắp đặt vào luồng đơn sau khi mua",
+          "b": "Trạng thái từng đơn trả về sàn",
+          "c": "Có quy trình khiếu nại và đổi thợ"
+        },
+        "cta": "Xem giải pháp cho sàn"
+      }
+    },
+    "compare": {
+      "eyebrow": "So sánh",
+      "title": "Ba cách triển khai lắp đặt",
+      "lead": "Không có cách nào đúng cho mọi doanh nghiệp. Bảng dưới so ba cách theo cùng một bộ tiêu chí để bạn tự cân nhắc."
+    },
+    "resources": {
+      "eyebrow": "Chuẩn bị báo giá",
+      "title": "Nên xem trước khi trao đổi",
+      "services": {
+        "title": "Danh mục dịch vụ",
+        "body": "Bốn nhóm dịch vụ và các thiết bị Bluebolt lắp đặt."
+      },
+      "pricing": {
+        "title": "Khung giá vật tư",
+        "body": "Giá vật tư tham khảo theo vùng, thợ thu tại chỗ."
+      },
+      "network": {
+        "title": "Mạng lưới theo tỉnh",
+        "body": "Bản đồ và bảng tỉnh, thành có thợ."
+      }
+    },
+    "cta": {
+      "title": "Cần một đầu mối lắp đặt cho đơn hàng của bạn?",
+      "body": "Gửi ngành hàng, sản lượng đơn mỗi tháng và các tỉnh cần triển khai. Bộ phận kinh doanh của Bluebolt sẽ liên hệ lại."
+    },
+    "pending": {
+      "compare": "Bảng so sánh viết theo mô hình vận hành mô tả trên site cũ; chưa có số liệu đối chứng (chi phí, thời gian) cho từng cách.",
+      "images": "Ảnh trên hai thẻ là minh họa, chờ ảnh thật."
+    }
   },
   "brands": {
     "meta": {
       "title": "Giải pháp lắp đặt cho hãng điện máy",
-      "description": "Bluebolt nhận đơn lắp đặt từ hãng điện máy, điều phối thợ, nghiệm thu bằng ảnh và đối soát hằng tháng."
+      "description": "Bluebolt nhận đơn lắp đặt từ hãng điện máy, điều phối thợ, nghiệm thu bằng ảnh và đối soát theo từng đơn, với SLA ghi theo vùng."
     },
+    "breadcrumb": "Hãng điện máy",
     "eyebrow": "Cho hãng điện máy",
     "title": "Lắp đặt và bảo hành cho hãng điện máy",
-    "lead": "Một đầu mối điều phối thợ, nghiệm thu và đối soát cho đơn lắp đặt của hãng."
+    "lead": "Một đầu mối điều phối thợ, nghiệm thu và đối soát cho đơn lắp đặt của hãng.",
+    "toSla": "Xem SLA theo vùng",
+    "pains": {
+      "eyebrow": "Vấn đề",
+      "title": "Vì sao hãng khó kiểm soát chất lượng lắp đặt?",
+      "lead": "Khi đơn lắp đặt trải ra nhiều tỉnh, hãng thường gặp năm vấn đề giống nhau.",
+      "answerLabel": "Cách Bluebolt xử lý",
+      "items": {
+        "people": {
+          "title": "Khó quản lý thợ ở nhiều tỉnh",
+          "body": "Mỗi khu vực một đội thợ, một cách liên lạc, một kiểu báo cáo.",
+          "answer": "Một đầu mối điều phối: hãng gửi đơn, Bluebolt giao thợ gần nhất, đúng kỹ năng."
+        },
+        "quality": {
+          "title": "Chất lượng không đồng đều",
+          "body": "Cùng một sản phẩm nhưng mỗi nơi lắp một kiểu, khách phàn nàn với hãng.",
+          "answer": "Thợ lắp theo hướng dẫn của hãng và nghiệm thu với khách bằng ảnh."
+        },
+        "speed": {
+          "title": "Đơn xử lý chậm",
+          "body": "Không rõ đơn đang chờ ở khâu nào, ai đang giữ.",
+          "answer": "Mỗi đơn có trạng thái theo 5 bước, từ tiếp nhận tới đối soát."
+        },
+        "cost": {
+          "title": "Khó kiểm soát chi phí",
+          "body": "Chi phí phát sinh tại nhà khách không có khung để đối chiếu.",
+          "answer": "Phí dịch vụ theo hợp đồng; vật tư theo khung giá tham khảo công khai."
+        },
+        "sla": {
+          "title": "Không đo được SLA",
+          "body": "Có cam kết thời gian với khách nhưng thiếu số đo để kiểm tra.",
+          "answer": "Mốc thời gian của từng đơn được ghi lại để đối chiếu với SLA theo vùng."
+        }
+      }
+    },
+    "kpi": {
+      "title": "Số liệu vận hành"
+    },
+    "sla": {
+      "eyebrow": "SLA",
+      "title": "Cam kết thời gian theo vùng",
+      "lead": "Ba mốc hãng cần đo trên mỗi đơn: xác nhận lịch với khách, hoàn thành lắp đặt và xử lý lỗi lắp đặt."
+    },
+    "process": {
+      "eyebrow": "Quy trình",
+      "title": "Từ đơn của hãng tới đối soát: 5 bước",
+      "lead": "Mọi đơn đi qua cùng năm bước, nên hãng biết đơn đang ở đâu và ai đang giữ."
+    },
+    "billing": {
+      "eyebrow": "Đối soát và hóa đơn",
+      "title": "Hai khoản tiền, tách bạch từ đầu",
+      "lead": "Một đơn lắp đặt có phí dịch vụ giữa hãng và Bluebolt, và có thể có vật tư phát sinh tại nhà khách. Hai khoản đi hai đường riêng.",
+      "fee": {
+        "title": "Phí dịch vụ lắp đặt",
+        "payer": "Hãng thanh toán cho Bluebolt",
+        "rows": {
+          "scope": {
+            "label": "Gồm",
+            "value": "Công lắp đặt tiêu chuẩn theo nhóm thiết bị"
+          },
+          "price": {
+            "label": "Đơn giá",
+            "value": "Theo hợp đồng, theo nhóm thiết bị và vùng"
+          },
+          "settle": {
+            "label": "Đối soát",
+            "value": "Theo từng đơn, kèm ảnh nghiệm thu"
+          }
+        }
+      },
+      "materials": {
+        "title": "Vật tư phát sinh",
+        "payer": "Khách trả trực tiếp cho thợ tại chỗ",
+        "rows": {
+          "scope": {
+            "label": "Gồm",
+            "value": "Ống đồng, dây điện, ống nước, giá đỡ khi cần thêm"
+          },
+          "price": {
+            "label": "Mức giá",
+            "value": "Theo khung giá vật tư tham khảo công khai"
+          },
+          "settle": {
+            "label": "Thỏa thuận",
+            "value": "Giữa khách và thợ, ngay tại nhà khách"
+          }
+        }
+      },
+      "claimsTitle": "Theo chính sách hiện hành"
+    },
+    "compare": {
+      "eyebrow": "So sánh",
+      "title": "Tự quản thợ, thuê địa phương hay dùng Bluebolt",
+      "lead": "Không có cách nào đúng cho mọi hãng. Bảng dưới so ba cách theo cùng tiêu chí."
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp của hãng",
+      "items": {
+        "channel": {
+          "q": "Hãng gửi đơn lắp đặt cho Bluebolt bằng cách nào?",
+          "a": "Theo kênh hai bên thống nhất khi ký hợp đồng. Kênh cụ thể được chốt trong buổi demo."
+        },
+        "devices": {
+          "q": "Bluebolt lắp đặt những thiết bị nào?",
+          "a": "Điều hòa treo tường và âm trần; máy giặt, máy sấy, tủ lạnh; TV treo tường, bếp từ, máy hút mùi, máy lọc nước, bình nóng lạnh; robot hút bụi.",
+          "more": "Xem danh mục dịch vụ"
+        },
+        "coverage": {
+          "q": "Bluebolt có thợ ở tỉnh của chúng tôi không?",
+          "a": "Xem bảng tỉnh ở trang Mạng lưới, hoặc gửi danh sách tỉnh cần triển khai để bộ phận kinh doanh xác nhận.",
+          "more": "Xem mạng lưới theo tỉnh"
+        },
+        "responsibility": {
+          "q": "Lỗi sau lắp đặt do ai chịu trách nhiệm?",
+          "a": "Hai bên phân định trong hợp đồng: lỗi của sản phẩm và lỗi do lắp đặt được xử lý theo hai quy trình khác nhau."
+        },
+        "warranty": {
+          "q": "Bảo hành dịch vụ lắp đặt bao lâu?",
+          "a": "Thời hạn bảo hành theo từng loại dịch vụ, ghi trong chính sách bảo hành.",
+          "more": "Đọc chính sách bảo hành"
+        },
+        "materials": {
+          "q": "Vật tư phát sinh tính thế nào, có hóa đơn không?",
+          "a": "Khách và thợ thỏa thuận tại chỗ theo khung giá vật tư tham khảo, khách trả trực tiếp cho thợ.",
+          "more": "Xem khung giá vật tư"
+        },
+        "tracking": {
+          "q": "Hãng theo dõi tiến độ đơn ở đâu?",
+          "a": "Mỗi đơn có trạng thái theo 5 bước và ảnh nghiệm thu. Hình thức báo cáo cho hãng được thống nhất trong hợp đồng."
+        }
+      }
+    },
+    "cta": {
+      "title": "Xem Bluebolt xử lý một đơn lắp đặt trong 30 phút",
+      "body": "Gửi ngành hàng, sản lượng đơn mỗi tháng và các tỉnh cần triển khai. Bộ phận kinh doanh sẽ liên hệ để chốt lịch demo và báo giá."
+    },
+    "pending": {
+      "sla": "SLA theo vùng: giá trị lấy từ chính sách hiện hành và trang dịch vụ cũ; mốc xác nhận lịch đang khác nhau giữa hai nguồn.",
+      "billing": "Đối soát và VAT: cần xác nhận Bluebolt xuất hóa đơn VAT cho phí dịch vụ và cách xử lý thuế thu nhập cá nhân của thợ.",
+      "channel": "Kênh nhận đơn (API, tệp, cổng đối tác) và báo cáo theo thời gian thực chưa được kiểm chứng.",
+      "kpi": "Số liệu K3, K5, K6 chưa có; case study chờ văn bản đồng ý của hãng nên chưa có khối case study.",
+      "images": "Ảnh hero và ảnh từng bước là khung minh họa, chờ ảnh thật hoặc ảnh tĩnh từ phim."
+    }
   },
   "retail": {
     "meta": {
-      "title": "Giải pháp lắp đặt cho sàn TMĐT và chuỗi bán lẻ",
+      "title": "Lắp đặt cho sàn TMĐT và chuỗi bán lẻ",
       "description": "Tích hợp lắp đặt sau bán hàng vào luồng đơn của sàn TMĐT và chuỗi bán lẻ, trạng thái đơn trả về hệ thống của bạn."
     },
+    "breadcrumb": "Sàn TMĐT và bán lẻ",
     "eyebrow": "Cho sàn TMĐT và bán lẻ",
     "title": "Lắp đặt sau bán hàng cho sàn TMĐT và chuỗi bán lẻ",
-    "lead": "Đơn từ hệ thống của bạn đi tới thợ, trạng thái lắp đặt quay về hệ thống của bạn."
+    "lead": "Đơn từ hệ thống của bạn đi tới thợ, trạng thái lắp đặt quay về hệ thống của bạn.",
+    "toDiagram": "Xem sơ đồ tích hợp",
+    "diagram": {
+      "eyebrow": "Tích hợp",
+      "title": "Đơn đi từ sàn tới thợ, trạng thái quay về sàn",
+      "lead": "Sàn giữ quan hệ với khách. Bluebolt lo phần lắp đặt và báo lại từng mốc của đơn.",
+      "label": "Luồng một đơn lắp đặt từ sàn tới nhà khách",
+      "nodes": {
+        "marketplace": {
+          "title": "Sàn hoặc chuỗi bán lẻ",
+          "body": "Đơn có kèm lắp đặt được chuyển sang Bluebolt qua kênh hai bên đã thống nhất."
+        },
+        "bluebolt": {
+          "title": "Bluebolt điều phối",
+          "body": "Tiếp nhận đơn, chọn thợ gần nhất, đúng kỹ năng, còn lịch trống."
+        },
+        "technician": {
+          "title": "Thợ đối tác",
+          "body": "Gọi khách xác nhận lịch hẹn, tới nhà khách lắp đặt."
+        },
+        "customer": {
+          "title": "Nhà khách",
+          "body": "Lắp đặt, chạy thử và nghiệm thu bằng ảnh."
+        }
+      },
+      "returnTitle": "Trạng thái trả về sàn",
+      "statuses": {
+        "received": "Đã tiếp nhận",
+        "assigned": "Đã giao thợ",
+        "scheduled": "Đã hẹn lịch",
+        "done": "Đã lắp xong, có ảnh nghiệm thu"
+      },
+      "statusesNote": "Ví dụ các mốc trạng thái. Danh sách mốc và định dạng được thống nhất khi tích hợp.",
+      "claimsTitle": "Kênh kỹ thuật"
+    },
+    "groups": {
+      "eyebrow": "Khung giá",
+      "title": "Khung giá theo nhóm thiết bị",
+      "lead": "Phí lắp đặt tính theo nhóm thiết bị và vùng, ghi trong hợp đồng với sàn. Vật tư phát sinh có khung giá tham khảo riêng, thợ thu tại chỗ.",
+      "feeLabel": "Phí lắp đặt",
+      "materialsLabel": "Vật tư phát sinh",
+      "materialsTable": "Có trong bảng giá vật tư",
+      "materialsOnSite": "Thỏa thuận tại chỗ",
+      "items": {
+        "ac": {
+          "title": "Điều hòa",
+          "examples": "Treo tường, âm trần"
+        },
+        "laundry": {
+          "title": "Máy giặt, máy sấy",
+          "examples": "Cửa trước, cửa trên, máy sấy"
+        },
+        "fridge": {
+          "title": "Tủ lạnh",
+          "examples": "Tủ lạnh các dòng"
+        },
+        "tv": {
+          "title": "TV treo tường",
+          "examples": "Giá treo thẳng, nghiêng, xoay"
+        },
+        "kitchen": {
+          "title": "Bếp từ, máy hút mùi",
+          "examples": "Thiết bị nhà bếp"
+        },
+        "water": {
+          "title": "Máy lọc nước, bình nóng lạnh",
+          "examples": "Thiết bị cấp nước"
+        },
+        "robot": {
+          "title": "Robot hút bụi",
+          "examples": "Robot hút bụi, lau nhà"
+        }
+      }
+    },
+    "sla": {
+      "eyebrow": "SLA",
+      "title": "Thời gian cho đơn của sàn",
+      "lead": "Đơn của sàn dùng chung bảng SLA theo vùng với đơn của hãng."
+    },
+    "complaints": {
+      "eyebrow": "Khiếu nại",
+      "title": "Khiếu nại và đổi thợ",
+      "lead": "Khách của sàn phản ánh qua kênh của sàn hoặc hotline Bluebolt. Mỗi phản ánh đi qua ba bước.",
+      "steps": {
+        "receive": {
+          "title": "Tiếp nhận",
+          "body": "Ghi nhận phản ánh của khách và gắn vào đúng đơn."
+        },
+        "verify": {
+          "title": "Xác minh",
+          "body": "Đối chiếu ảnh nghiệm thu, lịch sử đơn, trao đổi với thợ và khách."
+        },
+        "resolve": {
+          "title": "Xử lý",
+          "body": "Khắc phục lỗi, đổi thợ hoặc đền bù theo chính sách, báo kết quả cho sàn."
+        }
+      },
+      "claimsTitle": "Các trường hợp theo chính sách hiện hành"
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp của sàn",
+      "items": {
+        "channel": {
+          "q": "Sàn chuyển đơn cho Bluebolt bằng cách nào?",
+          "a": "Theo kênh hai bên thống nhất khi ký hợp đồng. Cách tích hợp cụ thể được trao đổi với đội kỹ thuật của sàn."
+        },
+        "status": {
+          "q": "Sàn nhận trạng thái đơn ra sao?",
+          "a": "Bluebolt báo các mốc của từng đơn theo kênh và định dạng thống nhất khi tích hợp."
+        },
+        "support": {
+          "q": "Khách của sàn liên hệ ai khi cần hỗ trợ?",
+          "a": "Khách gọi hotline Bluebolt {phone} hoặc phản ánh qua kênh của sàn. Đầu mối xử lý được ghi trong hợp đồng."
+        },
+        "materials": {
+          "q": "Ai trả tiền vật tư phát sinh?",
+          "a": "Khách trả trực tiếp cho thợ tại chỗ, theo khung giá vật tư tham khảo.",
+          "more": "Xem khung giá vật tư"
+        },
+        "urgent": {
+          "q": "Có lắp gấp trong ngày không?",
+          "a": "Có khung riêng cho đơn gấp theo chính sách hiện hành:"
+        },
+        "remote": {
+          "q": "Bluebolt có lắp ở hải đảo, vùng sâu vùng xa không?",
+          "a": "Theo chính sách hiện hành:"
+        }
+      }
+    },
+    "cta": {
+      "title": "Thảo luận tích hợp lắp đặt vào luồng đơn của bạn",
+      "body": "Gửi mô tả luồng đơn hiện tại, nhóm thiết bị và các tỉnh cần phục vụ. Bộ phận kinh doanh sẽ liên hệ để trao đổi cách tích hợp."
+    },
+    "pending": {
+      "diagram": "Sơ đồ mô tả luồng nghiệp vụ; kênh kỹ thuật và định dạng trạng thái chờ xác nhận.",
+      "groups": "Khung phí lắp đặt theo nhóm thiết bị chưa có số; trang chỉ ghi \"theo hợp đồng\" cho tới khi có bảng giá được duyệt.",
+      "sla": "Cam kết có thợ trong ngày trên site cũ khác với thời hạn hoàn thành trong chính sách hiện hành.",
+      "complaints": "Khiếu nại, đổi thợ, đền bù lấy từ chính sách hiện hành, chờ pháp chế duyệt lại cho site mới."
+    }
   }
 }

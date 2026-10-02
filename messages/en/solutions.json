@@ -1,29 +1,470 @@
 {
+  "kit": {
+    "breadcrumbLabel": "Breadcrumb",
+    "home": "Home",
+    "imagePending": "Illustration, real photo to follow",
+    "stillPending": "Still frame placeholder",
+    "callPrefix": "Or call",
+    "byContract": "Per contract",
+    "pendingTitle": "Pending confirmation",
+    "pendingIntro": "Shown in preview builds only. The live site hides all draft content automatically.",
+    "kpiHidden": "KPI tiles {ids} are hidden until measured figures are available.",
+    "formPending": "The request form will be added once the lead form contract is approved. For now the buttons lead to the sales section of the Contact page.",
+    "faqEyebrow": "FAQ",
+    "process": {
+      "step": "Step {n}",
+      "trigger": "Trigger",
+      "pending": "The order of steps 02 and 03, and the intake channel in step 01, are awaiting confirmation."
+    },
+    "cta": {
+      "eyebrow": "Get started",
+      "quote": "Get a quote",
+      "demo": "Book a 30-minute demo",
+      "integration": "Discuss an integration",
+      "pricing": "See reference parts prices"
+    },
+    "compare": {
+      "caption": "Three ways to run installations compared: an in-house team, local contractors and Bluebolt",
+      "criterion": "Criterion",
+      "columns": {
+        "self": "In-house team",
+        "local": "Local contractors",
+        "bluebolt": "Bluebolt"
+      },
+      "rows": {
+        "coverage": {
+          "label": "Coverage",
+          "self": "Only where your own team is based",
+          "local": "One contract and one contact per province",
+          "bluebolt": "One contract for every province with technicians in the network"
+        },
+        "fixedCost": {
+          "label": "Fixed costs",
+          "self": "Salaries, training, tools and vehicles for the whole team",
+          "local": "Low, but rates differ from place to place",
+          "bluebolt": "Pay per job, at the rates set in your contract"
+        },
+        "quality": {
+          "label": "Quality control",
+          "self": "You design and audit your own process",
+          "local": "Every contractor works differently and is hard to audit",
+          "bluebolt": "One shared five-step process with photo sign-off"
+        },
+        "tracking": {
+          "label": "Order tracking",
+          "self": "Depends on your internal tools",
+          "local": "By phone and chat messages",
+          "bluebolt": "Every job has a status in the dispatch system"
+        },
+        "billing": {
+          "label": "Reconciliation and paperwork",
+          "self": "Payroll, insurance and tax for every technician",
+          "local": "Many contacts, many invoices",
+          "bluebolt": "One point of reconciliation, with service fees and parts kept separate"
+        },
+        "expansion": {
+          "label": "Adding a new province",
+          "self": "Hire and train new technicians",
+          "local": "Find and vet a new contractor",
+          "bluebolt": "Use technicians already in the network where the province is covered"
+        }
+      }
+    },
+    "sla": {
+      "caption": "SLA by region: appointment confirmation, installation completion and installation fault fixes",
+      "milestone": "Milestone",
+      "regions": {
+        "inner": "Ho Chi Minh City and Hanoi (urban districts)",
+        "outer": "Ho Chi Minh City and Hanoi (outer districts)",
+        "provinces": "Other provinces",
+        "special": "Special areas"
+      },
+      "milestones": {
+        "confirm": {
+          "label": "Appointment confirmed with the customer",
+          "hint": "After the order is received"
+        },
+        "completion": {
+          "label": "Installation completed",
+          "hint": "Counted from the customer booking"
+        },
+        "fix": {
+          "label": "Installation fault fixed",
+          "hint": "A technician is sent to fix it"
+        }
+      },
+      "draftCaption": "Values from the current policy and the old website, awaiting confirmation. The live site only shows approved cells.",
+      "fallbackTitle": "SLA set out in your contract",
+      "fallback": "Times for appointment confirmation, installation completion and installation fault fixes are agreed per region and set out in the service contract.",
+      "networkLink": "See the network by province",
+      "notesTitle": "Notes",
+      "intakeLabel": "Order intake hours"
+    }
+  },
   "hub": {
     "meta": {
-      "title": "Installation solutions for brands and retailers",
+      "title": "Solutions for brands and retailers",
       "description": "Compare running your own technicians, hiring local contractors and using the Bluebolt network for appliance installation orders."
     },
     "eyebrow": "Solutions",
     "title": "Installation solutions for brands and retailers",
-    "lead": "Choose the installation and warranty setup that fits how you sell."
+    "lead": "Choose the installation and warranty setup that fits how you sell.",
+    "toCompare": "Compare three approaches",
+    "cards": {
+      "eyebrow": "Two models",
+      "title": "Two ways orders reach Bluebolt, one technician network",
+      "lead": "Brands and retailers sell differently, so installation orders reach Bluebolt in two ways. The work at the customer's home follows the same process.",
+      "brands": {
+        "eyebrow": "For appliance and cooling brands",
+        "title": "Installation and warranty work for brand orders",
+        "body": "The brand sends installation orders, Bluebolt assigns the nearest technician, signs off with photos and reconciles with the brand.",
+        "points": {
+          "a": "Installation orders across provinces through one contact",
+          "b": "Technicians dispatched by area and skill",
+          "c": "Reporting and reconciliation per job"
+        },
+        "cta": "See the solution for brands"
+      },
+      "retail": {
+        "eyebrow": "For marketplaces and retail chains",
+        "title": "Post-purchase installation for your customers",
+        "body": "Orders that include installation flow from your system to our technicians, and installation status flows back to your system.",
+        "points": {
+          "a": "Installation added to the post-purchase order flow",
+          "b": "Status of every job sent back to you",
+          "c": "A defined process for complaints and technician changes"
+        },
+        "cta": "See the solution for retailers"
+      }
+    },
+    "compare": {
+      "eyebrow": "Comparison",
+      "title": "Three ways to run installations",
+      "lead": "No single approach suits every business. The table compares three options against the same criteria so you can weigh them yourself."
+    },
+    "resources": {
+      "eyebrow": "Before you ask for a quote",
+      "title": "Worth a look before we talk",
+      "services": {
+        "title": "Service catalogue",
+        "body": "Four service groups and the appliances Bluebolt installs."
+      },
+      "pricing": {
+        "title": "Reference parts prices",
+        "body": "Parts prices by region, collected on site by technicians."
+      },
+      "network": {
+        "title": "Network by province",
+        "body": "Map and table of provinces with technicians."
+      }
+    },
+    "cta": {
+      "title": "Need one partner for your installation orders?",
+      "body": "Tell us your product category, monthly order volume and the provinces you need covered. The Bluebolt sales team will get back to you."
+    },
+    "pending": {
+      "compare": "The comparison is based on the operating model described on the old website; there are no benchmark figures (cost, time) for each option yet.",
+      "images": "Images on both cards are illustrations, awaiting real photos."
+    }
   },
   "brands": {
     "meta": {
-      "title": "Installation services for appliance brands",
-      "description": "Bluebolt takes installation orders from appliance brands, dispatches technicians, signs off with photos and reconciles monthly."
+      "title": "Installation for appliance brands",
+      "description": "Bluebolt takes installation orders from appliance brands, dispatches technicians, signs off with photos and reconciles per job, with SLAs by region."
     },
+    "breadcrumb": "Appliance brands",
     "eyebrow": "For appliance brands",
     "title": "Installation and warranty work for appliance brands",
-    "lead": "One partner to dispatch technicians, sign off jobs and reconcile your installation orders."
+    "lead": "One partner to dispatch technicians, sign off jobs and reconcile your installation orders.",
+    "toSla": "See SLA by region",
+    "pains": {
+      "eyebrow": "The problem",
+      "title": "Why is installation quality so hard for brands to control?",
+      "lead": "Once installation orders spread across provinces, brands tend to run into the same five problems.",
+      "answerLabel": "How Bluebolt handles it",
+      "items": {
+        "people": {
+          "title": "Technicians spread across provinces",
+          "body": "Every area has its own team, its own way of communicating and its own reporting.",
+          "answer": "One dispatch partner: the brand sends the order, Bluebolt assigns the nearest technician with the right skills."
+        },
+        "quality": {
+          "title": "Inconsistent quality",
+          "body": "The same product gets installed differently in every place, and customers complain to the brand.",
+          "answer": "Technicians install to the brand's guidelines and sign off with the customer using photos."
+        },
+        "speed": {
+          "title": "Slow order handling",
+          "body": "Nobody is sure which stage an order is stuck at, or who has it.",
+          "answer": "Every job has a status across five steps, from intake to reconciliation."
+        },
+        "cost": {
+          "title": "Costs that are hard to control",
+          "body": "Extra charges at the customer's home have no reference to check against.",
+          "answer": "Service fees are set by contract; parts follow a published reference price list."
+        },
+        "sla": {
+          "title": "SLAs you cannot measure",
+          "body": "You promise customers a timeframe but have no data to check it.",
+          "answer": "Each job's timestamps are recorded so they can be checked against the regional SLA."
+        }
+      }
+    },
+    "kpi": {
+      "title": "Operating figures"
+    },
+    "sla": {
+      "eyebrow": "SLA",
+      "title": "Time commitments by region",
+      "lead": "Three milestones a brand needs to measure on every job: appointment confirmation, installation completion and installation fault fixes."
+    },
+    "process": {
+      "eyebrow": "Process",
+      "title": "From brand order to reconciliation in five steps",
+      "lead": "Every job goes through the same five steps, so the brand always knows where an order is and who has it."
+    },
+    "billing": {
+      "eyebrow": "Reconciliation and invoicing",
+      "title": "Two payments, kept separate from the start",
+      "lead": "An installation job carries a service fee between the brand and Bluebolt, and may also involve extra parts at the customer's home. The two follow separate paths.",
+      "fee": {
+        "title": "Installation service fee",
+        "payer": "Paid by the brand to Bluebolt",
+        "rows": {
+          "scope": {
+            "label": "Covers",
+            "value": "Standard installation labour by appliance group"
+          },
+          "price": {
+            "label": "Rate",
+            "value": "Per contract, by appliance group and region"
+          },
+          "settle": {
+            "label": "Reconciliation",
+            "value": "Per job, with sign-off photos attached"
+          }
+        }
+      },
+      "materials": {
+        "title": "Extra parts on site",
+        "payer": "Paid by the customer directly to the technician",
+        "rows": {
+          "scope": {
+            "label": "Covers",
+            "value": "Copper pipe, cable, drain pipe and brackets when more are needed"
+          },
+          "price": {
+            "label": "Price",
+            "value": "Based on the published reference parts prices"
+          },
+          "settle": {
+            "label": "Agreement",
+            "value": "Between the customer and the technician, on site"
+          }
+        }
+      },
+      "claimsTitle": "Under the current policy"
+    },
+    "compare": {
+      "eyebrow": "Comparison",
+      "title": "In-house team, local contractors or Bluebolt",
+      "lead": "No single approach suits every brand. The table compares the three against the same criteria."
+    },
+    "faq": {
+      "title": "Questions brands often ask",
+      "items": {
+        "channel": {
+          "q": "How does a brand send installation orders to Bluebolt?",
+          "a": "Through the channel both sides agree on when signing the contract. The exact channel is settled during the demo."
+        },
+        "devices": {
+          "q": "Which appliances does Bluebolt install?",
+          "a": "Wall-mounted and ceiling cassette air conditioners; washing machines, dryers and refrigerators; wall-mounted TVs, induction hobs, cooker hoods, water purifiers and water heaters; robot vacuums.",
+          "more": "See the service catalogue"
+        },
+        "coverage": {
+          "q": "Does Bluebolt have technicians in our provinces?",
+          "a": "Check the province table on the Network page, or send us the list of provinces you need and the sales team will confirm.",
+          "more": "See the network by province"
+        },
+        "responsibility": {
+          "q": "Who is responsible for faults after installation?",
+          "a": "Responsibilities are set out in the contract: product faults and installation faults follow two separate processes."
+        },
+        "warranty": {
+          "q": "How long is the installation warranty?",
+          "a": "The warranty period depends on the type of service and is set out in the warranty policy.",
+          "more": "Read the warranty policy"
+        },
+        "materials": {
+          "q": "How are extra parts charged, and are they invoiced?",
+          "a": "The customer and the technician agree on site using the reference parts prices, and the customer pays the technician directly.",
+          "more": "See reference parts prices"
+        },
+        "tracking": {
+          "q": "Where can a brand follow the progress of its orders?",
+          "a": "Every job has a status across the five steps, plus sign-off photos. How reports reach the brand is agreed in the contract."
+        }
+      }
+    },
+    "cta": {
+      "title": "See how Bluebolt handles an installation job in 30 minutes",
+      "body": "Tell us your product category, monthly order volume and the provinces you need covered. The sales team will contact you to schedule the demo and prepare a quote."
+    },
+    "pending": {
+      "sla": "Regional SLA: values come from the current policy and the old services page; the confirmation milestone differs between the two sources.",
+      "billing": "Reconciliation and VAT: we need to confirm that Bluebolt issues VAT invoices for service fees, and how technicians' personal income tax is handled.",
+      "channel": "The order intake channel (API, file, partner portal) and real-time reporting have not been verified.",
+      "kpi": "KPIs K3, K5 and K6 are not available yet; there is no case study block until a brand gives written consent.",
+      "images": "The hero image and step images are illustration placeholders, awaiting real photos or stills from the film."
+    }
   },
   "retail": {
     "meta": {
-      "title": "Installation for marketplaces and retail chains",
+      "title": "Marketplace and retail installation",
       "description": "Add post-purchase installation to your marketplace or retail order flow, with job status sent back to your system."
     },
+    "breadcrumb": "Marketplaces and retail",
     "eyebrow": "For marketplaces and retail",
     "title": "Post-purchase installation for marketplaces and retail chains",
-    "lead": "Orders flow from your system to our technicians, and job status flows back."
+    "lead": "Orders flow from your system to our technicians, and job status flows back.",
+    "toDiagram": "See the integration flow",
+    "diagram": {
+      "eyebrow": "Integration",
+      "title": "Orders flow to the technician, status flows back to you",
+      "lead": "You keep the relationship with the customer. Bluebolt handles the installation and reports back at every milestone.",
+      "label": "How one installation order moves from the marketplace to the customer's home",
+      "nodes": {
+        "marketplace": {
+          "title": "Marketplace or retail chain",
+          "body": "Orders that include installation are passed to Bluebolt through the channel both sides agreed on."
+        },
+        "bluebolt": {
+          "title": "Bluebolt dispatch",
+          "body": "Receives the order and picks the nearest technician with the right skills and an open slot."
+        },
+        "technician": {
+          "title": "Partner technician",
+          "body": "Calls the customer to confirm the appointment, then installs at their home."
+        },
+        "customer": {
+          "title": "Customer's home",
+          "body": "Installation, test run and sign-off with photos."
+        }
+      },
+      "returnTitle": "Status sent back to you",
+      "statuses": {
+        "received": "Received",
+        "assigned": "Technician assigned",
+        "scheduled": "Appointment booked",
+        "done": "Installed, with sign-off photos"
+      },
+      "statusesNote": "Example milestones. The list of statuses and the format are agreed during integration.",
+      "claimsTitle": "Technical channel"
+    },
+    "groups": {
+      "eyebrow": "Pricing structure",
+      "title": "Pricing by appliance group",
+      "lead": "Installation fees are set per appliance group and region in your contract. Extra parts follow a separate reference price list and are collected on site by the technician.",
+      "feeLabel": "Installation fee",
+      "materialsLabel": "Extra parts",
+      "materialsTable": "In the reference parts price list",
+      "materialsOnSite": "Agreed on site",
+      "items": {
+        "ac": {
+          "title": "Air conditioners",
+          "examples": "Wall-mounted, ceiling cassette"
+        },
+        "laundry": {
+          "title": "Washing machines and dryers",
+          "examples": "Front-loading, top-loading, dryers"
+        },
+        "fridge": {
+          "title": "Refrigerators",
+          "examples": "All refrigerator types"
+        },
+        "tv": {
+          "title": "Wall-mounted TVs",
+          "examples": "Fixed, tilting and swivel brackets"
+        },
+        "kitchen": {
+          "title": "Induction hobs and cooker hoods",
+          "examples": "Kitchen appliances"
+        },
+        "water": {
+          "title": "Water purifiers and water heaters",
+          "examples": "Water supply appliances"
+        },
+        "robot": {
+          "title": "Robot vacuums",
+          "examples": "Robot vacuums and mops"
+        }
+      }
+    },
+    "sla": {
+      "eyebrow": "SLA",
+      "title": "Timeframes for marketplace orders",
+      "lead": "Marketplace orders use the same regional SLA table as brand orders."
+    },
+    "complaints": {
+      "eyebrow": "Complaints",
+      "title": "Complaints and technician changes",
+      "lead": "Your customers can raise an issue through your own channels or the Bluebolt hotline. Every issue goes through three steps.",
+      "steps": {
+        "receive": {
+          "title": "Log",
+          "body": "Record the customer's issue and attach it to the right job."
+        },
+        "verify": {
+          "title": "Check",
+          "body": "Review the sign-off photos and job history, and talk to the technician and the customer."
+        },
+        "resolve": {
+          "title": "Resolve",
+          "body": "Fix the fault, send a different technician or compensate under the policy, then report the outcome to you."
+        }
+      },
+      "claimsTitle": "Cases covered by the current policy"
+    },
+    "faq": {
+      "title": "Questions marketplaces often ask",
+      "items": {
+        "channel": {
+          "q": "How does a marketplace pass orders to Bluebolt?",
+          "a": "Through the channel both sides agree on when signing the contract. The integration details are worked out with your technical team."
+        },
+        "status": {
+          "q": "How does the marketplace receive job status?",
+          "a": "Bluebolt reports each job's milestones through the channel and format agreed during integration."
+        },
+        "support": {
+          "q": "Who do your customers contact when they need help?",
+          "a": "Customers can call the Bluebolt hotline on {phone} or raise the issue through your channels. The responsible contact is named in the contract."
+        },
+        "materials": {
+          "q": "Who pays for extra parts?",
+          "a": "The customer pays the technician directly on site, based on the reference parts prices.",
+          "more": "See reference parts prices"
+        },
+        "urgent": {
+          "q": "Can you install on the same day?",
+          "a": "Urgent jobs have their own timeframes under the current policy:"
+        },
+        "remote": {
+          "q": "Does Bluebolt install on islands and in remote areas?",
+          "a": "Under the current policy:"
+        }
+      }
+    },
+    "cta": {
+      "title": "Let's discuss adding installation to your order flow",
+      "body": "Describe your current order flow, the appliance groups and the provinces you serve. The sales team will contact you to talk through the integration."
+    },
+    "pending": {
+      "diagram": "The diagram shows the business flow; the technical channel and status format are awaiting confirmation.",
+      "groups": "There are no installation fee figures by appliance group yet; the page only says \"per contract\" until a price list is approved.",
+      "sla": "The same-day technician promise on the old website differs from the completion timeframe in the current policy.",
+      "complaints": "Complaints, technician changes and compensation are taken from the current policy and need legal review for the new website."
+    }
   }
 }
