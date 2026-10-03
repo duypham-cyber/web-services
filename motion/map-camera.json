@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Đường máy hero bản đồ (Mẫu 02, contracts/hero-map.md). p = tiến độ cuộn của track hero [0;1]. ll = [kinh độ, vĩ độ] điểm nhìn; d = khoảng cách (đơn vị cảnh ≈ 111 km); el = góc ngẩng (độ); az = phương vị (0 = nhìn từ phía nam, dương = máy lệch sang đông); sx, sy = dịch khung theo tỉ lệ khung chuẩn (sx dương: bản đồ sang phải; sy dương: bản đồ lên trên); bump = độ nâng máy giữa hai keyframe (cú bay). Khung chuẩn refAspect (desktop 16:10, mobile 9:16) đặt vào viewport kiểu object-fit: cover tại anchor [x, y], nhưng thu nhỏ nếu cover cắt vùng safe hoặc lấn cột chữ textInset (motion/map-camera.ts viewWindow). safe = vùng (toạ độ chuẩn hoá của khung chuẩn) chứa trọn đất liền + hai quần đảo ở các keyframe có fit = true.",
+  "note": "Đường máy hero bản đồ (Mẫu 02, contracts/hero-map.md). p = tiến độ cuộn của track hero [0;1]. ll = [kinh độ, vĩ độ] điểm nhìn; d = khoảng cách (đơn vị cảnh ≈ 111 km); el = góc ngẩng (độ); az = phương vị (0 = nhìn từ phía nam, dương = máy lệch sang đông); sx, sy = dịch khung theo tỉ lệ khung chuẩn (sx dương: bản đồ sang phải; sy dương: bản đồ lên trên); bump = độ nâng máy giữa hai keyframe (cú bay). Khung chuẩn refAspect (desktop 16:10, mobile 9:16) đặt vào viewport kiểu object-fit: cover tại anchor [x, y], nhưng thu nhỏ nếu cover cắt vùng safe, lấn cột chữ textInset (tỉ lệ bề ngang) hoặc dải header topInset (px) — motion/map-camera.ts viewWindow. safe = vùng (toạ độ chuẩn hoá của khung chuẩn) chứa trọn đất liền + hai quần đảo ở các keyframe có fit = true.",
   "scenes": [
     "national",
     "north",
@@ -28,6 +28,7 @@
         "y": [0.1, 0.955]
       },
       "textInset": 0.4,
+      "topInset": 80,
       "keyframes": [
         { "p": 0, "ll": [110, 15], "d": 32.2, "el": 48, "az": 12, "sx": 0.196, "sy": 0.054, "fit": true },
         { "p": 0.06, "ll": [110, 15], "d": 32.3, "el": 48, "az": 11, "sx": 0.193, "sy": 0.054, "fit": true },
@@ -49,6 +50,7 @@
         "x": [0.03, 0.97],
         "y": [0.08, 0.6]
       },
+      "topInset": 68,
       "keyframes": [
         { "p": 0, "ll": [110, 15], "d": 53.7, "el": 50, "az": 19, "sx": 0.022, "sy": 0.186, "fit": true },
         { "p": 0.06, "ll": [110, 15], "d": 53.5, "el": 50, "az": 18, "sx": 0.018, "sy": 0.187, "fit": true },

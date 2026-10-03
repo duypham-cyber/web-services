@@ -51,6 +51,8 @@ function readQuery(search: string) {
     shot: q.get('shot') === '1',
     labels: q.get('labels') !== '0',
     ambient: q.get('ambient') === '1',
+    /** Ghi đè DPR tối đa của tầng (poster chụp nét hơn tầng thật). */
+    maxDpr: q.has('dpr') ? Math.min(3, Math.max(0.5, num('dpr', 1))) : undefined,
     mobile: layout === 'mobile' ? true : layout === 'desktop' ? false : layoutFor(window.innerWidth, window.innerHeight) === 'mobile',
   };
 }
@@ -167,6 +169,7 @@ export function HeroMapDev({ labels }: { labels: HeroMapDevLabels }) {
           shot: cfg.shot,
           data,
           progress: cfg.p,
+          maxDpr: cfg.maxDpr,
           size: { width: root.clientWidth, height: root.clientHeight, dpr: window.devicePixelRatio || 1 },
           signal: ac.signal,
           onContextLost: () => setError('webglcontextlost → bước 2 chuyển T-STILL'),

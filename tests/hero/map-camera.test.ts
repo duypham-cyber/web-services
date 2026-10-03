@@ -151,17 +151,22 @@ describe('motion/map-camera.json', () => {
     }
   });
 
-  it('tỉ lệ thiết kế là cover thuần (poster khớp từng điểm ảnh) và cột chữ desktop không bị lấn', () => {
+  it('16:10 là cover thuần (poster khớp từng điểm ảnh); mọi viewport: không lấn cột chữ, không lấn header', () => {
     for (const [W, H] of [
       [1440, 900],
-      [1920, 1080],
-      [1366, 768],
       [1280, 800],
+      [1680, 1050],
     ]) {
       const win = viewWindow('desktop', { sx: 0, sy: 0 }, W!, H!);
       expect(win.fullWidth).toBeCloseTo(Math.max(W!, H! * MAP_CAMERA.layouts.desktop.refAspect), 3);
-      const L = MAP_CAMERA.layouts.desktop;
-      expect(L.safe.x[0] * win.fullWidth - win.cropX).toBeGreaterThanOrEqual((L.textInset ?? 0) * W! - 0.5);
+    }
+    for (const layout of ['desktop', 'mobile'] as const) {
+      const L = MAP_CAMERA.layouts[layout];
+      for (const [W, H] of VIEWPORTS[layout]) {
+        const win = viewWindow(layout, { sx: 0, sy: 0 }, W, H);
+        expect(L.safe.x[0] * win.fullWidth - win.cropX, `${layout} ${W}x${H} chữ`).toBeGreaterThanOrEqual((L.textInset ?? 0) * W - 0.5);
+        expect(L.safe.y[0] * win.fullHeight - win.cropY, `${layout} ${W}x${H} header`).toBeGreaterThanOrEqual((L.topInset ?? 0) - 0.5);
+      }
     }
   });
 

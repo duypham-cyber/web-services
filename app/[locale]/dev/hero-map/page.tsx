@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/dev/hero
  *   ?p=0.5          tiến độ 0..1        ?tier=full|lite     tầng          ?layout=desktop|mobile  ép bố cục
  *   ?shot=1         chụp tất định: seed cố định, thời gian đứng, không làm mượt, ẩn bảng điều khiển, phủ cả header
  *   ?labels=0       ẩn nhãn HTML (poster chụp không có chữ)       ?ambient=1   bật hiệu ứng nền
+ *   ?dpr=2          ghi đè DPR tối đa của tầng (poster)
  * scripts/hero-poster.mjs và ảnh soát dùng window.__heroMapDev (set(p), frame(), stats()).
  */
 export default async function DevHeroMapPage({ params }: PageProps<'/[locale]/dev/hero-map'>) {

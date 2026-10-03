@@ -29,6 +29,8 @@ export type SeaUniforms = {
   uTime: IUniform<number>;
   uNight: IUniform<number>;
   uHaze: IUniform<Vector2>;
+  /** Tỉ lệ điểm ảnh của renderer: nét elip + lưới tính theo px CSS (không mảnh đi trên màn DPR 2). */
+  uPx: IUniform<number>;
 };
 
 /**
@@ -47,6 +49,7 @@ export function buildSea(map: DecodedHeroMap, palette: ScenePalette, mask: DataT
       uTime: shared.uTime,
       uNight: shared.uNight,
       uHaze: shared.uHaze,
+      uPx: shared.uPx,
       uDeep: { value: palette.seaDeep },
       uMid: { value: palette.seaMid },
       uShallow: { value: palette.seaShallow },
@@ -65,7 +68,7 @@ export function buildSea(map: DecodedHeroMap, palette: ScenePalette, mask: DataT
     vertexShader: /* glsl */ `varying vec3 vW;
 void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
     fragmentShader: /* glsl */ `
-uniform sampler2D uMask; uniform vec4 uRect; uniform float uTime, uNight, uKX;
+uniform sampler2D uMask; uniform vec4 uRect; uniform float uTime, uNight, uKX, uPx;
 uniform vec3 uDeep, uMid, uShallow, uMist, uDeepN, uMidN, uMistN, uRing;
 uniform vec2 uC, uMistR, uLL0, uHaze; uniform vec4 uArch[2]; uniform vec2 uArchRot[2];
 varying vec3 vW;
@@ -75,7 +78,7 @@ float dashedEllipse(vec2 p, vec4 e, vec2 cs){
   vec2 q = vec2(d0.x * cs.x + d0.y * cs.y, -d0.x * cs.y + d0.y * cs.x) / e.zw;
   float d = length(q);
   if (abs(d - 1.0) > 0.08) return 0.0;
-  float w = fwidth(d);
+  float w = fwidth(d) * uPx;
   float ring = 1.0 - smoothstep(0.0, w * 1.5, abs(d - 1.0));
   float a = atan(q.y, q.x);
   return ring * step(0.45, fract(a * 9.0));
@@ -111,7 +114,7 @@ void main(){
   mist = max(mist, haze);
 #ifndef SEA_LITE
   vec2 ll = vec2(p.x / uKX + uLL0.x, -p.y + uLL0.y) / 2.0;
-  vec2 gd = abs(fract(ll - 0.5) - 0.5) / max(fwidth(ll), vec2(1e-4));
+  vec2 gd = abs(fract(ll - 0.5) - 0.5) / max(fwidth(ll) * uPx, vec2(1e-4));
   float line = 1.0 - min(min(gd.x, gd.y), 1.0);
   col = mix(col, vec3(1.0), line * 0.045 * (1.0 - mist));
 #endif

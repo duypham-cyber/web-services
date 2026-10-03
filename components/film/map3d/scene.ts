@@ -137,6 +137,7 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
     uTime: { value: SHOT_TIME },
     uNight: { value: 0 },
     uHaze: { value: new Vector2(30, 60) },
+    uPx: { value: 1 },
   };
   const mask = await buildSeaMask(map, full ? 1024 : 512, signal);
   const land = buildLand(map, palette, mask.texture, mobile);
@@ -191,6 +192,7 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
     renderer.setPixelRatio(effectiveDpr());
     renderer.setSize(W, H, false);
     arcs.dotsMaterial.uniforms.uPR!.value = renderer.getPixelRatio();
+    U.uPx.value = renderer.getPixelRatio();
     dirty = true;
   }
 

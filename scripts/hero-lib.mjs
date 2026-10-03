@@ -43,6 +43,7 @@ export async function openHeroDev(browser, base, { width, height, dpr = 1, ...q 
   if (q.layout) params.set('layout', q.layout);
   if (q.shot !== false) params.set('shot', '1');
   if (q.labels === false) params.set('labels', '0');
+  if (q.maxDpr) params.set('dpr', String(q.maxDpr));
   const prefix = q.locale === 'en' ? '/en' : '';
   const t0 = Date.now();
   const res = await page.goto(`${base}${prefix}/dev/hero-map?${params}`, { waitUntil: 'domcontentloaded', timeout: 180_000 });

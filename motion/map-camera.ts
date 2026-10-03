@@ -5,9 +5,10 @@
  *
  * Khung hình kiểu "poster": mỗi bố cục có một khung chuẩn refAspect (desktop 16:10, mobile 9:16). Camera dựng ảnh của
  * khung chuẩn rồi đặt khung đó vào viewport như CSS `object-fit: cover; object-position: anchor` (three: setViewOffset),
- * TRỪ KHI cover cắt mất vùng nội dung `safe` (đất liền + hai quần đảo) hoặc lấn vào cột chữ `textInset`: khi đó khung
- * thu nhỏ vừa đủ (lộ thêm biển ở mép — cảnh 3D vẽ tiếp, poster tô màu nền). Ở tỉ lệ thiết kế (desktop 1,54–1,87,
- * điện thoại dọc) đó là cover thuần nên poster chụp ở khung chuẩn khớp từng điểm ảnh với khung 3D p = 0; mọi tỉ lệ khác
+ * TRỪ KHI cover cắt mất vùng nội dung `safe` (đất liền + hai quần đảo) hoặc lấn vào cột chữ `textInset` / dải header
+ * `topInset`: khi đó khung
+ * thu nhỏ vừa đủ (lộ thêm biển ở mép — cảnh 3D vẽ tiếp, poster tô màu nền). Ở tỉ lệ thiết kế (desktop 16:10 như
+ * 1440×900, 1280×800) đó là cover thuần nên poster chụp ở khung chuẩn khớp từng điểm ảnh với khung 3D p = 0; mọi tỉ lệ khác
  * vẫn giữ trọn hai quần đảo (NFR-MAP-01). Lớp HTML đặt poster theo đúng viewWindow() (rộng fullWidth, lệch −cropX/−cropY).
  */
 import config from './map-camera.json' with { type: 'json' };
@@ -42,6 +43,8 @@ export type CameraLayout = {
   safe: { x: [number, number]; y: [number, number] };
   /** Desktop: phần bên trái viewport dành cho cột chữ — mép trái vùng safe không lấn vào (tỉ lệ bề ngang viewport). */
   textInset?: number;
+  /** Dải trên cùng dành cho header (px CSS, = --header-h + lề) — mép trên vùng safe không lấn vào. */
+  topInset?: number;
   keyframes: CameraKeyframe[];
 };
 
@@ -187,12 +190,13 @@ export function viewWindow(layoutId: LayoutId, pose: Pick<CameraPose, 'sx' | 'sy
   const [bx0, bx1] = l.safe.x;
   const [by0, by1] = l.safe.y;
   const left = (l.textInset ?? 0) * W;
+  const top = l.topInset ?? 0;
   let fullWidth = Math.max(W, H * A);
-  fullWidth = Math.min(fullWidth, (W - left - 2 * m) / (bx1 - bx0), ((H - 2 * m) * A) / (by1 - by0));
+  fullWidth = Math.min(fullWidth, (W - left - 2 * m) / (bx1 - bx0), ((H - top - 2 * m) * A) / (by1 - by0));
   const fullHeight = fullWidth / A;
   const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), Math.max(lo, hi));
   const cropX = clamp((fullWidth - W) * l.anchor[0], bx1 * fullWidth - (W - m), bx0 * fullWidth - left - m);
-  const cropY = clamp((fullHeight - H) * l.anchor[1], by1 * fullHeight - (H - m), by0 * fullHeight - m);
+  const cropY = clamp((fullHeight - H) * l.anchor[1], by1 * fullHeight - (H - m), by0 * fullHeight - top - m);
   return {
     fullWidth,
     fullHeight,
