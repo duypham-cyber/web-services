@@ -14,6 +14,7 @@ import {
 import type { Metadata } from 'next';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { INTEGRATION_HREF } from '@/components/layout/Header';
+import { LeadB2BBlock } from '@/components/leads/LeadBlocks';
 import { StaggerGrid } from '@/components/motion/StaggerGrid';
 import { IntegrationDiagram } from '@/components/solutions/IntegrationDiagram';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
@@ -222,7 +223,7 @@ export default async function SolutionsRetailPage({ params }: PageProps<'/[local
             </Button>
           </>
         }
-        note={preview ? <p className="text-small text-(--surface-muted)">{t('kit.formPending')}</p> : null}
+        note={<LeadB2BBlock locale={locale} intents={['integration']} />}
       />
 
       {preview ? (
@@ -235,7 +236,6 @@ export default async function SolutionsRetailPage({ params }: PageProps<'/[local
               t('retail.pending.groups'),
               t('retail.pending.sla'),
               t('retail.pending.complaints'),
-              t('kit.formPending'),
             ]}
           />
         </Section>

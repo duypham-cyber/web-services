@@ -2,6 +2,7 @@ import { Building2, Headset, MapPin, Wrench } from 'lucide-react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { DepartmentCard } from '@/components/contact/DepartmentCard';
+import { QUOTE_HREF, TECHNICIAN_SIGNUP_HREF } from '@/components/layout/Header';
 import { HoursTable } from '@/components/contact/HoursTable';
 import { OfficeMap } from '@/components/contact/OfficeMap';
 import { ContactButtons } from '@/components/partners/ContactButtons';
@@ -37,9 +38,9 @@ const JUMPS = [
 
 /**
  * /lien-he — T-CONTACT (contracts/site-shell-p0.md mục 1.3; docs/03 mục 13.5): 3 kênh theo bộ phận
- * (#kinh-doanh = đích nút "Nhận báo giá" ở header, #tuyen-tho, #cskh) → địa chỉ chữ + bản đồ facade (không nhúng
- * Google Maps, AC-PERF-4) → bảng giờ hoạt động (đang mâu thuẫn → nháp). KHÔNG có form: form B2B chờ
- * contracts/lead-b2b.md APPROVED. Trang này là đích CTA nên không thêm khối CTA cuối.
+ * (#kinh-doanh, #tuyen-tho, #cskh) → địa chỉ chữ + bản đồ facade (không nhúng Google Maps, AC-PERF-4) → bảng giờ hoạt
+ * động (đang mâu thuẫn → nháp). KHÔNG có form riêng (docs/SRS-LEADS.md mục 4): link tới form B2B (QUOTE_HREF → /#bao-gia)
+ * và form thợ (/doi-tac-tho#dang-ky), kèm hotline/Zalo/email theo bộ phận. Không thêm khối CTA cuối.
  */
 export default async function ContactPage({ params }: PageProps<'/[locale]/lien-he'>) {
   const locale = await resolveLocale(params);
@@ -98,10 +99,12 @@ export default async function ContactPage({ params }: PageProps<'/[locale]/lien-
             }
             footer={
               <>
+                <TextLink href={QUOTE_HREF} variant="arrow" className="py-1">
+                  {t('departments.sales.formLink')}
+                </TextLink>
                 <TextLink href="/giai-phap/hang-dien-may" variant="arrow" className="py-1">
                   {t('departments.sales.link')}
                 </TextLink>
-                <DraftNote>{t('departments.formPending')}</DraftNote>
               </>
             }
           />
@@ -121,9 +124,14 @@ export default async function ContactPage({ params }: PageProps<'/[locale]/lien-
               />
             }
             footer={
-              <TextLink href="/doi-tac-tho" variant="arrow" className="py-1">
-                {t('departments.recruitment.link')}
-              </TextLink>
+              <>
+                <TextLink href={TECHNICIAN_SIGNUP_HREF} variant="arrow" className="py-1">
+                  {t('departments.recruitment.formLink')}
+                </TextLink>
+                <TextLink href="/doi-tac-tho" variant="arrow" className="py-1">
+                  {t('departments.recruitment.link')}
+                </TextLink>
+              </>
             }
           />
           <DepartmentCard

@@ -7,9 +7,9 @@ import { DraftBadge } from '@/components/ui/DraftBadge';
 import { EarningsSection } from '@/components/partners/EarningsSection';
 import { FaqList, type FaqItem } from '@/components/partners/FaqList';
 import { JobsSection } from '@/components/partners/JobsSection';
+import { TechnicianRegisterSection } from '@/components/leads/TechnicianRegisterSection';
 import { PageHero } from '@/components/partners/PageHero';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
-import { RegisterSection } from '@/components/partners/RegisterSection';
 import { SectionHeader } from '@/components/partners/SectionHeader';
 import { StandardsSection } from '@/components/partners/StandardsSection';
 import { StepList, type StepItem } from '@/components/partners/StepList';
@@ -44,7 +44,7 @@ function claimAnswer(parts: (ClaimText | null)[]): { answer: ReactNode; draft: b
 /**
  * /doi-tac-tho — T-PARTNER (contracts/site-shell-p0.md mục 1.3; docs/03 mục 13.5). GỘP /requirement + /worker-map
  * + phần thợ của /system-map (301 ở content/redirects.ts). Thứ tự: hero thợ → thu nhập, cách nhận tiền → lộ trình
- * 4 bước → tiêu chuẩn → việc đang tuyển → hỏi đáp → #dang-ky (CTA cuối duy nhất; form chờ contract lead-technician).
+ * 4 bước → tiêu chuẩn → việc đang tuyển → hỏi đáp → #dang-ky (CTA cuối duy nhất, form thợ 4 ô — contracts/lead-technician.md).
  * Thanh dính đáy mobile tự đổi nút phải thành "Đăng ký thợ" trên trang này (components/layout/MobileActionBar).
  */
 export default async function PartnersPage({ params }: PageProps<'/[locale]/doi-tac-tho'>) {
@@ -181,7 +181,7 @@ export default async function PartnersPage({ params }: PageProps<'/[locale]/doi-
         </div>
       </Section>
 
-      <RegisterSection locale={locale} />
+      <TechnicianRegisterSection locale={locale} />
     </>
   );
 }

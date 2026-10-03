@@ -12,17 +12,18 @@ import { NavLink } from './NavLink';
 import { SolutionsMenu } from './SolutionsMenu';
 
 /**
- * Đích của các CTA cho tới khi form có contract APPROVED (docs/DECISIONS.md D-04, D-19). Neo dùng id tiếng Việt cho
- * CẢ HAI ngôn ngữ (một id cho mỗi khối, D-23) — next-intl tự đổi đường dẫn sang /en/contact#kinh-doanh.
- *   QUOTE_HREF       "Nhận báo giá"                → /lien-he#kinh-doanh
- *   DEMO_HREF        "Đặt lịch demo 30 phút"       → tạm = QUOTE_HREF (form B2B intent "demo" khi lead-b2b APPROVED)
- *   INTEGRATION_HREF "Thảo luận tích hợp" (sàn)    → tạm = QUOTE_HREF (intent "integration")
- *   TECHNICIAN_SIGNUP_HREF "Đăng ký thợ"           → /doi-tac-tho#dang-ky
- * Khi form B2B có contract: chỉ đổi giá trị ở đây (tách được demo/tích hợp), không sửa từng trang.
+ * Đích của các CTA form lead (docs/SRS-LEADS.md mục 4; contracts/lead-b2b.md, lead-technician.md APPROVED D-26).
+ * Neo dùng id tiếng Việt cho CẢ HAI ngôn ngữ (D-23) — next-intl tự đổi đường dẫn sang /en/....
+ *   QUOTE_HREF       "Nhận báo giá"           → /#bao-gia (form B2B ở khối CTA cuối trang chủ, intent quote)
+ *   DEMO_HREF        "Đặt lịch demo 30 phút"  → /#dat-lich-demo (cùng form, intent demo)
+ *   INTEGRATION_HREF "Thảo luận tích hợp"     → /giai-phap/san-tmdt-ban-le#bao-gia (form intent integration, D-15)
+ *   TECHNICIAN_SIGNUP_HREF "Đăng ký thợ"      → /doi-tac-tho#dang-ky
+ * Trang nào có form B2B (khối id="bao-gia") thì form chặn click vào link có neo #bao-gia / #dat-lich-demo và cuộn tới
+ * form của CHÍNH trang đó (components/leads/useLeadForm.ts); trang không có form thì link sang trang chủ như href.
  */
-export const QUOTE_HREF: AppHref = { pathname: '/lien-he', hash: 'kinh-doanh' };
-export const DEMO_HREF: AppHref = QUOTE_HREF;
-export const INTEGRATION_HREF: AppHref = QUOTE_HREF;
+export const QUOTE_HREF: AppHref = { pathname: '/', hash: 'bao-gia' };
+export const DEMO_HREF: AppHref = { pathname: '/', hash: 'dat-lich-demo' };
+export const INTEGRATION_HREF: AppHref = { pathname: '/giai-phap/san-tmdt-ban-le', hash: 'bao-gia' };
 export const TECHNICIAN_SIGNUP_HREF: AppHref = { pathname: '/doi-tac-tho', hash: 'dang-ky' };
 
 const NAV_LINK =

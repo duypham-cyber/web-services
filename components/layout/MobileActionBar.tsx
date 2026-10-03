@@ -1,6 +1,8 @@
 'use client';
 
 import { MessageCircle, Phone, UserPlus, FileText } from 'lucide-react';
+import { useEffect } from 'react';
+import { captureUtm } from '@/components/leads/client-utils';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { AppHref } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
@@ -21,9 +23,14 @@ const ITEM =
  * Thanh hành động dính đáy, chỉ dưới 768px, có safe-area (docs/03 mục 13.1):
  *   Gọi | Zalo | Nhận báo giá — trên /doi-tac-tho nút phải thành "Đăng ký thợ".
  * Root layout chừa sẵn khoảng trống cuối trang để thanh không che footer.
+ * Nút phải trỏ tới neo form (#bao-gia / #dang-ky): trang có form thì form tự chặn click và cuộn tới form của trang đó.
+ * Thanh có mặt ở MỌI trang nên cũng là nơi ghi utm_* lúc vào site (form lead gửi kèm, contracts/lead-b2b.md mục 3.1).
  */
 export function MobileActionBar({ label, call, zalo, quote, register }: MobileActionBarProps) {
   const pathname = usePathname();
+  useEffect(() => {
+    captureUtm();
+  }, []);
   const onPartners = pathname === '/doi-tac-tho';
   const primary = onPartners ? register : quote;
 

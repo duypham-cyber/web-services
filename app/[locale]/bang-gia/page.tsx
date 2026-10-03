@@ -2,6 +2,7 @@ import { BadgeCheck, FileText, Info, Layers, ReceiptText } from 'lucide-react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { QUOTE_HREF } from '@/components/layout/Header';
+import { LeadB2BBlock } from '@/components/leads/LeadBlocks';
 import { PriceTable, type PriceTableRow } from '@/components/pricing/PriceTable';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { PendingPanel } from '@/components/solutions/kit/draft';
@@ -233,9 +234,9 @@ export default async function PricingPage({ params }: PageProps<'/[locale]/bang-
                   {phone}
                 </a>
               </p>
-              {preview ? <p className="text-small text-(--surface-muted)">{ts('kit.formPending')}</p> : null}
             </div>
           </div>
+          <LeadB2BBlock locale={locale} intents={['quote']} className="mt-10" />
         </div>
       </Section>
 
@@ -259,7 +260,7 @@ export default async function PricingPage({ params }: PageProps<'/[locale]/bang-
           <PendingPanel
             title={ts('kit.pendingTitle')}
             intro={ts('kit.pendingIntro')}
-            items={[t('pending.effective'), t('pending.capacity'), t('pending.service'), t('pending.pdf'), ts('kit.formPending')]}
+            items={[t('pending.effective'), t('pending.capacity'), t('pending.service'), t('pending.pdf')]}
           />
         </Section>
       ) : null}

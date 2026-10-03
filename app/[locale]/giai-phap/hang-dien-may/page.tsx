@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import type { CSSProperties } from 'react';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { DEMO_HREF, QUOTE_HREF } from '@/components/layout/Header';
+import { LeadB2BBlock } from '@/components/leads/LeadBlocks';
 import { BillingSplit } from '@/components/solutions/BillingSplit';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -214,7 +215,7 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
             </Button>
           </>
         }
-        note={preview ? <p className="text-small text-(--surface-muted)">{t('kit.formPending')}</p> : null}
+        note={<LeadB2BBlock locale={locale} intents={['quote', 'demo']} />}
       />
 
       {preview ? (
@@ -229,7 +230,6 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
               t('brands.pending.kpi'),
               t('brands.pending.images'),
               t('kit.process.pending'),
-              t('kit.formPending'),
             ]}
           />
         </Section>
