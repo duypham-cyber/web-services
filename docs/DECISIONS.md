@@ -480,3 +480,49 @@ chữ không đổi, số đếm khớp file. Agent nội dung tự kiểm lại
   chưa duyệt. `content/provinces.ts` để coverage "unknown" cả 34 tỉnh nên JSON-LD bỏ `areaServed`. Chủ bản đồ/SEO quyết đổi sang
   "confirmed" theo K2 hay chờ đối soát từng tỉnh. Các file này ngoài vùng của agent nội dung.
 - `b2b.warranty.installation-faults` đã về nháp. Duyệt lại cùng lúc với bản chính thức của chính sách bảo hành.
+
+### D-28 · 03/10/2026 · Tích hợp sau khi dựng hero Mẫu 02 và form lead (tech lead)
+Nguồn: báo cáo agent ở workflow `bluebolt-p0-tiep` (hero, leads, content, process), review bảo mật leads, ảnh tự soát của tech lead.
+
+**Hero bản đồ (contracts/hero-map.md):**
+- Chọn tầng KHÔNG dùng detect-gpu: thư viện này tải benchmark từ unpkg (cấm CDN ngoài). Thứ tự chọn: `?tier=` (chỉ dev/bản xem
+  trước) → reduced-motion → Save-Data → dò WebGL2 + tên renderer. Renderer phần mềm hoặc GPU yếu → T-STILL. FPS guard và
+  webglcontextlost → T-STILL tại chỗ.
+- Số đo: bộ nạp 2,7 KB gz; chunk 3D 159,7 KB gz (ngân sách 290); JS tải đầu trang chủ 166,8 KB gz (≤ 170). Poster AVIF 71,5 KB
+  desktop và 24,6 KB mobile. Kiểm bằng `npm run hero:budget`; `budgets.json` có khối `heroMap`.
+- HTML server luôn ở trạng thái T-STILL: poster, nhãn tĩnh, 4 panel theo dòng chảy, nên không JS cũng đọc được. Runtime thêm
+  `.film-armed` chỉ khi T-FULL/T-LITE và khối chữ vừa khung (desktop cao ≥ khoảng 657 px).
+- Header: `data-film-zone="light"` cho chữ navy; khi cảnh chuyển đêm (`data-night`) thì chữ trắng. Không có `.film-armed` thì
+  header chỉ trong suốt khi chưa cuộn, để chữ hero không chạy dưới header (sửa của tech lead).
+- Trang chủ bỏ `NetworkSection`: hero đã là bản đồ mạng lưới, panel cuối dẫn sang `/mang-luoi`. `tests/map` chỉ còn `/mang-luoi`;
+  chủ quyền ở hero kiểm bằng `tests/hero` (9 bề rộng, cảnh sống, minimap).
+- Chấm bãi Tư Chính/DK1 nằm ngoài elip "QĐ. Trường Sa" là đúng thực tế (DK1 không thuộc quần đảo); giữ theo dòng bản đồ của D-25.
+- `<html data-film-tier>` (T-FULL|T-LITE|T-STILL) do runtime hero đặt, để form lead gửi `filmTier` cho analytics.
+- **Chờ anh Duy / pháp chế:**
+  - Mobile làm khác Mẫu 02: bản đồ dính trên cùng, chữ và panel cuộn bên dưới. Nếu để panel đè nửa dưới bản đồ thì che Trường Sa.
+  - Ở cảnh zoom từng miền (desktop), hai quần đảo nằm ngoài khung và được thay bằng minimap ghi đủ tên. Minimap như vậy có tính là
+    đạt NFR-MAP-01 không?
+  - Nhãn EN "East Sea".
+  - Có dùng ảnh bản đồ làm ảnh OG cho trang chủ không?
+- Chưa đo trên máy thật: thời gian khung (FULL p95 ≤ 16,7 ms, LITE ≤ 20 ms), cách chọn tầng trên GPU thật, Safari iOS.
+
+**Form lead:**
+- Mã form tải theo yêu cầu (`LazyLeadForm`) để trang có form giữ ≤ 170 KB gz. Tải ngay thì trang chủ lên 178,7 KB gz.
+- Neo: `QUOTE_HREF` = `/#bao-gia`, `DEMO_HREF` = `/#dat-lich-demo`, `INTEGRATION_HREF` = `/giai-phap/san-tmdt-ban-le#bao-gia`.
+  Trang có form tự cuộn tới form của chính trang.
+- Postgres dev và bản xem trước: container `bluebolt-web-db` (127.0.0.1:5450). Timer `bluebolt-web-leads-retry` chạy 5 phút một lần.
+  Email ghi ra `.cache/lead-mail/` cho tới khi có SMTP. Vận hành: `docs/LEADS-RUNBOOK.md`.
+- Review bảo mật: 0 critical/high, 2 medium (neo URL mã hoá sai làm sập trang có form; ký tự điều khiển trong ô công ty gây 500)
+  và 8 low. Đã giao sửa M1, M2 và L1–L6, L8. L7 (Idempotency-Key không gắn với nội dung) giữ nguyên theo Rule 7, ghi rủi ro ở runbook.
+
+**Mục "Còn mở" của D-27 tech lead đã xử lý:**
+- `/mang-luoi` đọc `regionCounts()`; bảng SLA thêm mốc 60 phút; sửa câu `network.json` cho khớp số đã duyệt.
+- Tiêu đề "Số liệu vận hành" đổi thành "Quy mô và cam kết", viết lại câu dẫn dải KPI ở `home.json`/`solutions.json`.
+- `content/README.md`.
+- JSON-LD: `areaServed` = Việt Nam (Country) khi claim `coverage.provinces-34` đã duyệt.
+
+**Vẫn mở:**
+- `services.json` `detail.warrantyLead` không đi qua `claim()`.
+- `SlaRegionTable` ghi "Theo hợp đồng" trong khi chỗ khác ghi 24–48 giờ.
+- Ô 60 phút đứng cạnh quy trình "điều phối → thợ gọi khách". Cần anh chốt ai xác nhận lịch: CSKH hay thợ.
+- `content/provinces.ts` để coverage "unknown".
