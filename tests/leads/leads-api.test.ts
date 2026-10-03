@@ -227,6 +227,45 @@ describe.skipIf(!HAS_DB)('POST /api/v1/leads — Postgres thật', () => {
     });
   });
 
+  describe('ký tự lạ (review M2): không bao giờ 500, dữ liệu sạch trong DB và email', () => {
+    const DIRTY = /[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]|\\u0000/;
+    it('NUL/BEL/U+202E/surrogate lẻ ở company, jobTitle, note, utm → 201; payload và utm đã bỏ ký tự lạ', async () => {
+      const { res, body } = await post(
+        withToken(
+          b2bBody({
+            fields: {
+              company: 'Cong\u0000 ty\u0007 \u202Egnub\u202C \ud800ABC',
+              jobTitle: 'Truong\u0000phong\u2066',
+              note: 'dong 1\u0000\u0007\n\u202Edong 2\u2067\r\ndong 3\udfff',
+            },
+            utm: { source: 'zalo\u0000\udfff', campaign: 'c\u202E', content: `${'a'.repeat(99)}😀` },
+          }),
+        ),
+      );
+      expect(res.status).toBe(201);
+      const row = await leadRow(String(body.data?.id));
+      expect(row.payload).toMatchObject({ company: 'Cong ty gnub ABC', jobTitle: 'Truongphong', note: 'dong 1\ndong 2\ndong 3' });
+      expect(row.utm).toEqual({ source: 'zalo', campaign: 'c', content: 'a'.repeat(99) });
+      expect(row.json).not.toMatch(DIRTY);
+      const mail = mailText(smtp.messages[0]?.data ?? '').replace(/\r\n/g, '\n'); // SMTP xuống dòng CRLF
+      expect(mail).toContain('Cong ty gnub ABC');
+      expect(mail).not.toMatch(DIRTY);
+    });
+    it('trường chỉ có ký tự điều khiển: company → 400 (không phải 500), jobTitle → null', async () => {
+      const bad = await post(withToken(b2bBody({ fields: { company: '\u0000\u0000\u0007' } })));
+      expect(bad.res.status).toBe(400);
+      expect(bad.body.error?.details).toContainEqual(expect.objectContaining({ field: 'fields.company' }));
+      const ok = await post(withToken(b2bBody({ fields: { jobTitle: '\u0000\u202E' } })));
+      expect(ok.res.status).toBe(201);
+      expect((await leadRow(String(ok.body.data?.id))).payload.jobTitle).toBeNull();
+    });
+    it('form thợ: họ tên có NUL/U+202E → 201, tên sạch', async () => {
+      const { res, body } = await post(withToken(techBody({ fields: { fullName: 'Nguyen\u0000 Van\u202E An' } })));
+      expect(res.status).toBe(201);
+      expect((await leadRow(String(body.data?.id))).payload.fullName).toBe('Nguyen Van An');
+    });
+  });
+
   describe('validation (không ghi DB)', () => {
     it('AC-B4/AC-T3: SĐT abc → 400 details[0] = {fields.phone, invalid_phone}', async () => {
       for (const b of [b2bBody({ fields: { phone: 'abc' } }), techBody({ fields: { phone: 'abc' } })]) {

@@ -149,8 +149,8 @@ export function sanitizeMeta(body: Record<string, unknown>): SanitizedMeta {
           sanitized.push(`utm.${key}`);
           continue;
         }
-        const cleaned = stripControl(value).trim();
-        const cut = cleaned.slice(0, LIMITS.utmValue);
+        // Cắt theo đơn vị UTF-16 có thể tách đôi một cặp surrogate (emoji ở vị trí 100) → lọc lại sau khi cắt
+        const cut = stripControl(stripControl(value).trim().slice(0, LIMITS.utmValue));
         if (cut !== value) sanitized.push(`utm.${key}`);
         if (cut !== '') utm[key] = cut;
       }

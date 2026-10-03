@@ -47,6 +47,43 @@ describe('chuẩn hóa chuỗi (Rule 4)', () => {
   it('ghi chú giữ xuống dòng, bỏ ký tự điều khiển', () => {
     expect(cleanMultiline(' dòng 1\r\ndòng 2\u0007\u0000 ')).toBe('dòng 1\ndòng 2');
   });
+  it('review M2: bỏ ký tự điều khiển C0/C1, ký tự định hướng, surrogate lẻ; tab/xuống dòng thành khoảng trắng', () => {
+    expect(cleanText('Cong\u0000 ty\u0007 ABC')).toBe('Cong ty ABC');
+    expect(cleanText('a \u0000 b')).toBe('a b');
+    expect(cleanText('a\tb\nc\r\nd\u0085e')).toBe('a b c de');
+    expect(cleanText('\u202Egnub\u202C ABC')).toBe('gnub ABC');
+    for (const bidi of ['\u061C', '\u200E', '\u200F', '\u202A', '\u202B', '\u202C', '\u202D', '\u202E', '\u2066', '\u2067', '\u2068', '\u2069']) {
+      expect(cleanText(`A${bidi}B`), bidi.codePointAt(0)?.toString(16)).toBe('AB');
+    }
+    expect(cleanText('Cong ty \ud800 lone \udfff')).toBe('Cong ty lone');
+    // Cặp surrogate hợp lệ (emoji) KHÔNG bị bỏ; chữ Việt tổ hợp vẫn về NFC
+    expect(cleanText('Shop 😀')).toBe('Shop 😀');
+    expect(cleanText('Nguyễn\u0000')).toBe('Nguyễn'.normalize('NFC'));
+    expect(cleanText('\u0000\u0007\u202E')).toBe('');
+  });
+  it('review M2: ghi chú giữ xuống dòng hợp lệ, bỏ NUL/BEL/định hướng/surrogate lẻ', () => {
+    expect(cleanMultiline('dong 1\u0000\u0007\n\u202Edong 2\u2067\r\ndong 3\tx\ud800')).toBe('dong 1\ndong 2\ndong 3 x');
+  });
+  it('review M2: Zod — company/jobTitle/note có ký tự lạ → dữ liệu sạch (không lỗi, không ký tự điều khiển)', () => {
+    const r = LeadRequest.safeParse(
+      b2bBody({
+        fields: {
+          company: 'Cong\u0000 ty\u0007 \u202EABC\u202C',
+          jobTitle: 'Truong\u0000 phong\u2066',
+          note: 'dong 1\u0000\ndong 2\u202E',
+          fullName: 'Nguyen\u0000 Van\u202E An',
+        },
+      }),
+    );
+    expect(r.success).toBe(true);
+    if (!r.success || r.data.type !== 'lead_b2b') return;
+    expect(r.data.fields).toMatchObject({ company: 'Cong ty ABC', jobTitle: 'Truong phong', note: 'dong 1\ndong 2', fullName: 'Nguyen Van An' });
+    expect(JSON.stringify(r.data.fields)).not.toMatch(/\\u00[01][0-9a-f]|[\u0000-\u001F\u007F-\u009F\u202A-\u202E\u2066-\u2069]/);
+    // Chỉ còn ký tự lạ → coi như trống: company bắt buộc → required/too_short; jobTitle tùy chọn → null
+    expect(codeOf(b2bBody({ fields: { company: '\u0000\u0007' } }), 'fields.company')).toBe('too_short');
+    const j = LeadRequest.safeParse(b2bBody({ fields: { jobTitle: '\u0000\u202E' } }));
+    expect(j.success && j.data.type === 'lead_b2b' && j.data.fields.jobTitle).toBeNull();
+  });
   it('mã tham chiếu = 8 hex đầu in hoa', () => {
     expect(leadReference('0b9f3c2e-6d1a-4c55-9a7e-2f4d8b1c9e01')).toBe('0B9F3C2E');
   });
@@ -199,6 +236,11 @@ describe('sanitizeMeta — siêu dữ liệu lỏng (Rule 5)', () => {
     expect(m.filmTier).toBeNull();
     expect(m.locale).toBe('vi');
     expect(m.sanitized).toEqual(expect.arrayContaining(['utm.unknown_keys', 'utm.source', 'utm.medium', 'pagePath', 'filmTier', 'locale']));
+  });
+  it('review M2: utm bỏ NUL/định hướng/surrogate lẻ; cắt 100 ký tự không để lại nửa cặp surrogate', () => {
+    const m = sanitizeMeta({ utm: { source: 'zalo\u0000\udfff', campaign: 'c\u202E', content: `${'a'.repeat(99)}😀` } });
+    expect(m.utm).toEqual({ source: 'zalo', campaign: 'c', content: 'a'.repeat(99) });
+    expect(m.sanitized).toEqual(expect.arrayContaining(['utm.source', 'utm.campaign', 'utm.content']));
   });
   it('giá trị đúng giữ nguyên, sanitized rỗng', () => {
     const m = sanitizeMeta({ utm: { source: 'zalo' }, pagePath: '/en/contact', filmTier: 'T-LITE', locale: 'en' });

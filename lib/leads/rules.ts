@@ -75,26 +75,48 @@ const ZERO_WIDTH = /[\u200B-\u200D\uFEFF]/g;
 // Ký tự điều khiển C0/C1 trừ xuống dòng (\n). Tab được đổi thành khoảng trắng trước khi lọc.
 const CONTROL_EXCEPT_LF = /[\u0000-\u0009\u000B-\u001F\u007F-\u009F]/g;
 const CONTROL_ALL = /[\u0000-\u001F\u007F-\u009F]/g;
+// Ký tự định hướng văn bản (bidi): ALM, LRM, RLM, nhúng/ghi đè U+202A–202E, cô lập U+2066–2069. Vô hình nhưng đảo được
+// thứ tự chữ khi hiển thị (giả mạo tên công ty trong email/CRM) → bỏ khỏi mọi chuỗi người dùng nhập.
+const BIDI_CONTROLS = /[\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g;
+// Nửa cặp surrogate đứng lẻ: JSON cho phép "\ud800" nhưng Postgres JSONB từ chối → không bao giờ để tới DB.
+const LONE_SURROGATE = /\p{Cs}/gu;
 
-/** Rule 4: NFC, bỏ zero-width, gộp khoảng trắng, trim. */
+/**
+ * Rule 4: NFC, bỏ zero-width, gộp khoảng trắng, trim. Thêm (review M2): bỏ ký tự điều khiển C0/C1 (NUL làm Postgres báo
+ * "unsupported Unicode escape sequence" → 500), ký tự định hướng và surrogate lẻ. Khoảng trắng (tab, xuống dòng) được gộp
+ * TRƯỚC khi bỏ ký tự điều khiển để "a\tb" thành "a b", không dính chữ.
+ */
 export function cleanText(input: string): string {
-  return input.normalize('NFC').replace(ZERO_WIDTH, '').replace(/\s+/g, ' ').trim();
+  return input
+    .replace(LONE_SURROGATE, '')
+    .normalize('NFC')
+    .replace(ZERO_WIDTH, '')
+    .replace(/\s+/g, ' ')
+    .replace(CONTROL_ALL, '')
+    .replace(BIDI_CONTROLS, '')
+    .replace(/ {2,}/g, ' ')
+    .trim();
 }
 
-/** Ghi chú: NFC, bỏ zero-width và ký tự điều khiển (giữ xuống dòng), trim. Lưu nguyên văn, không bao giờ render như HTML. */
+/**
+ * Ghi chú: NFC, bỏ zero-width, ký tự điều khiển (giữ xuống dòng \n), ký tự định hướng và surrogate lẻ, trim.
+ * Lưu nguyên văn, không bao giờ render như HTML.
+ */
 export function cleanMultiline(input: string): string {
   return input
+    .replace(LONE_SURROGATE, '')
     .normalize('NFC')
     .replace(/\r\n?/g, '\n')
     .replace(/\t/g, ' ')
     .replace(ZERO_WIDTH, '')
     .replace(CONTROL_EXCEPT_LF, '')
+    .replace(BIDI_CONTROLS, '')
     .trim();
 }
 
-/** Bỏ ký tự điều khiển (dùng cho siêu dữ liệu utm). */
+/** Bỏ ký tự điều khiển, zero-width, định hướng và surrogate lẻ (dùng cho siêu dữ liệu utm). */
 export function stripControl(input: string): string {
-  return input.replace(CONTROL_ALL, '').replace(ZERO_WIDTH, '');
+  return input.replace(LONE_SURROGATE, '').replace(CONTROL_ALL, '').replace(ZERO_WIDTH, '').replace(BIDI_CONTROLS, '');
 }
 
 /** Công ty: không chứa '<', '>' hay '://'. */
