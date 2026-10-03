@@ -15,9 +15,8 @@ import { archipelagos } from '../../content/provinces';
  * Spec tự quét 9 bề rộng nên chỉ chạy ở project desktop-1440. Chạy: npx playwright test tests/map
  */
 const WIDTHS = [360, 390, 414, 768, 1024, 1280, 1366, 1440, 1920] as const;
+// Trang chủ không còn VietnamMap (D-26: hero bản đồ Mẫu 02 thay NetworkSection); chủ quyền ở hero kiểm tại tests/hero/hero.spec.ts.
 const PAGES = [
-  { key: 'home', locale: 'vi', path: '/' },
-  { key: 'home', locale: 'en', path: '/en' },
   { key: 'network', locale: 'vi', path: '/mang-luoi' },
   { key: 'network', locale: 'en', path: '/en/network' },
 ] as const;
