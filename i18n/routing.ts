@@ -43,6 +43,7 @@ export const routing = defineRouting({
     // Trang nội bộ cho dev (noindex, tắt ở production trừ khi DEV_PAGES=1)
     '/dev/ui': '/dev/ui',
     '/dev/routes': '/dev/routes',
+    '/dev/hero-map': '/dev/hero-map',
   },
 });
 

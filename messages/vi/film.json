@@ -6,5 +6,16 @@
     "dollyIn": "Một đơn vừa đến",
     "screenHold": "Website trên màn hình",
     "handoff": "Ba nhóm khách"
+  },
+  "map": {
+    "sea": "Biển Đông",
+    "hqRole": "Văn phòng Bluebolt · điểm điều phối",
+    "legend": "Bản đồ minh hoạ — có Quần đảo Hoàng Sa và Quần đảo Trường Sa của Việt Nam",
+    "minimapCaption": "Đang xem",
+    "regions": {
+      "north": "Miền Bắc",
+      "central": "Miền Trung",
+      "south": "Miền Nam"
+    }
   }
 }

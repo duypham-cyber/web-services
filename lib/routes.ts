@@ -66,6 +66,7 @@ const PAGE_META = {
   '/chinh-sach-bao-hanh': { key: 'legal.warranty', priority: 'P0', owner: 'partner', indexable: true },
   '/dev/ui': { key: 'dev.ui', priority: 'dev', owner: 'foundation', indexable: false },
   '/dev/routes': { key: 'dev.routes', priority: 'dev', owner: 'foundation', indexable: false },
+  '/dev/hero-map': { key: 'dev.hero-map', priority: 'dev', owner: 'film', indexable: false },
 } as const satisfies Record<AppPathname, PageMeta>;
 
 type StaticPathname = Exclude<AppPathname, `${string}[slug]`>;

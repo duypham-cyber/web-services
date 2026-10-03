@@ -1,0 +1,140 @@
+/* Bàn soát hero bản đồ (trang nội bộ /dev/hero-map). Màu chỉ từ token styles/tokens.css. */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 60; /* phủ cả header (z-50): ảnh soát/poster là đúng khung cảnh */
+  overflow: clip;
+  background: #eef5ff; /* = màu trời của cảnh (palette.sky) để khung chưa vẽ không nháy trắng */
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  visibility: hidden;
+  will-change: transform, opacity;
+  font-size: 12.5px;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--color-navy-900);
+}
+
+.city {
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  box-shadow: 0 4px 12px rgb(10 31 68 / 0.16);
+}
+
+.arch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  color: var(--color-blue-700);
+  box-shadow: 0 4px 12px rgb(10 31 68 / 0.18);
+}
+
+.arch i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-blue-600);
+  box-shadow: 0 0 0 3px var(--color-blue-100);
+}
+
+.sea {
+  font-size: 13px;
+  font-style: italic;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  text-shadow: 0 1px 6px rgb(10 31 68 / 0.45);
+}
+
+.hq {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-navy-900);
+  color: var(--color-white);
+}
+
+.hq span {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--color-orange-200);
+}
+
+.panel {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 2;
+  width: min(420px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  color: var(--color-navy-900);
+  box-shadow: 0 8px 24px rgb(10 31 68 / 0.18);
+  font-size: var(--text-small);
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: var(--text-small);
+  font-weight: 700;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+}
+
+.row input {
+  flex: 1;
+}
+
+.row a[aria-current] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.stats {
+  margin: 6px 0;
+  white-space: pre-wrap;
+  font-size: 12px;
+  color: var(--color-slate-600);
+}
+
+.legend {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-slate-600);
+}
+
+.error {
+  margin: 6px 0 0;
+  color: var(--color-danger-700);
+}

@@ -6,5 +6,16 @@
     "dollyIn": "A new order arrives",
     "screenHold": "The website on screen",
     "handoff": "Who we serve"
+  },
+  "map": {
+    "sea": "East Sea",
+    "hqRole": "Bluebolt office · dispatch hub",
+    "legend": "Illustrative map — includes Vietnam's Hoang Sa (Paracel) and Truong Sa (Spratly) archipelagos",
+    "minimapCaption": "Viewing",
+    "regions": {
+      "north": "Northern Vietnam",
+      "central": "Central Vietnam",
+      "south": "Southern Vietnam"
+    }
   }
 }
