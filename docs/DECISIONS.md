@@ -323,7 +323,7 @@ Còn thiếu nhưng không chặn việc build:
 Agent nội dung áp ba quy tắc của D-26 mục 2 cho từng KPI, mốc SLA và câu khẳng định. "Duyệt" = production hiện, không nhãn
 nháp (claim: `status: 'approved'`, `approvedBy: 'Anh Duy (D-26)'`, `approvedAt: '2026-10-03'`). "Giữ nháp" = production ẩn,
 bản xem trước hiện kèm nhãn "Nháp". Khi duyệt, không đổi câu chữ nào và không thêm claim mới. SLA có thêm một mục mới là
-`confirm-time`.
+`confirm-time`. Bảng dưới đã cập nhật theo kiểm định độc lập cùng ngày (mục "Kiểm định độc lập" cuối D-27).
 
 **Cách làm**
 - `content/schemas.ts` thêm 3 trường cho KPI, tương thích ngược:
@@ -335,9 +335,15 @@ bản xem trước hiện kèm nhãn "Nháp". Khi duyệt, không đổi câu ch
   - `StatView.kind` thêm `'published'`.
   - Thêm `regionCounts(region?)` và `formatRegionCount(count, locale)`.
   - `legacyRegionCounts()` giữ chữ ký nhưng nay luôn trả `[]`, vì K1 đã có số duyệt (xem "Còn mở").
+- `components/ui/StatTile.tsx`: ô số công bố (`published`) chỉ ghi định nghĩa, không ghi "cập nhật dd/mm/yyyy". `updatedAt`
+  của số công bố là ngày duyệt, ghi ra sẽ đọc như số vừa đo lại. Số đo thật (`measured`) vẫn ghi ngày cập nhật.
 - `scripts/check-no-draft.mjs`:
   - Đoạn chữ của nội dung nháp nằm trọn trong chữ đã duyệt thì bỏ qua, có in số lượng.
   - Mọi đoạn khác vẫn bị dò.
+  - Nội dung nháp quá ngắn, không có đoạn nào ≥ 14 ký tự (ô bảng SLA "Tối đa 48 giờ", "Case by case"), thì dò cả câu khi
+    câu dài từ 8 ký tự (`SHORT_MIN`). Trước đây hai câu này không sinh mẫu dò nào.
+  - Cột `current` ("đang ghi") của SLA bị dò ở MỌI mục, kể cả mục đã duyệt: trang chỉ được hiện `value`, còn `current` của
+    mục đã duyệt vẫn chứa phần chưa duyệt ("CSKH phản hồi trong 24 giờ làm việc", "thợ liên hệ trong ngày nhận đơn").
   - Bản build không có HTML nào thì exit 1.
   - Unit test nằm ở `tests/unit/claims.test.ts`.
 
@@ -376,12 +382,12 @@ NOI-DUNG.md mục 13", `updatedAt: '2026-10-03'`)
 | `warranty.new-installation-term` | Giữ nháp | Thời hạn bảo hành 02 hay 12 tháng |
 | `support.24-7` | Giữ nháp | Giờ hotline |
 
-**`content/claims/b2b.ts`** (23 câu: 2 duyệt)
+**`content/claims/b2b.ts`** (23 câu: 1 duyệt)
 
 | id | Kết quả | Lý do |
 |---|---|---|
 | `b2b.sla.confirm-60-minutes` | Duyệt | Ô "60 phút" chỉ khẳng định mốc đã duyệt (K6) |
-| `b2b.warranty.installation-faults` | Duyệt | Phạm vi bảo hành lỗi do lắp đặt, nguồn /services cũ. Không nêu thời hạn, khớp mốc 24–48h |
+| `b2b.warranty.installation-faults` | Giữ nháp (duyệt rồi đưa về nháp sau kiểm định) | Câu về phạm vi bảo hành, không phải số hay mốc trong danh sách duyệt của D-26 mục 2. Khi duyệt, 4 trang `/dich-vu/*` hiện tiêu đề "Theo chính sách hiện hành" kèm link sang trang chính sách đang ghi "Chưa ban hành". Có nguồn /services cũ, không mâu thuẫn mốc 24–48h: duyệt lại cùng lúc với bản chính thức của chính sách bảo hành |
 | `b2b.sla.completion-48-hours` | Giữ nháp | Vênh với "trong 24h" của trang chủ cũ, thuộc câu hỏi "có thợ trong 24h" |
 | `b2b.sla.fix-24-business-hours` · `b2b.sla.fix-36-business-hours` | Giữ nháp | 24/36 giờ làm việc không phải mốc 24–48h đã duyệt; nguồn là chính sách cũ |
 | `b2b.sla.special-areas-case-by-case` · `b2b.sla.special-areas-definition` | Giữ nháp | Chính sách cũ (pháp lý) |
@@ -428,13 +434,45 @@ NOI-DUNG.md mục 13", `updatedAt: '2026-10-03'`)
 | `knowledge.digital-ops-results` | Giữ nháp | Số không nguồn (4 giờ → 15 phút, −65%) |
 | `knowledge.three-party-benefits` | Giữ nháp | Gộp hoa hồng, báo cáo thời gian thực và nhiều cam kết chưa duyệt |
 
-Tổng: 58 câu, 3 duyệt, 55 giữ nháp. 11 mục SLA: 2 duyệt, 9 giữ nháp. KPI: K1 (cùng số theo miền), K2, K6 duyệt; K3–K5 `null`.
+Tổng: 58 câu, 2 duyệt, 56 giữ nháp. 11 mục SLA: 2 duyệt, 9 giữ nháp. KPI: K1 (cùng số theo miền), K2, K6 duyệt; K3–K5 `null`.
+
+**Kiểm định độc lập 03/10/2026: xử lý từng phát hiện**
+
+Một agent kiểm định đã soát lại bảng trên, bản build production và `check:draft`. Nguồn của mọi mục đã duyệt khớp site cũ, câu
+chữ không đổi, số đếm khớp file. Agent nội dung tự kiểm lại bằng chứng của từng phát hiện rồi xử lý như sau:
+
+| # | Phát hiện | Xử lý |
+|---|---|---|
+| 1 | Ô 60 phút ở `/giai-phap/*` đứng cạnh quy trình "điều phối → thợ gọi khách", dễ đọc thành "trong 60 phút đã điều phối và thợ đã gọi". Nguồn đặt 60 phút TRƯỚC bước điều phối | Đồng ý. Không sửa được trong vùng nội dung (thứ tự quy trình ở `content/process.ts`, bố cục ở trang giải pháp). Đã ghi vào note của `b2b.sla.confirm-60-minutes`, chuyển sang "Còn mở" |
+| 2 | `/mang-luoi`: `lead` nói "số thợ đang hoạt động… đã đối soát" ngay trên ô 500+; `sla.intro` nói "sẽ hiện khi công bố" ngay trên dòng 24–48 giờ; cột "Thợ đang hoạt động" ghi "Chưa có số" cả 34 tỉnh | Đồng ý. `messages/*/network.json` và bảng tỉnh ngoài vùng: "Còn mở" |
+| 3 | Số thợ theo miền đã duyệt không hiện ở đâu | Đồng ý. Không cho `legacyRegionCounts()` trả số duyệt, vì nơi gọi gắn nhãn "Nháp · số site cũ" (production sẽ lộ nhãn nháp). Trang phải đổi sang `regionCounts()`: "Còn mở" |
+| 4 | Trang dịch vụ hiện tiêu đề "Theo chính sách hiện hành" trong khi trang chính sách ghi "Chưa ban hành" | Đồng ý. Sửa từ gốc: đưa `b2b.warranty.installation-faults` về nháp (mục 5). Cả nhóm claim bảo hành lại là nháp nên khối tiêu đề và danh sách tự ẩn ở production, như trước 8324c75 |
+| 5 | `b2b.warranty.installation-faults` được duyệt ngoài danh sách của D-26 | Đồng ý. Đưa về nháp. Tech lead hoặc anh Duy có thể duyệt lại khi có chính sách bảo hành chính thức |
+| 6 | SLA `confirm-time` đã duyệt nhưng không trang nào hiện | Đồng ý, nhưng giữ duyệt: đây là nguồn chung của mốc 60 phút, để không hiện cũng không sai. Đề xuất thêm vào `SLA_IDS` của `/mang-luoi`: "Còn mở" |
+| 7 | Bảng SLA theo vùng ở B2B ghi "Theo hợp đồng" ở dòng xử lý lỗi, vênh với "Trong 24–48 giờ" ở `/mang-luoi` và `/dich-vu/*` | Đồng ý. Ô của dòng này là claim 24/36 giờ làm việc (nháp, khác mốc 24–48h). Không thêm claim mới. Cách sửa thuộc component B2B: "Còn mở" |
+| 8 | "Số liệu vận hành" và "cập nhật 03/10/2026" trên số công bố | Đồng ý. Đã sửa `StatTile`: số công bố bỏ dòng "cập nhật". Tiêu đề trong `home.json`, `solutions.json` ngoài vùng: "Còn mở" |
+| 9 | Note lỗi thời trong `content/claims`; `content/provinces.ts` để coverage "unknown" dù K2 = 34/34 | Đồng ý. Đã sửa note ở `knowledge.ts` (2 câu) và `partner.ts` (`support.warranty-response-time`). `provinces.ts` và `lib/jsonld.ts` ngoài vùng: đã ghi note ở `coverage.provinces-34`, chuyển sang "Còn mở" |
+| 10 | Hai chỗ hở của `check-no-draft`: câu nháp ngắn không sinh mẫu dò; cột `current` của SLA đã duyệt không bị dò | Đồng ý. Đã sửa cả hai (xem "Cách làm"), có unit test |
+| 11 | K1 500+ so với tổng theo miền 460+ | Không phải lỗi quy tắc: dấu "+" làm hai số không mâu thuẫn chặt, D-26 duyệt cả hai. Khi `/mang-luoi` hiện số theo miền cạnh ô 500+, người đọc sẽ tự cộng: đã báo anh Duy |
 
 **Còn mở, cần tech lead hoặc anh Duy xử lý**
 - `/mang-luoi`, thẻ vùng: trang vẫn gọi `legacyRegionCounts()`, nay luôn trả `[]`. Vì vậy số theo miền đã duyệt chưa hiện ở
   đâu, kể cả bản xem trước. Cần đổi sang `regionCounts(region.id)` + `formatRegionCount()` và bỏ nhãn "Nháp · số site cũ".
   Trang này ngoài vùng của agent nội dung.
+- `/mang-luoi`, bảng SLA: thêm `'confirm-time'` vào `SLA_IDS` để mốc 60 phút đã duyệt có mặt cạnh dòng 24–48 giờ.
+- `messages/{vi,en}/network.json`: `lead` (số thợ "đang hoạt động", "đã đối soát với dữ liệu vận hành") và `sla.intro` ("sẽ hiện
+  khi công bố cam kết chính thức") vênh với dữ liệu đã duyệt. Cột "Thợ đang hoạt động" của bảng tỉnh ghi "Chưa có số" cả 34 tỉnh,
+  đặt cạnh ô 500+ dễ đọc là mâu thuẫn.
+- `messages/{vi,en}/home.json` (dải KPI) và `solutions.json` (`title` "Số liệu vận hành" trên ô 60 phút): các số đang hiện là số
+  công bố hoặc mốc cam kết, không phải số đo. Câu "Số nào chưa đo được thì chúng tôi không hiển thị" cũng không còn đúng.
+- `/giai-phap/*`: ô 60 phút đứng cạnh quy trình "điều phối → thợ gọi khách". Hoặc tách ô khỏi quy trình, hoặc chờ anh Duy chốt
+  người liên hệ và thứ tự 02 → 03 của `content/process.ts`.
+- `components/solutions/kit/SlaRegionTable.tsx`: dòng "Xử lý lỗi lắp đặt" ghi "Theo hợp đồng" ở cả 4 vùng, trong khi
+  `/mang-luoi` và `/dich-vu/*` ghi "Trong 24–48 giờ". Hướng sửa: cho ba vùng tiêu chuẩn đọc SLA `fix-response-time` (đã duyệt),
+  hoặc giữ "Theo hợp đồng" kèm chú thích mốc chung 24–48 giờ. Chủ trang B2B quyết.
 - Người xác nhận lịch trong 60 phút là CSKH hay thợ? Site cũ ghi CSKH. Chính sách cũ và `content/process.ts` bước 03 ghi thợ.
   Hiện K6, `confirm-time` và claim `b2b.sla.confirm-60-minutes` không nêu ai liên hệ.
 - `content/README.md` còn ghi "K1–K6 đều `null`" và "SLA đều `null`". `lib/jsonld.ts` còn ghi `coverage.provinces-34` là claim
-  chưa duyệt. Hai chỗ này cần cập nhật theo bảng trên; cả hai ngoài vùng của agent nội dung.
+  chưa duyệt. `content/provinces.ts` để coverage "unknown" cả 34 tỉnh nên JSON-LD bỏ `areaServed`. Chủ bản đồ/SEO quyết đổi sang
+  "confirmed" theo K2 hay chờ đối soát từng tỉnh. Các file này ngoài vùng của agent nội dung.
+- `b2b.warranty.installation-faults` đã về nháp. Duyệt lại cùng lúc với bản chính thức của chính sách bảo hành.
