@@ -62,8 +62,8 @@ export const knowledgeClaims = [
     approvedBy: null,
     approvedAt: null,
     note:
-      'Gộp 3 cam kết: chuẩn hãng (quality.brand-standard), bảo hành 12 tháng (mâu thuẫn chính sách 02 tháng), xử lý ' +
-      '24–48 giờ (chưa có SLA đã duyệt trong content/sla.ts).',
+      'Gộp 3 cam kết: chuẩn hãng (quality.brand-standard, nháp), bảo hành 12 tháng (mâu thuẫn chính sách 02 tháng, nháp ' +
+      'theo D-26), xử lý 24–48 giờ (đã duyệt: content/sla.ts "fix-response-time", D-27). Còn hai ý chưa duyệt nên cả câu giữ nháp.',
   },
   {
     id: 'knowledge.digital-ops-results',
@@ -90,8 +90,9 @@ export const knowledgeClaims = [
     approvedBy: null,
     approvedAt: null,
     note:
-      'Nhiều cam kết chưa có bằng chứng: SLA (content/sla.ts còn null), phủ mọi tỉnh (coverage.provinces-34), đào tạo ' +
-      'thợ, hoa hồng. Duyệt từng ý hoặc viết lại khi có chính sách thật.',
+      'Gộp nhiều cam kết: SLA (content/sla.ts mới duyệt 2 mốc: 60 phút, 24–48 giờ — D-27), phủ mọi tỉnh ' +
+      '(coverage.provinces-34, đã duyệt), còn chưa có bằng chứng: báo cáo thời gian thực, đào tạo thợ, hoa hồng. Duyệt từng ý ' +
+      'hoặc viết lại khi có chính sách thật.',
   },
   {
     id: 'knowledge.single-point-of-contact',

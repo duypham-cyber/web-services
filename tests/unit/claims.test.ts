@@ -33,8 +33,10 @@ describe('lib/claims.ts — câu khẳng định chưa duyệt không lên produ
 describe('content/claims — bảng duyệt 03/10/2026 (docs/DECISIONS.md D-26, D-27)', () => {
   const approved = ALL_CLAIMS.filter((c) => (c.status as string) === 'approved');
 
-  it('đúng 3 câu được duyệt, mỗi câu có bằng chứng, người duyệt, ngày và ghi chú duyệt', () => {
-    expect(approved.map((c) => c.id)).toEqual(['coverage.provinces-34', 'b2b.sla.confirm-60-minutes', 'b2b.warranty.installation-faults']);
+  it('đúng 2 câu được duyệt, mỗi câu có bằng chứng, người duyệt, ngày và ghi chú duyệt', () => {
+    // b2b.warranty.installation-faults: duyệt rồi đưa về nháp cùng ngày sau kiểm định độc lập (D-27) — câu về phạm vi bảo
+    // hành, không thuộc danh sách số/mốc của D-26.
+    expect(approved.map((c) => c.id)).toEqual(['coverage.provinces-34', 'b2b.sla.confirm-60-minutes']);
     for (const c of approved as readonly Claim[]) {
       expect(c, c.id).toMatchObject({ approvedBy: 'Anh Duy (D-26)', approvedAt: '2026-10-03' });
       expect(c.evidence, c.id).toBeTruthy();
@@ -55,6 +57,7 @@ describe('content/claims — bảng duyệt 03/10/2026 (docs/DECISIONS.md D-26, 
       'partner.standard-tcvn-5687',
       'partner.standard-qcvn-25',
       'home.standards-citation',
+      'b2b.warranty.installation-faults',
     ];
     for (const id of MUST_STAY_DRAFT) {
       const c = ALL_CLAIMS.find((x) => x.id === id);
@@ -121,6 +124,37 @@ describe('scripts/check-no-draft.mjs — chặn nội dung nháp, không báo nh
     expect(kinds('<dd>T2–T6 09:00–16:30; T7 09:00–12:00; CN và Lễ/Tết không tiếp nhận đơn</dd>')).toContain('SLA đang ghi (chưa duyệt)');
     expect(kinds('<p>hơn 500+ thợ kỹ thuật tay nghề cao</p>')).toContain('nguồn số site cũ');
     expect(kinds('<html lang="vi" data-draft-preview>')).toContain('dấu bản xem trước');
+  });
+
+  it('câu nháp quá ngắn (ô bảng SLA) vẫn có mẫu dò — không lọt cổng vì dưới 14 ký tự', async () => {
+    const gate = await loadGate();
+    const { needles } = gate.buildNeedles(realInput);
+    const kinds = (html: string) => gate.findViolations(html, needles).map((h) => `${h.needle.kind}|${h.needle.label}`);
+    expect(kinds('<td>Tối đa 48 giờ</td>')).toContain('claim nháp|b2b.sla.completion-48-hours (vi)');
+    expect(kinds('<td>Case by case</td>')).toContain('claim nháp|b2b.sla.special-areas-case-by-case (en)');
+    // Mọi claim nháp và mọi cột "đang ghi" của SLA đều sinh ít nhất một mẫu dò ở cả hai ngôn ngữ
+    for (const c of ALL_CLAIMS.filter((x) => (x.status as string) !== 'approved')) {
+      for (const l of ['vi', 'en']) expect(needles.some((n) => n.label === `${c.id} (${l})`), `${c.id} (${l})`).toBe(true);
+    }
+    for (const s of slaItems) {
+      for (const l of ['vi', 'en']) expect(needles.some((n) => n.label === `${s.id} (${l})`), `${s.id} (${l})`).toBe(true);
+    }
+  });
+
+  it('cột "đang ghi" của SLA ĐÃ duyệt vẫn bị dò (trang chỉ được hiện value)', async () => {
+    const gate = await loadGate();
+    const { needles } = gate.buildNeedles(realInput);
+    const fix = slaItems.find((s) => s.id === 'fix-response-time');
+    const confirm = slaItems.find((s) => s.id === 'confirm-time');
+    expect(fix?.status).toBe('approved');
+    expect(confirm?.status).toBe('approved');
+    const kinds = (html: string) => gate.findViolations(html, needles).map((h) => h.needle.kind);
+    for (const s of [fix, confirm]) {
+      expect(kinds(`<td>${s?.current.vi}</td>`)).toContain('SLA đang ghi (mục đã duyệt chỉ hiện value)');
+      expect(kinds(`<td>${s?.current.en}</td>`)).toContain('SLA đang ghi (mục đã duyệt chỉ hiện value)');
+      // value đã duyệt thì không
+      expect(gate.findViolations(`<td>${s?.label.vi}</td><td>${s?.value?.vi}</td>`, needles)).toEqual([]);
+    }
   });
 
   it('đoạn của câu nháp trùng y nguyên chữ đã duyệt thì bỏ qua (có ghi lại), đoạn khác vẫn bị dò', async () => {

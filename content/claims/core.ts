@@ -23,7 +23,9 @@ export const coreClaims = [
     approvedAt: '2026-10-03',
     note:
       'Duyệt 03/10/2026 (D-26 mục 2, D-27): câu chỉ khẳng định K2 = 34/34 đã duyệt, không đổi câu chữ. Trước đó: site cũ ' +
-      'ghi lẫn 63 và 34 tỉnh (UX-03).',
+      'ghi lẫn 63 và 34 tỉnh (UX-03). CÒN MỞ (ngoài vùng nội dung): content/provinces.ts vẫn để coverage "unknown" cho cả 34 ' +
+      'tỉnh nên lib/jsonld.ts bỏ areaServed và chú thích ở đó còn gọi claim này là chưa duyệt — chủ bản đồ/SEO quyết có đổi ' +
+      'sang "confirmed" theo K2 hay chờ đối soát từng tỉnh.',
   },
   {
     id: 'quality.brand-standard',

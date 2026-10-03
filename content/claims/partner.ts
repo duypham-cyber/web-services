@@ -221,7 +221,10 @@ export const partnerClaims = [
     evidence: 'Chính sách hiện hành Phần 2, Điều khoản 3',
     approvedBy: null,
     approvedAt: null,
-    note: 'Trùng nội dung SLA "fix-response-time" (content/sla.ts, draft). Chốt cùng lúc.',
+    note:
+      'Phần "24–48 giờ" trùng SLA "fix-response-time" (content/sla.ts) — đã duyệt 03/10/2026 (D-27). Câu vẫn nháp vì còn ' +
+      '"24 giờ làm việc" (CSKH phản hồi, chưa duyệt) và mốc tính "kể từ khi xác định được nguyên nhân" khác cách ghi của SLA. ' +
+      'Không tách câu vì khi duyệt không đổi câu chữ.',
   },
   {
     id: 'support.warranty-exclusions',

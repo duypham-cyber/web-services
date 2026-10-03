@@ -5,7 +5,8 @@
  * <distDir>/server/app và báo lỗi nếu còn:
  *   1. nhãn "Nháp"/"Draft" (DraftBadge), nhãn "Nháp · số site cũ" (KPI số site cũ — lib/stats.ts);
  *   2. thuộc tính data-draft-preview (dấu hiệu bản build có DRAFT_PREVIEW=1);
- *   3. chữ của câu khẳng định CHƯA DUYỆT (content/claims/*, cả VI và EN) và cột "đang ghi" của SLA chưa duyệt (content/sla.ts);
+ *   3. chữ của câu khẳng định CHƯA DUYỆT (content/claims/*, cả VI và EN) và cột "đang ghi" (`current`) của MỌI mục SLA
+ *      (content/sla.ts) — `current` không bao giờ được render như cam kết, kể cả khi mục đã duyệt (trang hiện `value`);
  *   4. nguồn số site cũ (content/stats.ts legacySource) và chữ của các khóa messages CHỈ dùng ở bản xem trước
  *      (ghi chú dựng trang common.dev.*, ghi chú duyệt nội dung — danh sách PREVIEW_ONLY_KEYS dưới đây).
  *
@@ -81,6 +82,19 @@ export function fragments(text, min = 14) {
 }
 
 /**
+ * Độ dài tối thiểu khi nội dung nháp QUÁ NGẮN để có đoạn ≥ 14 ký tự (vd ô bảng SLA "Tối đa 48 giờ", "Case by case").
+ * Không có ngưỡng dự phòng này thì câu đó không sinh mẫu dò nào và lọt cổng (kiểm định 03/10/2026, D-27). Chỉ dùng cho
+ * nội dung nháp (mục 3–4), không cho messages: chuỗi ngắn trong messages dễ trùng chữ giao diện khác.
+ */
+export const SHORT_MIN = 8;
+
+/** Đoạn dò của một nội dung nháp: như fragments(); không có đoạn nào đủ 14 ký tự thì hạ ngưỡng xuống SHORT_MIN. */
+export function contentFragments(text) {
+  const long = fragments(text);
+  return long.length > 0 ? long : fragments(text, SHORT_MIN);
+}
+
+/**
  * Chữ của nội dung ĐÃ DUYỆT, được phép hiện ở production: claim "approved", SLA "approved" (nhãn + giá trị), KPI có value
  * (nhãn + định nghĩa) và số theo miền đã duyệt (nhãn).
  */
@@ -112,7 +126,7 @@ export function buildNeedles({ loadMessages, claims, slaItems, stats }) {
   };
   // Mục 3–4 (nội dung chưa duyệt): đoạn trùng y nguyên chữ đã duyệt thì bỏ qua — nó hiện vì nội dung đã duyệt.
   const addContent = (kind, label, text) => {
-    for (const f of fragments(text)) {
+    for (const f of contentFragments(text)) {
       if (approved.some((a) => a.includes(f))) skipped.push({ kind, label, text: f });
       else needles.push({ kind, label, text: f });
     }
@@ -136,16 +150,17 @@ export function buildNeedles({ loadMessages, claims, slaItems, stats }) {
     }
   }
 
-  // 3. Câu khẳng định chưa duyệt, SLA "đang ghi" chưa duyệt
+  // 3. Câu khẳng định chưa duyệt; cột "đang ghi" của SLA — mục chưa duyệt VÀ mục đã duyệt (current của mục đã duyệt vẫn
+  //    chứa phần chưa duyệt, vd "CSKH phản hồi trong 24 giờ làm việc"; trang chỉ được hiện value)
   for (const c of claims) {
     if (c.status === 'approved') continue;
     addContent('claim nháp', `${c.id} (vi)`, c.text.vi);
     addContent('claim nháp', `${c.id} (en)`, c.text.en);
   }
   for (const s of slaItems) {
-    if (s.status === 'approved') continue;
-    addContent('SLA đang ghi (chưa duyệt)', `${s.id} (vi)`, s.current.vi);
-    addContent('SLA đang ghi (chưa duyệt)', `${s.id} (en)`, s.current.en);
+    const kind = s.status === 'approved' ? 'SLA đang ghi (mục đã duyệt chỉ hiện value)' : 'SLA đang ghi (chưa duyệt)';
+    addContent(kind, `${s.id} (vi)`, s.current.vi);
+    addContent(kind, `${s.id} (en)`, s.current.en);
   }
   // 4. Nguồn số site cũ — ghi chú nội bộ, không bao giờ được render (kể cả khi KPI đã có số duyệt)
   for (const s of stats) if (s.legacySource) addContent('nguồn số site cũ', `${s.id}.legacySource`, s.legacySource);
