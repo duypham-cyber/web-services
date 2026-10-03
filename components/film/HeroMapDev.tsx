@@ -119,13 +119,32 @@ export function HeroMapDev({ labels }: { labels: HeroMapDevLabels }) {
         const el = labelEls.get(it.id);
         if (!el) continue;
         const [lw, lh] = sizes.get(it.id) ?? [80, 24];
-        let box: Box =
-          it.kind === 'hq' ? [it.x + 14, it.y + 10, lw, lh] : it.kind === 'sea' ? [it.x - lw / 2, it.y - lh / 2, lw, lh] : [it.x - lw / 2, it.y - (it.kind === 'arch' ? 14 : 10) - lh, lw, lh];
-        box = [Math.min(Math.max(box[0], 8), W - 8 - lw), it.kind === 'arch' ? Math.min(Math.max(box[1], 8), f.height - 8 - lh) : box[1], lw, lh];
+        // vị trí thử lần lượt: nhãn văn phòng phải-dưới → trái-dưới → phải-trên; nhãn tỉnh trên → dưới ghim
+        const cands: Box[] =
+          it.kind === 'hq'
+            ? [
+                [it.x + 14, it.y + 10, lw, lh],
+                [it.x - 14 - lw, it.y + 10, lw, lh],
+                [it.x + 14, it.y - 10 - lh, lw, lh],
+              ]
+            : it.kind === 'sea'
+              ? [[it.x - lw / 2, it.y - lh / 2, lw, lh]]
+              : it.kind === 'arch'
+                ? [[it.x - lw / 2, it.y - 14 - lh, lw, lh]]
+                : [
+                    [it.x - lw / 2, it.y - 10 - lh, lw, lh],
+                    [it.x - lw / 2, it.y + 22, lw, lh],
+                  ];
+        const fit = (b: Box): Box => [Math.min(Math.max(b[0], 8), W - 8 - lw), it.kind === 'arch' ? Math.min(Math.max(b[1], 8), f.height - 8 - lh) : b[1], lw, lh];
+        const collides = (b: Box) => placed.some((q) => b[0] < q[0] + q[2] && b[0] + b[2] > q[0] && b[1] < q[1] + q[3] && b[1] + b[3] > q[1]);
         let op = it.weight > 0.01 && it.vis ? it.weight : 0;
         if (it.kind === 'arch') op = it.vis ? 1 : 0;
-        const hit = op > 0 && it.kind !== 'arch' && placed.some((b) => box[0] < b[0] + b[2] && box[0] + box[2] > b[0] && box[1] < b[1] + b[3] && box[1] + box[3] > b[1]);
-        if (hit) op = 0;
+        let box = fit(cands[0]!);
+        if (op > 0 && it.kind !== 'arch') {
+          const free = cands.map(fit).find((b) => !collides(b));
+          if (free) box = free;
+          else op = 0;
+        }
         if (op > 0) placed.push(box);
         el.style.transform = `translate(${Math.round(box[0])}px, ${Math.round(box[1])}px)`;
         el.style.opacity = op.toFixed(3);

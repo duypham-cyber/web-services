@@ -113,6 +113,36 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
 
   const scene = new Scene();
   scene.background = palette.sky.clone();
+  /** Texture không gắn trực tiếp vào material (mặt nạ, atlas mây) — giải phóng riêng. */
+  const ownTextures = new Set<Texture>();
+  // Huỷ giữa chừng (AbortSignal, StrictMode gắn/gỡ 2 lần ở dev): giải phóng phần đã dựng, không rò WebGL context
+  const step = async <T,>(p: Promise<T>): Promise<T> => {
+    try {
+      const v = await p;
+      if (signal?.aborted) throw new DOMException('aborted', 'AbortError');
+      return v;
+    } catch (e) {
+      releaseScene();
+      throw e;
+    }
+  };
+  function releaseScene() {
+    canvas.removeEventListener('webglcontextlost', onLost);
+    const geos = new Set<BufferGeometry>();
+    const mats = new Set<Material>();
+    scene.traverse((o: Object3D) => {
+      const m = o as Object3D & { geometry?: BufferGeometry; material?: Material | Material[] };
+      if (m.geometry) geos.add(m.geometry);
+      if (m.material) (Array.isArray(m.material) ? m.material : [m.material]).forEach((x) => mats.add(x));
+    });
+    geos.forEach((g) => g.dispose());
+    mats.forEach((m) => m.dispose());
+    ownTextures.forEach((t) => t.dispose());
+    sun.shadow.map?.dispose();
+    renderer.renderLists.dispose();
+    renderer.dispose();
+    renderer.forceContextLoss();
+  }
   const camera = new PerspectiveCamera(L.fov, L.refAspect, 0.1, 600);
 
   // ------------------------------------------------------------------ ánh sáng (giữ của bản mẫu)
@@ -139,7 +169,8 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
     uHaze: { value: new Vector2(30, 60) },
     uPx: { value: 1 },
   };
-  const mask = await buildSeaMask(map, full ? 1024 : 512, signal);
+  const mask = await step(buildSeaMask(map, full ? 1024 : 512, signal));
+  ownTextures.add(mask.texture);
   const land = buildLand(map, palette, mask.texture, mobile);
   land.top.castShadow = full;
   land.top.receiveShadow = full;
@@ -150,14 +181,15 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
   if (full) scene.add(buildShadowCatcher(palette));
   const islands = buildIslands(map, palette, rand, tier);
   scene.add(islands.body, islands.caps);
-  await yieldToMain(signal);
+  await step(yieldToMain(signal));
   const pins = buildPins(map, palette, U.uTime, rand, tier);
   scene.add(pins.stems, pins.heads, pins.bases, pins.rings, pins.beam);
   const arcs = buildArcs(map, palette, { uTime: U.uTime, uNight: U.uNight }, rand, { tier, mobile });
   scene.add(arcs.glow, arcs.core, arcs.dots);
   const clouds = buildClouds(map, mask, { uTime: U.uTime, uNight: U.uNight }, rand, { tier, mobile });
   scene.add(clouds.mesh);
-  await yieldToMain(signal);
+  ownTextures.add(clouds.texture);
+  await step(yieldToMain(signal));
 
   // ------------------------------------------------------------------ trạng thái
   let W = Math.max(1, Math.round(opts.size?.width ?? (canvas.clientWidth || canvas.width)));
@@ -241,11 +273,7 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
   // ------------------------------------------------------------------ khởi động: biên dịch + khung đầu
   applySize();
   update(p0);
-  await renderer.compileAsync(scene, camera);
-  if (signal?.aborted) {
-    disposeAll();
-    throw new DOMException('aborted', 'AbortError');
-  }
+  await step(renderer.compileAsync(scene, camera));
   draw();
   lastStats.firstCalls = lastStats.calls;
   lastStats.firstTriangles = lastStats.triangles;
@@ -255,22 +283,7 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
 
   // ------------------------------------------------------------------ giải phóng
   function disposeAll() {
-    canvas.removeEventListener('webglcontextlost', onLost);
-    const geos = new Set<BufferGeometry>();
-    const mats = new Set<Material>();
-    const texs = new Set<Texture>([mask.texture, clouds.texture]);
-    scene.traverse((o: Object3D) => {
-      const m = o as Object3D & { geometry?: BufferGeometry; material?: Material | Material[] };
-      if (m.geometry) geos.add(m.geometry);
-      if (m.material) (Array.isArray(m.material) ? m.material : [m.material]).forEach((x) => mats.add(x));
-    });
-    geos.forEach((g) => g.dispose());
-    mats.forEach((m) => m.dispose());
-    texs.forEach((t) => t.dispose());
-    if (full) sun.shadow.map?.dispose();
-    renderer.renderLists.dispose();
-    renderer.dispose();
-    renderer.forceContextLoss();
+    releaseScene();
   }
 
   function projectAt(x: number, y: number, z: number, v: Vector3): ProjectedPoint {
