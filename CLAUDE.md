@@ -37,8 +37,9 @@ Mọi quyết định và giả định: `docs/DECISIONS.md`. Đường dẫn ri
 - `scripts/safe-build.sh` — build production có khóa flock, distDir `.next-check-<pid>`, in bảng JS tải đầu mỗi route.
   `SAFE_BUILD_CLEAN=1` để tự xóa; `DRAFT_PREVIEW=1` / `DEV_PAGES=1` / `STAGING=1` (thêm X-Robots-Tag noindex) phải đặt
   LÚC BUILD (trang tĩnh và header được đóng băng khi build). KHÔNG gọi `next build` trực tiếp.
-- Xem bản build: `NEXT_DIST_DIR=.next-check-<pid> PORT=3092 npm run start` (127.0.0.1:3092). Xong thì dừng theo PID.
-- Playwright (chạy trên dev server; `BASE_URL=http://127.0.0.1:3092` cho bản build; tối đa 2 worker):
+- Xem bản build: `NEXT_DIST_DIR=.next-check-<pid> PORT=3093 npm run start` (cổng 3093–3096; 3092 là bản xem trước 9515,
+  `docs/PREVIEW.md`). Xong thì dừng theo PID.
+- Playwright (chạy trên dev server; `BASE_URL=http://127.0.0.1:3093` cho bản build; tối đa 2 worker):
   `npm run test:overflow` (9 bề rộng × mọi route × VI/EN) · `npm run test:seo` (seo-render + tests/seo/) · `npm run test:a11y`
   · `npm run test:map` · `npm run test:e2e` (tất cả)
   Chỉ chạy route của mình: `ONLY_ROUTES=partners,support npm run test:seo`.
@@ -179,9 +180,9 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 ## Phần động — contract-first (KHÔNG exception)
 - Form lead (B2B, thợ, bảo hành), API, DB, CMS, `/tra-cuu`: KHÔNG code khi `contracts/<feature>.md` chưa có `STATUS: APPROVED`.
   `lead-b2b.md` và `lead-technician.md` đã APPROVED ngày 03/10/2026 (D-26). Form bảo hành, CMS và `/tra-cuu` vẫn chưa có contract.
-  Hiện tại CTA "Nhận báo giá" → `/lien-he#kinh-doanh`, "Đăng ký thợ" → `/doi-tac-tho#dang-ky` (`QUOTE_HREF`, `TECHNICIAN_SIGNUP_HREF`);
-  "Đặt lịch demo 30 phút" / "Thảo luận tích hợp" dùng `DEMO_HREF` / `INTEGRATION_HREF` (tạm = `QUOTE_HREF`). Neo id tiếng Việt
-  cho cả hai ngôn ngữ (D-23).
+  Form đã gắn (03/10/2026): `QUOTE_HREF` → `/#bao-gia`, `DEMO_HREF` → `/#dat-lich-demo`, `INTEGRATION_HREF` →
+  `/giai-phap/san-tmdt-ban-le#bao-gia`, `TECHNICIAN_SIGNUP_HREF` → `/doi-tac-tho#dang-ky`. Trang có khối form tự cuộn tới form của
+  chính trang. Neo id tiếng Việt cho cả hai ngôn ngữ (D-23). Vận hành form: `docs/LEADS-RUNBOOK.md`.
 - API theo rules công ty: `/api/v1/...`, `{ success, data | error{code,message,details} }`, Zod, honeypot + Turnstile + rate-limit,
   correlationId, KHÔNG log SĐT/tên/email, consent theo Luật BVDLCN 91/2025 (câu chữ do pháp chế viết).
 
