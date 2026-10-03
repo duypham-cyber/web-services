@@ -318,3 +318,123 @@ Còn thiếu nhưng không chặn việc build:
   - Khi anh hoặc pháp chế duyệt câu chữ thì điền `approvedBy` và `approvedAt`.
 - Điều kiện bật form trên production giữ nguyên `docs/SRS-LEADS.md` mục 10: SMTP kèm SPF/DKIM/DMARC, khóa Turnstile thật, sao lưu,
   cấu hình openresty.
+
+### D-27 · 03/10/2026 · Bảng duyệt số liệu và câu khẳng định (thực hiện D-26)
+Agent nội dung áp ba quy tắc của D-26 mục 2 cho từng KPI, mốc SLA và câu khẳng định. "Duyệt" = production hiện, không nhãn
+nháp (claim: `status: 'approved'`, `approvedBy: 'Anh Duy (D-26)'`, `approvedAt: '2026-10-03'`). "Giữ nháp" = production ẩn,
+bản xem trước hiện kèm nhãn "Nháp". Khi duyệt, không đổi câu chữ nào và không thêm claim mới. SLA có thêm một mục mới là
+`confirm-time`.
+
+**Cách làm**
+- `content/schemas.ts` thêm 3 trường cho KPI, tương thích ngược:
+  - `basis: 'measured' | 'published'`, bỏ trống = `measured`.
+  - `plus`: chỉ dùng với `published`.
+  - `byRegion`: số theo miền đã duyệt.
+  Validate chặn `plus` hoặc `byRegion` khi KPI chưa có `value`, và chặn `plus` ở số đo thật.
+- `lib/stats.ts`:
+  - `StatView.kind` thêm `'published'`.
+  - Thêm `regionCounts(region?)` và `formatRegionCount(count, locale)`.
+  - `legacyRegionCounts()` giữ chữ ký nhưng nay luôn trả `[]`, vì K1 đã có số duyệt (xem "Còn mở").
+- `scripts/check-no-draft.mjs`:
+  - Đoạn chữ của nội dung nháp nằm trọn trong chữ đã duyệt thì bỏ qua, có in số lượng.
+  - Mọi đoạn khác vẫn bị dò.
+  - Bản build không có HTML nào thì exit 1.
+  - Unit test nằm ở `tests/unit/claims.test.ts`.
+
+**KPI — `content/stats.ts`** (nguồn chung: "Anh Duy duyệt 03/10/2026 (D-26) — số đang công bố trên lapdattoanquoc.vn, bộ
+NOI-DUNG.md mục 13", `updatedAt: '2026-10-03'`)
+
+| Mục | Kết quả | Lý do / thay đổi |
+|---|---|---|
+| K1 = 500+ | Duyệt (`published`, `plus`) | Số công bố của mạng lưới. Nhãn đổi "Thợ đang hoạt động / 90 ngày" → "Thợ trong mạng lưới", định nghĩa "Quy mô mạng lưới thợ kỹ thuật trên toàn quốc" |
+| K1 theo miền: Bắc 120+ · Trung 80+ · Nam 200+ · Mekong 60+ | Duyệt (`byRegion`) | D-26. `regionCounts('south')` trả 2 dòng (Miền Nam, Mekong) như nguồn ghi, không cộng thành số mới. EN "Mekong Delta" |
+| K2 = 34/34 | Duyệt (`published`) | D-26 |
+| K3 đơn 12 tháng · K4 Hãng/Sàn · K5 đúng hẹn | Giữ `null` | Chưa có số; site cũ hiện "0k+" hoặc không có |
+| K6 = 60 phút | Duyệt (`published`) | Mốc cam kết tối đa, không phải trung bình. Nhãn đổi "Thời gian xác nhận lịch trung bình" → "Xác nhận lịch trong vòng". Không nêu ai liên hệ (xem "Còn mở") |
+
+**SLA — `content/sla.ts`**
+
+| Mục | Kết quả | Lý do |
+|---|---|---|
+| `confirm-time` (mục mới) "Trong vòng 60 phút sau khi nhận đơn" | Duyệt | Mốc 60 phút của D-26, cùng K6. Câu duyệt ghi "CSKH xác nhận lịch"; mục này bỏ chữ CSKH vì nguồn vênh về người liên hệ |
+| `fix-response-time` "Trong 24–48 giờ" | Duyệt | "Xử lý bảo hành 24–48h" (D-26). Nhãn trong file là "Thời gian xử lý lỗi lắp đặt", cùng nghĩa. `value` chỉ chứa 24–48 giờ. "CSKH phản hồi 24 giờ làm việc" và "24/36 giờ làm việc theo khu vực" vẫn nháp |
+| `hotline-hours` | Giữ nháp | Giờ hotline 24/7 hay 9:00–18:00 (D-26) |
+| `order-intake-hours` | Giữ nháp | Giờ làm việc theo chính sách cũ; gắn với câu hỏi giờ hotline |
+| `completion-time` | Giữ nháp | Trong 24h hay tối đa 48h: chính là câu hỏi "có thợ trong 24h" (D-26) |
+| `warranty-new-installation` · `warranty-repair` · `warranty-cleaning` | Giữ nháp | Thời hạn bảo hành (02 hay 12 tháng) |
+| `warranty-registration-window` · `onsite-work-hours` · `warranty-service-hours` | Giữ nháp | Mốc giờ của chính sách cũ (trang pháp lý chưa có bản chốt) |
+| Thời gian gọi lại lead | Không có mục | `content/sla.ts` chưa có mục này, chưa có giá trị đề xuất nên không có gì để duyệt |
+
+**Câu khẳng định — `content/claims/core.ts`** (6 câu: 1 duyệt)
+
+| id | Kết quả | Lý do |
+|---|---|---|
+| `coverage.provinces-34` | Duyệt | Chỉ khẳng định K2 = 34/34 |
+| `quality.brand-standard` | Giữ nháp | Chưa có tài liệu chuẩn lắp đặt của hãng (`evidence: null`) |
+| `technician.ekyc` | Giữ nháp | Tiêu chuẩn thợ (E-KYC) |
+| `warranty.register-within-7-days` | Giữ nháp | Chính sách cũ, trang pháp lý chưa chốt |
+| `warranty.new-installation-term` | Giữ nháp | Thời hạn bảo hành 02 hay 12 tháng |
+| `support.24-7` | Giữ nháp | Giờ hotline |
+
+**`content/claims/b2b.ts`** (23 câu: 2 duyệt)
+
+| id | Kết quả | Lý do |
+|---|---|---|
+| `b2b.sla.confirm-60-minutes` | Duyệt | Ô "60 phút" chỉ khẳng định mốc đã duyệt (K6) |
+| `b2b.warranty.installation-faults` | Duyệt | Phạm vi bảo hành lỗi do lắp đặt, nguồn /services cũ. Không nêu thời hạn, khớp mốc 24–48h |
+| `b2b.sla.completion-48-hours` | Giữ nháp | Vênh với "trong 24h" của trang chủ cũ, thuộc câu hỏi "có thợ trong 24h" |
+| `b2b.sla.fix-24-business-hours` · `b2b.sla.fix-36-business-hours` | Giữ nháp | 24/36 giờ làm việc không phải mốc 24–48h đã duyệt; nguồn là chính sách cũ |
+| `b2b.sla.special-areas-case-by-case` · `b2b.sla.special-areas-definition` | Giữ nháp | Chính sách cũ (pháp lý) |
+| `b2b.sla.urgent-orders` | Giữ nháp | Chính sách viết cho thợ; chưa xác nhận là cam kết với Hãng/Sàn |
+| `b2b.sla.warranty-hours` | Giữ nháp | Giờ làm việc theo chính sách cũ |
+| `b2b.retail.onsite-within-24h` | Giữ nháp | "Có thợ trong 24h" (D-26) |
+| `b2b.integration.channels` | Giữ nháp | Kênh tích hợp chỉ ghi là "ví dụ" |
+| `b2b.platform.realtime-tracking` | Giữ nháp | Dashboard thời gian thực |
+| `b2b.billing.tax-compliant-costs` · `b2b.billing.materials-no-invoice` | Giữ nháp | VAT, thuế TNCN, hóa đơn |
+| `b2b.scope.standard-site-conditions` · `b2b.pricing.no-surprise-costs` | Giữ nháp | Giá |
+| `b2b.warranty.responsibility-split` · `b2b.warranty.brand-fallback` · `b2b.warranty.exclusions` | Giữ nháp | Chính sách cũ (pháp lý); brand-fallback còn có hoàn trả chi phí (đối soát) |
+| `b2b.complaints.change-technician` · `b2b.complaints.technician-sanctions` · `b2b.complaints.property-damage` | Giữ nháp | Chính sách cũ (pháp lý); chưa có khung chế tài |
+| `b2b.complaints.support-response` | Giữ nháp | "24 giờ làm việc" chưa duyệt |
+
+**`content/claims/home.ts`** (6 câu: 0 duyệt)
+
+| id | Kết quả | Lý do |
+|---|---|---|
+| `home.photo-sign-off` | Giữ nháp | Chưa có ảnh dashboard thật (evidence ghi chưa kiểm chứng) |
+| `home.compliant-costs` | Giữ nháp | Hóa đơn, VAT/TNCN |
+| `home.partner-logos` · `home.partner-video` · `home.case-study` | Giữ nháp | Logo/đối tác: chưa có văn bản đồng ý |
+| `home.standards-citation` | Giữ nháp | TCVN/QCVN chưa kiểm chứng |
+
+**`content/claims/partner.ts`** (16 câu: 0 duyệt)
+
+| id | Kết quả | Lý do |
+|---|---|---|
+| `partner.payout-per-job` · `partner.urgent-surcharge` · `partner.topup-wallet` | Giữ nháp | Thu nhập/phí của thợ, ví Top-up |
+| `partner.materials-paid-on-site` | Giữ nháp | Hóa đơn, đối soát vật tư |
+| `partner.training-brand-standard` · `partner.experience-requirement` · `partner.standard-tcvn-5687` · `partner.standard-qcvn-25` | Giữ nháp | Tiêu chuẩn thợ (đào tạo, năm kinh nghiệm vênh 1–2 / ≥ 2, TCVN/QCVN) |
+| `partner.onsite-hours` · `partner.urgent-orders` · `partner.violations` | Giữ nháp | Chính sách cũ (pháp lý); chưa có mức phạt |
+| `partner.job-duration` | Giữ nháp | Tối đa 48 giờ, vênh với "trong 24h" |
+| `support.no-personal-transfer` | Giữ nháp | `evidence: null`, phải đối chiếu chính sách vật tư trước |
+| `support.warranty-response-time` | Giữ nháp | Cả câu gộp "24 giờ làm việc" (chưa duyệt) với 24–48 giờ (đã duyệt). Không tách câu vì không được đổi câu chữ |
+| `support.warranty-exclusions` · `support.responsibility-split` | Giữ nháp | Chính sách cũ (pháp lý) |
+
+**`content/claims/knowledge.ts`** (7 câu: 0 duyệt)
+
+| id | Kết quả | Lý do |
+|---|---|---|
+| `knowledge.warranty-workmanship-12-months` · `knowledge.washer-install-commitment` | Giữ nháp | Bảo hành 12 tháng (thời hạn chưa chốt) |
+| `knowledge.pricing-no-surprise-costs` | Giữ nháp | Giá, `evidence: null` |
+| `knowledge.b2c-ac-care-services` · `knowledge.single-point-of-contact` | Giữ nháp | Dịch vụ khách lẻ, nhánh A (D-02); `evidence: null` |
+| `knowledge.digital-ops-results` | Giữ nháp | Số không nguồn (4 giờ → 15 phút, −65%) |
+| `knowledge.three-party-benefits` | Giữ nháp | Gộp hoa hồng, báo cáo thời gian thực và nhiều cam kết chưa duyệt |
+
+Tổng: 58 câu, 3 duyệt, 55 giữ nháp. 11 mục SLA: 2 duyệt, 9 giữ nháp. KPI: K1 (cùng số theo miền), K2, K6 duyệt; K3–K5 `null`.
+
+**Còn mở, cần tech lead hoặc anh Duy xử lý**
+- `/mang-luoi`, thẻ vùng: trang vẫn gọi `legacyRegionCounts()`, nay luôn trả `[]`. Vì vậy số theo miền đã duyệt chưa hiện ở
+  đâu, kể cả bản xem trước. Cần đổi sang `regionCounts(region.id)` + `formatRegionCount()` và bỏ nhãn "Nháp · số site cũ".
+  Trang này ngoài vùng của agent nội dung.
+- Người xác nhận lịch trong 60 phút là CSKH hay thợ? Site cũ ghi CSKH. Chính sách cũ và `content/process.ts` bước 03 ghi thợ.
+  Hiện K6, `confirm-time` và claim `b2b.sla.confirm-60-minutes` không nêu ai liên hệ.
+- `content/README.md` còn ghi "K1–K6 đều `null`" và "SLA đều `null`". `lib/jsonld.ts` còn ghi `coverage.provinces-34` là claim
+  chưa duyệt. Hai chỗ này cần cập nhật theo bảng trên; cả hai ngoài vùng của agent nội dung.
