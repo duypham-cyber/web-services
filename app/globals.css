@@ -187,7 +187,11 @@
   --header-shadow: var(--shadow-1);
 }
 
-body:has([data-film-zone]) .site-header:not([data-past-film='true']) {
+/*
+ * Hero chưa gắn khung dính (T-STILL, reduced-motion, máy yếu — không có .film-armed): khối chữ cuộn dưới header, nên header
+ * chỉ trong suốt khi CHƯA cuộn (data-scrolled). Đã gắn khung dính (.film-armed) thì trong suốt suốt vùng phim như cũ.
+ */
+body:has([data-film-zone]) .site-header:not([data-past-film='true']):is(:not([data-scrolled='true']), body:has([data-film-zone].film-armed) *) {
   --header-bg: transparent;
   --header-fg: var(--color-white);
   --header-shadow: none;
@@ -202,7 +206,7 @@ body:has([data-film-zone]) .site-header:not([data-past-film='true']) {
  * trên lớp sương nhạt (đọc được cả khi biển xanh đậm nằm dưới). Cảnh chuyển đêm → runtime đặt data-night lên track →
  * rơi về luật chữ trắng ở trên. data-film-zone rỗng (vùng phim tối) giữ nguyên chữ trắng.
  */
-body:has([data-film-zone='light']:not([data-night])) .site-header:not([data-past-film='true']) {
+body:has([data-film-zone='light']:not([data-night])) .site-header:not([data-past-film='true']):is(:not([data-scrolled='true']), body:has([data-film-zone].film-armed) *) {
   --header-fg: var(--color-ink-900);
   --logo-blue: var(--color-blue-600);
   --logo-sub: #a6b1b8;
@@ -217,7 +221,7 @@ body:has([data-film-zone='light']:not([data-night])) .site-header:not([data-past
 
 /* Màn nhỏ: chữ và panel cuộn dưới header trong vùng phim → làm mờ nền sau header cho dễ đọc */
 @media (max-width: 1023.98px) {
-  body:has([data-film-zone='light']:not([data-night])) .site-header:not([data-past-film='true']) {
+  body:has([data-film-zone='light']:not([data-night])) .site-header:not([data-past-film='true']):is(:not([data-scrolled='true']), body:has([data-film-zone].film-armed) *) {
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
   }
