@@ -3,6 +3,8 @@
 > Contract: `contracts/lead-b2b.md` (phần chung + B2B) và `contracts/lead-technician.md`, APPROVED 03/10/2026 (`docs/DECISIONS.md` D-26).
 > SRS: `docs/SRS-LEADS.md`. Viết cho quản trị kỹ thuật (người anh Duy chỉ định bằng văn bản) và dev tiếp quản.
 > Cập nhật: 03/10/2026, agent LEADS bước 1 (backend). Phần giao diện form (bước 2) ghi bổ sung khi xong.
+> 03/10/2026 (sau review): sửa (M1, M2, L1–L6, L8) — quyền cột `lead_notifications`, IPv6 /64, TLS SMTP, khóa test Turnstile,
+> cửa sổ 24 giờ của câu đồng ý, export DSR không ghi đè; rủi ro đã biết ở mục 15.
 
 ## 1. Thành phần
 
@@ -40,10 +42,10 @@ trang; API vẫn kiểm lại ở mỗi request và trả 503 nếu form đã t�
 | `LEAD_ALLOWED_ORIGINS` | Có | `http://127.0.0.1:3091,http://localhost:3091,http://<IP Tailscale của máy chủ>:9515,http://<IP LAN của máy chủ>:9515` | `https://lapdattoanquoc.vn` (+ origin staging) |
 | `LEAD_RATE_LIMIT_MAX`, `LEAD_RATE_LIMIT_WINDOW_SEC` | Không | `20` / `600` (nới để anh thử nhiều lần) | **Để trống** → 5 lần / 600 giây (contract, D-14) |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Có | `1x00000000000000000000AA` (khóa test Cloudflare, luôn qua) | Site key thật của tên miền (lúc build) |
-| `TURNSTILE_SECRET_KEY` | Có | `1x0000000000000000000000000000000AA` (test, luôn qua) | Secret thật. Khóa test ở production → API coi là lỗi cấu hình, trả 503 |
+| `TURNSTILE_SECRET_KEY` | Có | `1x0000000000000000000000000000000AA` (test, luôn qua) | Secret thật. Khóa test ở production → API coi là lỗi cấu hình, trả 503; kết quả khóa test lọt qua siteverify → 403 (mục 10) |
 | `TURNSTILE_ALLOWED_HOSTNAMES` | Có (khóa thật) | `localhost,127.0.0.1,<IP Tailscale của máy chủ>,<IP LAN của máy chủ>` | `lapdattoanquoc.vn` (+ staging) |
 | `TURNSTILE_TIMEOUT_MS` | Không | mặc định 3000 | 3000 |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SECURE` | Production | trống | Có. Tên miền gửi phải có SPF/DKIM/DMARC |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SECURE` | Production | trống | Có. Tên miền gửi phải có SPF/DKIM/DMARC. **TLS bắt buộc**: cổng 465 (hoặc `SMTP_SECURE=true`) dùng TLS ngay; cổng khác (587…) bắt buộc STARTTLS — máy chủ không hỗ trợ thì không gửi (lỗi `SMTP_…`, outbox thử lại). TLS ≥ 1.2, kiểm chứng chỉ. Chỉ relay loopback (`localhost`, `127.x`, `::1`) được miễn |
 | `SMTP_FROM` | Có | `Bluebolt Website (ban xem truoc) <leads@lapdattoanquoc.invalid>` | Địa chỉ gửi thật đã cấu hình SPF/DKIM |
 | `LEAD_MAIL_TRANSPORT`, `LEAD_MAIL_DIR` | Chỉ dev/preview | `file`, `.cache/lead-mail` | Không đặt (bị từ chối ở production) |
 | `LEAD_NOTIFY_EMAIL_B2B` | Có | `chua-co-dia-chi@invalid` (giữ chỗ, D-02) | Hộp thư kinh doanh B2B — **chờ anh Duy** |
@@ -63,8 +65,10 @@ khởi động lại (đã kiểm 03/10/2026 bằng một lead thật qua API, s
 - Container `bluebolt-web-db` (postgres:16-alpine), chỉ `127.0.0.1:5450`, volume `bluebolt-web-db`, `--restart unless-stopped`,
   `--memory 256m`, `shared_buffers=32MB`. Log server không ghi DETAIL/câu lệnh lỗi (tránh lộ dữ liệu dòng).
 - Tạo/sửa: `node scripts/db-dev-setup.mjs` (chạy lại bao nhiêu lần cũng được).
-- Ba role: `bb_owner` (chủ schema, chạy migration), `bb_app` (app + script retry: INSERT/SELECT `leads`; INSERT/SELECT/UPDATE
-  `lead_notifications`; không DDL, không UPDATE/DELETE `leads`), `bb_ops` (SELECT/DELETE `leads`, SELECT `lead_notifications`).
+- Ba role: `bb_owner` (chủ schema, chạy migration), `bb_app` (app + script retry: INSERT/SELECT `leads`; INSERT/SELECT
+  `lead_notifications` + UPDATE **chỉ 5 cột** `status, attempts, next_attempt_at, last_error_code, sent_at`; không DDL, không
+  UPDATE/DELETE `leads`, không DELETE `lead_notifications`), `bb_ops` (SELECT/DELETE `leads`, SELECT `lead_notifications`).
+  Code thêm câu UPDATE mới trên `lead_notifications` mà SET cột khác → "permission denied" (cố ý).
   Superuser `postgres` không có mật khẩu → quản trị bằng `docker exec -it bluebolt-web-db psql -U postgres`.
 - Hai database: `bluebolt_web` (dev + bản xem trước dùng chung), `bluebolt_web_test` (test tích hợp).
 - Kiểm: `docker ps --filter name=bluebolt-web-db` · `docker logs --tail 50 bluebolt-web-db`.
@@ -98,7 +102,13 @@ MIGRATION_DATABASE_URL=postgres://bb_owner:…@db:5432/bluebolt_web node scripts
 ```
 - Mỗi file một transaction; bảng `schema_migrations` ghi version; khóa advisory chống chạy chồng.
 - **KHÔNG chạy `down` trên production khi bảng đã có lead** (mất dữ liệu). Rollback app không cần rollback DB.
-- Migration hiện có: `20261003144700-create-leads.mjs` (đã chạy up → down → up trên cả `bluebolt_web` và `bluebolt_web_test`).
+- Migration hiện có (đều đã chạy up → down → up trên cả `bluebolt_web` và `bluebolt_web_test`):
+  - `20261003144700-create-leads.mjs` — hai bảng, index, trigger `updated_at`, quyền mức bảng.
+  - `20261003184500-narrow-notification-grants.mjs` — thu hẹp UPDATE của `bb_app` trên `lead_notifications` xuống 5 cột trạng
+    thái gửi (review L8). Chỉ đổi quyền → `down` an toàn (trả lại UPDATE cả bảng). Sau migration: timer retry vẫn nhận việc và
+    gửi được (kiểm 03/10/2026: `claimed 1, sent 1`, `--requeue-dead` chạy được).
+  Kiểm quyền: `docker exec bluebolt-web-db psql -U postgres -d bluebolt_web -c "\dp lead_notifications"` → `bb_app=ar` mức
+  bảng + `bb_app=w` trên đúng 5 cột.
 
 ## 5. Timer thử lại thông báo (chỉ bbsw / bản xem trước)
 
@@ -147,11 +157,13 @@ Không sửa được ngay: xuất lead (`leads-dsr.mjs export`, mục 7) và ch
 
 ```bash
 node scripts/leads-dsr.mjs find --phone "0902 808 049"     # hoặc --email <địa chỉ> | --reference 0B9F3C2E
-node scripts/leads-dsr.mjs export --id <uuid> --out /tmp/yeu-cau-<mã>.json   # tệp quyền 600, không in ra màn hình
+node scripts/leads-dsr.mjs export --id <uuid> --out /tmp/yeu-cau-<mã>.json   # tệp MỚI quyền 600, không in ra màn hình
 node scripts/leads-dsr.mjs erase --id <uuid> --yes          # DELETE thật, cascade sang lead_notifications
 ```
 - Chạy bằng role `bb_ops` (`DATABASE_URL_OPS`). Mỗi lần chạy ghi một dòng KHÔNG PII vào `logs/leads-ops.log` (người chạy,
   thời điểm, lệnh, loại tìm, id) — không ghi số điện thoại/email đã tìm.
+- `export` chỉ tạo tệp mới (`O_EXCL`): `--out` đã tồn tại (kể cả symlink) → báo lỗi "đã tồn tại", không ghi đè, không đổi quyền
+  tệp cũ. Xóa tệp cũ hoặc chọn tên khác rồi chạy lại.
 - Gửi tệp export cho chủ thể dữ liệu qua kênh pháp chế quy định (PC-04), rồi xóa tệp.
 - Bản sao trong hộp thư nhận thông báo và trong bản sao lưu: xử lý theo hướng dẫn pháp chế (PC-03). Email thông báo có mã
   tham chiếu để tìm.
@@ -163,8 +175,13 @@ chờ pháp chế, PC-03). Khi có số: chạy hằng ngày bằng cron, `--dry
 
 ## 9. IP, rate-limit, openresty
 
-- App KHÔNG lưu/log IP thô. `ip_hash = HMAC-SHA256(IP, LEAD_IP_HASH_SECRET)`; IP chỉ sống trong bộ nhớ request; siteverify không
-  nhận `remoteip`.
+- App KHÔNG lưu/log IP thô. `ip_hash = HMAC-SHA256(khóa gom, LEAD_IP_HASH_SECRET)`; IP chỉ sống trong bộ nhớ request; siteverify
+  không nhận `remoteip`. Khóa gom (`ipBucket` trong `lib/leads/ip.ts`): IPv4 giữ nguyên địa chỉ; **IPv6 gom theo tiền tố /64**
+  (một thuê bao IPv6 thường có cả khối /64 và tự đổi địa chỉ trong khối). Rate-limit và cột `ip_hash` cùng dùng khóa này.
+- **Bất biến triển khai** (vi phạm = client tự chọn IP, né được rate-limit): app chỉ tin phần tử `X-Forwarded-For` do proxy tin
+  cậy nối vào (openresty production, proxy 9515 bản xem trước); app chỉ bind loopback, không có đường nào từ ngoài máy vào thẳng
+  app. Thêm proxy/CDN nào trước openresty thì phải cấu hình openresty lấy IP thật từ proxy đó trước khi nối header. Có Cloudflare
+  proxy → bắt buộc `real_ip_header CF-Connecting-IP` + `set_real_ip_from` đúng dải IP Cloudflare.
 - App chỉ bind `localhost` → mọi kết nối tới app là tiến trình trên chính máy đó (proxy 9515 hoặc openresty). Tin header:
   - `xff-last` (mặc định): lấy phần tử **cuối** của `X-Forwarded-For` — proxy bản xem trước (`deploy/preview/proxy.mjs`) và
     openresty (`$proxy_add_x_forwarded_for`) đều nối IP socket vào cuối; gọi thẳng app thì Next tự đặt 127.0.0.1. Phần client
@@ -186,6 +203,9 @@ chờ pháp chế, PC-03). Khi có số: chạy hằng ngày bằng cron, `--dry
   `1x00000000000000000000AA` (hiện, luôn qua) · `2x00000000000000000000AB` (luôn trượt) · secret `1x0000000000000000000000000000000AA`
   (luôn qua) · `2x…AA` (luôn trượt) · `3x…AA` (token đã dùng). Token giả `XXXX.DUMMY.TOKEN.XXXX`.
 - Với secret test, app bỏ kiểm `hostname`/`action` (siteverify test không trả đúng hostname của site) và gắn `meta.captcha='test'`.
+  Chỉ ở dev/bản xem trước: trên site thật (`NODE_ENV=production`, không `DRAFT_PREVIEW`), kết quả khóa test (secret test hoặc
+  `metadata.result_with_testing_key`) bị coi là trượt → 403 `CAPTCHA_FAILED` + log `error` `lead_captcha_misconfigured`
+  (`turnstileError: testing-key-on-production`). Thấy log này: thay site key/secret thật rồi build lại.
 - Production: tạo widget cho `lapdattoanquoc.vn`, `action` = `lead_b2b` / `lead_technician`; app kiểm `success`, `hostname`
   (∈ `TURNSTILE_ALLOWED_HOSTNAMES`), `action`. Lỗi mạng/timeout/5xx của Cloudflare → vẫn nhận lead, `meta.captcha='unverified'`,
   email gắn cảnh báo (D-09). Secret sai → log `error` `lead_captcha_misconfigured`.
@@ -218,8 +238,11 @@ Chỉ đặt `LEADS_FORM_ENABLED=true` khi đủ:
       tác động + bên xử lý ngoài lãnh thổ (PC-05), trang `/chinh-sach-bao-mat`. Thêm **version mới** trong `content/consent.ts`
       (không sửa version nháp đã dùng ở bản xem trước) với `approvedBy` + `approvedAt`; schema chặn version đã duyệt mà còn chỗ
       "[… chờ pháp chế]". Thay chân thư "[đầu mối … PC-04]" trong `lib/leads/notify/email.ts`.
+      `effectiveFrom` = thời điểm deploy dự kiến: version liền trước chỉ còn được nhận 24 giờ kể từ `effectiveFrom` của version
+      mới (Rule 2) — tính theo dữ liệu, khởi động lại server KHÔNG mở lại cửa sổ. Deploy trễ hơn `effectiveFrom` thì cửa sổ ngắn
+      lại tương ứng (tab mở sẵn nhận 409 sớm hơn, FE tự tải lại và giữ dữ liệu đã nhập).
 - [ ] Anh Duy cho hai địa chỉ nhận (D-02) → `LEAD_NOTIFY_EMAIL_B2B`, `LEAD_NOTIFY_EMAIL_TECHNICIAN`.
-- [ ] SMTP production + SPF/DKIM/DMARC cho tên miền gửi; gửi thử tới cả hai hộp thư.
+- [ ] SMTP production (cổng 465 hoặc 587 có STARTTLS, TLS ≥ 1.2) + SPF/DKIM/DMARC cho tên miền gửi; gửi thử tới cả hai hộp thư.
 - [ ] Turnstile: widget production cho đúng tên miền, `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (lúc build) + `TURNSTILE_SECRET_KEY` +
       `TURNSTILE_ALLOWED_HOSTNAMES`.
 - [ ] `LEAD_IP_HASH_SECRET` mới (không dùng lại của bbsw), `LEAD_ALLOWED_ORIGINS=https://lapdattoanquoc.vn`, rate-limit để trống.
@@ -251,3 +274,12 @@ npm run test:leads    # tích hợp với Postgres thật (bluebolt_web_test): t
 | 500 `INTERNAL_ERROR`, log `lead_db_error` | DB không chạy / sai mật khẩu | `docker ps`, `docker start bluebolt-web-db`; production: kiểm DB |
 | Lead có trong DB nhưng không có email | Outbox lỗi | Mục 6 |
 | Mọi lead trông như cùng một IP (429 hàng loạt) | Proxy không gửi IP thật | Kiểm header IP ở openresty/proxy, `LEAD_CLIENT_IP_SOURCE` (mục 9) |
+
+## 15. Rủi ro đã biết (chấp nhận, ghi lại)
+
+| Rủi ro | Vì sao giữ | Giảm thiểu / theo dõi |
+|---|---|---|
+| `Idempotency-Key` không gắn với nội dung (review L7): gửi lại cùng khóa nhưng dữ liệu KHÁC vẫn nhận 201 replay của lead đầu, dữ liệu mới bị bỏ qua | Đúng Rule 7 của contract: chống trùng theo khóa, không so nội dung | FE sinh khóa mới khi người dùng sửa dữ liệu sau lỗi 4xx (Rule 7), nên chỉ client lỗi/tự chế gặp. Replay chỉ trả `id`, `reference`, `type`, `receivedAt` — không trả nội dung lead. Người dùng báo "đã sửa mà bộ phận nhận dữ liệu cũ" → tìm theo mã tham chiếu (mục 7) |
+| Gom IPv6 theo /64 có thể gộp nhiều người dùng chung một /64 (văn phòng, nhà mạng cấp /64 dùng chung); IPv4 sau NAT cũng vậy | Đổi lại không cho một thuê bao né rate-limit bằng cách đổi địa chỉ trong khối | 5 lần / 10 phút đủ rộng cho người thật; thấy 429 hàng loạt từ một nơi thì xem mục 14 và cân nhắc nới `LEAD_RATE_LIMIT_MAX` |
+| Bộ đếm rate-limit nằm trong bộ nhớ tiến trình (mục 9) | Contract mục 3.4 | Khởi động lại/2 instance thì nới tạm thời; lớp `limit_req` ở openresty vẫn chạy |
+| Ký tự điều khiển, ký tự định hướng (U+202A–202E, U+2066–2069, LRM/RLM) và surrogate lẻ bị **bỏ im lặng** khỏi họ tên, công ty, chức danh, ghi chú, utm (review M2) | Không bao giờ 500 vì ký tự lạ; dữ liệu trong DB/email sạch | Chuỗi chỉ toàn ký tự lạ → coi như trống (trường bắt buộc báo lỗi 400 bình thường) |
