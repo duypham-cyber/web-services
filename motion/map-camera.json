@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "note": "Đường máy hero bản đồ (Mẫu 02, contracts/hero-map.md). p = tiến độ cuộn của track hero [0;1]. ll = [kinh độ, vĩ độ] điểm nhìn; d = khoảng cách (đơn vị cảnh ≈ 111 km); el = góc ngẩng (độ); az = phương vị (0 = nhìn từ phía nam, dương = máy lệch sang đông); sx, sy = dịch khung theo tỉ lệ khung chuẩn (sx dương: bản đồ sang phải; sy dương: bản đồ lên trên); bump = độ nâng máy giữa hai keyframe (cú bay). Khung chuẩn refAspect (desktop 16:10, mobile 9:16) đặt vào viewport kiểu object-fit: cover tại anchor [x, y], nhưng thu nhỏ nếu cover cắt vùng safe hoặc lấn cột chữ textInset (motion/map-camera.ts viewWindow). safe = vùng (toạ độ chuẩn hoá của khung chuẩn) chứa trọn đất liền + hai quần đảo ở các keyframe có fit = true.",
+  "scenes": [
+    "national",
+    "north",
+    "central",
+    "south",
+    "network"
+ ],
+  "weights": {
+    "national": [null, null, 0.03, 0.1],
+    "north": [0.17, 0.23, 0.37, 0.42],
+    "central": [0.45, 0.5, 0.63, 0.68],
+    "south": [0.71, 0.76, 0.88, 0.92],
+    "network": [0.93, 0.985, null, null]
+  },
+  "night": [0.88, 0.985],
+  "smoothing": 5.5,
+  "layouts": {
+    "desktop": {
+      "refAspect": 1.6,
+      "anchor": [1, 0.5],
+      "fov": 30,
+      "targetY": 0.25,
+      "safe": {
+        "x": [0.43, 0.975],
+        "y": [0.1, 0.955]
+      },
+      "textInset": 0.4,
+      "keyframes": [
+        { "p": 0, "ll": [110, 15], "d": 32.2, "el": 48, "az": 12, "sx": 0.196, "sy": 0.054, "fit": true },
+        { "p": 0.06, "ll": [110, 15], "d": 32.3, "el": 48, "az": 11, "sx": 0.193, "sy": 0.054, "fit": true },
+        { "p": 0.24, "ll": [106.05, 20.75], "d": 11.6, "el": 44, "az": 12, "sx": 0.14, "sy": 0.02, "bump": 7 },
+        { "p": 0.36, "ll": [106.15, 20.65], "d": 10.9, "el": 43, "az": 7, "sx": 0.14, "sy": 0.02 },
+        { "p": 0.5, "ll": [108.75, 16.05], "d": 12.6, "el": 46, "az": 22, "sx": 0.12, "sy": 0.02, "bump": 5 },
+        { "p": 0.62, "ll": [108.85, 15.95], "d": 11.9, "el": 45, "az": 18, "sx": 0.12, "sy": 0.02 },
+        { "p": 0.76, "ll": [106.35, 10.45], "d": 11.8, "el": 45, "az": 18, "sx": 0.13, "sy": 0.02, "bump": 6 },
+        { "p": 0.88, "ll": [106.45, 10.35], "d": 11, "el": 44, "az": 13, "sx": 0.13, "sy": 0.02 },
+        { "p": 1, "ll": [110, 15], "d": 33.9, "el": 56, "az": 8, "sx": 0.191, "sy": 0.039, "bump": 2, "fit": true }
+     ]
+    },
+    "mobile": {
+      "refAspect": 0.5625,
+      "anchor": [0.5, 0],
+      "fov": 30,
+      "targetY": 0.25,
+      "safe": {
+        "x": [0.03, 0.97],
+        "y": [0.08, 0.6]
+      },
+      "keyframes": [
+        { "p": 0, "ll": [110, 15], "d": 53.7, "el": 50, "az": 19, "sx": 0.022, "sy": 0.186, "fit": true },
+        { "p": 0.06, "ll": [110, 15], "d": 53.5, "el": 50, "az": 18, "sx": 0.018, "sy": 0.187, "fit": true },
+        { "p": 0.24, "ll": [109, 16.5], "d": 52.3, "el": 47, "az": 13, "sx": -0.046, "sy": 0.238, "fit": true },
+        { "p": 0.36, "ll": [109, 16.5], "d": 52.4, "el": 47, "az": 11, "sx": -0.059, "sy": 0.237, "fit": true },
+        { "p": 0.5, "ll": [110.2, 15.2], "d": 53.8, "el": 49, "az": 22, "sx": 0.053, "sy": 0.188, "fit": true },
+        { "p": 0.62, "ll": [110.2, 15.2], "d": 53.6, "el": 49, "az": 21, "sx": 0.048, "sy": 0.189, "fit": true },
+        { "p": 0.76, "ll": [109.6, 13.8], "d": 50.2, "el": 47, "az": 19, "sx": -0.03, "sy": 0.163, "fit": true },
+        { "p": 0.88, "ll": [109.6, 13.8], "d": 49.7, "el": 47, "az": 17, "sx": -0.037, "sy": 0.163, "fit": true },
+        { "p": 1, "ll": [110, 15], "d": 55.8, "el": 56, "az": 12, "sx": -0.006, "sy": 0.185, "fit": true }
+     ]
+    }
+  }
+}
