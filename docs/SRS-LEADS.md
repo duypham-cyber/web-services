@@ -1,6 +1,6 @@
 # SRS rút gọn — Form lead (B2B và đối tác thợ)
 
-> Dự án: website Bluebolt Services (CTCP Công nghệ Tia Chớp Xanh) · Ngày 02/10/2026 · Phiên bản 0.1 · **DRAFT, chờ anh Duy duyệt**
+> Dự án: website Bluebolt Services (CTCP Công nghệ Tia Chớp Xanh) · Ngày 02/10/2026 · Phiên bản 0.1 · **APPROVED cùng hai contract lead (anh Duy duyệt 03/10/2026, D-26)**
 > Chi tiết kỹ thuật (schema, API, mã lỗi, RBAC, test): `contracts/lead-b2b.md` (gồm phần chung) và `contracts/lead-technician.md`. Chỗ nào SRS và contract khác nhau thì theo contract.
 > Căn cứ: `04` mục 2.5, 2.6, 7.3 · `03` mục 1.2, 13.1, 13.4 (P8), 13.5.
 

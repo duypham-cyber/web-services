@@ -7,6 +7,8 @@ Mã câu hỏi Q1–Q20 theo `docs/04` mục 9.
 ## Phạm vi và sản phẩm
 
 ### D-01 · 02/10/2026 · Anh Duy chọn phim A+ và yêu cầu build
+> **03/10/2026: thay bằng D-26.** Hero trang chủ là Mẫu 02 "Bản đồ sống", phim A+ dừng. Phần còn hiệu lực: không KHANG.
+
 Phim trang chủ theo phương án **A+** (`docs/03` mục 9, 13.2): shot 0 POV người ngồi, phòng sáng ban ngày → shot 1 dolly-in,
 phòng tối dần (exposure ramp) → **screen-hold** (website cuộn trên màn hình trong cảnh) → push-through/handoff sang
 HeroScreen (H2) → section "Ba cửa vào". Bản đồ 34 tỉnh là **section HTML 2.5D sau phim**, không phải shot trong phim.
@@ -172,6 +174,10 @@ cũ). `components/layout/Logo.tsx` khai báo path một lần (`<symbol>`), dùn
   KHÁC (listener nhận dạng của bbsw không nhận được) → NAT router chưa trỏ 9515 về bbsw (<IP LAN của máy chủ>).
 - Bản xem trước chạy trên bbsw cổng 9515 (Basic Auth). Truy cập được ngay qua Tailscale `http://<IP Tailscale của máy chủ>:9515` và LAN
   `http://<IP LAN của máy chủ>:9515`. Muốn public cần đổi NAT 9515 → <IP LAN của máy chủ> (dịch vụ Mention sẽ mất cổng này).
+- **Cập nhật 03/10/2026:** phiên 02/10 chưa dựng bản xem trước (không có `deploy/preview`, cổng 9515 trống). Nay đã dựng:
+  `deploy/preview/proxy.mjs` + 2 unit systemd user, bản build `.next-preview` có DRAFT_PREVIEW, cập nhật bằng
+  `bash deploy/preview/update.sh`. Đã kiểm qua LAN và Tailscale: thiếu mật khẩu → 401; 50/50 URL sitemap → 200 kèm noindex;
+  `/dev/ui` → 404. Chi tiết: `docs/PREVIEW.md`.
 
 ### D-22 · 02/10/2026 · Hero 3D trang chủ: chờ anh Duy chọn
 - Sáng 02/10 có thêm nhánh "5 mẫu 3D làm riêng" ở `../website-services-3d/` (khuyến nghị Mẫu 02 "Bản đồ sống", có thể + mở màn
@@ -179,6 +185,7 @@ cũ). `components/layout/Logo.tsx` khai báo path một lần (`<symbol>`), dùn
 - Trong lúc chờ: build toàn bộ phần không phụ thuộc hero (trang, nội dung, bản đồ SVG, SEO, QA, bản xem trước 9515).
   Hero giữ `FilmHero` khung tạm (H1 + CTA + poster). Đổi hero sau này chỉ thay ruột `FilmHero` (giữ `FilmHeroProps`).
 - Một repo duy nhất `bluebolt-web` cho mọi hướng hero; mẫu ở `website-services-3d/mau/` là bản tham khảo HTML + three.js.
+- **Cập nhật 03/10/2026: anh Duy chọn Mẫu 02 "Bản đồ sống 34 tỉnh"**, không ghép mở màn Mẫu 01. Chi tiết: D-26.
 
 ## Tích hợp sau 5 agent build (tech lead tích hợp, 02/10/2026)
 
@@ -242,6 +249,8 @@ Bác hoặc hoãn (lý do):
   tông của section liền trước (`inheritTone`) nên nhịp nền trắng/xanh nhạt của bản xem trước giống hệt production.
 
 ### D-25 · 02/10/2026 · Giả định do 5 agent build đặt, chờ anh Duy (chi tiết: `docs/BUILD-REPORTS-2026-10-02.md`)
+> **03/10/2026: anh Duy đã duyệt.** Quy tắc áp dụng: D-26 mục 2. Bảng từng câu khẳng định: D-27.
+
 | Chủ đề | Đang áp dụng | Ai chốt |
 |---|---|---|
 | Số liệu K1–K6, số thợ theo tỉnh | `value: null` (production ẩn); bản xem trước hiện số site cũ (D-24) | Anh Duy + vận hành |
@@ -257,3 +266,55 @@ Bác hoặc hoãn (lý do):
 | Bài viết | Bài AI 410; 2 bài robot gộp; số không nguồn đã làm mềm; tên hãng → "các hãng lớn" | Anh Duy |
 | Trang chủ | Khi có K1–K2 thật, dải tin cậy có nên chỉ hiện K3–K4 (tránh lặp với section bản đồ)? Đang theo contract (K1–K4) | Anh Duy |
 | Bản EN | Bản nháp, cần người bản ngữ biên tập | Anh Duy |
+
+## Quyết định của anh Duy (03/10/2026)
+
+### D-26 · 03/10/2026 · Anh Duy chọn hero Mẫu 02, duyệt D-25 và hai contract lead
+Tin nhắn của anh: "chọn mẫu 2 và duyệt 2 hạng mục kia, em làm đi". Đây là câu trả lời cho ba việc đang chặn trong báo cáo ngày 03/10:
+(1) chọn mẫu hero, (2) chốt số liệu và 13 giả định D-25, (3) duyệt form nhận lead.
+
+**1. Hero là Mẫu 02 "Bản đồ sống 34 tỉnh"** (`../website-services-3d/mau/02-ban-do-song/`, chỉ đọc), thay phim A+ của D-01.
+- Cảnh: bản đồ Việt Nam 3D nổi khối trên biển, đường điều phối toả từ TP.HCM. Khi cuộn, máy bay theo thứ tự
+  Toàn quốc → Miền Bắc → Miền Trung → Miền Nam → toàn mạng lưới.
+- Ranh giới tỉnh lấy từ `public/data/vn34.topo.json`, thay cho dải vĩ độ gần đúng trong bản mẫu.
+- Không ghép mở màn tia chớp của Mẫu 01. Không KHANG, không Lenis.
+- Cách làm: thay ruột `FilmHero`, giữ nguyên `FilmHeroProps`.
+- Tiêu chí nghiệm thu: `contracts/hero-map.md` (DRAFT; đây là phần tĩnh nên dùng ngoại lệ D-19).
+
+**2. D-25 được duyệt.** Khi site cũ tự mâu thuẫn, không tự chọn giá trị. Áp dụng theo ba quy tắc:
+- **Duyệt, production hiện.** Đây là các số và mốc trong bộ NOI-DUNG.md mục 13 không còn phải chọn:
+  - 500+ thợ (K1): số công bố của mạng lưới, không phải số đo "hoạt động trong 90 ngày".
+  - 34/34 tỉnh/thành (K2).
+  - Xác nhận lịch trong 60 phút (K6): mốc cam kết tối đa, không phải số trung bình.
+  - Số thợ theo miền: Bắc 120+ · Trung 80+ · Nam 200+ · Mekong 60+.
+  - Xử lý bảo hành trong 24–48h.
+- **Vẫn nháp (production ẩn), chờ anh trả lời.** Ba mục này site cũ tự mâu thuẫn hoặc chưa có giá trị đề xuất:
+  - Thời hạn bảo hành lắp đặt: 02 hay 12 tháng.
+  - Giờ làm việc của hotline: 24/7 hay 9:00–18:00 T2–T6.
+  - Có cam kết "có thợ trong 24h" cho mọi tỉnh hay không.
+- **Các dòng còn lại của D-25 thành quyết định, giữ đúng cách đang áp dụng:**
+  - Giá vật tư ẩn khi chưa có ngày hiệu lực.
+  - Đối soát, thuế, ví: chỉ hiện đoạn trung tính.
+  - Kênh tích hợp ghi là "ví dụ".
+  - Tiêu chuẩn thợ, tin tuyển, trang pháp lý: giữ nháp tới khi bộ phận phụ trách giao bản chốt.
+  - Giữ nhãn bản đồ EN, các bài viết, dải tin cậy K1–K4.
+  - Bản EN vẫn là nháp, chờ biên tập.
+- Bảng duyệt hoặc giữ nháp cho từng câu khẳng định: D-27.
+
+**3. Hai contract lead được duyệt (APPROVED):** `contracts/lead-b2b.md` và `contracts/lead-technician.md`.
+Nhận mọi đề xuất mặc định ở Phụ lục A của cả hai:
+- Kênh thông báo (a): email theo bộ phận.
+- Nhận email tên miền miễn phí, có gắn cờ. Không nhận số máy bàn.
+- 3 loại doanh nghiệp; giữ các mốc sản lượng.
+- Turnstile lỗi mạng: vẫn nhận lead, có gắn cờ. Honeypot: không lưu.
+- `/api/contact` trả 410. Rate-limit 5 lần/10 phút/IP. Dùng `intent='integration'`. Bỏ trường "ngành hàng".
+- Form thợ: 8 kỹ năng, một tỉnh; email thông báo có link Zalo.
+
+Còn thiếu nhưng không chặn việc build:
+- **D-02, hai địa chỉ email nhận** (kinh doanh B2B, tuyển thợ): chưa có. Hai địa chỉ này là biến môi trường
+  `LEAD_NOTIFY_EMAIL_B2B` và `LEAD_NOTIFY_EMAIL_TECHNICIAN`, khai lúc deploy. Bản xem trước ghi email ra tệp, không gửi thật.
+- **PC-01…05, câu chữ đồng ý:** tech lead soạn bản nháp trong `content/consent.ts`, CHƯA có `approvedBy`.
+  - Production tự tắt form (AC-C10). Bản xem trước hiện form kèm nhãn "Nháp".
+  - Khi anh hoặc pháp chế duyệt câu chữ thì điền `approvedBy` và `approvedAt`.
+- Điều kiện bật form trên production giữ nguyên `docs/SRS-LEADS.md` mục 10: SMTP kèm SPF/DKIM/DMARC, khóa Turnstile thật, sao lưu,
+  cấu hình openresty.

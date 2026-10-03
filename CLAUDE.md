@@ -4,9 +4,11 @@
 
 Website B2B của CÔNG TY CỔ PHẦN CÔNG NGHỆ TIA CHỚP XANH (Bluebolt Services): mạng lưới lắp đặt điện máy toàn quốc
 (phạm vi tỉnh: đọc `content/claims/`, KHÔNG tự ghi) cho Hãng, Sàn TMĐT, thợ, khách lẻ.
-Concept "Bluebolt Cinematic" — **phương án phim A+ (anh Duy chọn 02/10/2026)**: shot 0 POV ban ngày → dolly-in, phòng
-tối dần → screen-hold (website cuộn trên màn hình) → push-through/handoff sang HeroScreen (H2) → section "Ba cửa vào".
-Bản đồ 34 tỉnh là section HTML 2.5D SAU phim. KHÔNG có KHANG trong cảnh.
+Hero trang chủ: **Mẫu 02 "Bản đồ sống 34 tỉnh"** (anh Duy chọn 03/10/2026, D-26), thay phim A+ của D-01.
+- Cảnh: bản đồ Việt Nam 3D nổi khối trên biển, đường điều phối toả từ TP.HCM.
+- Khi cuộn, máy bay theo thứ tự Toàn quốc → Miền Bắc → Miền Trung → Miền Nam → toàn mạng lưới.
+- Mẫu tham khảo: `../website-services-3d/mau/02-ban-do-song/` (CHỈ ĐỌC). Tiêu chí: `contracts/hero-map.md`.
+- KHÔNG có KHANG.
 Tài liệu gốc: `docs/03-DINH-HUONG-THIET-KE-3D.md`, `docs/04-KE-HOACH-PHAT-TRIEN-CLAUDE-CODE.md` (khác nhau thì theo 04).
 Mọi quyết định và giả định: `docs/DECISIONS.md`. Đường dẫn riêng của máy (Chromium, ffmpeg): `CLAUDE.local.md` (gitignore).
 
@@ -129,7 +131,7 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 
 ## Header, vùng phim, stub
 - Header dùng chung ở root layout. Trang có phần tử `[data-film-zone]` → header trong suốt chữ trắng, qua khỏi vùng đó thì
-  nền trắng có bóng (CSS `:has()` + `HeaderObserver`, không setState khi cuộn). Phim A+: đặt `data-film-zone` lên CẢ track cuộn.
+  nền trắng có bóng (CSS `:has()` + `HeaderObserver`, không setState khi cuộn). Hero bản đồ: đặt `data-film-zone` lên CẢ track cuộn.
 - `components/film/FilmHero.tsx` — STUB. Agent phim thay ruột, GIỮ props `FilmHeroProps` { locale, eyebrow ({text, draft}|null),
   title (H1), lead, primaryCta, secondaryCta ({label, href}), skipLabel, skipTargetId='ba-cua-vao' }. Link "Bỏ qua phần giới
   thiệu ↓" đứng ĐẦU trong DOM (focus đầu tiên sau header), hiển thị dưới CTA. Đích handoff: `<section id="ba-cua-vao">` (H2).
@@ -147,6 +149,10 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 - Font: chỉ 1 file preload (Be Vietnam Pro 700 vietnamese). Không thêm weight/họ font.
 
 ## Luật cảnh 3D và máy quay (Agent phim — KHÔNG vi phạm)
+Áp dụng cho hero bản đồ Mẫu 02:
+- Luật 1–3 và 6–12 giữ nguyên. Đường máy đọc từ `motion/map-camera.json` + `motion/map-camera.ts`.
+- Luật 4, 5, 13 và tầng T-SEQ chỉ dành cho phim A+, nay đã dừng.
+- Tầng của hero bản đồ: T-FULL · T-LITE · T-STILL (poster).
 1. HTML là nội dung. Mọi chữ/số/CTA trong DOM render từ server. Canvas `aria-hidden="true"`.
 2. LCP = H1 hoặc poster, server render và HIỆN mặc định. Ẩn lớp chuyển giao chỉ bằng class `.film-armed` thêm sau hydrate;
    KHÔNG inline `opacity:0` trong HTML server. HeroScreen và "Ba cửa vào" dùng H2. Canvas không bao giờ là LCP.
@@ -172,6 +178,7 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 
 ## Phần động — contract-first (KHÔNG exception)
 - Form lead (B2B, thợ, bảo hành), API, DB, CMS, `/tra-cuu`: KHÔNG code khi `contracts/<feature>.md` chưa có `STATUS: APPROVED`.
+  `lead-b2b.md` và `lead-technician.md` đã APPROVED ngày 03/10/2026 (D-26). Form bảo hành, CMS và `/tra-cuu` vẫn chưa có contract.
   Hiện tại CTA "Nhận báo giá" → `/lien-he#kinh-doanh`, "Đăng ký thợ" → `/doi-tac-tho#dang-ky` (`QUOTE_HREF`, `TECHNICIAN_SIGNUP_HREF`);
   "Đặt lịch demo 30 phút" / "Thảo luận tích hợp" dùng `DEMO_HREF` / `INTEGRATION_HREF` (tạm = `QUOTE_HREF`). Neo id tiếng Việt
   cho cả hai ngôn ngữ (D-23).
@@ -181,7 +188,7 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 ## Git (làm local, một cây làm việc, nhiều agent song song)
 - Nhánh tích hợp: `feat/s1-1.4-p0-build` (tách từ `develop`). Không push `main`/`develop`, không `--force`, không rebase nhánh chung.
 - CHỈ `git add <đường dẫn mình sửa>` — KHÔNG `git add -A`/`git add .`/`git commit -a` (agent khác đang có file chưa commit).
-- Conventional Commits, scope: `web` | `film` | `content` | `i18n` | `seo` | `infra` | `test` | `docs` (subject tiếng Anh,
+- Conventional Commits, scope: `web` | `film` | `content` | `i18n` | `seo` | `infra` | `test` | `docs` | `leads` (subject tiếng Anh,
   động từ nguyên thể, ≤ 72 ký tự). Commit theo từng mốc nhỏ.
 
 ## Definition of Done (mỗi phần việc)

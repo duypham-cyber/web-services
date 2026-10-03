@@ -1,6 +1,13 @@
 # Contract: lead-b2b — Form "Nhận báo giá / Đặt lịch demo 30 phút"
 
-## STATUS: DRAFT — chờ anh Duy duyệt
+## STATUS: APPROVED — anh Duy duyệt 03/10/2026
+
+> Anh duyệt qua chat ("duyệt 2 hạng mục kia", xem `docs/DECISIONS.md` D-26) và nhận mọi đề xuất mặc định ở Phụ lục A.
+> Còn mở, nhưng không chặn việc build:
+> - **D-02:** hai địa chỉ email nhận, khai bằng biến môi trường lúc deploy.
+> - **PC-01…05:** câu chữ đồng ý. Bản nháp nằm trong `content/consent.ts` và chưa có `approvedBy`, nên production tự tắt form theo AC-C10.
+>
+> Điều kiện bật form trên production: `docs/SRS-LEADS.md` mục 10.
 
 | | |
 |---|---|
