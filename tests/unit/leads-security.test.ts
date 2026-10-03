@@ -72,7 +72,13 @@ describe('Turnstile siteverify (bước 11, D-09)', () => {
   const okBody = { success: true, hostname: 'lapdattoanquoc.vn', action: 'lead_b2b', 'error-codes': [] };
   const fakeFetch = (status: number, body: unknown) =>
     vi.fn(async () => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } }));
-  const base = { secret: 'real-secret', expectedAction: 'lead_b2b', allowedHostnames: ['lapdattoanquoc.vn'], token: 'tok' };
+  const base = {
+    secret: 'real-secret',
+    expectedAction: 'lead_b2b',
+    allowedHostnames: ['lapdattoanquoc.vn'],
+    token: 'tok',
+    liveProduction: false,
+  };
 
   it('qua khi success + hostname + action đúng; KHÔNG gửi remoteip', async () => {
     const f = fakeFetch(200, okBody);
@@ -124,6 +130,22 @@ describe('Turnstile siteverify (bước 11, D-09)', () => {
       fetchImpl: fakeFetch(200, { success: true, hostname: 'example.com' }) as unknown as typeof fetch,
     });
     expect(r).toEqual({ result: 'test' });
+  });
+  it('review L5: site thật — kết quả khóa test (secret test hoặc metadata.result_with_testing_key) → failed + misconfigured', async () => {
+    const testBody = { success: true, hostname: 'example.com', metadata: { result_with_testing_key: true } };
+    const live = { ...base, liveProduction: true };
+    const viaSecret = await verifyTurnstile({
+      ...live,
+      secret: TURNSTILE_TEST_SECRETS.pass,
+      fetchImpl: fakeFetch(200, { success: true, hostname: 'example.com' }) as unknown as typeof fetch,
+    });
+    expect(viaSecret).toEqual({ result: 'failed', reason: 'testing-key-on-production', misconfigured: true });
+    const viaMetadata = await verifyTurnstile({ ...live, fetchImpl: fakeFetch(200, testBody) as unknown as typeof fetch });
+    expect(viaMetadata).toEqual({ result: 'failed', reason: 'testing-key-on-production', misconfigured: true });
+    // bản xem trước (không phải site thật): giữ hành vi cũ
+    expect(await verifyTurnstile({ ...base, fetchImpl: fakeFetch(200, testBody) as unknown as typeof fetch })).toEqual({ result: 'test' });
+    // site thật với khóa thật vẫn qua bình thường
+    expect(await verifyTurnstile({ ...live, fetchImpl: fakeFetch(200, okBody) as unknown as typeof fetch })).toEqual({ result: 'passed' });
   });
 });
 

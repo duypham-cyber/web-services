@@ -403,6 +403,16 @@ describe.skipIf(!HAS_DB)('POST /api/v1/leads — Postgres thật', () => {
       expect(smtp.messages.length).toBeGreaterThanOrEqual(3);
       expect(smtp.messages.every((m) => mailText(m.data).includes('Chưa xác minh captcha'))).toBe(true);
     });
+    it('review L5: kết quả khóa test qua siteverify — site thật → failed + misconfigured; bản xem trước → test', async () => {
+      const verify = (e: Record<string, string | undefined>) =>
+        createLeadDeps({ env: env(e), schedule: () => {}, logger, turnstileUrl: siteverify.url }).turnstile({
+          token: 'testkey',
+          expectedAction: 'lead_b2b',
+        });
+      expect(await verify({ NODE_ENV: 'production' })).toEqual({ result: 'failed', reason: 'testing-key-on-production', misconfigured: true });
+      expect(await verify({ NODE_ENV: 'production', DRAFT_PREVIEW: '1' })).toEqual({ result: 'test' });
+      expect(await verify({})).toEqual({ result: 'test' });
+    });
     it('Origin lạ → 403 FORBIDDEN_ORIGIN; không Origin (curl) + Turnstile hợp lệ → 201', async () => {
       const bad = await post(withToken(b2bBody()), { headers: { origin: 'https://evil.example' } });
       expect([bad.res.status, bad.body.error?.code]).toEqual([403, 'FORBIDDEN_ORIGIN']);

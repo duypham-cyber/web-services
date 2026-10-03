@@ -101,6 +101,7 @@ export function createLeadDeps(options: CreateLeadDepsOptions): LeadHandlerDeps 
         expectedAction,
         secret: config.turnstileSecret ?? '',
         allowedHostnames: config.turnstileAllowedHostnames,
+        liveProduction: config.liveProduction,
         timeoutMs: config.turnstileTimeoutMs,
         url: options.turnstileUrl,
       }),
@@ -324,6 +325,8 @@ export async function handleLeadPost(request: Request, deps: LeadHandlerDeps): P
     const captcha = await deps.turnstile({ token: data.turnstileToken, expectedAction: data.type });
     if (captcha.result === 'failed') {
       logger.warn('lead_rejected', { correlationId, type, code: 'CAPTCHA_FAILED', turnstileError: captcha.reason });
+      // Khóa test lọt lên site thật (review L5): chặn như captcha sai và báo động cấu hình
+      if (captcha.misconfigured) logger.error('lead_captcha_misconfigured', { correlationId, type, turnstileError: captcha.reason });
       return errorResponse(403, 'CAPTCHA_FAILED', correlationId);
     }
     if (captcha.result === 'unverified') {

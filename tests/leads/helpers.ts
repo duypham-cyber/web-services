@@ -39,6 +39,7 @@ const closeServer = (server: Server | NetServer) => new Promise<void>((resolve) 
 /**
  * siteverify giả. Token quyết định kết quả:
  *   ok:<action> → success, hostname lapdattoanquoc.vn, action <action> · host:<action> → hostname evil.example
+ *   testkey → success như khóa test thật (hostname example.com, không action, metadata.result_with_testing_key)
  *   bad → invalid-input-response · spent → timeout-or-duplicate · 500 → HTTP 500 · slow → không trả lời (timeout)
  */
 export async function startSiteverify() {
@@ -58,6 +59,9 @@ export async function startSiteverify() {
       if (token === '500') return send(500, {});
       if (token === 'bad') return send(200, { success: false, 'error-codes': ['invalid-input-response'] });
       if (token === 'spent') return send(200, { success: false, 'error-codes': ['timeout-or-duplicate'] });
+      if (token === 'testkey') {
+        return send(200, { success: true, hostname: 'example.com', 'error-codes': [], metadata: { result_with_testing_key: true } });
+      }
       const [kind, action] = token.split(':');
       if (kind === 'ok') return send(200, { success: true, hostname: 'lapdattoanquoc.vn', action, 'error-codes': [] });
       if (kind === 'host') return send(200, { success: true, hostname: 'evil.example', action, 'error-codes': [] });

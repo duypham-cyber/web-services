@@ -10,6 +10,9 @@
  *   cùng ngày: khóa test trả `hostname: "example.com"`, KHÔNG có `action`, có `metadata.result_with_testing_key: true`
  *   (tài liệu ghi "localhost"/"test" — thực tế khác). Vì vậy ở chế độ test KHÔNG kiểm hostname/action; production cấm khóa
  *   test (config.ts báo lỗi cấu hình → form tắt).
+ * - Lớp thứ hai (review L5): kết quả "test" chỉ được coi là qua khi KHÔNG phải site thật. Site thật (NODE_ENV=production,
+ *   không DRAFT_PREVIEW) mà siteverify trả kết quả khóa test → failed + misconfigured (403 CAPTCHA_FAILED, log error).
+ *   Bản xem trước giữ nguyên hành vi (khóa test → 'test').
  */
 
 export const TURNSTILE_SITEVERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
@@ -40,7 +43,7 @@ export function isTurnstileTestSecret(secret: string): boolean {
 export type TurnstileOutcome =
   | { result: 'passed' }
   | { result: 'test' }
-  | { result: 'failed'; reason: string }
+  | { result: 'failed'; reason: string; misconfigured?: boolean }
   | { result: 'unverified'; reason: string; misconfigured: boolean };
 
 export type VerifyTurnstileInput = {
@@ -48,6 +51,8 @@ export type VerifyTurnstileInput = {
   secret: string;
   expectedAction: string;
   allowedHostnames: readonly string[];
+  /** Site thật (NODE_ENV=production và không DRAFT_PREVIEW): kết quả khóa test bị coi là failed. Bắt buộc truyền. */
+  liveProduction: boolean;
   timeoutMs?: number;
   fetchImpl?: typeof fetch;
   url?: string;
@@ -99,7 +104,9 @@ export async function verifyTurnstile(input: VerifyTurnstileInput): Promise<Turn
   }
 
   const testMode = isTurnstileTestSecret(input.secret) || data.metadata?.result_with_testing_key === true;
-  if (testMode) return { result: 'test' };
+  if (testMode) {
+    return input.liveProduction ? { result: 'failed', reason: 'testing-key-on-production', misconfigured: true } : { result: 'test' };
+  }
 
   const hostname = typeof data.hostname === 'string' ? data.hostname.toLowerCase() : '';
   if (!input.allowedHostnames.includes(hostname)) return { result: 'failed', reason: 'hostname-mismatch' };

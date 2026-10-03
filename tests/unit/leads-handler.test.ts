@@ -176,6 +176,18 @@ describe('envelope + thứ tự xử lý', () => {
     expect(unverified.status).toBe(201);
     expect(lines.some((l) => l.includes('"lead_captcha_unverified"'))).toBe(true);
   });
+  it('review L5: khóa test trên site thật (failed + misconfigured) → 403 CAPTCHA_FAILED, không ghi DB, log error cấu hình', async () => {
+    const lines: string[] = [];
+    const { db, rows } = fakeDb();
+    const res = await handleLeadPost(
+      leadRequest(b2bBody()),
+      deps({ db, lines, turnstile: { result: 'failed', reason: 'testing-key-on-production', misconfigured: true } }),
+    );
+    expect([res.status, (await json(res)).error?.code]).toEqual([403, 'CAPTCHA_FAILED']);
+    expect(rows).toHaveLength(0);
+    const err = lines.map((l) => JSON.parse(l) as Record<string, unknown>).find((l) => l.event === 'lead_captcha_misconfigured');
+    expect(err).toMatchObject({ level: 'error', turnstileError: 'testing-key-on-production' });
+  });
   it('DB lỗi → 500 INTERNAL_ERROR có correlationId, không stack trace', async () => {
     const db = { query: async () => Promise.reject(new Error('connect ECONNREFUSED')), connect: async () => Promise.reject(new Error('connect ECONNREFUSED')) } as unknown as Db;
     const res = await handleLeadPost(leadRequest(b2bBody()), deps({ db }));
