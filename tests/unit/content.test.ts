@@ -35,8 +35,13 @@ describe('stats.ts — không bịa số', () => {
     expect(stats.map((s) => s.id)).toEqual(['K1', 'K2', 'K3', 'K4', 'K5', 'K6']);
   });
   it('schema từ chối số thiếu ngày/nguồn', () => {
-    const bad = { ...stats[0], value: 500 };
-    expect(statSchema.safeParse(bad).success).toBe(false);
+    const unapproved = stats.find((s) => s.id === 'K3');
+    expect(statSchema.safeParse({ ...unapproved, value: 500 }).success).toBe(false);
+    expect(statSchema.safeParse({ ...stats[0], updatedAt: null }).success).toBe(false);
+    expect(statSchema.safeParse({ ...stats[0], source: null }).success).toBe(false);
+  });
+  it('chỉ số đã duyệt mới có value (D-26): K1, K2, K6; K3–K5 null', () => {
+    expect(stats.filter((s) => s.value !== null).map((s) => s.id)).toEqual(['K1', 'K2', 'K6']);
   });
 });
 

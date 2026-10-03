@@ -78,42 +78,68 @@ export type Site = z.infer<typeof siteSchema>;
 export const statIdSchema = z.enum(['K1', 'K2', 'K3', 'K4', 'K5', 'K6']);
 export type StatId = z.infer<typeof statIdSchema>;
 
-/** Cách định dạng số KPI (lib/format.ts → formatStatValue). "minutes" dùng cho số site cũ "60 phút". */
+/** Cách định dạng số KPI (lib/format.ts → formatStatValue). "minutes": mốc tính bằng phút (K6 "60 phút"). */
 export const statFormatSchema = z.enum(['integer', 'of-34', 'percent', 'hours', 'minutes']);
+
+/**
+ * Bản chất của `value` (D-26, D-27):
+ *   measured  — số ĐO THẬT theo `definition` (vd đơn nghiệm thu trong 12 tháng). Không kèm "+".
+ *   published — số CÔNG BỐ hoặc mốc CAM KẾT đã được anh Duy duyệt (vd "500+ thợ", "xác nhận lịch trong vòng 60 phút").
+ *               Không phải số đo: label/definition phải nói đúng bản chất (không gọi là "đang hoạt động", "trung bình").
+ */
+export const statBasisSchema = z.enum(['measured', 'published']);
+export type StatBasis = z.infer<typeof statBasisSchema>;
 
 /** Ba vùng điều phối (content/provinces.ts → regions). */
 export const regionSchema = z.enum(['north', 'central', 'south']);
 
 /**
- * Số thợ theo miền mà site cũ đang ghi (trang /system-map). Tên miền giữ đúng như site cũ ghi (có "Mekong" riêng);
- * `region` = vùng tương ứng trên site mới để đặt đúng thẻ vùng ở /mang-luoi.
+ * Số thợ theo miền (chỉ K1). Tên miền giữ đúng như nguồn ghi (site cũ /system-map tách "Mekong" khỏi Miền Nam);
+ * `region` = vùng tương ứng trên site mới để đặt đúng thẻ vùng ở /mang-luoi và cảnh vùng của hero bản đồ.
+ * Dùng cho cả số đã duyệt (`byRegion`) lẫn số site cũ (`legacyByRegion`).
  */
-export const statLegacyRegionSchema = z
+export const statRegionCountSchema = z
   .object({
     region: regionSchema,
     label: localizedTextSchema,
     value: z.number().int().nonnegative(),
-    /** Site cũ ghi kèm "+" (vd "120+ thợ"). */
+    /** Số kèm "+" (vd "120+ thợ"). */
     plus: z.boolean(),
   })
   .strict();
+/** Tên cũ của statRegionCountSchema (giữ tương thích ngược). */
+export const statLegacyRegionSchema = statRegionCountSchema;
 
 export const statSchema = z
   .object({
     id: statIdSchema,
     label: localizedTextSchema,
     definition: localizedTextSchema,
-    /** null = chưa có số thật → ô KPI bị ẩn. KHÔNG điền số ước. */
+    /**
+     * Số hiển thị ở MỌI môi trường: số đo thật hoặc số công bố/mốc cam kết đã duyệt (xem `basis`).
+     * null = chưa có số được duyệt → ô KPI bị ẩn ở production. KHÔNG điền số ước.
+     */
     value: z.number().nonnegative().nullable(),
     format: statFormatSchema,
+    /** Bản chất của `value`; bỏ trống = "measured". Chỉ dùng khi có value. */
+    basis: statBasisSchema.optional(),
+    /** `value` kèm dấu "+" ("500+"). Chỉ với basis "published" — số đo thật không có "+". */
+    plus: z.boolean().optional(),
+    /** Ngày đo / ngày duyệt (YYYY-MM-DD). Có value thì bắt buộc. */
     updatedAt: isoDateSchema.nullable(),
+    /** Ai cấp hoặc ai duyệt, đo thế nào. Có value thì bắt buộc. */
     source: z.string().min(1).nullable(),
     /** Khóa route (lib/routes.ts) nơi KPI được phép hiện. */
     showOn: z.array(z.string().min(1)).min(1),
     /**
-     * Số ĐANG GHI trên site cũ (lapdattoanquoc.vn), để bản xem trước bớt ô trống. CHỈ hiện khi DRAFT_PREVIEW=1, kèm
-     * nhãn "Nháp · số site cũ"; production KHÔNG BAO GIỜ hiện (cổng duy nhất: lib/stats.ts, có unit test). Không phải số
-     * đo theo `definition`. null = site cũ không có số này.
+     * Số theo miền ĐÃ DUYỆT (chỉ K1) — hiện ở mọi môi trường qua lib/stats.ts regionCounts(), không kèm nhãn nháp.
+     * Dùng chung updatedAt/source của KPI. Chỉ dùng khi có value.
+     */
+    byRegion: z.array(statRegionCountSchema).optional(),
+    /**
+     * Số ĐANG GHI trên site cũ (lapdattoanquoc.vn), để bản xem trước bớt ô trống. CHỈ hiện khi DRAFT_PREVIEW=1 và KPI
+     * chưa có value, kèm nhãn "Nháp · số site cũ"; production KHÔNG BAO GIỜ hiện (cổng duy nhất: lib/stats.ts, có unit
+     * test). Không phải số đo theo `definition`. null = site cũ không có số này.
      */
     legacyValue: z.number().nonnegative().nullable(),
     /** Site cũ ghi kèm dấu "+" (vd "500+"). */
@@ -123,12 +149,21 @@ export const statSchema = z
     /** Trang + câu nguyên văn trên site cũ + ngày crawl; ghi cả chỗ site cũ tự mâu thuẫn. Có legacyValue thì bắt buộc. */
     legacySource: z.string().min(1).nullable(),
     /** Số theo miền site cũ ghi (chỉ K1, trang /system-map). Cùng luật hiển thị với legacyValue. */
-    legacyByRegion: z.array(statLegacyRegionSchema).optional(),
+    legacyByRegion: z.array(statRegionCountSchema).optional(),
   })
   .strict()
   .superRefine((s, ctx) => {
     if (s.value !== null && (s.updatedAt === null || s.source === null)) {
       ctx.addIssue({ code: 'custom', message: `${s.id}: có value thì phải có updatedAt và source` });
+    }
+    if (s.value === null && (s.basis !== undefined || s.plus !== undefined || s.byRegion !== undefined)) {
+      ctx.addIssue({ code: 'custom', message: `${s.id}: basis/plus/byRegion chỉ dùng khi có value (số đã duyệt)` });
+    }
+    if (s.plus === true && s.basis !== 'published') {
+      ctx.addIssue({ code: 'custom', message: `${s.id}: dấu "+" chỉ dùng cho số công bố đã duyệt (basis "published")` });
+    }
+    if (s.byRegion?.some((r) => r.plus) && s.basis !== 'published') {
+      ctx.addIssue({ code: 'custom', message: `${s.id}: số theo miền có "+" chỉ dùng với basis "published"` });
     }
     if (s.value !== null && s.format === 'percent' && s.value > 100) {
       ctx.addIssue({ code: 'custom', message: `${s.id}: phần trăm phải ≤ 100` });
@@ -152,7 +187,9 @@ export const statSchema = z
     }
   });
 export type Stat = z.infer<typeof statSchema>;
-export type StatLegacyRegion = z.infer<typeof statLegacyRegionSchema>;
+export type StatRegionCount = z.infer<typeof statRegionCountSchema>;
+/** Tên cũ của StatRegionCount (giữ tương thích ngược). */
+export type StatLegacyRegion = StatRegionCount;
 
 // ---------------------------------------------------------------------------------------------
 // claims/ — câu khẳng định cần bằng chứng (docs/04 R17, Q19)
