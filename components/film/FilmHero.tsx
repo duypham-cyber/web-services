@@ -334,7 +334,7 @@ export async function FilmHero({
             </figure>
           </div>
 
-          <div className={`${styles.copyWrap} mx-auto box-content max-w-content px-gutter`}>
+          <div className={styles.copyWrap}>
             <div className={styles.copy} data-hero-copy="">
               {/* DOM: link bỏ qua đứng ĐẦU (focus đầu tiên sau header); hiển thị cuối khối chữ */}
               <a href={`#${skipTargetId}`} className={styles.skip}>

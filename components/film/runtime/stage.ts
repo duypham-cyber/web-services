@@ -9,7 +9,7 @@
  *   - minimap (desktop) khi một quần đảo ra khỏi khung, vẽ đủ hai quần đảo có tên, né vùng chấm đảo.
  */
 import { createMapScene, type MapScene, type ProjectedFrame, type RawHeroMap } from '@/components/film/map3d';
-import type { HeroState } from './boot';
+import { SCENE_IDS, type Band, type HeroState, type SceneKey } from './boot';
 import { createLabels } from './labels';
 
 type Box = [number, number, number, number];
@@ -21,6 +21,40 @@ const RELEASE_MS = 3000;
 const GUARD_WINDOW_MS = 2000;
 const GUARD_P90_MS = 25;
 const SVG_NS = 'http://www.w3.org/2000/svg';
+
+const absTop = (el: HTMLElement) => el.getBoundingClientRect().top + window.scrollY;
+
+/**
+ * Mobile: tiến độ theo vị trí đọc. Mỗi panel đi qua tâm "cửa sổ đọc" (phần màn hình dưới bản đồ dính) ↔ đoạn đứng [b, c] của
+ * cảnh đó; giữa hai panel máy bay. Trả các mốc (scrollY → p) tăng dần.
+ */
+function readingKnots(root: HTMLElement, stage: HTMLElement, panels: HTMLElement[], weights: Band[]): [number, number][] {
+  const vh = window.innerHeight;
+  const hm = stage.offsetHeight;
+  const center = hm + (vh - hm) / 2;
+  const knots: [number, number][] = [[absTop(root), 0]];
+  for (const el of panels) {
+    const b = weights[SCENE_IDS.indexOf(el.dataset.scene as SceneKey)];
+    if (!b) continue;
+    const mid = absTop(el) + el.offsetHeight / 2 - center;
+    const half = Math.min(el.offsetHeight * 0.3, (vh - hm) * 0.3);
+    knots.push([mid - half, b[1] ?? 0], [b[2] === null ? mid : mid + half, b[2] ?? 1]);
+  }
+  for (let i = 1; i < knots.length; i += 1) knots[i]![0] = Math.max(knots[i]![0], knots[i - 1]![0] + 1);
+  return knots;
+}
+
+function knotP(knots: [number, number][], y: number): number {
+  if (!knots.length || y <= knots[0]![0]) return 0;
+  for (let i = 1; i < knots.length; i += 1) {
+    const [y1, p1] = knots[i]!;
+    if (y <= y1) {
+      const [y0, p0] = knots[i - 1]!;
+      return p0 + ((p1 - p0) * (y - y0)) / (y1 - y0);
+    }
+  }
+  return knots[knots.length - 1]![1];
+}
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -58,7 +92,12 @@ function buildMinimap(fig: HTMLElement, raw: RawHeroMap) {
   }
 }
 
-export async function startStage(state: HeroState, dataPromise: Promise<unknown>, signal: AbortSignal): Promise<() => void> {
+export async function startStage(
+  state: HeroState,
+  dataPromise: Promise<unknown>,
+  signal: AbortSignal,
+  weights: Band[],
+): Promise<() => void> {
   const { root, stage, host, copy } = state;
   const q = state.query;
   const guardOn = q?.get('fpsguard') !== '0';
@@ -251,6 +290,27 @@ export async function startStage(state: HeroState, dataPromise: Promise<unknown>
       return;
     }
     if (!raf && inView && visible) raf = requestAnimationFrame(tick);
+  }
+
+  // ---------------------------------------------------------------- mobile: tiến độ theo vị trí đọc của panel
+  if (state.mobile) {
+    let knots: [number, number][] | null = null;
+    state.progress = () => knotP((knots ??= readingKnots(root, stage, state.panels, weights)), window.scrollY);
+    const kro = new ResizeObserver(() => {
+      knots = null;
+      state.schedule();
+    });
+    kro.observe(root);
+    cleanups.push(() => {
+      kro.disconnect();
+      state.progress = null;
+    });
+    window.addEventListener('resize', onResizeKnots, { passive: true });
+    cleanups.push(() => window.removeEventListener('resize', onResizeKnots));
+    function onResizeKnots() {
+      knots = null;
+    }
+    state.schedule();
   }
 
   // ---------------------------------------------------------------- sự kiện

@@ -39,6 +39,10 @@ export type HeroState = {
   query: URLSearchParams | null;
   /** Gọi mỗi khi p đổi (chunk cảnh đăng ký). */
   listeners: Set<() => void>;
+  /** Tiến độ theo vị trí đọc (mobile — chunk cảnh cài); null = tuyến tính theo track dính (desktop). */
+  progress: (() => number) | null;
+  /** Hẹn tính lại tiến độ ở rAF kế tiếp. */
+  schedule: () => void;
   toStill(reason: string): void;
 };
 
@@ -98,40 +102,6 @@ function fits(state: HeroState): boolean {
   return state.mobile || state.copy.offsetHeight + 8 <= window.innerHeight;
 }
 
-const absTop = (el: HTMLElement) => el.getBoundingClientRect().top + window.scrollY;
-
-/**
- * Mobile: tiến độ theo vị trí đọc. Mỗi panel đi qua tâm "cửa sổ đọc" (phần màn hình dưới bản đồ dính) ↔ đoạn đứng [b, c] của
- * cảnh đó; giữa hai panel máy bay. Trả các mốc (scrollY → p) tăng dần.
- */
-function readingKnots(root: HTMLElement, stage: HTMLElement, panels: HTMLElement[], weights: Band[]): [number, number][] {
-  const vh = window.innerHeight;
-  const hm = stage.offsetHeight;
-  const center = hm + (vh - hm) / 2;
-  const knots: [number, number][] = [[absTop(root), 0]];
-  for (const el of panels) {
-    const b = weights[SCENE_IDS.indexOf(el.dataset.scene as SceneKey)];
-    if (!b) continue;
-    const mid = absTop(el) + el.offsetHeight / 2 - center;
-    const half = Math.min(el.offsetHeight * 0.3, (vh - hm) * 0.3);
-    knots.push([mid - half, b[1] ?? 0], [b[2] === null ? mid : mid + half, b[2] ?? 1]);
-  }
-  for (let i = 1; i < knots.length; i += 1) knots[i]![0] = Math.max(knots[i]![0], knots[i - 1]![0] + 1);
-  return knots;
-}
-
-function knotP(knots: [number, number][], y: number): number {
-  if (!knots.length || y <= knots[0]![0]) return 0;
-  for (let i = 1; i < knots.length; i += 1) {
-    const [y1, p1] = knots[i]!;
-    if (y <= y1) {
-      const [y0, p0] = knots[i - 1]!;
-      return p0 + ((p1 - p0) * (y - y0)) / (y1 - y0);
-    }
-  }
-  return knots[knots.length - 1]![1];
-}
-
 export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): () => void {
   const root = host.closest<HTMLElement>('[data-hero-map]');
   const stage = host.closest<HTMLElement>('[data-hero-stage]');
@@ -164,6 +134,8 @@ export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): 
     lastInput: performance.now(),
     query,
     listeners: new Set(),
+    progress: null,
+    schedule: () => {},
     toStill(why) {
       if (state.tier === 'still') return;
       state.tier = 'still';
@@ -218,17 +190,10 @@ export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): 
   };
   let raf = 0;
   let lastNight = -1;
-  let knots: [number, number][] | null = null;
   const apply = () => {
     raf = 0;
-    let p: number;
-    if (mobile) {
-      knots ??= readingKnots(root, stage, panels, weights);
-      p = clamp01(knotP(knots, window.scrollY));
-    } else {
-      const range = root.offsetHeight - frame.offsetHeight;
-      p = range > 0 ? clamp01(-root.getBoundingClientRect().top / range) : 0;
-    }
+    const range = root.offsetHeight - frame.offsetHeight;
+    const p = clamp01(state.progress ? state.progress() : range > 0 ? -root.getBoundingClientRect().top / range : 0);
     state.p = p;
     if (query) root.dataset.p = p.toFixed(4);
     const w = weights.map((b) => band(b, p));
@@ -252,22 +217,15 @@ export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): 
   const schedule = () => {
     if (!raf) raf = requestAnimationFrame(apply);
   };
+  state.schedule = schedule;
   on('scroll', () => {
     state.lastScroll = state.lastInput = performance.now();
     schedule();
   });
   on('resize', () => {
     if (isMobileLayout() !== mobile) state.toStill('layout-change');
-    knots = null;
     schedule();
   });
-  // nội dung đổi cao (font về, ảnh, chữ xuống dòng) → tính lại mốc đọc của mobile
-  const ro = new ResizeObserver(() => {
-    knots = null;
-    schedule();
-  });
-  ro.observe(root);
-  cleanups.push(() => ro.disconnect());
   apply();
   cleanups.push(() => cancelAnimationFrame(raf));
 
@@ -308,7 +266,7 @@ export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): 
     });
     data.catch(() => {});
     import('./stage')
-      .then((m) => m.startStage(state, data, ac.signal))
+      .then((m) => m.startStage(state, data, ac.signal, weights))
       .then((s) => {
         if (disposed || state.tier === 'still') s();
         else stop = s;

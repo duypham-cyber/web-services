@@ -425,8 +425,9 @@
 .copyWrap {
   position: relative;
   z-index: 5;
-  /* box-content (Container): bề rộng nội dung = 100% trừ lề hai bên; auto margin căn giữa khi > 1280px */
-  width: calc(100% - 2 * var(--spacing-gutter));
+  /* desktop: khung chữ chỉ rộng bằng cột chữ (không phủ lên bản đồ), mép trái thẳng hàng Container 1280px */
+  justify-self: start;
+  margin-left: max(var(--spacing-gutter), (100cqw - var(--container-content)) / 2);
 }
 
 .copy {
@@ -814,6 +815,8 @@
 
   .copyWrap {
     flex: 1 0 auto;
+    margin: 0;
+    padding-inline: var(--spacing-gutter);
   }
 
   .copy {
@@ -986,9 +989,13 @@
     pointer-events: none;
   }
 
+  /* khung tour chỉ rộng bằng cột panel (không phủ lên bản đồ); % = bề ngang khung dính */
   .track:global(.film-armed) .tour {
     position: absolute;
-    inset: 0;
+    top: 0;
+    bottom: 0;
+    left: max(var(--spacing-gutter), (100% - var(--container-content)) / 2);
+    width: min(26.5rem, calc(41% - max(var(--spacing-gutter), (100% - var(--container-content)) / 2)));
     padding: 0;
     pointer-events: none;
   }
@@ -1004,9 +1011,9 @@
 
   .track:global(.film-armed) .panel {
     position: absolute;
-    left: max(var(--spacing-gutter), (100% - var(--container-content)) / 2);
+    left: 0;
+    right: 0;
     top: 50%;
-    width: min(26.5rem, calc(41vw - max(var(--spacing-gutter), (100vw - var(--container-content)) / 2)));
     padding: 28px 30px 30px;
     opacity: var(--w, 0);
     transform: translateY(-50%) translateY(calc((1 - var(--w, 0)) * 24px));
