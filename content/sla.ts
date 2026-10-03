@@ -1,10 +1,16 @@
 import type { SlaItem } from './schemas';
 
 /**
- * SLA và bảo hành dùng chung (docs/03 mục 14.2). TẤT CẢ là placeholder: value = null, status = "draft".
- * Cột `current` ghi nguyên điều site cũ/chính sách hiện hành đang nói, để anh Duy + pháp chế đối chiếu và chốt.
- * KHÔNG render `current` ra trang như một cam kết. Trang chỉ hiện `value` khi status = "approved".
- * Nguồn: research/agent-notes/content-cro/policy-vi.json, policy-vi-parts.json, research/raw/home.txt, contact.txt.
+ * SLA và bảo hành dùng chung (docs/03 mục 14.2) — MỘT nguồn cho mọi mốc giờ.
+ * Mặc định: value = null, status = "draft". Cột `current` ghi nguyên điều site cũ/chính sách hiện hành đang nói, để anh Duy
+ * + pháp chế đối chiếu và chốt. KHÔNG render `current` ra trang như một cam kết. Trang chỉ hiện `value` khi status = "approved".
+ * Nguồn: research/agent-notes/content-cro/policy-vi.json, policy-vi-parts.json, research/raw/home.txt, contact.txt, services.txt.
+ *
+ * Đã duyệt (anh Duy, 03/10/2026 — docs/DECISIONS.md D-26 mục 2, bảng D-27): "confirm-time" (xác nhận lịch trong 60 phút) và
+ * "fix-response-time" (xử lý bảo hành/lỗi lắp đặt trong 24–48 giờ). value chỉ chứa đúng phần đã duyệt; phần khác của `current`
+ * (CSKH phản hồi 24 giờ làm việc, 24/36 giờ làm việc theo khu vực) vẫn chưa duyệt.
+ * Giữ nháp theo D-26: thời hạn bảo hành (02 hay 12 tháng), giờ hotline (24/7 hay 9:00–18:00), "có thợ trong 24h" mọi tỉnh,
+ * cùng các mốc giờ khác của chính sách cũ (trang pháp lý chưa có bản chốt).
  */
 export const slaItems: readonly SlaItem[] = [
   {
@@ -30,6 +36,20 @@ export const slaItems: readonly SlaItem[] = [
     value: null,
     status: 'draft',
     approvedBy: null,
+  },
+  {
+    // Thêm 03/10/2026 để ghi mốc đã duyệt (D-26). Cùng mốc với KPI K6 (content/stats.ts) và claim b2b.sla.confirm-60-minutes.
+    // Không nêu ai liên hệ: site cũ ghi CSKH, chính sách cũ và content/process.ts (bước 03) ghi thợ — chờ anh Duy chốt.
+    id: 'confirm-time',
+    label: { vi: 'Xác nhận lịch với khách', en: 'Appointment confirmation' },
+    current: {
+      vi: 'Trang /services cũ: CSKH liên hệ khách trong vòng 60 phút để xác nhận thông tin, chốt lịch; chính sách cũ: thợ phải liên hệ khách trong ngày nhận đơn',
+      en: 'Old /services page: customer care contacts the customer within 60 minutes to confirm details and book; old policy: the technician must contact the customer on the day the job arrives',
+    },
+    currentSource: 'research/raw/services.txt (mục 3); Chính sách Phần 3, Điều khoản 3; NOI-DUNG.md mục 6, mục 13',
+    value: { vi: 'Trong vòng 60 phút sau khi nhận đơn', en: 'Within 60 minutes of receiving the order' },
+    status: 'approved',
+    approvedBy: 'Anh Duy (D-26, 03/10/2026)',
   },
   {
     id: 'completion-time',
@@ -93,9 +113,11 @@ export const slaItems: readonly SlaItem[] = [
       en: 'Support replies within 24 business hours; Bluebolt-caused faults fixed in 24–48 hours; 24 business hours in central Hanoi/HCMC, 36 in suburbs and provinces',
     },
     currentSource: 'Chính sách Phần 2 Điều khoản 3, Phần 4 Điều khoản 2',
-    value: null,
-    status: 'draft',
-    approvedBy: null,
+    // Duyệt đúng mốc "xử lý bảo hành 24–48h" (D-26; NOI-DUNG.md mục 8, 13). "24 giờ làm việc" (CSKH phản hồi) và
+    // "24/36 giờ làm việc" theo khu vực KHÔNG nằm trong value — vẫn nháp ở claim b2b.sla.fix-*, support.warranty-response-time.
+    value: { vi: 'Trong 24–48 giờ', en: 'Within 24–48 hours' },
+    status: 'approved',
+    approvedBy: 'Anh Duy (D-26, 03/10/2026)',
   },
   // Hai mốc giờ dưới đây chuyển từ content/legal.ts (legacyServiceHours) về đây cho một nguồn — đề xuất P4 của agent
   // partner, 02/10/2026. /lien-he#gio-lam-viec (HoursTable) đọc theo id.

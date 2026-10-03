@@ -5,6 +5,9 @@ import type { Claim } from '../schemas';
  * (crawl 02/10/2026), chưa có bằng chứng → "draft": production KHÔNG hiển thị; bản xem trước hiện kèm nhãn "Nháp".
  * Nguồn bài cũ: website-services-3d/noi-dung/crawl.json + HTML tải lại ngày 02/10/2026.
  *
+ * Xét duyệt 03/10/2026 (docs/DECISIONS.md D-26 mục 2, bảng D-27): cả 7 câu giữ nháp (bảo hành 12 tháng, giá, B2C nhánh A,
+ * số không nguồn, câu gộp nhiều cam kết chưa duyệt).
+ *
  * Duyệt một câu: điền evidence, approvedBy, approvedAt rồi đổi status → "approved" (content/README.md).
  */
 export const knowledgeClaims = [

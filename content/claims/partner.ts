@@ -11,6 +11,9 @@ import type { Claim } from '../schemas';
  *   - Trang tuyển thợ cũ: research/raw/worker-map.txt, requirement.txt, system-map.txt
  *   - Bảng giá vật tư cũ: research/raw/prices.txt
  *
+ * Xét duyệt 03/10/2026 (docs/DECISIONS.md D-26 mục 2, bảng D-27): cả 16 câu giữ nháp (thu nhập/phí/ví, tiêu chuẩn thợ,
+ * quy định làm việc và bảo hành lấy từ chính sách cũ = trang pháp lý chưa có bản chốt; mốc giờ chưa duyệt).
+ *
  * Đọc CHỈ qua `claim(id, locale)` (lib/claims.ts). Duyệt: điền evidence, approvedBy, approvedAt, đổi status.
  */
 export const partnerClaims = [

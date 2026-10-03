@@ -3,6 +3,8 @@ import type { Claim } from '../schemas';
 /**
  * Câu khẳng định riêng của TRANG CHỦ (khu vực b2b, phần sau phim). Chủ sở hữu: agent trang chủ.
  * TẤT CẢ đang là "draft" → KHÔNG hiển thị ở production; bản xem trước (DRAFT_PREVIEW=1) hiện kèm nhãn "Nháp".
+ * Xét duyệt 03/10/2026 (docs/DECISIONS.md D-26 mục 2, bảng D-27): cả 6 câu giữ nháp (dashboard, hóa đơn, logo/đối tác,
+ * video, case study, TCVN/QCVN đều thuộc nhóm chờ bằng chứng).
  * Đọc CHỈ qua `claim(id, locale)` (lib/claims.ts). Câu dùng chung toàn site (34 tỉnh, chuẩn hãng, E-KYC, bảo hành,
  * 24/7) nằm ở content/claims/core.ts — không lặp lại ở đây.
  *

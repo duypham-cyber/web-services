@@ -9,35 +9,25 @@
  *   4. nguồn số site cũ (content/stats.ts legacySource) và chữ của các khóa messages CHỈ dùng ở bản xem trước
  *      (ghi chú dựng trang common.dev.*, ghi chú duyệt nội dung — danh sách PREVIEW_ONLY_KEYS dưới đây).
  *
+ * Số và câu ĐÃ DUYỆT (claim "approved", SLA "approved", KPI có value — vd "500+", "34/34", "60 phút", D-26/D-27) không bị
+ * dò: chúng hiện ở production mà không có nhãn nháp. Một đoạn chữ của mục 3–4 mà trùng y nguyên một đoạn của nội dung đã
+ * duyệt được bỏ qua (in số lượng ở dòng tổng kết) để cổng không báo nhầm; mọi đoạn khác của câu nháp vẫn bị dò.
+ * Unit test: tests/unit/claims.test.ts (buildNeedles, findViolations).
+ *
  *   node scripts/check-no-draft.mjs .next-check-12345      # thư mục build (mặc định: .next-check-* mới nhất)
  *   node scripts/check-no-draft.mjs .next-check-12345 --json
  * Exit 1 nếu có vi phạm. Build có DRAFT_PREVIEW=1 thì đương nhiên đỏ — chỉ chạy cho bản production.
  */
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, realpathSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { loadTs, ROOT } from './lib/load-ts.mjs';
-
-const args = process.argv.slice(2);
-const JSON_OUT = args.includes('--json');
-const distArg = args.find((a) => !a.startsWith('--'));
-
-function latestDist() {
-  const dirs = readdirSync(ROOT)
-    .filter((d) => d.startsWith('.next-') && statSync(join(ROOT, d)).isDirectory())
-    .map((d) => ({ d, t: statSync(join(ROOT, d)).mtimeMs }))
-    .sort((a, b) => b.t - a.t);
-  if (dirs.length === 0) throw new Error('Không có thư mục build .next-* — chạy scripts/safe-build.sh trước');
-  return dirs[0].d;
-}
-
-const DIST = distArg ?? latestDist();
-const APP_DIR = join(ROOT, DIST, 'server', 'app');
 
 // ---------------------------------------------------------------------------------------------
 // Khóa messages CHỈ hiện ở bản xem trước (đã kiểm từng chỗ dùng: nằm sau isDraftPreview()/DraftLine/DraftNote/
 // PendingPanel/PreviewNote). Thêm khóa preview mới thì thêm vào đây. "*" = cả nhánh.
 // ---------------------------------------------------------------------------------------------
-const PREVIEW_ONLY_KEYS = [
+export const PREVIEW_ONLY_KEYS = [
   'common.status.draft',
   'common.status.draftLegacy',
   'common.dev.*',
@@ -66,7 +56,7 @@ const PREVIEW_ONLY_KEYS = [
   'legal.reviewNoteLabel',
 ];
 
-const loadJson = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
+const LOCALES = ['vi', 'en'];
 
 function pick(tree, path) {
   const parts = path.split('.');
@@ -83,103 +73,182 @@ function pick(tree, path) {
 }
 
 /** Các đoạn chữ cần dò: bỏ biến ICU {x}, tách theo ký tự bị escape khác nhau giữa HTML/JSON, giữ đoạn đủ dài. */
-function fragments(text, min = 14) {
+export function fragments(text, min = 14) {
   return text
     .split(/\{[^}]*\}|["'&<>\\]/)
     .map((s) => s.trim())
     .filter((s) => s.length >= min);
 }
 
-const needles = []; // { kind, label, re?|text }
-const add = (kind, label, text) => {
-  for (const f of fragments(text)) needles.push({ kind, label, text: f });
-};
-
-// 1. Nhãn ngắn: chỉ khớp khi là cả một nút chữ (>Nháp< trong HTML, "Nháp" / \"Nháp\" trong payload RSC)
-for (const locale of ['vi', 'en']) {
-  const common = loadJson(`messages/${locale}/common.json`);
-  for (const label of [common.status.draft, common.status.draftLegacy]) {
-    const esc = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    needles.push({ kind: 'nhãn nháp', label: `common.status (${locale})`, re: new RegExp(`(?:>|\\\\?")${esc}(?:<|\\\\?")`) });
+/**
+ * Chữ của nội dung ĐÃ DUYỆT, được phép hiện ở production: claim "approved", SLA "approved" (nhãn + giá trị), KPI có value
+ * (nhãn + định nghĩa) và số theo miền đã duyệt (nhãn).
+ */
+export function approvedTexts({ claims, slaItems, stats }) {
+  const out = [];
+  for (const c of claims) if (c.status === 'approved') out.push(c.text.vi, c.text.en);
+  for (const s of slaItems) {
+    if (s.status === 'approved' && s.value) out.push(s.label.vi, s.label.en, s.value.vi, s.value.en);
   }
-}
-needles.push({ kind: 'dấu bản xem trước', label: 'data-draft-preview', re: /data-draft-preview/ });
-
-// 2. Khóa messages chỉ dùng ở bản xem trước
-const NAMESPACE_CACHE = new Map();
-for (const key of PREVIEW_ONLY_KEYS) {
-  const [ns, ...rest] = key.split('.');
-  for (const locale of ['vi', 'en']) {
-    const id = `${locale}/${ns}`;
-    if (!NAMESPACE_CACHE.has(id)) NAMESPACE_CACHE.set(id, loadJson(`messages/${locale}/${ns}.json`));
-    for (const text of pick(NAMESPACE_CACHE.get(id), rest.join('.'))) add('messages chỉ bản xem trước', `${key} (${locale})`, text);
+  for (const s of stats) {
+    if (s.value === null) continue;
+    out.push(s.label.vi, s.label.en, s.definition.vi, s.definition.en);
+    for (const r of s.byRegion ?? []) out.push(r.label.vi, r.label.en);
   }
+  return out;
 }
 
-// 3. Câu khẳng định chưa duyệt, SLA "đang ghi", nguồn số site cũ
-const { ALL_CLAIMS } = await loadTs('content/claims/index.ts');
-for (const c of ALL_CLAIMS) {
-  if (c.status === 'approved') continue;
-  add('claim nháp', `${c.id} (vi)`, c.text.vi);
-  add('claim nháp', `${c.id} (en)`, c.text.en);
+/**
+ * Dựng danh sách mẫu dò (hàm thuần — unit test gọi với dữ liệu thật hoặc dữ liệu giả).
+ * @param {{ loadMessages: (locale: string, namespace: string) => object, claims: object[], slaItems: object[], stats: object[] }} input
+ * @returns {{ needles: { kind: string, label: string, text?: string, re?: RegExp }[], skipped: { kind: string, label: string, text: string }[] }}
+ */
+export function buildNeedles({ loadMessages, claims, slaItems, stats }) {
+  const needles = [];
+  const skipped = [];
+  const approved = approvedTexts({ claims, slaItems, stats });
+  const addStrict = (kind, label, text) => {
+    for (const f of fragments(text)) needles.push({ kind, label, text: f });
+  };
+  // Mục 3–4 (nội dung chưa duyệt): đoạn trùng y nguyên chữ đã duyệt thì bỏ qua — nó hiện vì nội dung đã duyệt.
+  const addContent = (kind, label, text) => {
+    for (const f of fragments(text)) {
+      if (approved.some((a) => a.includes(f))) skipped.push({ kind, label, text: f });
+      else needles.push({ kind, label, text: f });
+    }
+  };
+
+  // 1. Nhãn ngắn: chỉ khớp khi là cả một nút chữ (>Nháp< trong HTML, "Nháp" / \"Nháp\" trong payload RSC)
+  for (const locale of LOCALES) {
+    const common = loadMessages(locale, 'common');
+    for (const label of [common.status.draft, common.status.draftLegacy]) {
+      const esc = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      needles.push({ kind: 'nhãn nháp', label: `common.status (${locale})`, re: new RegExp(`(?:>|\\\\?")${esc}(?:<|\\\\?")`) });
+    }
+  }
+  needles.push({ kind: 'dấu bản xem trước', label: 'data-draft-preview', re: /data-draft-preview/ });
+
+  // 2. Khóa messages chỉ dùng ở bản xem trước (không miễn trừ)
+  for (const key of PREVIEW_ONLY_KEYS) {
+    const [ns, ...rest] = key.split('.');
+    for (const locale of LOCALES) {
+      for (const text of pick(loadMessages(locale, ns), rest.join('.'))) addStrict('messages chỉ bản xem trước', `${key} (${locale})`, text);
+    }
+  }
+
+  // 3. Câu khẳng định chưa duyệt, SLA "đang ghi" chưa duyệt
+  for (const c of claims) {
+    if (c.status === 'approved') continue;
+    addContent('claim nháp', `${c.id} (vi)`, c.text.vi);
+    addContent('claim nháp', `${c.id} (en)`, c.text.en);
+  }
+  for (const s of slaItems) {
+    if (s.status === 'approved') continue;
+    addContent('SLA đang ghi (chưa duyệt)', `${s.id} (vi)`, s.current.vi);
+    addContent('SLA đang ghi (chưa duyệt)', `${s.id} (en)`, s.current.en);
+  }
+  // 4. Nguồn số site cũ — ghi chú nội bộ, không bao giờ được render (kể cả khi KPI đã có số duyệt)
+  for (const s of stats) if (s.legacySource) addContent('nguồn số site cũ', `${s.id}.legacySource`, s.legacySource);
+
+  return { needles, skipped };
 }
-const { slaItems } = await loadTs('content/sla.ts');
-for (const s of slaItems) {
-  if (s.status === 'approved') continue;
-  add('SLA đang ghi (chưa duyệt)', `${s.id} (vi)`, s.current.vi);
-  add('SLA đang ghi (chưa duyệt)', `${s.id} (en)`, s.current.en);
+
+/** Dò một file đã đọc; trả mọi mẫu khớp (kèm vị trí đầu tiên). */
+export function findViolations(raw, needles) {
+  const hits = [];
+  for (const n of needles) {
+    const at = n.re ? (n.re.exec(raw)?.index ?? -1) : raw.indexOf(n.text);
+    if (at >= 0) hits.push({ needle: n, at });
+  }
+  return hits;
 }
-const { stats } = await loadTs('content/stats.ts');
-for (const s of stats) if (s.legacySource) add('nguồn số site cũ', `${s.id}.legacySource`, s.legacySource);
 
 // ---------------------------------------------------------------------------------------------
-// Dò file
+// CLI
 // ---------------------------------------------------------------------------------------------
-function walk(dir) {
+function latestDist() {
+  const dirs = readdirSync(ROOT)
+    .filter((d) => d.startsWith('.next-') && statSync(join(ROOT, d)).isDirectory())
+    .map((d) => ({ d, t: statSync(join(ROOT, d)).mtimeMs }))
+    .sort((a, b) => b.t - a.t);
+  if (dirs.length === 0) throw new Error('Không có thư mục build .next-* — chạy scripts/safe-build.sh trước');
+  return dirs[0].d;
+}
+
+function walkDist(dir) {
   return readdirSync(dir).flatMap((name) => {
     const p = join(dir, name);
-    if (statSync(p).isDirectory()) return walk(p);
+    if (statSync(p).isDirectory()) return walkDist(p);
     return /\.(html|rsc|body)$/.test(name) ? [p] : [];
   });
 }
 
-const files = walk(APP_DIR);
-const violations = [];
-for (const file of files) {
-  const raw = readFileSync(file, 'utf8');
-  for (const n of needles) {
-    const hit = n.re ? n.re.exec(raw) : raw.includes(n.text) ? { index: raw.indexOf(n.text) } : null;
-    if (!hit) continue;
-    const at = hit.index;
-    violations.push({
-      file: relative(ROOT, file),
-      kind: n.kind,
-      label: n.label,
-      context: raw.slice(Math.max(0, at - 60), at + 80).replace(/\s+/g, ' '),
-    });
+async function main() {
+  const args = process.argv.slice(2);
+  const JSON_OUT = args.includes('--json');
+  const distArg = args.find((a) => !a.startsWith('--'));
+  const DIST = distArg ?? latestDist();
+  const APP_DIR = join(ROOT, DIST, 'server', 'app');
+
+  const cache = new Map();
+  const loadMessages = (locale, ns) => {
+    const id = `${locale}/${ns}`;
+    if (!cache.has(id)) cache.set(id, JSON.parse(readFileSync(join(ROOT, `messages/${id}.json`), 'utf8')));
+    return cache.get(id);
+  };
+  const { ALL_CLAIMS } = await loadTs('content/claims/index.ts');
+  const { slaItems } = await loadTs('content/sla.ts');
+  const { stats } = await loadTs('content/stats.ts');
+  const { needles, skipped } = buildNeedles({ loadMessages, claims: ALL_CLAIMS, slaItems, stats });
+
+  const files = walkDist(APP_DIR);
+  const violations = [];
+  for (const file of files) {
+    const raw = readFileSync(file, 'utf8');
+    for (const { needle, at } of findViolations(raw, needles)) {
+      violations.push({
+        file: relative(ROOT, file),
+        kind: needle.kind,
+        label: needle.label,
+        context: raw.slice(Math.max(0, at - 60), at + 80).replace(/\s+/g, ' '),
+      });
+    }
   }
+
+  const summary = {
+    dist: DIST,
+    files: files.length,
+    html: files.filter((f) => f.endsWith('.html')).length,
+    needles: needles.length,
+    skippedApproved: skipped.length,
+    violations: violations.length,
+  };
+  if (JSON_OUT) {
+    console.log(JSON.stringify({ ...summary, skipped, violations }, null, 2));
+  } else {
+    console.log(
+      `[check-no-draft] ${DIST}: ${summary.files} file (${summary.html} HTML), ${summary.needles} mẫu dò ` +
+        `(bỏ qua ${summary.skippedApproved} đoạn trùng nội dung đã duyệt) → ${summary.violations} vi phạm`,
+    );
+    const seen = new Set();
+    for (const v of violations) {
+      const k = `${v.kind}|${v.label}`;
+      const count = violations.filter((x) => `${x.kind}|${x.label}` === k).length;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      console.log(`  ✗ [${v.kind}] ${v.label} — ${count} file, vd ${v.file}\n      …${v.context}…`);
+    }
+  }
+  process.exit(violations.length > 0 ? 1 : 0);
 }
 
-const summary = {
-  dist: DIST,
-  files: files.length,
-  html: files.filter((f) => f.endsWith('.html')).length,
-  needles: needles.length,
-  violations: violations.length,
-};
-if (JSON_OUT) {
-  console.log(JSON.stringify({ ...summary, violations }, null, 2));
-} else {
-  console.log(
-    `[check-no-draft] ${DIST}: ${summary.files} file (${summary.html} HTML), ${summary.needles} mẫu dò → ${summary.violations} vi phạm`,
-  );
-  const seen = new Set();
-  for (const v of violations) {
-    const k = `${v.kind}|${v.label}`;
-    const count = violations.filter((x) => `${x.kind}|${x.label}` === k).length;
-    if (seen.has(k)) continue;
-    seen.add(k);
-    console.log(`  ✗ [${v.kind}] ${v.label} — ${count} file, vd ${v.file}\n      …${v.context}…`);
+// Chạy CLI chỉ khi gọi trực tiếp (node scripts/check-no-draft.mjs); import từ unit test thì không. So realpath để gọi qua
+// symlink vẫn chạy (không bao giờ thoát im lặng với mã 0 mà chưa dò).
+const invokedDirectly = (() => {
+  try {
+    return Boolean(process.argv[1]) && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
   }
-}
-process.exit(violations.length > 0 ? 1 : 0);
+})();
+if (invokedDirectly) await main();

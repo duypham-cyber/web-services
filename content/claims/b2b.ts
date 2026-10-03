@@ -2,8 +2,11 @@ import type { Claim } from '../schemas';
 
 /**
  * Câu khẳng định của khu vực B2B (/giai-phap/*, /dich-vu/*, /bang-gia). Chủ sở hữu: agent trang B2B.
- * TẤT CẢ đang là "draft": lấy từ site cũ / chính sách hiện hành, CHƯA được anh Duy + pháp chế duyệt cho site mới
- * → production KHÔNG hiển thị (phần chứa nó tự thu gọn); bản xem trước (DRAFT_PREVIEW=1) hiện kèm nhãn "Nháp".
+ * Lấy từ site cũ / chính sách hiện hành. "draft" = CHƯA được anh Duy + pháp chế duyệt cho site mới → production KHÔNG
+ * hiển thị (phần chứa nó tự thu gọn); bản xem trước (DRAFT_PREVIEW=1) hiện kèm nhãn "Nháp".
+ * Duyệt 03/10/2026 (docs/DECISIONS.md D-26 mục 2, bảng D-27): "b2b.sla.confirm-60-minutes" (mốc 60 phút đã duyệt) và
+ * "b2b.warranty.installation-faults" (phạm vi bảo hành, nguồn /services cũ). Câu lấy từ chính sách cũ (CS) giữ nháp vì
+ * chính sách đó là trang pháp lý chưa có bản chốt (D-26).
  *
  * id có tiền tố "b2b." để không trùng claim của khu vực khác (validate.ts báo lỗi khi trùng id).
  * Duyệt một câu: điền evidence, approvedBy, approvedAt, đổi status → "approved" (docs/04 R17, Q19).
@@ -23,13 +26,13 @@ export const b2bClaims = [
   {
     id: 'b2b.sla.confirm-60-minutes',
     text: { vi: '60 phút', en: '60 minutes' },
-    status: 'draft',
+    status: 'approved',
     evidence:
-      '/services cũ, mục 3: "CSKH liên hệ khách hàng để xác nhận đơn hàng trong vòng 60 phút"; NOI-DUNG.md mục 13 ghi "60 phút xác nhận lịch".',
-    approvedBy: null,
-    approvedAt: null,
+      '/services cũ, mục 3: "CSKH liên hệ khách hàng để xác nhận đơn hàng trong vòng 60 phút"; NOI-DUNG.md mục 13 ghi "60 phút xác nhận lịch". Anh Duy duyệt mốc 60 phút 03/10/2026 (docs/DECISIONS.md D-26 mục 2).',
+    approvedBy: 'Anh Duy (D-26)',
+    approvedAt: '2026-10-03',
     note:
-      'Ô "Xác nhận lịch với khách" ở 3 vùng tiêu chuẩn. MÂU THUẪN: CS Phần 3 Điều khoản 3 chỉ phạt thợ "chậm liên hệ với khách trong ngày nhận đơn"; content/process.ts để thợ xác nhận lịch ở bước 03 (sau điều phối). Chờ anh Duy chốt mốc và người xác nhận.',
+      'Duyệt 03/10/2026 (D-26 mục 2, D-27): ô chỉ khẳng định mốc tối đa 60 phút đã duyệt (cùng K6, content/sla.ts "confirm-time"), không đổi câu chữ. Ô "Xác nhận lịch với khách" ở 3 vùng tiêu chuẩn; khu vực đặc thù vẫn theo claim b2b.sla.special-areas-case-by-case (nháp). CÒN MỞ: người xác nhận (site cũ: CSKH; CS Phần 3 Điều khoản 3 và content/process.ts bước 03: thợ) — chờ anh Duy.',
   },
   {
     id: 'b2b.sla.completion-48-hours',
@@ -202,10 +205,12 @@ export const b2bClaims = [
       vi: 'Bảo hành lỗi do kỹ thuật lắp đặt, như rò nước, lỏng giắc cắm hay đấu nối sai quy trình.',
       en: 'Faults caused by the installation work, such as water leaks, loose connectors or incorrect wiring, are covered.',
     },
-    status: 'draft',
-    evidence: '/services cũ, mục 5: "Bảo hành 100% các lỗi phát sinh do kỹ thuật lắp đặt (như rò rỉ nước, lỏng giắc cắm, đấu nối sai quy trình...)".',
-    approvedBy: null,
-    approvedAt: null,
+    status: 'approved',
+    evidence: '/services cũ, mục 5: "Bảo hành 100% các lỗi phát sinh do kỹ thuật lắp đặt (như rò rỉ nước, lỏng giắc cắm, đấu nối sai quy trình...)"; NOI-DUNG.md mục 8.',
+    approvedBy: 'Anh Duy (D-26)',
+    approvedAt: '2026-10-03',
+    note:
+      'Duyệt 03/10/2026 (D-26 mục 2, D-27): mô tả phạm vi bảo hành có nguồn site cũ, khớp chính sách cũ (Bluebolt khắc phục lỗi do lắp đặt) và mốc "xử lý bảo hành 24–48h" đã duyệt; không nêu thời hạn bảo hành (02 hay 12 tháng — vẫn nháp). Không đổi câu chữ.',
   },
   {
     id: 'b2b.warranty.responsibility-split',
