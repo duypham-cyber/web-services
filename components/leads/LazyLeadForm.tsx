@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
+import { hashOf } from './safe-decode';
 import type { LeadB2BProps, LeadTechnicianProps } from './types';
 
 /**
@@ -39,7 +40,7 @@ function anchorHash(e: MouseEvent): string | null {
   if (!a || (a.target && a.target !== '_self')) return null;
   try {
     const url = new URL(a.href, window.location.href);
-    return url.origin === window.location.origin ? decodeURIComponent(url.hash.slice(1)) : null;
+    return url.origin === window.location.origin ? hashOf(url) : null;
   } catch {
     return null;
   }
@@ -90,7 +91,7 @@ export function LazyLeadForm(props: LazyProps) {
     if (loaded || kind === 'contact') return;
     const root = rootRef.current;
     const hashes = new Set(anchors);
-    if (hashes.has(decodeURIComponent(window.location.hash.slice(1)))) void load();
+    if (hashes.has(hashOf(window.location))) void load();
 
     const io =
       'IntersectionObserver' in window && root

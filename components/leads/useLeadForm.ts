@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react';
 import type { LeadType } from '@/lib/leads/rules';
 import { fmt, isInAppBrowser, readFilmTier, saveDraft, scrollToAndFocus, takeDraft, track, uuidV4 } from './client-utils';
+import { hashOf } from './safe-decode';
 import { postLead, type LeadClientErrorCode } from './submit';
 import type { LeadFormBaseProps } from './types';
 import { useTurnstile } from './useTurnstile';
@@ -12,6 +13,11 @@ import { errorFromDetail, validateAll, type FieldError, type FieldErrors } from 
 type Status = 'idle' | 'submitting' | 'done' | 'disabled';
 
 const noopSubscribe = () => () => {};
+
+type Anchors = Record<string, (() => void) | null>;
+
+/** Neo có trong form? Chỉ khóa RIÊNG của object: neo URL `#__proto__`, `#constructor` không được gọi nhầm hàm kế thừa. */
+const hasAnchor = (anchors: Anchors, hash: string) => Object.prototype.hasOwnProperty.call(anchors, hash);
 
 export type NoticeState = {
   tone: 'error' | 'info';
@@ -33,7 +39,7 @@ type Options<V extends Record<string, unknown>, K extends keyof V & string> = {
   /** Thuộc tính analytics thêm (intent của B2B). */
   analytics: () => Record<string, string>;
   /** Neo trong trang dẫn tới form: hash → việc phụ (vd đổi intent). Link có hash này được chặn để cuộn tới form. */
-  anchors: Record<string, (() => void) | null>;
+  anchors: Anchors;
   firstFieldId: string;
   /** Link tới neo được bấm TRƯỚC khi form tải xong (LazyLeadForm): áp việc phụ của neo rồi cuộn + focus ô đầu. */
   activation?: { hash: string } | null;
@@ -150,8 +156,8 @@ export function useLeadForm<V extends Record<string, unknown>, K extends keyof V
       setNotice({ tone: 'info', code: 'CONSENT_RESTORED' });
     }
     const applyHash = () => {
-      const hash = decodeURIComponent(window.location.hash.slice(1));
-      if (hash in optsRef.current.anchors) optsRef.current.anchors[hash]?.();
+      const hash = hashOf(window.location);
+      if (hasAnchor(optsRef.current.anchors, hash)) optsRef.current.anchors[hash]?.();
     };
     applyHash();
     window.addEventListener('hashchange', applyHash);
@@ -172,8 +178,8 @@ export function useLeadForm<V extends Record<string, unknown>, K extends keyof V
         return;
       }
       if (url.origin !== window.location.origin) return;
-      const hash = decodeURIComponent(url.hash.slice(1));
-      if (!(hash in optsRef.current.anchors)) return;
+      const hash = hashOf(url);
+      if (!hasAnchor(optsRef.current.anchors, hash)) return;
       const block = blockRef.current;
       if (!block) return;
       e.preventDefault();
@@ -189,7 +195,7 @@ export function useLeadForm<V extends Record<string, unknown>, K extends keyof V
   useEffect(() => {
     if (!opts.activation) return;
     const o = optsRef.current;
-    o.anchors[opts.activation.hash]?.();
+    if (hasAnchor(o.anchors, opts.activation.hash)) o.anchors[opts.activation.hash]?.();
     const block = blockRef.current;
     if (block) scrollToAndFocus(block, block.querySelector<HTMLElement>(`#${o.firstFieldId}`));
   }, [opts.activation]);

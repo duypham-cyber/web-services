@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { fmt, uuidV4 } from '@/components/leads/client-utils';
+import { hashOf, safeDecode } from '@/components/leads/safe-decode';
 import { UTM_KEYS as CLIENT_UTM_KEYS } from '@/components/leads/utm';
 import {
   B2B_FIELD_ORDER,
@@ -142,6 +143,27 @@ describe('tiện ích trình duyệt', () => {
   it('components/leads/utm.ts (không import gì, nằm trong chunk layout) giữ đúng UTM_KEYS của rules.ts', () => {
     expect([...CLIENT_UTM_KEYS]).toEqual([...UTM_KEYS]);
     expect(readFileSync('components/leads/utm.ts', 'utf8')).not.toMatch(/^import /m);
+  });
+
+  it('M1: neo URL percent-encoding hỏng không ném URIError (trả nguyên chuỗi), neo đúng vẫn giải mã', () => {
+    for (const bad of ['%E0%A4%A', '%', '%zz', '%E0%A4', '%ED%A0%80', 'bao-gia%']) {
+      expect(() => safeDecode(bad), bad).not.toThrow();
+      expect(safeDecode(bad), bad).toBe(bad);
+    }
+    expect(safeDecode('dang-ky')).toBe('dang-ky');
+    expect(safeDecode('%C4%91%C4%83ng-k%C3%BD')).toBe('đăng-ký');
+    expect(hashOf(new URL('http://127.0.0.1:3091/bang-gia#%E0%A4%A'))).toBe('%E0%A4%A');
+    expect(hashOf(new URL('http://127.0.0.1:3091/#bao-gia'))).toBe('bao-gia');
+    expect(hashOf({ hash: '' })).toBe('');
+  });
+
+  it('M1: không còn decodeURIComponent trần trong components/leads (chỉ qua safe-decode.ts); safe-decode.ts không import gì', () => {
+    const dir = 'components/leads';
+    for (const name of readdirSync(dir)) {
+      if (name === 'safe-decode.ts') continue;
+      expect(readFileSync(join(dir, name), 'utf8'), name).not.toMatch(/decodeURI(Component)?\s*\(/);
+    }
+    expect(readFileSync(join(dir, 'safe-decode.ts'), 'utf8')).not.toMatch(/^import /m);
   });
 
   it('fmt thay {biến}, giữ nguyên biến không có giá trị', () => {

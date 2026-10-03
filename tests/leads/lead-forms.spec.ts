@@ -499,6 +499,43 @@ test.describe('xử lý mã lỗi của API (phản hồi giả, không ghi DB)'
   });
 });
 
+test.describe('neo URL hỏng không làm sập trang (review M1)', () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-1440', 'kiểm logic FE: một project là đủ');
+  });
+
+  // percent-encoding hỏng (URIError nếu decodeURIComponent trần) + khóa kế thừa của Object (`__proto__` không gọi được)
+  for (const path of ['/bang-gia#%E0%A4%A', '/#%', '/doi-tac-tho#%zz', '/bang-gia#__proto__']) {
+    test(`mở ${path}: không vào error boundary; form vẫn tải; bấm link/đổi sang neo hỏng cũng không lỗi`, async ({ page }) => {
+      const errors: string[] = [];
+      page.on('pageerror', (e) => errors.push(`${e.name}: ${e.message}`));
+      await page.goto(path, { waitUntil: 'networkidle' });
+      await expect(page.locator('#error-title')).toHaveCount(0);
+      if (await openForm(page)) {
+        // Form đã tải: useLeadForm đọc neo hiện tại, nghe click link có neo và hashchange
+        await page.evaluate(() => {
+          const a = document.createElement('a');
+          a.href = '#%E0%A4%A';
+          a.id = 'm1-bad-link';
+          a.textContent = 'neo hỏng';
+          document.body.append(a);
+          a.click();
+        });
+        await page.evaluate(() => {
+          window.location.hash = '%zz';
+        });
+        await page.evaluate(() => {
+          window.location.hash = '__defineGetter__';
+        });
+        await page.waitForTimeout(300);
+        await expect(page.locator('[data-lead-block] form').first()).toBeVisible();
+      }
+      await expect(page.locator('#error-title')).toHaveCount(0);
+      expect(errors.filter((e) => /URI|malformed|not a function|Expecting function/i.test(e))).toEqual([]);
+    });
+  }
+});
+
 test.describe('a11y trạng thái lỗi', () => {
   for (const path of ['/bang-gia', '/en/technician-partners']) {
     test(`axe 0 lỗi serious/critical khi form đang báo lỗi: ${path}`, async ({ page }) => {
