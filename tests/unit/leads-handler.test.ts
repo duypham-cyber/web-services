@@ -215,6 +215,23 @@ describe('Idempotency-Key (AC-C9, bước 7 + 12)', () => {
   });
 });
 
+describe('rate-limit theo IP (review L4)', () => {
+  it('IPv6 cùng /64 dùng chung bộ đếm; /64 khác vẫn qua; IPv4 tính riêng từng địa chỉ', async () => {
+    const limiter = createRateLimiter(new Map());
+    const { db } = fakeDb();
+    const d = { ...deps({ db, env: { LEAD_RATE_LIMIT_MAX: '2' } }), rateLimiter: limiter };
+    const send = (ip: string) => handleLeadPost(leadRequest(b2bBody(), { ip }), d).then((r) => r.status);
+    expect(await send('2001:db8:1:2::1')).toBe(201);
+    expect(await send('2001:db8:1:2::2')).toBe(201);
+    expect(await send('2001:db8:1:2:abcd:ef01:2345:6789')).toBe(429);
+    expect(await send('2001:db8:1:3::1')).toBe(201);
+    expect(await send('203.0.113.1')).toBe(201);
+    expect(await send('203.0.113.1')).toBe(201);
+    expect(await send('203.0.113.1')).toBe(429);
+    expect(await send('203.0.113.2')).toBe(201);
+  });
+});
+
 describe('tên trường lạ của client (review L1)', () => {
   it('response và log chỉ có tên đã làm sạch (≤ 64 ký tự, [A-Za-z0-9_.-]), tối đa 10 tên; log ghi tổng số khóa lạ', async () => {
     const lines: string[] = [];

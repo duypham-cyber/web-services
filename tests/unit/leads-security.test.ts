@@ -2,9 +2,10 @@
  * Form lead — ip_hash, IP tin cậy, rate-limit, Turnstile, cấu hình, email thông báo (escape, tiêu đề không PII), kênh gửi.
  * Không cần DB/mạng (siteverify dùng fetch giả).
  */
+import { createHmac } from 'node:crypto';
 import { describe, expect, it, vi } from 'vitest';
 import { readLeadsConfig } from '../../lib/leads/config';
-import { clientIpFromHeaders, hashIp, normalizeIp } from '../../lib/leads/ip';
+import { clientIpFromHeaders, hashIp, ipBucket, normalizeIp } from '../../lib/leads/ip';
 import { buildLeadEmail, escapeHtml, formatVnTime, type StoredLead } from '../../lib/leads/notify/email';
 import { createMailTransport, isPlaceholderAddress, mailErrorCode } from '../../lib/leads/notify/transport';
 import { BACKOFF_MINUTES, MAX_ATTEMPTS, NOTIFY_ROUTES } from '../../lib/leads/outbox';
@@ -26,6 +27,24 @@ describe('ip_hash = HMAC-SHA256(IP, secret)', () => {
     expect(normalizeIp('203.0.113.77:51234')).toBe('203.0.113.77');
     expect(normalizeIp('[2001:db8::1]:443')).toBe('2001:db8::1');
     expect(normalizeIp('không phải ip')).toBeNull();
+  });
+  it('review L4: IPv6 gom theo /64 trước khi băm; IPv4 giữ nguyên (hash IPv4 không đổi)', () => {
+    const secret = 'secret-a-0123456789abcdef0123456789';
+    expect(ipBucket('203.0.113.77')).toBe('203.0.113.77');
+    expect(hashIp('203.0.113.77', secret)).toBe(createHmac('sha256', secret).update('203.0.113.77').digest('hex'));
+    expect(ipBucket('2001:db8:1:2:3:4:5:6')).toBe('2001:0db8:0001:0002::/64');
+    expect(ipBucket('2001:DB8:1:2::1')).toBe('2001:0db8:0001:0002::/64');
+    expect(ipBucket('::1')).toBe('0000:0000:0000:0000::/64');
+    expect(ipBucket('::')).toBe('0000:0000:0000:0000::/64');
+    expect(ipBucket('fe80::1%eth0')).toBe('fe80:0000:0000:0000::/64');
+    expect(ipBucket('64:ff9b::192.0.2.1')).toBe('0064:ff9b:0000:0000::/64');
+    expect(ipBucket('::ffff:cb00:714d')).toBe('203.0.113.77');
+    expect(ipBucket('unknown')).toBe('unknown');
+    // cùng /64 → cùng hash (đổi địa chỉ trong khối không né được rate-limit); khác /64 → khác hash
+    const a = hashIp('2001:db8:1:2::1', secret);
+    expect(hashIp('2001:db8:1:2:ffff:ffff:ffff:fffe', secret)).toBe(a);
+    expect(hashIp('2001:db8:1:3::1', secret)).not.toBe(a);
+    expect(a).toMatch(/^[0-9a-f]{64}$/);
   });
   it('xff-last: lấy phần tử CUỐI (do proxy loopback thêm), bỏ phần client tự khai', () => {
     const h = new Headers({ 'x-forwarded-for': '1.1.1.1, 10.0.0.1, 203.0.113.77', 'x-real-ip': '9.9.9.9' });
