@@ -3,7 +3,7 @@
  * thời hạn lưu (mục 6.4). Chạy script bằng `node` như quản trị kỹ thuật chạy thật.
  */
 import { execFile } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -114,6 +114,16 @@ describe.skipIf(!HAS_DB)('script vận hành form lead — Postgres thật', () 
     expect(doc.lead).toMatchObject({ id, payload: { phone: SENTINEL.phoneE164, fullName: SENTINEL.fullName } });
     expect(doc.notifications).toHaveLength(1);
 
+    // review L2: tệp --out đã có → báo lỗi, không ghi đè, không đổi quyền/nội dung tệp cũ
+    const again = await script('leads-dsr.mjs', ['export', '--id', id, '--out', out, '--test']);
+    expect(again.code).toBe(1);
+    expect(again.stderr).toMatch(/đã tồn tại/);
+    expect(readFileSync(out, 'utf8')).toBe(`${JSON.stringify(doc, null, 2)}\n`);
+    const loose = join(tmp, 'loose.json');
+    writeFileSync(loose, 'cũ\n', { mode: 0o644 });
+    expect((await script('leads-dsr.mjs', ['export', '--id', id, '--out', loose, '--test'])).code).toBe(1);
+    expect([readFileSync(loose, 'utf8'), statSync(loose).mode & 0o777]).toEqual(['cũ\n', 0o644]);
+
     expect((await script('leads-dsr.mjs', ['erase', '--id', id, '--test'])).code).toBe(1); // thiếu --yes
     const erase = await script('leads-dsr.mjs', ['erase', '--id', id, '--yes', '--test']);
     expect(erase.code).toBe(0);
@@ -122,6 +132,7 @@ describe.skipIf(!HAS_DB)('script vận hành form lead — Postgres thật', () 
     expect((await countRows()).leads).toBe(1);
 
     const log = readFileSync(opsLog, 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+    // export bị từ chối (tệp đã có) không ghi nhật ký
     expect(log.map((l) => [l.script, l.command])).toEqual([
       ['leads-dsr', 'find'],
       ['leads-dsr', 'find'],

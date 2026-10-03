@@ -8,14 +8,15 @@
  *   node scripts/leads-dsr.mjs erase --id <uuid> --yes
  *   thêm --test để chạy trên database test (DATABASE_URL_TEST_OPS)
  *
- * - `find` chỉ in id, type, created_at (KHÔNG in nội dung). `export` ghi JSON ra tệp quyền 600 (không in ra màn hình).
+ * - `find` chỉ in id, type, created_at (KHÔNG in nội dung). `export` ghi JSON ra tệp MỚI quyền 600 (không in ra màn hình);
+ *   tệp `--out` đã tồn tại → báo lỗi, không ghi đè (tệp cũ có thể mang quyền rộng hơn 600 hoặc là symlink).
  *   `erase` là DELETE thật; dòng lead_notifications bị xóa theo (ON DELETE CASCADE).
  * - Mỗi lần chạy ghi một dòng nhật ký KHÔNG PII vào logs/leads-ops.log (người chạy, thời điểm, lệnh, loại tìm, id, số dòng) —
  *   KHÔNG ghi số điện thoại/email đã tìm.
  * - Bản sao trong hộp thư nhận thông báo và trong bản sao lưu: xử lý theo hướng dẫn của pháp chế (PC-03, docs/LEADS-RUNBOOK.md).
  * - Chuỗi kết nối: DATABASE_URL_OPS (hoặc DATABASE_URL_TEST_OPS với --test); `.env.local` được nạp nếu có.
  */
-import { writeFileSync } from 'node:fs';
+import { closeSync, fchmodSync, openSync, writeSync } from 'node:fs';
 import { resolve } from 'node:path';
 import pg from 'pg';
 import { appendOpsLog, importTs, loadLocalEnv } from '../lib/leads/script-runtime.mjs';
@@ -113,7 +114,20 @@ try {
       lead,
       notifications,
     };
-    writeFileSync(file, `${JSON.stringify(doc, null, 2)}\n`, { mode: 0o600 });
+    // 'wx' = O_CREAT | O_EXCL: chỉ tạo tệp mới, không ghi đè (kể cả symlink) → không thừa hưởng quyền của tệp cũ
+    let fd;
+    try {
+      fd = openSync(file, 'wx', 0o600);
+    } catch (err) {
+      if (err?.code === 'EEXIST') fail(`tệp ${file} đã tồn tại — không ghi đè. Xóa tệp cũ (rm "${file}") hoặc chọn --out khác rồi chạy lại`);
+      throw err;
+    }
+    try {
+      fchmodSync(fd, 0o600); // umask chỉ bớt quyền; đặt lại để chắc chắn đúng 600
+      writeSync(fd, `${JSON.stringify(doc, null, 2)}\n`);
+    } finally {
+      closeSync(fd);
+    }
     process.stdout.write(`[leads-dsr] đã ghi ${file} (quyền 600). Gửi cho chủ thể dữ liệu qua kênh pháp chế quy định, rồi xóa tệp.\n`);
     appendOpsLog({ script: 'leads-dsr', command: 'export', ids: [id], count: 1, db: urlEnv });
   }
