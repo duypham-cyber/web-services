@@ -83,15 +83,23 @@ describe('activeConsentVersions — AC-C10 + cửa sổ 24 giờ (Rule 2)', () =
   it('bản xem trước: version nháp dùng được', () => {
     expect(activeConsentVersions('lead_b2b', { now: NOW, draftPreview: true }).map((v) => v.version)).toEqual(['b2b-2026-10-v1']);
   });
-  it('version liền trước còn nhận trong 24 giờ, sau đó → chỉ version hiện hành', () => {
+  it('version liền trước còn nhận trong 24 giờ kể từ effectiveFrom của version hiện hành, sau đó → chỉ version hiện hành', () => {
     const versions = [approved('b2b-test-v1', '2026-10-01T00:00:00Z'), approved('b2b-test-v2', '2026-10-04T00:00:00Z')];
-    const at = (iso: string, serverStartedAt?: Date) =>
-      activeConsentVersions('lead_b2b', { now: new Date(iso), draftPreview: false, versions, serverStartedAt }).map((v) => v.version);
+    const at = (iso: string) =>
+      activeConsentVersions('lead_b2b', { now: new Date(iso), draftPreview: false, versions }).map((v) => v.version);
     expect(at('2026-10-03T12:00:00Z')).toEqual(['b2b-test-v1']);
     expect(at('2026-10-04T10:00:00Z')).toEqual(['b2b-test-v2', 'b2b-test-v1']);
-    expect(at('2026-10-05T00:00:01Z')).toEqual(['b2b-test-v2']);
-    // deploy muộn hơn effectiveFrom: cửa sổ tính từ lúc server khởi động
-    expect(at('2026-10-05T06:00:00Z', new Date('2026-10-05T00:00:00Z'))).toEqual(['b2b-test-v2', 'b2b-test-v1']);
+    expect(at('2026-10-04T23:59:59Z')).toEqual(['b2b-test-v2', 'b2b-test-v1']);
+    expect(at('2026-10-05T00:00:00Z')).toEqual(['b2b-test-v2']);
+    expect(at('2026-10-05T06:00:00Z')).toEqual(['b2b-test-v2']);
+  });
+  it('review L3: khởi động lại server không mở lại cửa sổ — ngữ cảnh không có mốc giờ khởi động nào', () => {
+    const versions = [approved('b2b-test-v1', '2026-10-01T00:00:00Z'), approved('b2b-test-v2', '2026-10-04T00:00:00Z')];
+    // Trường lạ (vd serverStartedAt cũ) bị bỏ qua: kết quả chỉ phụ thuộc now + effectiveFrom
+    const ctx = { now: new Date('2026-10-05T06:00:00Z'), draftPreview: false, versions, serverStartedAt: new Date('2026-10-05T05:00:00Z') };
+    expect(activeConsentVersions('lead_b2b', ctx).map((v) => v.version)).toEqual(['b2b-test-v2']);
+    expect(checkConsent('lead_b2b', { version: 'b2b-test-v1', purposes: ['b2b_sales_contact'] }, ctx)).toMatchObject({ status: 409 });
+    expect(checkConsent('lead_b2b', { version: 'b2b-test-v2', purposes: ['b2b_sales_contact'] }, ctx)).toMatchObject({ ok: true });
   });
 });
 

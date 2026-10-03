@@ -68,12 +68,14 @@ export type ConsentContext = {
   now: Date;
   /** Bản xem trước (DRAFT_PREVIEW=1): version nháp cũng có hiệu lực. Production: chỉ version đã duyệt. */
   draftPreview: boolean;
-  /** Lúc tiến trình server khởi động (≈ lúc deploy) — cửa sổ 24 giờ của version liền trước tính từ max(effectiveFrom, mốc này). */
-  serverStartedAt?: Date;
   versions?: readonly ConsentVersion[];
 };
 
-/** Version còn hiệu lực của type: [hiện hành, (liền trước nếu còn trong 24 giờ)]. Rỗng = form phải tắt. */
+/**
+ * Version còn hiệu lực của type: [hiện hành, (liền trước nếu còn trong 24 giờ)]. Rỗng = form phải tắt.
+ * Cửa sổ 24 giờ CHỈ tính từ `effectiveFrom` của version hiện hành (Rule 2, review L3) — không theo giờ khởi động server,
+ * để khởi động lại tiến trình không mở lại cửa sổ cho version cũ. Deploy version mới thì đặt effectiveFrom = giờ deploy.
+ */
 export function activeConsentVersions(type: LeadType, ctx: ConsentContext): ConsentVersion[] {
   const nowMs = ctx.now.getTime();
   const eligible = (ctx.versions ?? VERSIONS)
@@ -82,8 +84,7 @@ export function activeConsentVersions(type: LeadType, ctx: ConsentContext): Cons
   const [current, previous] = eligible;
   if (!current) return [];
   if (!previous) return [current];
-  const windowStart = Math.max(Date.parse(current.effectiveFrom), ctx.serverStartedAt?.getTime() ?? 0);
-  return nowMs < windowStart + PREVIOUS_VERSION_GRACE_MS ? [current, previous] : [current];
+  return nowMs < Date.parse(current.effectiveFrom) + PREVIOUS_VERSION_GRACE_MS ? [current, previous] : [current];
 }
 
 export function currentConsentVersion(type: LeadType, ctx: ConsentContext): ConsentVersion | null {

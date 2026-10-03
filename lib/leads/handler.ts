@@ -60,19 +60,11 @@ export type LeadHandlerDeps = {
   logger: LeadLogger;
   rateLimiter: RateLimiter;
   now: () => Date;
-  /** Lúc tiến trình server khởi động (≈ lúc deploy): mốc cửa sổ 24 giờ của version đồng ý liền trước (Rule 2). */
-  serverStartedAt: Date;
   turnstile: (input: { token: string | undefined; expectedAction: LeadType }) => Promise<TurnstileOutcome>;
   outbox: () => OutboxContext;
   /** Route: `after` của next/server. Test: chạy và chờ ngay. */
   schedule: (task: () => Promise<unknown>) => void;
 };
-
-const STARTED_KEY = Symbol.for('bluebolt-web.leads.server-started-at');
-function serverStartedAt(): Date {
-  const g = globalThis as unknown as Record<symbol, Date | undefined>;
-  return (g[STARTED_KEY] ??= new Date());
-}
 
 export type CreateLeadDepsOptions = {
   schedule: LeadHandlerDeps['schedule'];
@@ -86,7 +78,6 @@ export type CreateLeadDepsOptions = {
   transport?: MailTransport | null;
   /** Thư mục gốc cho LEAD_MAIL_DIR tương đối. Mặc định process.cwd() (gốc repo khi chạy next dev/start). */
   cwd?: string;
-  serverStartedAt?: Date;
 };
 
 /** Phụ thuộc mặc định: đọc env của tiến trình lúc gọi (không đóng băng lúc build). */
@@ -104,7 +95,6 @@ export function createLeadDeps(options: CreateLeadDepsOptions): LeadHandlerDeps 
     logger,
     rateLimiter: options.rateLimiter ?? createRateLimiter(),
     now: options.now ?? (() => new Date()),
-    serverStartedAt: options.serverStartedAt ?? serverStartedAt(),
     turnstile: ({ token, expectedAction }) =>
       verifyTurnstile({
         token,
@@ -216,7 +206,6 @@ export async function handleLeadPost(request: Request, deps: LeadHandlerDeps): P
       now,
       // Câu đồng ý nháp dùng được ở mọi nơi TRỪ site thật (production không DRAFT_PREVIEW) — AC-C10
       draftPreview: !config.liveProduction,
-      serverStartedAt: deps.serverStartedAt,
     };
 
     // Bước 0: form tắt (công tắc, cấu hình thiếu, hoặc không type nào có câu đồng ý dùng được)
