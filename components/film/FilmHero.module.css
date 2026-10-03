@@ -880,10 +880,18 @@
   }
 }
 
-/* màn ngang thấp (laptop 1366×768): khối chữ gọn để vừa khung dính */
+/* màn ngang thấp (laptop 1366×768, trình duyệt còn ~1366×657): khối chữ gọn để vừa khung dính */
 @media (orientation: landscape) and (max-height: 820px) {
   .copy {
     padding-top: calc(var(--header-h) + 1rem);
+  }
+
+  .title {
+    font-size: calc((var(--text-h1) + var(--text-h2)) / 2);
+  }
+
+  .lead {
+    font-size: var(--text-body);
   }
 
   .title,

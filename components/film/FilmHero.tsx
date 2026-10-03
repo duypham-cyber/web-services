@@ -353,10 +353,10 @@ export async function FilmHero({
               </h1>
               <p className={styles.lead}>{lead}</p>
               <div className={styles.ctas}>
-                <Button href={primaryCta.href} variant="primary" size="lg">
+                <Button href={primaryCta.href} variant="primary" size="md">
                   {primaryCta.label}
                 </Button>
-                <Button href={secondaryCta.href} variant="ghost" size="lg">
+                <Button href={secondaryCta.href} variant="ghost" size="md">
                   {secondaryCta.label}
                 </Button>
               </div>
