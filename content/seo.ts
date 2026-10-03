@@ -47,7 +47,8 @@ type StaticSeoKey =
   | 'legal.terms'
   | 'legal.warranty'
   | 'dev.ui'
-  | 'dev.routes';
+  | 'dev.routes'
+  | 'dev.hero-map';
 
 const CONTENT_DATE = '2026-10-02';
 
@@ -292,6 +293,16 @@ export const SEO_PAGES = {
     },
     label: { vi: 'Danh mục route', en: 'Route list' },
     updatedAt: CONTENT_DATE,
+    index: false,
+  },
+  'dev.hero-map': {
+    title: { vi: 'Cảnh bản đồ hero nội bộ | Bluebolt Services', en: 'Internal hero map scene | Bluebolt Services' },
+    description: {
+      vi: 'Trang nội bộ để soát cảnh bản đồ 3D của trang chủ theo tiến độ cuộn và từng tầng thiết bị. Chỉ dùng khi phát triển, không lập chỉ mục.',
+      en: 'Internal page for checking the 3D home page map scene by scroll progress and device tier. For development only and never indexed.',
+    },
+    label: { vi: 'Cảnh bản đồ hero', en: 'Hero map scene' },
+    updatedAt: '2026-10-03',
     index: false,
   },
 } as const satisfies Record<StaticSeoKey, SeoEntry>;

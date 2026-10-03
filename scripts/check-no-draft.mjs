@@ -48,6 +48,7 @@ export const PREVIEW_ONLY_KEYS = [
   'services.detail.warrantyTable.draftCaption',
   'network.map.draftPinsNote',
   'network.stats.hiddenNote',
+  'leads.preview.*',
   'network.sla.reviewTitle',
   'network.sla.reviewIntro',
   'network.review.*',
