@@ -4,6 +4,7 @@ import { provinces } from '@/content/provinces';
 import { CONTACT_POINTS } from '@/content/seo';
 import { site } from '@/content/site';
 import type { Locale } from '@/i18n/routing';
+import { claim } from './claims';
 import { absoluteUrl, getRoute, SITE_URL, type RouteKey } from './routes';
 import { breadcrumbTrail, ogImageFor, seoFor, type Crumb } from './seo';
 
@@ -18,8 +19,8 @@ import { breadcrumbTrail, ogImageFor, seoFor, type Crumb } from './seo';
  *
  * KHÔNG LocalBusiness (không có địa điểm đón khách), KHÔNG AggregateRating/Review tự đánh giá (AC-LD-2).
  * Tên pháp nhân KHÔNG dịch. sameAs chỉ link thật (content/site.ts → socials, Zalo đã duyệt).
- * areaServed chỉ gồm tỉnh "confirmed" trong content/provinces.ts; chưa có tỉnh nào → bỏ trường (không ghi "Vietnam":
- * câu "phục vụ toàn quốc" là claim chưa duyệt — coverage.provinces-34).
+ * areaServed: tỉnh "confirmed" trong content/provinces.ts; chưa có tỉnh nào thì ghi Việt Nam (Country) KHI claim phạm vi
+ * coverage.provinces-34 đã duyệt (D-26/D-27); claim còn nháp → bỏ trường.
  */
 export type JsonLdObject = { '@context'?: 'https://schema.org'; '@type': string | string[]; [key: string]: unknown };
 
@@ -107,11 +108,18 @@ export function breadcrumbJsonLd(routeKey: RouteKey, locale: Locale): JsonLdObje
   return breadcrumbListJsonLd(breadcrumbTrail(routeKey, locale));
 }
 
-/** Tỉnh đã xác nhận có thợ (content/provinces.ts coverage === 'confirmed') → areaServed. */
+/**
+ * areaServed: tỉnh đã xác nhận có thợ (content/provinces.ts coverage === 'confirmed'); chưa có tỉnh nào mà claim phạm vi
+ * 34 tỉnh/thành đã duyệt → cả nước (Country). Claim còn nháp → [] (bỏ trường). Không phụ thuộc DRAFT_PREVIEW.
+ */
 export function confirmedAreaServed(locale: Locale): JsonLdObject[] {
-  return provinces
+  const confirmed = provinces
     .filter((p) => (p.coverage as string) === 'confirmed')
     .map((p) => ({ '@type': 'AdministrativeArea', name: p.name[locale] }));
+  if (confirmed.length > 0) return confirmed;
+  return claim('coverage.provinces-34', locale, { draftPreview: false })
+    ? [{ '@type': 'Country', name: locale === 'vi' ? 'Việt Nam' : 'Vietnam' }]
+    : [];
 }
 
 type ServiceInput = {
