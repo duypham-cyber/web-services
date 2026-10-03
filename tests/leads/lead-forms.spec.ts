@@ -95,9 +95,14 @@ const events = (page: Page) =>
  * Form bật (data-lead-state="enabled") → cuộn tới khối để LazyLeadForm tải mã form, đợi form hiện. false = form tắt
  * (bản production khi câu đồng ý chưa duyệt).
  */
+async function leadState(page: Page): Promise<string | null> {
+  const block = page.locator('[data-lead-block]').first();
+  return (await block.count()) > 0 ? block.getAttribute('data-lead-state') : null;
+}
+
 async function openForm(page: Page): Promise<boolean> {
   const block = page.locator('[data-lead-block]').first();
-  if ((await block.getAttribute('data-lead-state')) !== 'enabled') return false;
+  if ((await leadState(page)) !== 'enabled') return false;
   await block.scrollIntoViewIfNeeded();
   await expect(block.locator('form')).toBeVisible();
   return true;
@@ -294,8 +299,7 @@ test.describe('form B2B', () => {
   }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-1440', 'header đầy đủ chỉ ở desktop');
     await page.goto('/giai-phap/hang-dien-may', { waitUntil: 'networkidle' });
-    const block = page.locator('[data-lead-block]');
-    test.skip((await block.getAttribute('data-lead-state')) !== 'enabled', 'form đang tắt');
+    test.skip((await leadState(page)) !== 'enabled', 'form đang tắt');
     // Nút demo ở hero, lúc mã form CHƯA tải: chặn điều hướng, tải form, đặt intent demo, cuộn + focus ô đầu
     await expect(page.locator('[data-lead-root]')).toHaveAttribute('data-lead-root', 'placeholder');
     await page.locator('main a[href$="#dat-lich-demo"]').first().click();
@@ -356,8 +360,7 @@ test.describe('form thợ', () => {
     test.skip(testInfo.project.name !== 'mobile-390', 'thanh dính đáy chỉ dưới 768px');
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/doi-tac-tho', { waitUntil: 'networkidle' });
-    const block = page.locator('[data-lead-block]');
-    test.skip((await block.getAttribute('data-lead-state')) !== 'enabled', 'form đang tắt');
+    test.skip((await leadState(page)) !== 'enabled', 'form đang tắt');
     await expect(page.locator('[data-lead-root]')).toHaveAttribute('data-lead-root', 'placeholder');
     await page.locator('nav.fixed a[href$="#dang-ky"]').click();
     await expect(page.locator('#lead-tech-fullName')).toBeFocused();
@@ -520,18 +523,27 @@ test.describe('form tắt (bản production khi câu đồng ý chưa duyệt)',
   test('AC-C10: không có form, có khối Gọi · email thay thế', async ({ page }) => {
     await page.goto('/bang-gia');
     const block = page.locator('[data-lead-block]');
-    test.skip((await block.getAttribute('data-lead-state')) === 'enabled', 'form đang bật (bản xem trước)');
+    test.skip((await leadState(page)) === 'enabled', 'form đang bật (bản xem trước)');
     await block.scrollIntoViewIfNeeded();
     await expect(block.locator('a[href^="tel:"]')).toHaveCount(1);
     await expect(block.locator('a[href^="mailto:"]')).toHaveCount(1);
     await expect(block.locator('form')).toHaveCount(0);
   });
 
+  test('AC-C10 form thợ: #dang-ky không có form, có Gọi · email tuyển thợ', async ({ page }) => {
+    await page.goto('/doi-tac-tho');
+    test.skip((await page.locator('#dang-ky [data-lead-block][data-lead-state="enabled"]').count()) > 0, 'form đang bật');
+    const section = page.locator('#dang-ky');
+    await expect(section.locator('form')).toHaveCount(0);
+    await expect(section.locator('a[href^="tel:"]')).toHaveCount(1);
+    await expect(section.locator('a[href^="mailto:"]')).toHaveCount(1);
+  });
+
   test('nút "Nhận báo giá" trong trang cuộn tới khối liên hệ của chính trang, không sang trang chủ', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-1440', 'một project là đủ');
     await page.goto('/bang-gia', { waitUntil: 'networkidle' });
     const block = page.locator('[data-lead-block]');
-    test.skip((await block.getAttribute('data-lead-state')) === 'enabled', 'form đang bật (bản xem trước)');
+    test.skip((await leadState(page)) === 'enabled', 'form đang bật (bản xem trước)');
     await page.locator('#gia-hop-dong a[href$="#bao-gia"]').first().click();
     await expect(block.locator('a[href^="tel:"]').first()).toBeFocused();
     expect(new URL(page.url()).pathname).toBe('/bang-gia');
