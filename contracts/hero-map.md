@@ -24,8 +24,14 @@ I WANT TO đọc đủ nội dung, bỏ qua hero bằng một link, không tải
 
 ## 2. Bố cục và trục cuộn
 
-- Track hero `data-film-zone` (cả track) chứa khung sticky 100svh. Chiều cao mặc định desktop 320vh, mobile 280svh (bước 2 tinh
-  chỉnh trong 280–340). p ∈ [0, 1] = tiến độ cuộn của track, ghi vào ref, không vào React state (FH luật 10).
+- Track hero `data-film-zone="light"` (cả track; header chữ navy, sang đêm chữ trắng). HTML server = bố cục T-STILL theo dòng chảy
+  (màn đầu 100svh + 4 panel xếp lưới). Runtime thêm `.film-armed` khi T-FULL/T-LITE:
+  - desktop (màn ngang): track 320vh, khung sticky 100svh, panel cố định bên trái ẩn/hiện theo tiến độ; khối chữ phải vừa
+    100svh, không vừa (laptop thấp, điện thoại xoay ngang) → T-STILL;
+  - mobile (màn dọc): BẢN ĐỒ dính trên cùng (cao min(1,16·W, 54svh)), khối chữ và 4 panel cuộn theo dòng chảy bên dưới, không
+    bao giờ đè bản đồ; tiến độ cảnh theo vị trí đọc của panel (panel đi qua tâm "cửa sổ đọc" ↔ đoạn đứng của cảnh đó).
+    Bản mẫu để panel cố định đè nửa dưới bản đồ, che Trường Sa trên máy nhỏ — đổi để giữ NFR-MAP-01.
+  p ∈ [0, 1] ghi vào biến của runtime + `data-p`/biến CSS, không vào React state (FH luật 10).
 - Năm cảnh, trọng số đọc từ `motion/map-camera.json` (`weights`), không viết lại ở chỗ khác:
 
 | Cảnh | Hiện rõ (p) | Máy (desktop) | Lớp HTML |
@@ -66,7 +72,8 @@ I WANT TO đọc đủ nội dung, bỏ qua hero bằng một link, không tải
 - **AC-TR-2** Tô sáng miền theo ranh giới tỉnh THẬT (miền của `content/provinces.ts`, Bắc 18 · Trung 4 · Nam 12 — D-06),
   không theo dải vĩ độ như bản mẫu. Miền khác tối đi ≤ 15%.
 - **AC-TR-3** Cảnh 5: biển, mây, sương chuyển đêm theo `nightAt(p)`; header chuyển chữ trắng khi `night > 0,5` (HeaderObserver).
-- **AC-TR-4** Chữ không chuyển động cùng máy: panel đổi `opacity` + `translateY` ≤ 24 px. Mỗi cảnh có đoạn đứng ≥ 20 vh.
+- **AC-TR-4** Chữ không chuyển động cùng máy: desktop panel đổi `opacity` + `translateY` ≤ 24 px, mỗi cảnh có đoạn đứng ≥ 20 vh
+  (Bắc 0,23–0,37 × 220vh ≈ 31vh). Mobile: panel cuộn native dưới bản đồ dính, cách nhau 30svh (đoạn máy bay).
 - **AC-TR-5** Cuộn ngược, nhảy hash, back/forward, kéo thanh cuộn: trạng thái tính lại từ vị trí cuộn, không kẹt nửa chừng.
   Space/PageDown/mũi tên/Home/End cuộn native.
 
@@ -87,18 +94,22 @@ I WANT TO đọc đủ nội dung, bỏ qua hero bằng một link, không tải
 
 | Tầng | Điều kiện | Hiển thị |
 |---|---|---|
-| T-FULL | desktop (`layoutFor` = desktop VÀ `pointer:fine`) VÀ WebGL2 VÀ renderer thật VÀ detect-gpu tier 3 | bóng đổ (shadow map vẽ 1 lần), mây tiền cảnh khi bay, lưới kinh vĩ, DPR ≤ 2, mặt nạ biển 1024² |
-| T-LITE | như trên nhưng tier 2 hoặc không xếp hạng; HOẶC mobile/`pointer:coarse` có tier ≥ 2 | không bóng, 12 cụm mây + 2 dải, không mây tiền cảnh, biển rút gọn (bỏ lưới, bọt tĩnh), DPR ≤ 1,5, mặt nạ 512² |
-| T-STILL | không JS, reduced-motion, Save-Data, không WebGL2, renderer `/SwiftShader\|llvmpipe\|Software\|Basic Render/i` hoặc không đọc được, tier 0–1, `webglcontextlost`, FPS guard hết bậc | poster `<picture>` + nhãn HTML tĩnh, KHÔNG tải three/chunk 3D, không pin |
+| T-FULL | desktop (màn ngang VÀ `pointer:fine`) VÀ WebGL2 VÀ renderer thật VÀ GPU mạnh theo heuristic AC-T-1 | bóng đổ (shadow map vẽ 1 lần), mây tiền cảnh khi bay, lưới kinh vĩ, DPR ≤ 2, mặt nạ biển 1024² |
+| T-LITE | như trên nhưng GPU không thuộc nhóm mạnh; HOẶC màn dọc/`pointer:coarse` không thuộc nhóm yếu | không bóng, 12 cụm mây + 2 dải, không mây tiền cảnh, biển rút gọn (bỏ lưới, bọt tĩnh), DPR ≤ 1,5, mặt nạ 512² |
+| T-STILL | không JS, reduced-motion, Save-Data, không WebGL2, renderer `/SwiftShader\|llvmpipe\|Software\|Basic Render/i` hoặc không đọc được, GPU yếu/máy yếu (AC-T-1), desktop có khối chữ không vừa 100svh, `webglcontextlost`, FPS guard hết bậc | poster `<picture>` + nhãn HTML tĩnh, KHÔNG tải three/chunk 3D; chọn từ đầu → bố cục dòng chảy, không pin; hạ giữa phiên → giữ track |
 
-- **AC-T-1** Thứ tự: no-JS → reduced-motion → Save-Data → probe WebGL2 + `UNMASKED_RENDERER_WEBGL` → detect-gpu (benchmark tự host).
-  Thiếu API = máy yếu (FH AC-T-2).
+- **AC-T-1** Thứ tự: no-JS → reduced-motion → Save-Data → probe WebGL2 (`failIfMajorPerformanceCaveat`) + `UNMASKED_RENDERER_WEBGL`
+  → heuristic không gọi mạng (thay benchmark detect-gpu tải từ unpkg): renderer phần mềm/GPU đời cũ (Mali-T/4xx, Adreno ≤ 4xx,
+  PowerVR SGX, Intel HD 2000–4000, VideoCore) hoặc `deviceMemory` < 2 / `hardwareConcurrency` < 4 → T-STILL; màn dọc hoặc
+  `pointer:coarse` → T-LITE; GPU rời/đời mới (NVIDIA, Radeon RX/Pro, Apple M/GPU, Iris Xe, Arc) + ≥ 8 nhân + RAM ≥ 8 GB (hoặc
+  không báo) + màn ≤ 4K → T-FULL; còn lại T-LITE. Thiếu API = máy yếu (FH AC-T-2). Dev/bản xem trước nhận `?tier=`.
 - **AC-T-2** FPS guard: chỉ đo khi ĐANG cuộn; p90 frame time > 25 ms trong 2 s → `scene.degrade()` (hạ DPR, tắt mây tiền cảnh/dải,
   không biên dịch lại shader); `degrade()` trả `false` → T-STILL tại chỗ.
 - **AC-T-3** `webglcontextlost` (callback `onContextLost`) → T-STILL tại chỗ: giữ chiều cao track (không nhảy cuộn), thay canvas bằng
   poster, panel HTML vẫn theo tiến độ; không tải thêm gì.
 - **AC-T-4** Đổi bố cục desktop ↔ mobile giữa phiên (xoay máy) → T-STILL tại chỗ với poster bố cục mới; không dựng lại cảnh.
-- **AC-T-5** Server render ở trạng thái T-STILL. `.film-armed` chỉ thêm khi T-FULL/T-LITE; poster gỡ sau 2 khung canvas liên tiếp < 33 ms.
+- **AC-T-5** Server render ở trạng thái T-STILL. `.film-armed` chỉ thêm khi T-FULL/T-LITE; canvas (tạo mới mỗi lần dựng, `aria-hidden`)
+  hiện đè poster khi khung đầu xong; poster giữ nguyên bên dưới làm nền dự phòng (T-STILL tại chỗ).
 
 ### 3.5 Reduced-motion → T-STILL
 Không pin, không tour, không tải three; poster p = 0 + nhãn HTML + ba panel miền xếp dọc như section thường. Chọn poster thay cho
@@ -113,7 +124,8 @@ Không pin, không tour, không tải three; poster p = 0 + nhãn HTML + ba pane
   đã đứng ≥ 150 ms; cấm tải/biên dịch khi p đang đổi (FH luật 9).
 - **AC-L-4** Một rAF của bước 2 gọi `renderIfNeeded(now)`: chỉ vẽ khi p (đã làm mượt) đổi, khi resize, hoặc khi hiệu ứng nền bật.
   Hiệu ứng nền (đường cung chạy, sóng ghim, mây trôi, rung máy ≤ 1,2°) chỉ bật khi hero trong khung nhìn, tab hiện, không reduced-motion;
-  tắt sau 20 s không tương tác. Ra khỏi khung (IntersectionObserver) hoặc tab ẩn → dừng rAF.
+  tắt sau 8 s không tương tác (brief bước 2). Ra khỏi khung (IntersectionObserver) hoặc tab ẩn → dừng rAF; ra khỏi khung > 3 s →
+  `dispose()` (giải phóng texture + WebGL context), quay lại thì dựng lại ở đúng tiến độ khi cuộn đã đứng.
 - **AC-L-5** `dispose()` giải phóng mọi geometry/material/texture, `renderer.dispose()` + `forceContextLoss()`.
 
 ### 3.7 Ngân sách (`budgets.json`; bước 1 đo, bước 2 giữ)
@@ -153,9 +165,9 @@ Không pin, không tour, không tải three; poster p = 0 + nhãn HTML + ba pane
 | AC-MAP-3, AC-TR-1 | `tests/hero/map-camera.test.ts` (Vitest): JSON hợp lệ, keyframe tăng dần, nội suy khớp keyframe, `projectPoint` khớp three, mọi keyframe `fit` chứa hai quần đảo trong `safe`, phép chiếu trùng `projection.ts` |
 | Dữ liệu | `node scripts/make-hero-map.mjs --check` (34 tỉnh, ≥ 5/20 chấm đảo, chấm trong elip, ≤ 60 KB gz); `tests/hero/hero-map-data.test.ts` |
 | Màu | `tests/hero/palette.test.ts`: `TOKEN_FALLBACK` khớp `styles/tokens.css` |
-| AC-MAP-2, AC-HM-* | bước 2: `tests/hero/*.spec.ts` (Playwright, 9 bề rộng, mọi tầng ép bằng `?tier=` ở non-production) |
+| AC-MAP-2, AC-HM-* | `tests/hero/hero.spec.ts` (Playwright): H1/panel H2 trong HTML server, link bỏ qua focus đầu, không JS, reduced-motion, không WebGL, SwiftShader → T-STILL, hết track → panel cuối + `/mang-luoi`, nhãn hai quần đảo ở 9 bề rộng (T-STILL và `.film-armed`), cảnh sống: quần đảo trong khung hoặc minimap đủ tên, tương phản header + chữ ở p = 0 và p = 1. Ép tầng `?tier=` · `?scene=0` · `?shot=1` · `?fpsguard=0` chỉ ở dev/bản xem trước |
 | Poster | `scripts/hero-poster.mjs` kiểm dung lượng + hai quần đảo trong khung; ảnh do người xem duyệt |
-| AC-L-*, AC-T-* | bước 2: liệt kê request theo tầng (T-STILL 0 request three), đếm khung khi đứng yên |
+| AC-L-*, AC-T-* | `tests/hero/hero.spec.ts`: T-STILL không tải `hero-map.json`/chunk 3D; `node scripts/hero-budget.mjs`: bộ nạp ≤ 3 KB gz, dữ liệu, poster, draw call/tam giác khung đầu; `npm run budget`: JS tải đầu, chunk 3D. Ảnh soát trên trang: `scripts/hero-page-shots.mjs` |
 
 ## 6. Câu cần anh Duy / pháp chế xác nhận
 1. Minimap (desktop, cảnh zoom miền) có được coi là thoả NFR-MAP-01 (a) không — mặc định: CÓ (như bản mẫu anh đã chọn).

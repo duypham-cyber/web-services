@@ -154,7 +154,7 @@ export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): 
     stop?.();
     stop = null;
     root.classList.remove('film-armed');
-    for (const k of ['tier', 'tierReason', 'stillReason', 'live', 'night', 'scene', 'p']) delete root.dataset[k];
+    for (const k of ['tier', 'tierReason', 'stillReason', 'live', 'night', 'heroScene', 'p']) delete root.dataset[k];
     root.style.removeProperty('--night');
     root.style.removeProperty('--wn');
     for (const el of [copy, ...panels]) {
@@ -203,7 +203,7 @@ export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): 
     w.forEach((v, i) => {
       if (v > (w[best] ?? 0)) best = i;
     });
-    root.dataset.scene = SCENE_IDS[best];
+    root.dataset.heroScene = SCENE_IDS[best];
     const n = smooth(night[0], night[1], p);
     if (Math.abs(n - lastNight) > 0.002) {
       lastNight = n;

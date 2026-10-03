@@ -1,12 +1,13 @@
 {
   "version": 1,
-  "updated": "2026-10-02",
+  "updated": "2026-10-03",
   "owner": "qa — đổi ngưỡng = sửa file này trong PR riêng, ghi lý do vào docs/DECISIONS.md",
   "sources": [
     "CLAUDE.md mục Ngân sách",
     "docs/04-KE-HOACH-PHAT-TRIEN-CLAUDE-CODE.md mục 3.4, 3.5, 7.1 (NFR-PERF-06…10)",
     "contracts/site-shell-p0.md AC-PERF-1, AC-PERF-3, AC-PERF-4",
-    "contracts/film-home.md mục 1.7 (ngân sách) và mục 3 (public/film/manifest.json)"
+    "contracts/film-home.md mục 1.7 (ngân sách) và mục 3 (public/film/manifest.json)",
+    "contracts/hero-map.md mục 3.7 (hero bản đồ Mẫu 02, D-26)"
   ],
   "units": "KB = 1024 byte · gz = gzip -9 trên file của bản build (chưa qua brotli của openresty) · level fail = exit 1, warn = chỉ in",
   "pages": {
@@ -96,6 +97,7 @@
   },
   "film": {
     "id": "film-home §3",
+    "status": "Phim A+ đã dừng (D-26): public/film trống nên scripts/check-budgets.mjs bỏ qua khối này. Hero trang chủ đo ở khối heroMap.",
     "dir": "public/film",
     "glb": { "id": "NFR-PERF-10", "maxKb": 900, "maxTriangles": 150000, "maxDrawCalls": 60 },
     "ktx2": { "id": "NFR-PERF-10", "maxSize": 2048, "largeAt": 2048, "maxLarge": 3 },
@@ -116,6 +118,31 @@
       "allowedSizes": [[540, 960], [720, 1280]]
     },
     "desktopTotal": { "id": "NFR-PERF-09", "tFullKb": 2252.8, "tLiteKb": 1433.6 }
+  },
+  "heroMap": {
+    "id": "contracts/hero-map.md §3.7",
+    "level": "fail",
+    "checker": "scripts/hero-budget.mjs (bộ nạp, dữ liệu, poster, cảnh) + scripts/check-budgets.mjs (JS tải đầu, chunk 3D, ảnh preload và dung lượng)",
+    "loader": {
+      "entry": "components/film/MapHeroStage.tsx",
+      "maxGzKb": 3,
+      "note": "bộ nạp trong JS tải đầu trang chủ: rolldown minify, không tính react; chunk cảnh là import động"
+    },
+    "chunk3dMaxGzKb": 290,
+    "data": { "file": "public/data/hero-map.json", "maxGzKb": 60 },
+    "posters": {
+      "manifest": "public/images/hero/hero-poster.json",
+      "maxKb": { "desktop": 150, "mobile": 90 },
+      "formats": ["avif", "webp"],
+      "note": "mọi định dạng (AVIF chính, WebP dự phòng) đều dưới ngưỡng của bố cục"
+    },
+    "scene": {
+      "full": { "maxDrawCalls": 40, "maxTriangles": 150000 },
+      "lite": { "maxDrawCalls": 30, "maxTriangles": 80000 },
+      "note": "khung đầu, gồm pass bóng của T-FULL; số đo ghi trong hero-poster.json (scripts/hero-poster.mjs) và scene.stats()"
+    },
+    "frameMs": { "fullP95": 16.7, "liteP95": 20, "note": "máy thật 1366×768 iGPU; SwiftShader không đại diện nên script không kiểm" },
+    "desktopTotalKb": { "tFull": 2252.8, "tLite": 1433.6, "note": "chunk 3D + hero-map.json + poster desktop; giữ ngưỡng phim desktop cũ" }
   },
   "live": {
     "id": "NFR-PERF-08",

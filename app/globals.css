@@ -211,8 +211,16 @@ body:has([data-film-zone='light']:not([data-night])) .site-header:not([data-past
   background-image: linear-gradient(
     180deg,
     color-mix(in srgb, var(--color-blue-50) 94%, transparent),
-    color-mix(in srgb, var(--color-blue-50) 62%, transparent)
+    color-mix(in srgb, var(--color-blue-50) 72%, transparent)
   );
+}
+
+/* Màn nhỏ: chữ và panel cuộn dưới header trong vùng phim → làm mờ nền sau header cho dễ đọc */
+@media (max-width: 1023.98px) {
+  body:has([data-film-zone='light']:not([data-night])) .site-header:not([data-past-film='true']) {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
 }
 
 /* Menu mobile (<dialog> modal): khóa cuộn trang nền, trượt vào từ phải */

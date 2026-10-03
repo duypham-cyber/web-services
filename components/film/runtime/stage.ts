@@ -222,7 +222,8 @@ export async function startStage(
     ];
     const islands: Box[] = f.archipelagos
       .filter((a) => a.box.right >= 0 && a.box.left <= W && a.box.bottom >= 0 && a.box.top <= H)
-      .map((a) => [a.box.left - 16, a.box.top - 40, a.box.right - a.box.left + 32, a.box.bottom - a.box.top + 56]);
+      // chấm đảo + elip nét đứt + quầng nước nông (~48 px quanh chấm) + nhãn phía trên
+      .map((a) => [a.box.left - 48, a.box.top - 72, a.box.right - a.box.left + 96, a.box.bottom - a.box.top + 120]);
     const avoid = avoidBoxes(origin);
     const pick =
       corners.find(([, b]) => !islands.some((i) => b[0] < i[0] + i[2] && b[0] + b[2] > i[0] && b[1] < i[1] + i[3] && b[1] + b[3] > i[1]) && !avoid.some((i) => b[0] < i[0] + i[2] && b[0] + b[2] > i[0] && b[1] < i[1] + i[3] && b[1] + b[3] > i[1])) ??

@@ -465,7 +465,13 @@
   color: var(--color-blue-600);
 }
 
+.eyebrow > span:not(.pulse) {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
 .pulse {
+  flex: none;
   width: 9px;
   height: 9px;
   border-radius: 50%;
@@ -807,6 +813,13 @@
 
   .pillHq span {
     display: none;
+  }
+
+  /* poster mobile: văn phòng TP.HCM nằm sát mép trái và gần nhãn Trường Sa → đặt nhãn ngay dưới điểm, căn giữa */
+  .labelsStatic[data-layout='mobile'] .pillHq {
+    left: 0;
+    top: 12px;
+    transform: translateX(-50%);
   }
 
   .minimap {

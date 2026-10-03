@@ -158,6 +158,7 @@ for (const { locale, path } of PATHS) {
     test('tầng lite (ép): .film-armed, cuộn hết track → panel cuối + link /mang-luoi bấm được', async ({ page }) => {
       await page.goto(`${path}?tier=lite&scene=0`);
       const d = await heroData(page);
+      test.skip(d.tierReason !== 'query', 'bản production không nhận ?tier= (chỉ dev/bản xem trước)');
       expect(d.tier).toBe('lite');
       expect(await page.locator(`${ROOT}.film-armed`).count()).toBe(1);
       await scrollToTrackEnd(page);
@@ -182,7 +183,7 @@ for (const { locale, path } of PATHS) {
       test.skip(testInfo.project.name !== 'desktop-1440', 'một bố cục là đủ (SwiftShader chậm)');
       test.setTimeout(300_000);
       await page.goto(`${path}?tier=lite&shot=1&fpsguard=0`);
-      await heroData(page);
+      test.skip((await heroData(page)).tierReason !== 'query', 'bản production không nhận ?tier=');
       await page.mouse.move(500, 400);
       await page.waitForSelector(`${ROOT}[data-live]`, { timeout: 240_000 });
       const canvas = page.locator(`${ROOT} canvas`);
@@ -205,7 +206,11 @@ test.describe('NFR-MAP-01: Hoàng Sa, Trường Sa thấy được ở 9 bề r�
           const ctx = await browser.newContext({ viewport: { width, height: heightFor(width) }, isMobile: width < 768, hasTouch: width < 768 });
           const page = await ctx.newPage();
           await page.goto(mode === 'still' ? `${path}?tier=still` : `${path}?tier=lite&scene=0`);
-          await heroData(page);
+          const d = await heroData(page);
+          if (mode === 'armed' && d.tierReason !== 'query') {
+            await ctx.close();
+            test.skip(true, 'bản production không nhận ?tier=');
+          }
           // nhãn/lớp trang trí có pointer-events: none — bật lại để elementFromPoint thấy MỌI phần tử đè lên (như tests/map)
           await page.addStyleTag({ content: '* { pointer-events: auto !important; }' });
           const r = await page.evaluate(
@@ -257,7 +262,7 @@ test.describe('NFR-MAP-01 khi cảnh 3D sống (lite, SwiftShader)', () => {
       const ctx = await browser.newContext({ viewport: { width, height }, isMobile: width < 768, hasTouch: width < 768 });
       const page = await ctx.newPage();
       await page.goto('/?tier=lite&shot=1&fpsguard=0');
-      await heroData(page);
+      test.skip((await heroData(page)).tierReason !== 'query', 'bản production không nhận ?tier=');
       await page.mouse.move(width / 2, height / 3);
       await page.waitForSelector(`${ROOT}[data-live]`, { timeout: 240_000 });
       const problems: string[] = [];
@@ -314,14 +319,17 @@ test.describe('tương phản header + chữ hero ở hai trạng thái (sáng p
   for (const { locale, path } of PATHS) {
     test(`${locale}`, async ({ page }) => {
       await page.goto(`${path}?tier=lite&scene=0`);
-      await heroData(page);
+      const forced = (await heroData(page)).tierReason === 'query';
       const run = async (label: string) => {
         const res = await new AxeBuilder({ page }).include('[data-site-header]').include(ROOT).withRules(['color-contrast']).analyze();
         return res.violations.flatMap((v) => v.nodes.map((n) => `${label}: ${n.target.join(' ')} — ${n.failureSummary?.split('\n')[1] ?? ''}`));
       };
       const problems = await run('p=0');
-      await scrollToTrackEnd(page);
-      problems.push(...(await run('p=1')));
+      // trạng thái đêm chỉ có khi track được gắn (.film-armed) — bản production trên SwiftShader là T-STILL
+      if (forced) {
+        await scrollToTrackEnd(page);
+        problems.push(...(await run('p=1')));
+      }
       expect(problems, problems.join('\n')).toEqual([]);
     });
   }

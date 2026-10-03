@@ -85,7 +85,7 @@ try {
           const file = join(OUT, `${locale}-${tier}-${width}x${height}-p${String(p).replace('.', '')}.png`);
           await page.screenshot({ path: file });
           const ds = await page.evaluate(() => ({ ...document.querySelector('[data-hero-map]').dataset }));
-          console.log(`${file} y=${y} tier=${ds.tier} reason=${ds.tierReason ?? ''} scene=${ds.scene ?? ''} live=${ds.live !== undefined}`);
+          console.log(`${file} y=${y} tier=${ds.tier} reason=${ds.tierReason ?? ''} scene=${ds.heroScene ?? ''} live=${ds.live !== undefined}`);
         }
         if (errors.length) console.log(`  lỗi trang: ${errors.slice(0, 5).join(' | ')}`);
         await page.close();
