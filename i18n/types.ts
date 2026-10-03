@@ -6,6 +6,7 @@ import type errors from '../messages/vi/errors.json';
 import type film from '../messages/vi/film.json';
 import type home from '../messages/vi/home.json';
 import type knowledge from '../messages/vi/knowledge.json';
+import type leads from '../messages/vi/leads.json';
 import type legal from '../messages/vi/legal.json';
 import type network from '../messages/vi/network.json';
 import type partners from '../messages/vi/partners.json';
@@ -28,5 +29,6 @@ export type AppMessages = {
   contact: typeof contact;
   support: typeof support;
   legal: typeof legal;
+  leads: typeof leads;
   errors: typeof errors;
 };

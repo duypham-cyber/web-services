@@ -16,7 +16,8 @@
       "i3": "Job-by-job reconciliation and reporting",
       "prepare": "For a faster quote, have ready: your product category, monthly installation volume and the areas you need covered.",
       "emailSubject": "Installation quote for business",
-      "link": "See our solution for appliance brands"
+      "link": "See our solution for appliance brands",
+      "formLink": "Request a quote online"
     },
     "recruitment": {
       "title": "Technician recruitment",
@@ -25,7 +26,8 @@
       "i2": "Which areas need technicians",
       "i3": "Guidance on the onboarding steps",
       "emailSubject": "Technician partner sign-up",
-      "link": "See the technician partner page"
+      "link": "See the technician partner page",
+      "formLink": "Register as a technician online"
     },
     "care": {
       "title": "Customer care",

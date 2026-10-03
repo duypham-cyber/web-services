@@ -22,6 +22,7 @@ export const NAMESPACES = [
   'contact',
   'support',
   'legal',
+  'leads',
   'errors',
 ] as const;
 

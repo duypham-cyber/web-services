@@ -16,7 +16,8 @@
       "i3": "Đối soát và báo cáo theo đơn",
       "prepare": "Để báo giá nhanh, hãy chuẩn bị: ngành hàng, sản lượng lắp đặt mỗi tháng và khu vực cần phủ.",
       "emailSubject": "Báo giá lắp đặt cho doanh nghiệp",
-      "link": "Xem giải pháp cho hãng điện máy"
+      "link": "Xem giải pháp cho hãng điện máy",
+      "formLink": "Gửi yêu cầu báo giá trực tuyến"
     },
     "recruitment": {
       "title": "Tuyển thợ",
@@ -25,7 +26,8 @@
       "i2": "Hỏi khu vực đang cần thợ",
       "i3": "Hướng dẫn các bước gia nhập",
       "emailSubject": "Đăng ký làm đối tác thợ",
-      "link": "Xem trang đối tác thợ"
+      "link": "Xem trang đối tác thợ",
+      "formLink": "Đăng ký làm đối tác thợ trực tuyến"
     },
     "care": {
       "title": "Chăm sóc khách hàng",

@@ -1,0 +1,199 @@
+{
+  "form": {
+    "requiredMark": "bắt buộc",
+    "optionalMark": "tùy chọn",
+    "submitting": "Đang gửi…",
+    "honeypot": "Không điền ô này",
+    "noscript": "Trình duyệt đang tắt JavaScript nên biểu mẫu chưa gửi được. Vui lòng gọi hoặc gửi email cho Bluebolt:",
+    "verifyLabel": "Xác minh chống spam",
+    "verifyPlaceholder": "Bước xác minh tự động của Cloudflare sẽ hiện ở đây khi bạn bắt đầu điền.",
+    "verifyPending": "Vui lòng đợi bước xác minh chống spam hoàn tất rồi bấm gửi lại.",
+    "webviewHint": "Nếu bước xác minh không hiện trong ứng dụng Zalo hoặc Facebook, hãy mở trang này bằng trình duyệt.",
+    "webviewOpen": "Mở bằng trình duyệt",
+    "newTab": "(mở thẻ mới)",
+    "callNow": "Gọi {phone}",
+    "zalo": "Nhắn Zalo"
+  },
+  "b2b": {
+    "title": {
+      "quote": "Nhận báo giá cho doanh nghiệp",
+      "demo": "Đặt lịch demo 30 phút",
+      "integration": "Thảo luận tích hợp"
+    },
+    "lead": {
+      "quote": "Để lại thông tin, bộ phận kinh doanh sẽ gọi lại để trao đổi sản lượng, khu vực và gửi báo giá theo hợp đồng.",
+      "demo": "Để lại thông tin, Bluebolt sẽ gọi để chốt giờ demo 30 phút phù hợp với bạn.",
+      "integration": "Để lại thông tin, bộ phận kinh doanh sẽ gọi lại để trao đổi cách kết nối đơn lắp đặt với hệ thống của bạn."
+    },
+    "switchToDemo": "Muốn xem demo trước? Đặt lịch demo 30 phút",
+    "switchToQuote": "Cần báo giá? Chuyển sang nhận báo giá",
+    "submit": {
+      "quote": "Gửi yêu cầu báo giá",
+      "demo": "Gửi yêu cầu đặt lịch",
+      "integration": "Gửi yêu cầu"
+    },
+    "fields": {
+      "fullName": {
+        "label": "Họ và tên"
+      },
+      "company": {
+        "label": "Công ty"
+      },
+      "jobTitle": {
+        "label": "Chức danh"
+      },
+      "phone": {
+        "label": "Số di động",
+        "hint": "Ví dụ 0902 808 049"
+      },
+      "workEmail": {
+        "label": "Email công ty"
+      },
+      "customerType": {
+        "label": "Loại doanh nghiệp",
+        "placeholder": "Chọn loại doanh nghiệp",
+        "options": {
+          "brand": "Hãng điện máy",
+          "marketplace": "Sàn TMĐT",
+          "retail_chain": "Chuỗi bán lẻ"
+        }
+      },
+      "monthlyVolume": {
+        "label": "Sản lượng đơn lắp mỗi tháng",
+        "placeholder": "Chọn mốc sản lượng",
+        "options": {
+          "lt_100": "Dưới 100 đơn",
+          "100_499": "100–499 đơn",
+          "500_1999": "500–1.999 đơn",
+          "gte_2000": "Từ 2.000 đơn",
+          "unknown": "Chưa rõ"
+        }
+      },
+      "provinces": {
+        "label": "Tỉnh/thành triển khai",
+        "hint": "Chọn một hoặc nhiều tỉnh/thành.",
+        "all": "Toàn quốc ({total} tỉnh/thành)",
+        "selected": "Đã chọn {count}/{total}",
+        "regions": {
+          "north": "Miền Bắc",
+          "central": "Miền Trung",
+          "south": "Miền Nam"
+        }
+      },
+      "note": {
+        "label": "Ghi chú",
+        "hint": "Ví dụ ngành hàng, thời điểm cần triển khai. Tối đa 1.000 ký tự."
+      }
+    }
+  },
+  "technician": {
+    "title": "Điền 4 thông tin để đăng ký",
+    "lead": "Dành cho thợ kỹ thuật điện lạnh, điện máy. Bộ phận tuyển thợ sẽ gọi lại hướng dẫn các bước gia nhập.",
+    "sectionLead": "Điền form bên dưới, bộ phận tuyển thợ sẽ gọi lại. Cần hỏi trước? Gọi hoặc nhắn Zalo cho bộ phận tuyển thợ.",
+    "customerHint": "Bạn cần thợ lắp đặt cho nhà mình? Gọi {phone}",
+    "submit": "Đăng ký",
+    "fields": {
+      "fullName": {
+        "label": "Họ và tên"
+      },
+      "phone": {
+        "label": "Số di động (Zalo)",
+        "hint": "Ví dụ 0912 345 678"
+      },
+      "province": {
+        "label": "Tỉnh/thành nhận việc chính",
+        "placeholder": "Chọn tỉnh/thành"
+      },
+      "primarySkill": {
+        "label": "Kỹ năng chính",
+        "placeholder": "Chọn kỹ năng chính",
+        "options": {
+          "air_conditioner": "Điều hòa, máy lạnh (lắp, tháo, bảo dưỡng)",
+          "washer_dryer": "Máy giặt, máy sấy",
+          "tv_mounting": "Treo TV",
+          "water_appliances": "Máy lọc nước, máy nước nóng, bồn cầu thông minh",
+          "kitchen_appliances": "Bếp, máy hút mùi, máy rửa bát",
+          "electrical_plumbing": "Điện, nước dân dụng",
+          "robot_vacuum": "Robot hút bụi",
+          "other": "Khác"
+        }
+      }
+    }
+  },
+  "consent": {
+    "legend": "Đồng ý xử lý dữ liệu cá nhân",
+    "requiredTag": "bắt buộc",
+    "optionalTag": "tùy chọn",
+    "policy": "Chính sách bảo mật"
+  },
+  "errors": {
+    "INVALID_JSON": "Yêu cầu chưa gửi được do lỗi dữ liệu. Vui lòng tải lại trang rồi thử lại.",
+    "VALIDATION_ERROR": "Một số thông tin chưa đúng. Vui lòng kiểm tra các ô được đánh dấu.",
+    "FORBIDDEN_ORIGIN": "Yêu cầu bị chặn vì không gửi từ trang của Bluebolt. Vui lòng tải lại trang rồi thử lại.",
+    "CAPTCHA_FAILED": "Xác minh chưa thành công, vui lòng thử lại.",
+    "CONSENT_VERSION_OUTDATED": "Điều khoản vừa cập nhật. Trang sẽ tải lại, thông tin bạn đã nhập được giữ nguyên.",
+    "PAYLOAD_TOO_LARGE": "Nội dung quá dài. Vui lòng rút gọn ghi chú rồi gửi lại.",
+    "CONSENT_REQUIRED": "Cần đồng ý mục bắt buộc để Bluebolt được liên hệ lại với bạn.",
+    "EMAIL_DOMAIN_NOT_ALLOWED": "Vui lòng dùng email công ty.",
+    "RATE_LIMITED": "Bạn đã gửi nhiều lần trong thời gian ngắn. Vui lòng thử lại sau {minutes} phút hoặc gọi {phone}.",
+    "INTERNAL_ERROR": "Hệ thống đang lỗi nên chưa nhận được yêu cầu. Thông tin bạn nhập vẫn còn, vui lòng thử lại hoặc gọi {phone}. Mã lỗi: {code}.",
+    "LEADS_DISABLED": "Biểu mẫu đang tạm dừng. Vui lòng liên hệ Bluebolt qua các kênh dưới đây.",
+    "NETWORK_ERROR": "Chưa gửi được do mất kết nối. Kiểm tra mạng rồi bấm gửi lại.",
+    "CLIENT_VALIDATION": "Vui lòng kiểm tra các ô được đánh dấu.",
+    "CONSENT_RESTORED": "Điều khoản vừa cập nhật. Thông tin của bạn đã được điền lại, vui lòng đọc và đồng ý lại trước khi gửi."
+  },
+  "fieldErrors": {
+    "required": "Vui lòng điền thông tin này.",
+    "requiredChoice": "Vui lòng chọn một mục.",
+    "requiredProvinces": "Chọn ít nhất một tỉnh/thành.",
+    "requiredConsent": "Cần đồng ý mục này để Bluebolt được liên hệ lại với bạn.",
+    "too_short": "Cần ít nhất {min} ký tự.",
+    "too_long": "Tối đa {max} ký tự.",
+    "invalid_format": "Có ký tự không hợp lệ.",
+    "invalidName": "Họ tên chỉ gồm chữ cái, khoảng trắng và các dấu . ' -",
+    "invalidCompany": "Tên công ty không được chứa dấu < > hoặc đường link.",
+    "invalid_phone": "Số di động chưa đúng định dạng, ví dụ 0902 808 049.",
+    "invalid_email": "Email chưa đúng định dạng.",
+    "invalid_option": "Lựa chọn không hợp lệ, vui lòng chọn lại.",
+    "too_many": "Chọn quá nhiều mục.",
+    "unknown_field": "Biểu mẫu đã cũ, vui lòng tải lại trang.",
+    "unknown_purpose": "Mục đồng ý đã thay đổi, vui lòng tải lại trang."
+  },
+  "thanks": {
+    "title": {
+      "quote": "Bluebolt đã nhận yêu cầu của bạn",
+      "demo": "Bluebolt đã nhận yêu cầu đặt lịch demo",
+      "technician": "Bluebolt đã nhận đăng ký của bạn"
+    },
+    "reference": "Mã yêu cầu",
+    "referenceHint": "Ghi lại mã này nếu bạn cần liên hệ Bluebolt về yêu cầu.",
+    "callback": {
+      "b2b": "Bộ phận kinh doanh sẽ gọi lại trong {time}.",
+      "demo": "Bluebolt sẽ gọi trong {time} để chốt lịch demo 30 phút.",
+      "technician": "Bộ phận tuyển thợ sẽ gọi lại trong {time}."
+    },
+    "stepsTitle": "Lộ trình gia nhập",
+    "urgent": "Cần gấp? Gọi {phone}"
+  },
+  "fallback": {
+    "title": {
+      "b2b": "Liên hệ bộ phận kinh doanh",
+      "technician": "Liên hệ bộ phận tuyển thợ"
+    },
+    "body": {
+      "b2b": "Gọi hotline hoặc gửi email, bộ phận kinh doanh sẽ tư vấn và gửi báo giá theo hợp đồng.",
+      "technician": "Gọi hotline hoặc nhắn Zalo cho bộ phận tuyển thợ để đăng ký và được hướng dẫn các bước gia nhập."
+    },
+    "email": "Gửi email",
+    "emailSubject": {
+      "b2b": "Yêu cầu báo giá lắp đặt cho doanh nghiệp",
+      "technician": "Đăng ký làm đối tác thợ"
+    }
+  },
+  "preview": {
+    "consentDraft": "Câu đồng ý là bản nháp chờ pháp chế duyệt (PC-01…05). Bản production tắt biểu mẫu tới khi có người duyệt.",
+    "callbackPending": "Thời gian gọi lại chưa có trong content/sla.ts (D-12). Bản production ẩn câu này.",
+    "callbackPendingValue": "[thời gian gọi lại chờ chốt]",
+    "disabled": "Biểu mẫu đang tắt (lý do: {reason}). Bản production hiện khối liên hệ này cho tới khi đủ điều kiện ở docs/SRS-LEADS.md mục 10."
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "form": {
+    "requiredMark": "required",
+    "optionalMark": "optional",
+    "submitting": "Sending…",
+    "honeypot": "Leave this field empty",
+    "noscript": "JavaScript is turned off in your browser, so this form cannot be sent. Please call or email Bluebolt:",
+    "verifyLabel": "Spam check",
+    "verifyPlaceholder": "The automatic Cloudflare spam check will appear here once you start filling in the form.",
+    "verifyPending": "Please wait for the spam check to finish, then send again.",
+    "webviewHint": "If the spam check does not appear inside the Zalo or Facebook app, open this page in your browser.",
+    "webviewOpen": "Open in browser",
+    "newTab": "(opens in a new tab)",
+    "callNow": "Call {phone}",
+    "zalo": "Message on Zalo"
+  },
+  "b2b": {
+    "title": {
+      "quote": "Get a quote for your business",
+      "demo": "Book a 30-minute demo",
+      "integration": "Discuss an integration"
+    },
+    "lead": {
+      "quote": "Leave your details and our sales team will call you back to discuss volumes and provinces, then send a contract quote.",
+      "demo": "Leave your details and Bluebolt will call you to agree a time for a 30-minute demo.",
+      "integration": "Leave your details and our sales team will call you back to discuss how installation orders connect to your systems."
+    },
+    "switchToDemo": "Want to see a demo first? Book a 30-minute demo",
+    "switchToQuote": "Need a quote instead? Switch to a quote request",
+    "submit": {
+      "quote": "Request a quote",
+      "demo": "Request a demo",
+      "integration": "Send request"
+    },
+    "fields": {
+      "fullName": {
+        "label": "Full name"
+      },
+      "company": {
+        "label": "Company"
+      },
+      "jobTitle": {
+        "label": "Job title"
+      },
+      "phone": {
+        "label": "Mobile number",
+        "hint": "For example +84 902 808 049"
+      },
+      "workEmail": {
+        "label": "Work email"
+      },
+      "customerType": {
+        "label": "Business type",
+        "placeholder": "Choose a business type",
+        "options": {
+          "brand": "Appliance brand",
+          "marketplace": "Marketplace",
+          "retail_chain": "Retail chain"
+        }
+      },
+      "monthlyVolume": {
+        "label": "Installations per month",
+        "placeholder": "Choose a volume",
+        "options": {
+          "lt_100": "Under 100 orders",
+          "100_499": "100–499 orders",
+          "500_1999": "500–1,999 orders",
+          "gte_2000": "2,000 orders or more",
+          "unknown": "Not sure yet"
+        }
+      },
+      "provinces": {
+        "label": "Provinces to cover",
+        "hint": "Choose one or more provinces.",
+        "all": "Nationwide ({total} provinces)",
+        "selected": "{count} of {total} selected",
+        "regions": {
+          "north": "North",
+          "central": "Central",
+          "south": "South"
+        }
+      },
+      "note": {
+        "label": "Notes",
+        "hint": "For example product category or launch date. Up to 1,000 characters."
+      }
+    }
+  },
+  "technician": {
+    "title": "Fill in 4 details to register",
+    "lead": "For air-conditioning and appliance technicians. Our recruitment team will call you back with the steps to join.",
+    "sectionLead": "Fill in the form below and our recruitment team will call you back. Questions first? Call or message the recruitment team on Zalo.",
+    "customerHint": "Need a technician for your home? Call {phone}",
+    "submit": "Register",
+    "fields": {
+      "fullName": {
+        "label": "Full name"
+      },
+      "phone": {
+        "label": "Mobile number (Zalo)",
+        "hint": "For example +84 912 345 678"
+      },
+      "province": {
+        "label": "Main working province",
+        "placeholder": "Choose a province"
+      },
+      "primarySkill": {
+        "label": "Main skill",
+        "placeholder": "Choose your main skill",
+        "options": {
+          "air_conditioner": "Air conditioners",
+          "washer_dryer": "Washers and dryers",
+          "tv_mounting": "TV mounting",
+          "water_appliances": "Water appliances",
+          "kitchen_appliances": "Kitchen appliances",
+          "electrical_plumbing": "Electrical and plumbing",
+          "robot_vacuum": "Robot vacuums",
+          "other": "Other"
+        }
+      }
+    }
+  },
+  "consent": {
+    "legend": "Consent to personal data processing",
+    "requiredTag": "required",
+    "optionalTag": "optional",
+    "policy": "Privacy policy"
+  },
+  "errors": {
+    "INVALID_JSON": "The request could not be sent because of a data error. Please reload the page and try again.",
+    "VALIDATION_ERROR": "Some details are not quite right. Please check the highlighted fields.",
+    "FORBIDDEN_ORIGIN": "The request was blocked because it did not come from a Bluebolt page. Please reload the page and try again.",
+    "CAPTCHA_FAILED": "The spam check did not pass. Please try again.",
+    "CONSENT_VERSION_OUTDATED": "Our terms have just been updated. The page will reload and keep what you have entered.",
+    "PAYLOAD_TOO_LARGE": "The message is too long. Please shorten your notes and send again.",
+    "CONSENT_REQUIRED": "Please give the required consent so that Bluebolt can contact you.",
+    "EMAIL_DOMAIN_NOT_ALLOWED": "Please use your work email.",
+    "RATE_LIMITED": "You have sent several requests in a short time. Please try again in {minutes} minutes or call {phone}.",
+    "INTERNAL_ERROR": "Our system has a problem and did not receive your request. Your details are still here, so please try again or call {phone}. Error code: {code}.",
+    "LEADS_DISABLED": "This form is paused for now. Please contact Bluebolt through the channels below.",
+    "NETWORK_ERROR": "Not sent because the connection dropped. Check your network and send again.",
+    "CLIENT_VALIDATION": "Please check the highlighted fields.",
+    "CONSENT_RESTORED": "Our terms have just been updated. Your details have been filled back in, so please read and give your consent again before sending."
+  },
+  "fieldErrors": {
+    "required": "Please fill in this field.",
+    "requiredChoice": "Please choose an option.",
+    "requiredProvinces": "Choose at least one province.",
+    "requiredConsent": "Please agree to this so that Bluebolt can contact you.",
+    "too_short": "At least {min} characters.",
+    "too_long": "Up to {max} characters.",
+    "invalid_format": "Contains characters that are not allowed.",
+    "invalidName": "Use letters, spaces and . ' - only.",
+    "invalidCompany": "The company name cannot contain < > or a link.",
+    "invalid_phone": "Enter a Vietnamese mobile number, for example 0902 808 049.",
+    "invalid_email": "Enter a valid email address.",
+    "invalid_option": "That option is not available. Please choose again.",
+    "too_many": "Too many options selected.",
+    "unknown_field": "This form is out of date. Please reload the page.",
+    "unknown_purpose": "The consent options have changed. Please reload the page."
+  },
+  "thanks": {
+    "title": {
+      "quote": "Bluebolt has received your request",
+      "demo": "Bluebolt has received your demo request",
+      "technician": "Bluebolt has received your registration"
+    },
+    "reference": "Request code",
+    "referenceHint": "Keep this code in case you need to contact Bluebolt about your request.",
+    "callback": {
+      "b2b": "Our sales team will call you back within {time}.",
+      "demo": "Bluebolt will call you within {time} to book your 30-minute demo.",
+      "technician": "Our recruitment team will call you back within {time}."
+    },
+    "stepsTitle": "Steps to join",
+    "urgent": "Urgent? Call {phone}"
+  },
+  "fallback": {
+    "title": {
+      "b2b": "Contact our sales team",
+      "technician": "Contact our recruitment team"
+    },
+    "body": {
+      "b2b": "Call the hotline or send an email and our sales team will advise you and send a contract quote.",
+      "technician": "Call the hotline or message us on Zalo to register with our recruitment team and hear about the next steps."
+    },
+    "email": "Send an email",
+    "emailSubject": {
+      "b2b": "Installation quote for my business",
+      "technician": "Technician partner registration"
+    }
+  },
+  "preview": {
+    "consentDraft": "The consent wording is a draft awaiting legal review (PC-01 to PC-05). The production build turns this form off until it is approved.",
+    "callbackPending": "The callback time is not yet in content/sla.ts (D-12). The production build hides this sentence.",
+    "callbackPendingValue": "[callback time to be confirmed]",
+    "disabled": "The form is turned off (reason: {reason}). The production build shows this contact block until the conditions in docs/SRS-LEADS.md section 10 are met."
+  }
+}
