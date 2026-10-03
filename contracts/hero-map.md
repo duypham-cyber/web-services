@@ -36,10 +36,12 @@ I WANT TO đọc đủ nội dung, bỏ qua hero bằng một link, không tải
 | 4 Miền Nam | 0,76 – 0,88 | zoom Nam Bộ + HQ TP.HCM | panel H2 "Miền Nam" (+ Mekong) |
 | 5 Toàn mạng lưới | 0,985 – 1 | kéo ra cả nước, biển chuyển đêm (`night` 0,88 → 0,985) | câu kết + CTA |
 
-- Desktop (`layoutFor`: rộng ≥ 1024 và ngang): chữ trái, bản đồ phải bằng lens shift `setViewOffset` (sx). Mobile: bản đồ trên
+- Desktop (`layoutFor`: viewport ngang): chữ trái, bản đồ phải bằng lens shift `setViewOffset` (sx). Mobile (dọc): bản đồ trên
   (khung chuẩn 9:16 neo trên), chữ dưới; máy giữ CẢ NƯỚC trong mọi cảnh (không zoom miền), chỉ đổi điểm nhìn và tô sáng miền.
-- Khung chuẩn: desktop 16:9, mobile 9:16. Viewport khác tỉ lệ cắt kiểu `object-fit: cover` tại `anchor` (desktop phải-giữa,
-  mobile giữa-trên) — poster chụp ở khung chuẩn khớp từng điểm ảnh với khung 3D p = 0 ở mọi viewport (`viewWindow()`).
+- Khung chuẩn: desktop 16:10, mobile 9:16, đặt vào viewport kiểu `object-fit: cover` tại `anchor` (desktop phải-giữa, mobile
+  giữa-trên); nếu cover cắt vùng `safe` (đất liền + hai quần đảo), lấn cột chữ (`textInset` 40% trái) hoặc dải header (`topInset`)
+  thì khung thu nhỏ vừa đủ, lộ thêm biển ở mép (`viewWindow()`). Ở 16:10 là cover thuần → poster khớp từng điểm ảnh với khung 3D
+  p = 0; mọi tỉ lệ khác poster đặt theo đúng `viewWindow()` (rộng `fullWidth`, lệch `−cropX/−cropY`), phần hở tô màu `edge`.
 
 ## 3. Acceptance Criteria
 
@@ -121,9 +123,9 @@ Không pin, không tour, không tải three; poster p = 0 + nhãn HTML + ba pane
 | JS tải đầu trang chủ | ≤ 170 KB gz (bộ nạp ≤ 3 KB gz) | `scripts/safe-build.sh` |
 | Chunk 3D (three tree-shake + cảnh) | ≤ 290 KB gz | chunk chứa chữ ký three của `budgets.json`, gzip -9 |
 | `hero-map.json` | ≤ 60 KB gz | `make-hero-map.mjs` tự kiểm |
-| Poster | ≤ 150 KB desktop · ≤ 90 KB mobile (AVIF, WebP dự phòng) | `scripts/hero-poster.mjs` tự kiểm |
+| Poster | ≤ 150 KB desktop (1920×1200) · ≤ 90 KB mobile (576×1024); AVIF, WebP dự phòng | `scripts/hero-poster.mjs` tự kiểm |
 | Trang chủ mobile trước khi cuộn | ≤ 600 KB truyền | `npm run budget` (live) |
-| Cảnh | FULL ≤ 160 draw call · ≤ 150k tam giác; LITE ≤ 100 draw call · ≤ 100k tam giác | `scene.stats()` |
+| Cảnh | FULL ≤ 40 draw call · ≤ 150k tam giác (khung đầu, gồm pass bóng); LITE ≤ 30 draw call · ≤ 80k tam giác | `scene.stats()` |
 | Khung hình (máy thật) | FULL p95 ≤ 16,7 ms; LITE p95 ≤ 20 ms (1366×768 iGPU) | rAF trace; số SwiftShader không đại diện |
 
 ### 3.8 Hình ảnh (bằng hoặc hơn Mẫu 02)
