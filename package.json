@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
+    "test:leads": "vitest run --config vitest.leads.config.mts",
     "test:e2e": "playwright test",
     "test:overflow": "playwright test tests/overflow.spec.ts",
     "test:seo": "playwright test tests/seo-render.spec.ts tests/seo/",
@@ -25,7 +26,11 @@
     "redirects:gen": "node scripts/gen-openresty-map.mjs",
     "redirects:check": "node scripts/check-redirects.mjs",
     "check:draft": "node scripts/check-no-draft.mjs",
-    "budget": "node scripts/check-budgets.mjs"
+    "budget": "node scripts/check-budgets.mjs",
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "leads:retry": "node scripts/leads-notify-retry.mjs",
+    "leads:dsr": "node scripts/leads-dsr.mjs",
+    "leads:cleanup": "node scripts/leads-cleanup.mjs"
   },
   "dependencies": {
     "@react-three/drei": "10.7.9",
