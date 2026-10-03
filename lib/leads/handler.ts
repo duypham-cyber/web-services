@@ -28,7 +28,7 @@ import {
   type LeadErrorDetail,
   type LeadType,
 } from './rules';
-import { LeadRequest, detail, detailFields, issuesToDetails, sanitizeMeta } from './schema';
+import { LeadRequest, detail, detailFields, issuesToDetails, sanitizeMeta, unknownKeyCount } from './schema';
 import { verifyTurnstile, type TurnstileOutcome } from './turnstile';
 
 /** Shape của payload (contract mục 2.1). Đổi shape = tăng số này + CR. */
@@ -305,8 +305,16 @@ export async function handleLeadPost(request: Request, deps: LeadHandlerDeps): P
     // Bước 8: Zod (strict cho fields/consent; siêu dữ liệu lỏng đi qua sanitizeMeta)
     const result = LeadRequest.safeParse(raw);
     if (!result.success) {
+      // Tên trường lạ của client đã được làm sạch + giới hạn trong issuesToDetails (review L1); log thêm tổng số khóa lạ
       const details = issuesToDetails(result.error.issues, raw);
-      logger.warn('lead_rejected', { correlationId, type, code: 'VALIDATION_ERROR', fields: detailFields(details) });
+      const unknownFields = unknownKeyCount(result.error.issues);
+      logger.warn('lead_rejected', {
+        correlationId,
+        type,
+        code: 'VALIDATION_ERROR',
+        fields: detailFields(details),
+        ...(unknownFields > 0 ? { unknownFields } : {}),
+      });
       return errorResponse(400, 'VALIDATION_ERROR', correlationId, details);
     }
     const data = result.data;

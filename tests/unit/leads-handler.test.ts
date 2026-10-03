@@ -215,6 +215,37 @@ describe('Idempotency-Key (AC-C9, bước 7 + 12)', () => {
   });
 });
 
+describe('tên trường lạ của client (review L1)', () => {
+  it('response và log chỉ có tên đã làm sạch (≤ 64 ký tự, [A-Za-z0-9_.-]), tối đa 10 tên; log ghi tổng số khóa lạ', async () => {
+    const lines: string[] = [];
+    const extra: Record<string, string> = {
+      ['x'.repeat(200)]: '1',
+      '<script>alert(1)</script>': '1',
+      'line\nbreak"quote': '1',
+      'tên_trường': '1',
+      '': '1',
+    };
+    for (let i = 0; i < 20; i += 1) extra[`junk${i}`] = '1';
+    const res = await handleLeadPost(leadRequest(b2bBody({ fields: { ...extra } })), deps({ lines }));
+    expect(res.status).toBe(400);
+    const details = (await json(res)).error?.details as { field: string; code: string }[];
+    const unknown = details.filter((d) => d.code === 'unknown_field').map((d) => d.field);
+    expect(unknown).toHaveLength(10);
+    expect(unknown).toContain(`fields.${'x'.repeat(64)}`);
+    expect(unknown).toContain('fields.?script?alert?1???script?');
+    expect(unknown).toContain('fields.line?break?quote');
+    expect(unknown).toContain('fields.t?n_tr??ng');
+    expect(unknown).toContain('fields.?');
+    for (const f of unknown) expect(f).toMatch(/^fields\.[A-Za-z0-9_.?-]{1,64}$/);
+
+    const line = lines.find((l) => l.includes('"lead_rejected"'));
+    const entry = JSON.parse(line ?? '{}') as { fields: string[]; unknownFields: number };
+    expect(entry.unknownFields).toBe(25);
+    expect(entry.fields.filter((f) => f.startsWith('fields.'))).toEqual(unknown);
+    expect(line).not.toMatch(/<script>|x{65}|tên|\\n/);
+  });
+});
+
 describe('log không có dữ liệu cá nhân (AC-C8, mức unit)', () => {
   it('mọi đường đi đều không log giá trị đánh dấu hay IP', async () => {
     const lines: string[] = [];

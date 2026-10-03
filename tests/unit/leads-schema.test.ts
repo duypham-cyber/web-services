@@ -13,7 +13,7 @@ import {
   leadReference,
   normalizePhoneVN,
 } from '../../lib/leads/rules';
-import { LeadRequest, issuesToDetails, sanitizeMeta } from '../../lib/leads/schema';
+import { LeadRequest, MAX_UNKNOWN_FIELDS, issuesToDetails, safeFieldName, sanitizeMeta, unknownKeyCount } from '../../lib/leads/schema';
 import { b2bBody, techBody } from '../leads/fixtures';
 
 function details(body: unknown) {
@@ -183,6 +183,22 @@ describe('LeadRequest — mã lỗi details (contract mục 3.1)', () => {
     expect(codeOf(b2bBody({ ipHash: 'x' }), 'ipHash')).toBe('unknown_field');
     expect(codeOf(b2bBody({ fields: { id: 'x' } }), 'fields.id')).toBe('unknown_field');
     expect(codeOf(b2bBody({ consent: { version: 'b2b-2026-10-v1', purposes: [], at: 'x' } }), 'consent.at')).toBe('unknown_field');
+  });
+  it('review L1: tên trường lạ được làm sạch (≤ 64 ký tự, [A-Za-z0-9_.-] còn lại thành ?), tối đa 10 tên', () => {
+    expect(safeFieldName('a'.repeat(100))).toBe('a'.repeat(64));
+    expect(safeFieldName('<img src=x>')).toBe('?img?src?x?');
+    expect(safeFieldName('ok_name.v-2')).toBe('ok_name.v-2');
+    expect(safeFieldName('😀')).toBe('??');
+    expect(safeFieldName('')).toBe('?');
+    const keys = Object.fromEntries(Array.from({ length: 15 }, (_, i) => [`k${i}\u0000`, 'x']));
+    const body = b2bBody({ ...keys, fields: { 'bad key': 'x' } });
+    const r = LeadRequest.safeParse(body);
+    expect(r.success).toBe(false);
+    if (r.success) return;
+    const unknown = issuesToDetails(r.error.issues, body).filter((d) => d.code === 'unknown_field');
+    expect(unknown).toHaveLength(MAX_UNKNOWN_FIELDS);
+    expect(unknown.every((d) => /^[A-Za-z0-9_.?-]+$/.test(d.field))).toBe(true);
+    expect(unknownKeyCount(r.error.issues)).toBe(16);
   });
   it('type lạ hoặc thiếu → lỗi ở trường type', () => {
     expect(codeOf({ ...b2bBody(), type: 'warranty_registration' }, 'type')).toBe('invalid_option');

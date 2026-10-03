@@ -216,6 +216,22 @@ const isBlank = (v: unknown) => v === undefined || v === null || v === '';
 
 type IssueLike = { code: string; path: readonly PropertyKey[]; origin?: string; format?: string; keys?: string[] };
 
+/**
+ * Tên trường LẠ do client tự đặt đi vào response (`details[].field`) và log → làm sạch (review L1): cắt ≤ 64 ký tự, chỉ giữ
+ * [A-Za-z0-9_.-], ký tự khác thành "?". Tối đa 10 tên trong details; log chỉ ghi số lượng + tên đã làm sạch.
+ */
+export const MAX_UNKNOWN_FIELDS = 10;
+const MAX_FIELD_NAME = 64;
+
+export function safeFieldName(name: string): string {
+  return name.slice(0, MAX_FIELD_NAME).replace(/[^A-Za-z0-9_.-]/g, '?') || '?';
+}
+
+/** Tổng số khóa lạ client gửi (kể cả phần bị cắt khỏi details) — để log số lượng. */
+export function unknownKeyCount(issues: readonly IssueLike[]): number {
+  return issues.reduce((n, i) => n + (i.code === 'unrecognized_keys' ? (i.keys?.length ?? 0) : 0), 0);
+}
+
 /** Một trường lỗi nhiều luật (vd rỗng: vừa quá ngắn vừa sai mẫu) → giữ một mã, theo thứ tự ưu tiên này. */
 const DETAIL_PRIORITY: readonly LeadDetailCode[] = [
   'required',
@@ -233,6 +249,7 @@ const DETAIL_PRIORITY: readonly LeadDetailCode[] = [
 /** Ánh xạ issue của Zod sang mã details của contract. `body` là JSON gốc (để biết trường thiếu hay sai). */
 export function issuesToDetails(issues: readonly IssueLike[], body: unknown): LeadErrorDetail[] {
   const byField = new Map<string, LeadDetailCode>();
+  const unknown = new Set<string>();
   const push = (field: string, code: LeadDetailCode) => {
     const prev = byField.get(field);
     if (prev === undefined || DETAIL_PRIORITY.indexOf(code) < DETAIL_PRIORITY.indexOf(prev)) byField.set(field, code);
@@ -245,7 +262,12 @@ export function issuesToDetails(issues: readonly IssueLike[], body: unknown): Le
     const raw = valueAt(body, issue.path);
 
     if (issue.code === 'unrecognized_keys') {
-      for (const key of issue.keys ?? []) push(named.length ? `${field}.${key}` : key, 'unknown_field');
+      for (const key of issue.keys ?? []) {
+        const name = named.length ? `${field}.${safeFieldName(key)}` : safeFieldName(key);
+        if (!unknown.has(name) && unknown.size >= MAX_UNKNOWN_FIELDS) break;
+        unknown.add(name);
+        push(name, 'unknown_field');
+      }
       continue;
     }
     if (field === 'body') {

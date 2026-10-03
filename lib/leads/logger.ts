@@ -39,8 +39,10 @@ export type LeadLogFields = {
   utmSource?: string | null;
   captcha?: string;
   code?: string;
-  /** Chỉ TÊN trường lỗi, không giá trị. */
+  /** Chỉ TÊN trường lỗi, không giá trị. Tên trường lạ của client đã làm sạch (schema.ts → safeFieldName, tối đa 10). */
   fields?: string[];
+  /** Tổng số khóa lạ client gửi (VALIDATION_ERROR), kể cả phần không liệt kê trong `fields`. */
+  unknownFields?: number;
   reason?: string;
   turnstileError?: string;
   channel?: string;
