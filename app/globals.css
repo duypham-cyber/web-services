@@ -197,6 +197,24 @@ body:has([data-film-zone]) .site-header:not([data-past-film='true']) {
   --surface-link: var(--color-white);
 }
 
+/*
+ * Vùng phim SÁNG (hero bản đồ Mẫu 02, D-26: data-film-zone="light"): biển xanh nhạt lúc đầu → header trong suốt chữ navy
+ * trên lớp sương nhạt (đọc được cả khi biển xanh đậm nằm dưới). Cảnh chuyển đêm → runtime đặt data-night lên track →
+ * rơi về luật chữ trắng ở trên. data-film-zone rỗng (vùng phim tối) giữ nguyên chữ trắng.
+ */
+body:has([data-film-zone='light']:not([data-night])) .site-header:not([data-past-film='true']) {
+  --header-fg: var(--color-ink-900);
+  --logo-blue: var(--color-blue-600);
+  --logo-sub: #a6b1b8;
+  --focus-ring: var(--color-blue-600);
+  --surface-link: var(--color-blue-600);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-blue-50) 94%, transparent),
+    color-mix(in srgb, var(--color-blue-50) 62%, transparent)
+  );
+}
+
 /* Menu mobile (<dialog> modal): khóa cuộn trang nền, trượt vào từ phải */
 html:has(dialog[data-mobile-menu][open]) {
   overflow: hidden;

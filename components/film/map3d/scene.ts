@@ -353,13 +353,20 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
         let all = true;
         for (const [x, z] of a.dots) {
           const q = projectAt(x, 0.1, z, tmp);
+          // chấm sau lưng máy (z ngoài [-1, 1]) chiếu ra toạ độ lật — không tính vào khung, coi như ngoài khung
+          if (!(tmp.z < 1 && tmp.z > -1)) {
+            all = false;
+            continue;
+          }
           left = Math.min(left, q.x);
           top = Math.min(top, q.y);
           right = Math.max(right, q.x);
           bottom = Math.max(bottom, q.y);
-          if (!(q.x >= 4 && q.x <= W - 4 && q.y >= 4 && q.y <= H - 4 && tmp.z < 1)) all = false;
+          if (!(q.x >= 4 && q.x <= W - 4 && q.y >= 4 && q.y <= H - 4)) all = false;
         }
-        return { id: a.id, ...lbl, box: { left, top, right, bottom }, inView: all };
+        // không chấm nào trước máy → khung rỗng ngoài màn hình
+        const box = left === Infinity ? { left: -1e5, top: -1e5, right: -1e5, bottom: -1e5 } : { left, top, right, bottom };
+        return { id: a.id, ...lbl, box, inView: all };
       });
       return {
         width: W,

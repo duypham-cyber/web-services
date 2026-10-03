@@ -1,0 +1,1087 @@
+/*
+ * Hero bản đồ Mẫu 02 (contracts/hero-map.md). Màu UI chỉ từ token (styles/tokens.css); màu mép poster (--*-edge-*) đọc từ
+ * public/images/hero/hero-poster.json (bảng màu riêng của cảnh 3D, chỉ để tô phần hở quanh poster).
+ *
+ * Hai trạng thái:
+ *   - mặc định (HTML server, T-STILL, không JS, reduced-motion): màn đầu poster + khối chữ, rồi 4 panel tour xếp theo dòng chảy;
+ *   - .film-armed (runtime thêm sau hydrate khi T-FULL/T-LITE): track cao, khung sticky, chữ/panel ẩn hiện theo --w.
+ * Bố cục desktop/mobile theo hướng màn hình — cùng quy tắc với layoutFor() của motion/map-camera.ts (dọc = mobile).
+ */
+
+.track {
+  position: relative;
+  isolation: isolate;
+  background: var(--color-blue-50);
+  /* bố cục đang dùng: desktop (đổi sang mobile ở màn dọc). Giá trị --d-* / --m-* do FilmHero ghi từ motion/map-camera.json */
+  --A: var(--d-A);
+  --ax: var(--d-ax);
+  --ay: var(--d-ay);
+  --bx0: var(--d-bx0);
+  --bx1: var(--d-bx1);
+  --by0: var(--d-by0);
+  --by1: var(--d-by1);
+  --ti: var(--d-ti);
+  --top: var(--d-top);
+}
+
+.frame {
+  position: relative;
+}
+
+/* ------------------------------------------------------------------ màn đầu */
+.screen {
+  position: relative;
+  container-type: inline-size;
+  display: grid;
+  align-content: center;
+  min-height: max(100svh, 38rem);
+  overflow: clip;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  container-type: size;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--d-edge-top), var(--d-edge-bottom));
+}
+
+/*
+ * Poster đặt đúng như viewWindow() (motion/map-camera.ts): khung chuẩn cover tại anchor, nhưng thu nhỏ để vùng safe
+ * (đất liền + hai quần đảo) không bị cắt, không lấn cột chữ (--ti) và dải header (--top). W, H = kích thước stage (cq).
+ * CSS clamp(MIN, VAL, MAX) = max(MIN, min(VAL, MAX)) trùng clamp() của viewWindow kể cả khi MAX < MIN.
+ */
+.posterBox,
+.copy {
+  --fw: min(
+    max(100cqw, 100cqh * var(--A)),
+    (100cqw - var(--ti) * 100cqw - 2 * var(--safe-m)) / (var(--bx1) - var(--bx0)),
+    (100cqh - var(--top) - 2 * var(--safe-m)) * var(--A) / (var(--by1) - var(--by0))
+  );
+  --fh: calc(var(--fw) / var(--A));
+  --cx: clamp(
+    var(--bx1) * var(--fw) - 100cqw + var(--safe-m),
+    (var(--fw) - 100cqw) * var(--ax),
+    var(--bx0) * var(--fw) - var(--ti) * 100cqw - var(--safe-m)
+  );
+  --cy: clamp(
+    var(--by1) * var(--fh) - 100cqh + var(--safe-m),
+    (var(--fh) - 100cqh) * var(--ay),
+    var(--by0) * var(--fh) - var(--top) - var(--safe-m)
+  );
+}
+
+.posterBox {
+  position: absolute;
+  left: calc(-1 * var(--cx));
+  top: calc(-1 * var(--cy));
+  width: var(--fw);
+  height: var(--fh);
+}
+
+.posterImg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity var(--dur-medium) var(--ease-standard);
+}
+
+.canvasHost canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.veil,
+.nightVeil,
+.nightTint {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* sương sáng sau cột chữ (desktop trái) + dải trên cho header */
+.veil {
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-blue-50) 96%, transparent) 0%,
+      color-mix(in srgb, var(--color-blue-50) 88%, transparent) 26%,
+      color-mix(in srgb, var(--color-blue-50) 40%, transparent) 40%,
+      transparent 52%
+    ),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-blue-50) 80%, transparent) 0%, transparent 14%);
+  opacity: calc(1 - var(--night, 0));
+}
+
+.nightVeil,
+.nightTint {
+  opacity: 0;
+}
+
+.nightVeil {
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-navy-900) 92%, transparent) 0%,
+      color-mix(in srgb, var(--color-navy-900) 64%, transparent) 30%,
+      transparent 56%
+    ),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-navy-900) 70%, transparent) 0%, transparent 16%);
+}
+
+.nightTint {
+  background: var(--color-navy-900);
+}
+
+/* ------------------------------------------------------------------ nhãn bản đồ (trang trí, aria-hidden) */
+.labelsStatic,
+.labelsLive {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.labelsStatic[data-layout='mobile'] {
+  display: none;
+}
+
+.labelsLive {
+  visibility: hidden;
+}
+
+.lbl {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  white-space: nowrap;
+  font-size: 12.5px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: var(--color-navy-900);
+}
+
+.labelsLive .lbl {
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.pillCity,
+.pillArch {
+  position: absolute;
+  left: 0;
+  bottom: 10px;
+  transform: translateX(-50%);
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  box-shadow: 0 4px 12px rgb(10 31 68 / 0.18);
+}
+
+.pillCity {
+  padding: 3px 9px;
+}
+
+.pillArch {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  bottom: 8px;
+  padding: 4px 11px 4px 8px;
+  border: 1px solid var(--color-blue-100);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-blue-700);
+}
+
+.pillArch i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-blue-600);
+  box-shadow: 0 0 0 3px var(--color-blue-100);
+}
+
+.lbl[data-align='end'] > .pillCity,
+.lbl[data-align='end'] > .pillArch {
+  transform: translateX(calc(-100% + 18px));
+}
+
+.lbl[data-align='start'] > .pillCity,
+.lbl[data-align='start'] > .pillArch {
+  transform: translateX(-18px);
+}
+
+.pillSea {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  text-shadow: 0 1px 8px rgb(10 31 68 / 0.55);
+}
+
+.pillHq {
+  position: absolute;
+  left: 14px;
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 7px 13px 8px;
+  border-radius: var(--radius-md);
+  background: var(--color-navy-900);
+  color: var(--color-white);
+  box-shadow: 0 14px 30px -12px rgb(10 31 68 / 0.6);
+}
+
+.pillHq b {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pillHq span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-orange-200);
+}
+
+.chipLead {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 1.5px;
+  background: color-mix(in srgb, var(--color-blue-600) 45%, transparent);
+  transform-origin: 0 50%;
+}
+
+.chipDot {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--color-blue-600);
+  background: var(--color-white);
+}
+
+.chip {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 13px 9px;
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  box-shadow: 0 14px 30px -14px rgb(10 31 68 / 0.45);
+  transform: translate(0, -50%);
+}
+
+.chip[data-side='left'] {
+  transform: translate(-100%, -50%);
+}
+
+.chip small {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-slate-600);
+}
+
+.chip b {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-navy-900);
+}
+
+.chip em {
+  font-style: normal;
+  color: var(--color-orange-700);
+}
+
+/* ------------------------------------------------------------------ minimap (desktop, cảnh zoom miền) */
+.minimap {
+  position: absolute;
+  z-index: 4;
+  right: 24px;
+  bottom: 24px;
+  width: 220px;
+  margin: 0;
+  padding: 10px 12px 8px;
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-white) 92%, transparent);
+  box-shadow: var(--shadow-2);
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity var(--dur-base) var(--ease-standard),
+    visibility var(--dur-base);
+}
+
+.minimap[data-on] {
+  visibility: visible;
+  opacity: 1;
+}
+
+.minimap[data-corner='tr'] {
+  top: calc(var(--header-h) + 16px);
+  bottom: auto;
+}
+
+.minimap[data-corner='bl'] {
+  right: auto;
+  left: 42%;
+}
+
+.minimap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.minimap svg path {
+  fill: var(--color-blue-100);
+  stroke: var(--color-blue-300);
+  stroke-width: 0.6;
+}
+
+.minimap[data-region='north'] path[data-region='north'],
+.minimap[data-region='central'] path[data-region='central'],
+.minimap[data-region='south'] path[data-region='south'] {
+  fill: var(--color-blue-600);
+  stroke: var(--color-blue-700);
+}
+
+.minimap svg ellipse {
+  fill: none;
+  stroke: var(--color-blue-600);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 2;
+}
+
+.minimap svg circle {
+  fill: var(--color-blue-600);
+}
+
+.minimap svg circle[data-hq] {
+  fill: var(--color-orange-500);
+}
+
+.minimap svg text {
+  font-size: 10.5px;
+  font-weight: 700;
+  fill: var(--color-blue-700);
+}
+
+.minimap figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-slate-600);
+}
+
+.minimap figcaption span {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.minimap figcaption b {
+  display: none;
+  color: var(--color-blue-600);
+}
+
+.minimap[data-region='north'] b[data-region='north'],
+.minimap[data-region='central'] b[data-region='central'],
+.minimap[data-region='south'] b[data-region='south'] {
+  display: inline;
+}
+
+/* ------------------------------------------------------------------ khối chữ */
+.copyWrap {
+  position: relative;
+  z-index: 5;
+  /* box-content (Container): bề rộng nội dung = 100% trừ lề hai bên; auto margin căn giữa khi > 1280px */
+  width: calc(100% - 2 * var(--spacing-gutter));
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  /* cột chữ dừng trước mép trái vùng safe của bản đồ (bx0·fw − cx, cùng phép tính poster; cqh của .screen = svh) */
+  max-width: min(36rem, var(--bx0) * var(--fw) - var(--cx) - max(var(--spacing-gutter), (100cqw - var(--container-content)) / 2) - 20px);
+  padding-block: calc(var(--header-h) + 1.5rem) 1.5rem;
+}
+
+.skip {
+  order: 99;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-top: 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-blue-600);
+  text-underline-offset: 4px;
+}
+
+.skip:hover {
+  color: var(--color-blue-700);
+  text-decoration: underline;
+}
+
+.eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-blue-600);
+}
+
+.pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-orange-500);
+  box-shadow: 0 0 0 4px var(--color-orange-50);
+}
+
+.title {
+  margin-top: 1.25rem;
+  font-size: var(--text-h1);
+  line-height: var(--text-h1--line-height);
+  font-weight: 700;
+  letter-spacing: var(--text-h1--letter-spacing);
+  color: var(--color-navy-900);
+  text-wrap: balance;
+}
+
+.lead {
+  margin-top: 1.25rem;
+  font-size: var(--text-lead);
+  line-height: var(--text-lead--line-height);
+  color: var(--color-slate-600);
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 1.75rem;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, max-content));
+  justify-content: start;
+  gap: 8px clamp(16px, 2.4cqw, 36px);
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-slate-300);
+}
+
+.kpis > div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.kpis dt {
+  font-size: var(--text-small);
+  color: var(--color-slate-600);
+}
+
+.kpis dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-navy-900);
+}
+
+.kpis dd small {
+  font-size: 1.125rem;
+  letter-spacing: 0;
+}
+
+.legend {
+  margin-top: 1rem;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-slate-600);
+}
+
+.cue {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ panel tour: mặc định theo dòng chảy */
+.tour {
+  position: relative;
+  z-index: 6;
+  padding-block: 3rem 5rem;
+}
+
+.tourInner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
+  gap: 20px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 24px 26px;
+  border: 1px solid var(--color-white);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--color-white) 86%, transparent);
+  box-shadow: 0 30px 60px -30px rgb(10 31 68 / 0.35);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+}
+
+.kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-blue-600);
+}
+
+.kicker > span:first-child {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-blue-100);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.panelTitle {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-navy-900);
+}
+
+.stat {
+  margin-top: 14px;
+  font-size: var(--text-small);
+  color: var(--color-slate-600);
+}
+
+.stat strong {
+  margin-right: 4px;
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-orange-700);
+  vertical-align: -3px;
+}
+
+.stat strong.statSm {
+  margin: 0 0 0 2px;
+  font-size: 1.625rem;
+  vertical-align: -1px;
+}
+
+.text {
+  margin-top: 12px;
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--color-ink-900);
+}
+
+.order {
+  margin-top: 18px;
+  padding: 13px 15px 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  box-shadow:
+    0 24px 48px -24px rgb(10 31 68 / 0.45),
+    0 0 0 1px rgb(10 31 68 / 0.06);
+}
+
+.orderTitle {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-navy-900);
+}
+
+.orderMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--color-slate-600);
+}
+
+.orderMeta span::before {
+  content: '•';
+  margin-right: 6px;
+  color: var(--color-orange-500);
+}
+
+.orderSteps {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.orderSteps li {
+  position: relative;
+  flex: 1;
+  padding-top: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-slate-600);
+}
+
+.orderSteps li::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--color-blue-100);
+}
+
+.orderSteps li[data-state='ok']::before {
+  background: var(--color-blue-600);
+}
+
+.orderSteps li[data-state='now'] {
+  color: var(--color-orange-700);
+}
+
+.orderSteps li[data-state='now']::before {
+  background: linear-gradient(90deg, var(--color-orange-500) 55%, var(--color-blue-100) 55%);
+}
+
+.panelFinal {
+  border-color: rgb(255 255 255 / 0.14);
+  background: var(--color-navy-900);
+}
+
+.panelFinal .kicker {
+  color: var(--color-orange-200);
+}
+
+.panelFinal .kicker > span:first-child {
+  background: rgb(255 255 255 / 0.12);
+  color: var(--color-white);
+}
+
+.panelFinal .panelTitle {
+  color: var(--color-white);
+}
+
+.panelFinal .text,
+.panelFinal .stat {
+  color: var(--color-slate-300);
+}
+
+.panelFinal .stat strong {
+  color: var(--color-orange-200);
+}
+
+.panelCta {
+  align-self: flex-start;
+  margin-top: 20px;
+}
+
+/* ------------------------------------------------------------------ mobile (màn dọc): bản đồ trên, chữ dưới */
+@media (orientation: portrait) {
+  .track {
+    --A: var(--m-A);
+    --ax: var(--m-ax);
+    --ay: var(--m-ay);
+    --bx0: var(--m-bx0);
+    --bx1: var(--m-bx1);
+    --by0: var(--m-by0);
+    --by1: var(--m-by1);
+    --ti: var(--m-ti);
+    --top: var(--m-top);
+  }
+
+  .screen {
+    display: flex;
+    flex-direction: column;
+    align-content: normal;
+    min-height: 100svh;
+  }
+
+  .stage {
+    position: relative;
+    inset: auto;
+    flex: none;
+    height: calc(1.16 * 100cqw);
+    background: linear-gradient(180deg, var(--m-edge-top), var(--m-edge-bottom));
+  }
+
+  .labelsStatic[data-layout='desktop'] {
+    display: none;
+  }
+
+  .labelsStatic[data-layout='mobile'] {
+    display: block;
+  }
+
+  .veil {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--color-blue-50) 75%, transparent) 0%, transparent 13%),
+      linear-gradient(0deg, var(--color-blue-50) 0, transparent 16px);
+  }
+
+  .nightVeil {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-navy-900) 75%, transparent) 0%, transparent 16%);
+  }
+
+  .lbl {
+    font-size: 11.5px;
+  }
+
+  .pillArch {
+    font-size: 12px;
+    padding: 3px 9px 3px 7px;
+  }
+
+  .pillSea {
+    font-size: 12px;
+  }
+
+  .pillHq {
+    padding: 5px 10px 6px;
+  }
+
+  .pillHq b {
+    font-size: 13px;
+  }
+
+  .pillHq span {
+    display: none;
+  }
+
+  .minimap {
+    display: none;
+  }
+
+  .copyWrap {
+    flex: 1 0 auto;
+  }
+
+  .copy {
+    max-width: 36rem;
+    padding-block: 1rem 1.5rem;
+  }
+
+  .title {
+    margin-top: 0.75rem;
+  }
+
+  .lead {
+    margin-top: 0.75rem;
+    font-size: var(--text-body);
+  }
+
+  .ctas {
+    margin-top: 1.25rem;
+  }
+
+  .ctas > * {
+    flex: 1 1 auto;
+  }
+
+  .kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px 16px;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+  }
+
+  .kpis dd {
+    font-size: 1.5rem;
+  }
+
+  .kpis dd small {
+    font-size: 0.9375rem;
+  }
+
+  .kpis dt {
+    font-size: 13px;
+  }
+}
+
+/* màn ngang thấp (laptop 1366×768): khối chữ gọn để vừa khung dính */
+@media (orientation: landscape) and (max-height: 820px) {
+  .copy {
+    padding-top: calc(var(--header-h) + 1rem);
+  }
+
+  .title,
+  .lead {
+    margin-top: 0.875rem;
+  }
+
+  .ctas {
+    margin-top: 1.25rem;
+  }
+
+  .kpis {
+    margin-top: 1.25rem;
+    padding-top: 0.875rem;
+  }
+
+  .kpis dd {
+    font-size: 1.75rem;
+  }
+
+  .legend {
+    margin-top: 0.75rem;
+  }
+
+  .skip {
+    margin-top: 0.875rem;
+  }
+}
+
+/* thanh hành động dính đáy (< 768px) che đáy màn hình */
+@media (max-width: 767.98px) {
+  .copy {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom) + 1.25rem);
+  }
+}
+
+/* ------------------------------------------------------------------ .film-armed: chung hai bố cục */
+.track:global(.film-armed) .nightVeil {
+  opacity: var(--night, 0);
+}
+
+.track:global(.film-armed):not([data-live]) .nightTint {
+  opacity: calc(var(--night, 0) * 0.8);
+}
+
+.track[data-live] .canvasHost {
+  opacity: 1;
+}
+
+.track[data-live] .labelsStatic {
+  visibility: hidden;
+}
+
+.track[data-live] .labelsLive {
+  visibility: visible;
+}
+
+.cueMouse {
+  position: relative;
+  width: 16px;
+  height: 24px;
+  border: 1.5px solid var(--color-slate-600);
+  border-radius: 10px;
+}
+
+.cueMouse::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  width: 2px;
+  height: 5px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: var(--color-orange-500);
+}
+
+/* ------------------------------------------------------------------ .film-armed desktop: khung dính, panel ẩn hiện */
+@media (orientation: landscape) {
+  .track:global(.film-armed) {
+    height: 320vh;
+  }
+
+  .track:global(.film-armed) .frame {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: clip;
+  }
+
+  .track:global(.film-armed) .screen {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .track:global(.film-armed) .copy {
+    opacity: var(--w, 1);
+    transform: translateY(calc((1 - var(--w, 1)) * -24px));
+  }
+
+  .track:global(.film-armed) .copy:not([data-vis]) {
+    pointer-events: none;
+  }
+
+  .track:global(.film-armed) .cue {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 8px 14px 8px 10px;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--color-white) 90%, transparent);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-slate-600);
+    opacity: var(--wn, 1);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .track:global(.film-armed) .tour {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    pointer-events: none;
+  }
+
+  .track:global(.film-armed) .tourInner {
+    position: absolute;
+    inset: 0;
+    display: block;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .track:global(.film-armed) .panel {
+    position: absolute;
+    left: max(var(--spacing-gutter), (100% - var(--container-content)) / 2);
+    top: 50%;
+    width: min(26.5rem, calc(41vw - max(var(--spacing-gutter), (100vw - var(--container-content)) / 2)));
+    padding: 28px 30px 30px;
+    opacity: var(--w, 0);
+    transform: translateY(-50%) translateY(calc((1 - var(--w, 0)) * 24px));
+  }
+
+  .track:global(.film-armed) .panel:not([data-vis]) {
+    visibility: hidden;
+  }
+
+  .track:global(.film-armed) .panel[data-on] {
+    pointer-events: auto;
+  }
+
+  .track:global(.film-armed) .panelTitle {
+    font-size: var(--text-h2);
+  }
+
+  .track:global(.film-armed) .panelFinal {
+    background: color-mix(in srgb, var(--color-navy-900) 80%, transparent);
+  }
+
+  .track:global(.film-armed) .order {
+    position: absolute;
+    left: calc(100% + 28px);
+    top: 4%;
+    width: 16.5rem;
+    margin: 0;
+  }
+
+  .track:global(.film-armed) .panel[data-scene='central'] .order {
+    top: 52%;
+  }
+
+  .track:global(.film-armed) .panel[data-scene='south'] .order {
+    top: 64%;
+  }
+}
+
+/*
+ * .film-armed mobile (màn dọc): BẢN ĐỒ dính trên cùng, khối chữ và 4 panel cuộn theo dòng chảy bên dưới (không bao giờ đè
+ * lên bản đồ → hai quần đảo luôn thấy). Tiến độ cảnh theo vị trí đọc của panel (runtime/boot.ts readingKnots).
+ */
+@media (orientation: portrait) {
+  .track:global(.film-armed) .screen {
+    display: contents;
+  }
+
+  .track:global(.film-armed) .stage {
+    position: sticky;
+    top: 0;
+    z-index: 7;
+    height: min(calc(1.16 * 100vw), 54svh);
+  }
+
+  .track:global(.film-armed) .veil {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-blue-50) 75%, transparent) 0%, transparent 13%);
+  }
+
+  .track:global(.film-armed) .tour {
+    padding: 0.5rem 0 34svh;
+  }
+
+  .track:global(.film-armed) .tourInner {
+    gap: 30svh;
+  }
+}
+
+/* In: luôn bố cục T-STILL */
+@media print {
+  .track:global(.film-armed) {
+    height: auto;
+  }
+
+  .track:global(.film-armed) .frame {
+    position: static;
+    height: auto;
+  }
+}

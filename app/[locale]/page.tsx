@@ -6,7 +6,6 @@ import { ChallengeSection } from '@/components/home/ChallengeSection';
 import { DoorsSection } from '@/components/home/DoorsSection';
 import { FinalCta } from '@/components/home/FinalCta';
 import { KnowledgeSection } from '@/components/home/KnowledgeSection';
-import { NetworkSection } from '@/components/home/NetworkSection';
 import { ProcessSection } from '@/components/home/ProcessSection';
 import { ProofSection, proofVisible } from '@/components/home/ProofSection';
 import { ServicesSection } from '@/components/home/ServicesSection';
@@ -48,10 +47,10 @@ type FlowItem = {
 
 /**
  * Gán tông nền xen kẽ cho các section ĐANG hiển thị (section ẩn — dải tin cậy, bằng chứng — không làm hai section
- * cùng màu đứng cạnh nhau). Phần tử trước section đầu tiên là hero (navy).
+ * cùng màu đứng cạnh nhau). Phần tử trước section đầu tiên là hero bản đồ (nền xanh nhạt blue-50).
  */
 function renderFlow(items: readonly FlowItem[]): ReactNode[] {
-  let previous: SectionTone = 'navy';
+  let previous: SectionTone = 'blue-50';
   return items.map((item) => {
     const tone = item.tone ?? (item.inheritTone ? previous : previous === 'light' ? 'blue-50' : 'light');
     if (!item.inheritTone) previous = tone;
@@ -60,10 +59,11 @@ function renderFlow(items: readonly FlowItem[]): ReactNode[] {
 }
 
 /**
- * TRANG CHỦ. Phần đầu = <FilmHero/> (agent phim thay ruột — phim A+ hoặc hero khác — GIỮ FilmHeroProps, nên trang này
- * không phải sửa khi đổi hero). Sau hero = các section HTML cuộn native theo contracts/site-shell-p0.md (T-HOME) và
- * docs/03 mục 13.4: Ba cửa vào (#ba-cua-vao) → bản đồ 34 tỉnh → dải tin cậy → vấn đề/giải pháp → quy trình 5 bước →
- * công nghệ → dịch vụ → bằng chứng → tiêu chuẩn thợ → kiến thức → CTA cuối (một khối, chưa có form).
+ * TRANG CHỦ. Phần đầu = <FilmHero/> — hero bản đồ Mẫu 02 "Bản đồ sống 34 tỉnh" (D-26), GIỮ FilmHeroProps. Sau hero = các
+ * section HTML cuộn native theo contracts/site-shell-p0.md (T-HOME) và docs/03 mục 13.4: Ba cửa vào (#ba-cua-vao, ngay sau
+ * hero) → dải tin cậy → vấn đề/giải pháp → quy trình → công nghệ → dịch vụ → bằng chứng → tiêu chuẩn thợ → kiến thức → CTA
+ * cuối. Section bản đồ 34 tỉnh (NetworkSection) đã bỏ khỏi trang chủ vì hero đã là bản đồ mạng lưới (panel cuối dẫn sang
+ * /mang-luoi, nơi có bản đồ SVG tương tác + bảng 34 tỉnh); component giữ nguyên cho trang khác.
  * Số liệu: content/stats.ts; câu khẳng định: claim(); production ẩn mọi thứ chưa duyệt.
  */
 export default async function HomePage({ params }: PageProps<'/[locale]'>) {
@@ -79,7 +79,6 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
 
   const flow: FlowItem[] = [
     { key: 'doors', render: (tone) => <DoorsSection tone={tone} /> },
-    { key: 'network', render: (tone) => <NetworkSection locale={locale} tone={tone} /> },
     ...(trustBandVisible(locale) ? [{ key: 'trust', tone: 'navy' as const, render: () => <TrustBand locale={locale} /> }] : []),
     { key: 'challenge', render: (tone) => <ChallengeSection locale={locale} tone={tone} /> },
     { key: 'process', render: (tone) => <ProcessSection locale={locale} tone={tone} /> },

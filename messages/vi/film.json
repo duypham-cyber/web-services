@@ -17,5 +17,63 @@
       "central": "Miền Trung",
       "south": "Miền Nam"
     }
+  },
+  "hero": {
+    "scrollCue": "Cuộn để bay dọc bản đồ",
+    "kpiLabel": "Số liệu mạng lưới",
+    "tourLabel": "Mạng lưới theo miền"
+  },
+  "tour": {
+    "step": "{n} / {total}",
+    "technicians": "thợ trong mạng lưới",
+    "techniciansShort": "thợ",
+    "provincesShort": "tỉnh/thành",
+    "north": {
+      "kicker": "Miền Bắc",
+      "title": "Hà Tĩnh trở ra",
+      "body": "Đơn được điều phối theo khu vực: hệ thống chọn thợ gần nhất, đúng kỹ năng với thiết bị."
+    },
+    "central": {
+      "kicker": "Miền Trung",
+      "title": "Quảng Trị → Quảng Ngãi",
+      "body": "Thợ chụp ảnh nghiệm thu ngay trên app; mỗi đơn có trạng thái theo từng bước.",
+      "bodyConfirm": "Lịch hẹn được xác nhận với khách trong vòng {confirm}. Thợ chụp ảnh nghiệm thu ngay trên app."
+    },
+    "south": {
+      "kicker": "Miền Nam & Mekong",
+      "title": "Gia Lai trở vào",
+      "body": "Mỗi đơn có trạng thái theo từng bước và được đối soát với hãng/sàn theo từng đơn."
+    },
+    "network": {
+      "kicker": "Toàn mạng lưới",
+      "title": "Một hệ thống điều phối cho cả nước",
+      "body": "Đơn ở tỉnh nào cũng đi qua cùng một quy trình: tiếp nhận, xác nhận lịch, điều phối thợ, nghiệm thu và đối soát.",
+      "cta": "Xem mạng lưới"
+    },
+    "order": {
+      "badge": "Ví dụ minh hoạ",
+      "steps": {
+        "created": "Tạo đơn",
+        "confirmed": "Xác nhận",
+        "dispatch": "Điều phối",
+        "install": "Lắp đặt",
+        "signoff": "Nghiệm thu"
+      },
+      "north": {
+        "title": "Lắp máy lạnh 12.000 BTU",
+        "distance": "Thợ cách 2,3 km",
+        "confirm": "Xác nhận lịch sau 18 phút"
+      },
+      "central": {
+        "title": "Lắp máy giặt cửa trước",
+        "distance": "Thợ cách 3,1 km",
+        "confirm": "Xác nhận lịch sau 24 phút"
+      },
+      "south": {
+        "title": "Lắp máy lạnh âm trần",
+        "distance": "Thợ cách 1,6 km",
+        "confirm": "Xác nhận lịch sau 12 phút"
+      }
+    }
   }
 }

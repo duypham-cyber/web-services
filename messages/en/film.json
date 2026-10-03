@@ -17,5 +17,63 @@
       "central": "Central Vietnam",
       "south": "Southern Vietnam"
     }
+  },
+  "hero": {
+    "scrollCue": "Scroll to fly along the map",
+    "kpiLabel": "Network figures",
+    "tourLabel": "The network by region"
+  },
+  "tour": {
+    "step": "{n} / {total}",
+    "technicians": "technicians in the network",
+    "techniciansShort": "technicians",
+    "provincesShort": "provinces",
+    "north": {
+      "kicker": "Northern Vietnam",
+      "title": "Ha Tinh and northward",
+      "body": "Jobs are dispatched by area: the system picks the nearest technician with the right skills for the appliance."
+    },
+    "central": {
+      "kicker": "Central Vietnam",
+      "title": "Quang Tri to Quang Ngai",
+      "body": "Technicians sign off each job with photos in the app, and every job has a step-by-step status.",
+      "bodyConfirm": "Appointments are confirmed with the customer within {confirm}. Technicians sign off each job with photos in the app."
+    },
+    "south": {
+      "kicker": "Southern Vietnam & Mekong",
+      "title": "Gia Lai and southward",
+      "body": "Every job has a step-by-step status and is reconciled with the brand or platform job by job."
+    },
+    "network": {
+      "kicker": "Whole network",
+      "title": "One dispatch system for the whole country",
+      "body": "Wherever the job is, it follows the same process: intake, scheduling, dispatch, sign-off and reconciliation.",
+      "cta": "View the network"
+    },
+    "order": {
+      "badge": "Illustrative example",
+      "steps": {
+        "created": "Created",
+        "confirmed": "Confirmed",
+        "dispatch": "Dispatch",
+        "install": "Install",
+        "signoff": "Sign-off"
+      },
+      "north": {
+        "title": "12,000 BTU air conditioner install",
+        "distance": "Technician 2.3 km away",
+        "confirm": "Confirmed after 18 min"
+      },
+      "central": {
+        "title": "Front-load washer install",
+        "distance": "Technician 3.1 km away",
+        "confirm": "Confirmed after 24 min"
+      },
+      "south": {
+        "title": "Ceiling cassette AC install",
+        "distance": "Technician 1.6 km away",
+        "confirm": "Confirmed after 12 min"
+      }
+    }
   }
 }
