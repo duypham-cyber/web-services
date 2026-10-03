@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { fmt, uuidV4 } from '@/components/leads/client-utils';
+import { UTM_KEYS as CLIENT_UTM_KEYS } from '@/components/leads/utm';
 import {
   B2B_FIELD_ORDER,
   EMPTY_B2B,
@@ -14,7 +15,7 @@ import {
   validateTechnicianField,
   type B2BValues,
 } from '@/components/leads/validation';
-import { LEAD_DETAIL_CODES, LEAD_ERROR_CODES, PROVINCE_CODES } from '@/lib/leads/rules';
+import { LEAD_DETAIL_CODES, LEAD_ERROR_CODES, PROVINCE_CODES, UTM_KEYS } from '@/lib/leads/rules';
 import { LeadB2BFields, LeadTechnicianFields } from '@/lib/leads/schema';
 import vi from '@/messages/vi/leads.json';
 import en from '@/messages/en/leads.json';
@@ -136,6 +137,11 @@ describe('tiện ích trình duyệt', () => {
     const ids = new Set(Array.from({ length: 200 }, () => uuidV4()));
     expect(ids.size).toBe(200);
     for (const id of ids) expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  });
+
+  it('components/leads/utm.ts (không import gì, nằm trong chunk layout) giữ đúng UTM_KEYS của rules.ts', () => {
+    expect([...CLIENT_UTM_KEYS]).toEqual([...UTM_KEYS]);
+    expect(readFileSync('components/leads/utm.ts', 'utf8')).not.toMatch(/^import /m);
   });
 
   it('fmt thay {biến}, giữ nguyên biến không có giá trị', () => {

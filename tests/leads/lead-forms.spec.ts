@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import pg from 'pg';
 
@@ -90,8 +91,16 @@ async function stubUmami(page: Page) {
 const events = (page: Page) =>
   page.evaluate(() => (window as unknown as { __events: [string, Record<string, unknown>][] }).__events);
 
-async function formEnabled(page: Page): Promise<boolean> {
-  return (await page.locator('[data-lead-block] form').count()) > 0;
+/**
+ * Form bật (data-lead-state="enabled") → cuộn tới khối để LazyLeadForm tải mã form, đợi form hiện. false = form tắt
+ * (bản production khi câu đồng ý chưa duyệt).
+ */
+async function openForm(page: Page): Promise<boolean> {
+  const block = page.locator('[data-lead-block]').first();
+  if ((await block.getAttribute('data-lead-state')) !== 'enabled') return false;
+  await block.scrollIntoViewIfNeeded();
+  await expect(block.locator('form')).toBeVisible();
+  return true;
 }
 
 async function fillB2B(page: Page, fullName: string) {
@@ -118,17 +127,25 @@ test.afterAll(async () => {
 });
 
 test.describe('form B2B', () => {
-  test('AC-C2: checkbox không tick sẵn ở HTML server và sau hydrate; có link chính sách', async ({ page, request }) => {
+  test('AC-C2: không checkbox nào tick sẵn (HTML server và sau khi form tải); có link chính sách; mã form không tải lúc vào trang', async ({
+    page,
+    request,
+  }) => {
     const html = await (await request.get('/bang-gia')).text();
-    test.skip(!html.includes('id="lead-b2b-fullName"'), 'form đang tắt (bản production)');
+    test.skip(!html.includes('data-lead-state="enabled"'), 'form đang tắt (bản production)');
     const boxes = [...html.matchAll(/<input[^>]*type="checkbox"[^>]*>/g)].map((m) => m[0]);
-    expect(boxes.length).toBeGreaterThan(30);
     expect(boxes.filter((b) => /\schecked(=|\s|>)/.test(b))).toEqual([]);
-    expect(html).toContain('href="/chinh-sach-bao-mat"');
+    // HTML server của khối form: tiêu đề + Gọi · email (bản không JS), chưa có ô nhập
+    expect(html).toMatch(/data-lead-placeholder=""[\s\S]*?href="tel:\+84902808049"/);
 
-    await page.goto('/bang-gia');
-    await expect(page.locator('[data-lead-block] form button[type="submit"]')).toBeEnabled();
+    await page.goto('/bang-gia', { waitUntil: 'networkidle' });
+    await expect(page.locator('[data-lead-root]')).toHaveAttribute('data-lead-root', 'placeholder');
+    await expect(page.locator('[data-lead-block] form')).toHaveCount(0);
+    expect(await openForm(page)).toBe(true);
+    await expect(page.locator('[data-lead-root]')).toHaveAttribute('data-lead-root', 'ready');
+    await expect(page.locator('[data-lead-block] input[type="checkbox"]')).not.toHaveCount(0);
     await expect(page.locator('[data-lead-block] input[type="checkbox"]:checked')).toHaveCount(0);
+    await expect(page.locator('[data-lead-block] a[href="/chinh-sach-bao-mat"]')).toHaveCount(1);
   });
 
   test('Turnstile chỉ tải sau lần tương tác đầu; honeypot không lọt cây a11y', async ({ page }) => {
@@ -137,7 +154,8 @@ test.describe('form B2B', () => {
       if (r.url().includes('challenges.cloudflare.com')) hits.push(r.url());
     });
     await page.goto('/bang-gia', { waitUntil: 'networkidle' });
-    test.skip(!(await formEnabled(page)), 'form đang tắt');
+    test.skip(!(await openForm(page)), 'form đang tắt');
+    await page.waitForTimeout(500);
     expect(hits).toEqual([]);
     const hp = page.locator('#lead-b2b-hp');
     await expect(hp).toHaveAttribute('tabindex', '-1');
@@ -154,7 +172,7 @@ test.describe('form B2B', () => {
     });
     await stubUmami(page);
     await page.goto('/bang-gia');
-    test.skip(!(await formEnabled(page)), 'form đang tắt');
+    test.skip(!(await openForm(page)), 'form đang tắt');
 
     const phone = page.locator('#lead-b2b-phone');
     await phone.fill('abc');
@@ -175,7 +193,7 @@ test.describe('form B2B', () => {
 
   test('bấm Gửi khi trống → focus ô lỗi đầu tiên (Họ và tên)', async ({ page }) => {
     await page.goto('/giai-phap/hang-dien-may');
-    test.skip(!(await formEnabled(page)), 'form đang tắt');
+    test.skip(!(await openForm(page)), 'form đang tắt');
     await page.locator('[data-lead-block] button[type="submit"]').click();
     await expect(page.locator('#lead-b2b-fullName')).toBeFocused();
     await expect(page.locator('[data-lead-block] [aria-invalid="true"]')).not.toHaveCount(0);
@@ -186,7 +204,7 @@ test.describe('form B2B', () => {
     test.skip(!OPS_URL, 'thiếu DATABASE_URL_OPS');
     await stubUmami(page);
     await page.goto('/bang-gia');
-    test.skip(!(await formEnabled(page)), 'form đang tắt');
+    test.skip(!(await openForm(page)), 'form đang tắt');
 
     const name = sentinelName('Quote');
     await fillB2B(page, name);
@@ -241,7 +259,7 @@ test.describe('form B2B', () => {
       await route.continue();
     });
     await page.goto('/giai-phap/hang-dien-may');
-    test.skip(!(await formEnabled(page)), 'form đang tắt');
+    test.skip(!(await openForm(page)), 'form đang tắt');
 
     const name = sentinelName('Replay');
     await fillB2B(page, name);
@@ -275,11 +293,15 @@ test.describe('form B2B', () => {
     page,
   }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-1440', 'header đầy đủ chỉ ở desktop');
-    await page.goto('/giai-phap/hang-dien-may');
-    test.skip(!(await formEnabled(page)), 'form đang tắt');
-    await page.locator('#cta-cuoi a[href$="#dat-lich-demo"]').first().click();
+    await page.goto('/giai-phap/hang-dien-may', { waitUntil: 'networkidle' });
+    const block = page.locator('[data-lead-block]');
+    test.skip((await block.getAttribute('data-lead-state')) !== 'enabled', 'form đang tắt');
+    // Nút demo ở hero, lúc mã form CHƯA tải: chặn điều hướng, tải form, đặt intent demo, cuộn + focus ô đầu
+    await expect(page.locator('[data-lead-root]')).toHaveAttribute('data-lead-root', 'placeholder');
+    await page.locator('main a[href$="#dat-lich-demo"]').first().click();
     await expect(page.locator('#lead-b2b-title')).toContainText('Đặt lịch demo 30 phút');
     await expect(page.locator('#lead-b2b-fullName')).toBeFocused();
+    // Header "Nhận báo giá" khi form đã tải: cuộn về form của trang này, intent quote
     await page.locator('header a[href$="#bao-gia"]').first().click();
     await expect(page.locator('#lead-b2b-title')).toContainText('Nhận báo giá cho doanh nghiệp');
     expect(new URL(page.url()).pathname).toBe('/giai-phap/hang-dien-may');
@@ -287,7 +309,7 @@ test.describe('form B2B', () => {
 
   test('AC-C11: bản EN — nhãn, lỗi tiếng Anh, không chữ tiếng Việt trong form', async ({ page }) => {
     await page.goto('/en/solutions/marketplaces-retail');
-    test.skip(!(await formEnabled(page)), 'form đang tắt');
+    test.skip(!(await openForm(page)), 'form đang tắt');
     await expect(page.locator('#lead-b2b-title')).toContainText('Discuss an integration');
     const phone = page.locator('#lead-b2b-phone');
     await phone.fill('028 3812 3456');
@@ -310,7 +332,7 @@ test.describe('form thợ', () => {
   test('AC-T1: đúng 4 ô nhập liệu nhìn thấy được (VI #dang-ky và EN #register)', async ({ page }) => {
     for (const path of ['/doi-tac-tho', '/en/technician-partners']) {
       await page.goto(path);
-      test.skip(!(await formEnabled(page)), 'form đang tắt');
+      test.skip(!(await openForm(page)), 'form đang tắt');
       const count = await page.locator('#dang-ky form').evaluate(
         (form) =>
           [...form.querySelectorAll('input, select, textarea')].filter((el) => {
@@ -333,8 +355,10 @@ test.describe('form thợ', () => {
   test('AC-T9: nút "Đăng ký thợ" ở thanh dính đáy → focus "Họ và tên" (reduced-motion)', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'mobile-390', 'thanh dính đáy chỉ dưới 768px');
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/doi-tac-tho');
-    test.skip(!(await formEnabled(page)), 'form đang tắt');
+    await page.goto('/doi-tac-tho', { waitUntil: 'networkidle' });
+    const block = page.locator('[data-lead-block]');
+    test.skip((await block.getAttribute('data-lead-state')) !== 'enabled', 'form đang tắt');
+    await expect(page.locator('[data-lead-root]')).toHaveAttribute('data-lead-root', 'placeholder');
     await page.locator('nav.fixed a[href$="#dang-ky"]').click();
     await expect(page.locator('#lead-tech-fullName')).toBeFocused();
     expect(new URL(page.url()).pathname).toBe('/doi-tac-tho');
@@ -347,7 +371,7 @@ test.describe('form thợ', () => {
     test.skip(!OPS_URL, 'thiếu DATABASE_URL_OPS');
     await stubUmami(page);
     await page.goto('/doi-tac-tho');
-    test.skip(!(await formEnabled(page)), 'form đang tắt');
+    test.skip(!(await openForm(page)), 'form đang tắt');
 
     await page.locator('#lead-tech-fullName').fill(sentinelName('Tho'));
     await page.locator('#lead-tech-phone').fill('0912.345.678');
@@ -374,13 +398,142 @@ test.describe('form thợ', () => {
   });
 });
 
+/** Trả lời giả của API (không ghi DB) để kiểm cách FE xử lý từng mã lỗi. */
+async function fakeApi(page: Page, status: number, code: string, headers: Record<string, string> = {}) {
+  await page.route(`**${API}`, (route) =>
+    route.fulfill({
+      status,
+      headers: { 'content-type': 'application/json', 'x-correlation-id': '0b9f3c2e-1111-4222-8333-444455556666', ...headers },
+      body: JSON.stringify({
+        success: false,
+        error: { code, message: 'developer message that must not be shown', details: [], correlationId: '0b9f3c2e-1111-4222-8333-444455556666' },
+      }),
+    }),
+  );
+}
+
+async function fillAndSend(page: Page) {
+  await fillB2B(page, sentinelName('Fake'));
+  await page.locator('#lead-b2b-consent-b2b_sales_contact').check();
+  await page.locator('[data-lead-block] button[type="submit"]').click();
+}
+
+test.describe('xử lý mã lỗi của API (phản hồi giả, không ghi DB)', () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-1440', 'kiểm logic FE: một project là đủ');
+  });
+
+  test('429 RATE_LIMITED: báo số phút theo Retry-After + hotline, giữ dữ liệu, không hiện message của API', async ({ page }) => {
+    await fakeApi(page, 429, 'RATE_LIMITED', { 'retry-after': '125' });
+    await page.goto('/bang-gia');
+    test.skip(!(await openForm(page)), 'form đang tắt');
+    await fillAndSend(page);
+    const alert = page.locator('[data-lead-block] [role="alert"]');
+    await expect(alert).toContainText('thử lại sau 3 phút');
+    await expect(alert.locator('a[href^="tel:"]')).toHaveCount(1);
+    await expect(alert).not.toContainText('developer message');
+    await expect(page.locator('#lead-b2b-company')).toHaveValue('Cong ty Thu Nghiem');
+    await expect(alert).toBeFocused();
+  });
+
+  test('500 INTERNAL_ERROR: mã lỗi 8 ký tự từ correlationId + hotline', async ({ page }) => {
+    await fakeApi(page, 500, 'INTERNAL_ERROR');
+    await page.goto('/bang-gia');
+    test.skip(!(await openForm(page)), 'form đang tắt');
+    await fillAndSend(page);
+    await expect(page.locator('[data-lead-block] [role="alert"]')).toContainText('Mã lỗi: 0B9F3C2E');
+  });
+
+  test('503 LEADS_DISABLED lúc chạy: form được thay bằng khối Gọi · email', async ({ page }) => {
+    await fakeApi(page, 503, 'LEADS_DISABLED');
+    await page.goto('/bang-gia');
+    test.skip(!(await openForm(page)), 'form đang tắt');
+    await fillAndSend(page);
+    const block = page.locator('[data-lead-block]');
+    await expect(block.locator('form')).toHaveCount(0);
+    await expect(block.locator('a[href^="tel:"]').first()).toBeVisible();
+    await expect(block.locator('a[href^="mailto:"]')).toHaveCount(1);
+  });
+
+  test('409 CONSENT_VERSION_OUTDATED: tải lại, điền lại dữ liệu, đồng ý phải tick lại', async ({ page }) => {
+    await fakeApi(page, 409, 'CONSENT_VERSION_OUTDATED');
+    await page.goto('/bang-gia');
+    test.skip(!(await openForm(page)), 'form đang tắt');
+    await fillAndSend(page);
+    await expect(page.locator('[data-lead-block] [role="status"]')).toContainText('Điều khoản vừa cập nhật');
+    await page.waitForEvent('load');
+    await openForm(page);
+    await expect(page.locator('#lead-b2b-company')).toHaveValue('Cong ty Thu Nghiem');
+    await expect(page.locator('#lead-b2b-provinces-all')).toBeChecked();
+    await expect(page.locator('#lead-b2b-consent-b2b_sales_contact')).not.toBeChecked();
+    await expect(page.locator('[data-lead-block] [role="status"]')).toContainText('đã được điền lại');
+  });
+
+  test('Rule 7: sửa dữ liệu sau lỗi 4xx → Idempotency-Key mới; gửi lại sau 500 không sửa → giữ key', async ({ page }) => {
+    const keys: string[] = [];
+    let status = 500;
+    await page.route(`**${API}`, (route) => {
+      keys.push(route.request().headers()['idempotency-key'] ?? '');
+      return route.fulfill({
+        status,
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ success: false, error: { code: status === 500 ? 'INTERNAL_ERROR' : 'CAPTCHA_FAILED', details: [] } }),
+      });
+    });
+    await page.goto('/bang-gia');
+    test.skip(!(await openForm(page)), 'form đang tắt');
+    await fillAndSend(page);
+    const submit = page.locator('[data-lead-block] button[type="submit"]');
+    await expect(page.locator('[data-lead-block] [role="alert"]')).toBeVisible();
+    status = 403;
+    await submit.click(); // gửi lại sau 500, không sửa gì → cùng key
+    await expect.poll(() => keys.length).toBe(2);
+    await page.locator('#lead-b2b-jobTitle').fill('Giam doc'); // sửa sau lỗi 4xx → key mới
+    await submit.click();
+    await expect.poll(() => keys.length).toBe(3);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[1]);
+  });
+});
+
+test.describe('a11y trạng thái lỗi', () => {
+  for (const path of ['/bang-gia', '/en/technician-partners']) {
+    test(`axe 0 lỗi serious/critical khi form đang báo lỗi: ${path}`, async ({ page }) => {
+      await page.goto(path, { waitUntil: 'networkidle' });
+      test.skip(!(await openForm(page)), 'form đang tắt');
+      await page.locator('[data-lead-block] button[type="submit"]').click();
+      await expect(page.locator('[data-lead-block] [role="alert"]')).toBeVisible();
+      const results = await new AxeBuilder({ page })
+        .include('[data-lead-block]')
+        .exclude('[data-turnstile-slot]') // iframe Cloudflare, không phải mã của site
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze();
+      const blocking = results.violations
+        .filter((v) => v.impact === 'serious' || v.impact === 'critical' || v.id === 'color-contrast')
+        .map((v) => ({ id: v.id, nodes: v.nodes.slice(0, 3).map((n) => n.target.join(' ')) }));
+      expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
+    });
+  }
+});
+
 test.describe('form tắt (bản production khi câu đồng ý chưa duyệt)', () => {
   test('AC-C10: không có form, có khối Gọi · email thay thế', async ({ page }) => {
     await page.goto('/bang-gia');
-    test.skip(await formEnabled(page), 'form đang bật (bản xem trước)');
     const block = page.locator('[data-lead-block]');
+    test.skip((await block.getAttribute('data-lead-state')) === 'enabled', 'form đang bật (bản xem trước)');
+    await block.scrollIntoViewIfNeeded();
     await expect(block.locator('a[href^="tel:"]')).toHaveCount(1);
     await expect(block.locator('a[href^="mailto:"]')).toHaveCount(1);
     await expect(block.locator('form')).toHaveCount(0);
+  });
+
+  test('nút "Nhận báo giá" trong trang cuộn tới khối liên hệ của chính trang, không sang trang chủ', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-1440', 'một project là đủ');
+    await page.goto('/bang-gia', { waitUntil: 'networkidle' });
+    const block = page.locator('[data-lead-block]');
+    test.skip((await block.getAttribute('data-lead-state')) === 'enabled', 'form đang bật (bản xem trước)');
+    await page.locator('#gia-hop-dong a[href$="#bao-gia"]').first().click();
+    await expect(block.locator('a[href^="tel:"]').first()).toBeFocused();
+    expect(new URL(page.url()).pathname).toBe('/bang-gia');
   });
 });
