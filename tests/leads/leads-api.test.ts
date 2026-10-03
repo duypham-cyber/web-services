@@ -531,6 +531,23 @@ describe.skipIf(!HAS_DB)('POST /api/v1/leads — Postgres thật', () => {
       await expect(app.query('CREATE TABLE x_test (id int)')).rejects.toThrow(/permission denied/);
       await expect(app.query('DELETE FROM lead_notifications')).rejects.toThrow(/permission denied/);
     });
+    it('review L8: bb_app chỉ UPDATE 5 cột trạng thái gửi của lead_notifications (migration 20261003184500)', async () => {
+      const { body } = await post(withToken(b2bBody()), { deliver: false });
+      const id = String(body.data?.id);
+      const app = getPool(DB.app);
+      for (const set of [`lead_id = gen_random_uuid()`, `channel = 'crm'`, `target = 'technician_hr'`, `created_at = NOW()`, `updated_at = NOW()`]) {
+        await expect(app.query(`UPDATE lead_notifications SET ${set} WHERE lead_id = $1`, [id]), set).rejects.toThrow(/permission denied/);
+      }
+      const ok = await app.query(
+        `UPDATE lead_notifications SET status = 'pending', attempts = 0, next_attempt_at = NOW(), last_error_code = 'X', sent_at = NULL
+          WHERE lead_id = $1`,
+        [id],
+      );
+      expect(ok.rowCount).toBe(1);
+      // updated_at vẫn tự cập nhật qua trigger dù bb_app không có quyền trên cột đó
+      const { rows } = await owner().query('SELECT updated_at > created_at AS bumped, target FROM lead_notifications WHERE lead_id = $1', [id]);
+      expect(rows[0]).toEqual({ bumped: true, target: 'b2b_sales' });
+    });
   });
 
   it('AC-C8: log của toàn bộ bộ test không chứa giá trị đánh dấu hay IP thô', () => {

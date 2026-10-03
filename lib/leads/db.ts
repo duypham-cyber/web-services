@@ -1,6 +1,8 @@
 /**
  * Truy cập Postgres cho form lead (contracts/lead-b2b.md mục 2 + bước 7, 12). CHỈ SERVER. Chỉ truy vấn tham số hóa;
- * payload ghi bằng `$n::jsonb` (mục 6.3). Role của app: bb_app (INSERT/SELECT leads; INSERT/SELECT/UPDATE lead_notifications).
+ * payload ghi bằng `$n::jsonb` (mục 6.3). Role của app: bb_app (INSERT/SELECT leads; INSERT/SELECT lead_notifications +
+ * UPDATE chỉ 5 cột status, attempts, next_attempt_at, last_error_code, sent_at — migration 20261003184500). Câu UPDATE mới
+ * trên lead_notifications chỉ được SET các cột này, nếu không sẽ "permission denied".
  */
 import pg from 'pg';
 import type { LeadType } from './rules';
