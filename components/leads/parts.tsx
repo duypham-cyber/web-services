@@ -152,7 +152,7 @@ export function TurnstileSlot({
   placeholder: string;
 }) {
   return (
-    <div role="group" aria-label={label} className="relative min-h-[140px] sm:min-h-[65px]">
+    <div role="group" aria-label={label} data-turnstile-slot="" className="relative min-h-[140px] sm:min-h-[65px]">
       {status === 'idle' || status === 'loading' ? (
         <p className="absolute inset-0 flex items-center rounded-sm border border-dashed border-slate-300 px-3 text-small text-slate-600">
           {placeholder}

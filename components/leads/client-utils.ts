@@ -3,7 +3,7 @@
  * KHÔNG dùng crypto.randomUUID / crypto.subtle / clipboard: bản xem trước chạy HTTP qua IP (ngữ cảnh không an toàn,
  * trình duyệt không có các API đó). Mọi truy cập sessionStorage bọc try/catch (trình duyệt riêng tư, webview chặn).
  */
-import { FILM_TIERS, UTM_KEYS, type FilmTier, type LeadType } from '@/lib/leads/rules';
+import { FILM_TIERS, type FilmTier, type LeadType } from '@/lib/leads/rules';
 
 type UmamiProps = Record<string, string | number | boolean>;
 
@@ -39,45 +39,6 @@ export function track(event: 'lead_submit' | 'lead_error', data: UmamiProps): vo
 export function readFilmTier(): FilmTier | null {
   const v = document.documentElement.dataset.filmTier;
   return v && (FILM_TIERS as readonly string[]).includes(v) ? (v as FilmTier) : null;
-}
-
-const UTM_STORAGE_KEY = 'bb:utm';
-const UTM_MAX = 100;
-
-/**
- * Ghi utm_* của URL LÚC VÀO SITE vào sessionStorage (một lần mỗi phiên tab). Gọi từ component có mặt ở mọi trang
- * (thanh dính đáy) và từ form. Không ghi đè khi phiên đã có utm.
- */
-export function captureUtm(): void {
-  try {
-    if (window.sessionStorage.getItem(UTM_STORAGE_KEY) !== null) return;
-    const params = new URLSearchParams(window.location.search);
-    const utm: Record<string, string> = {};
-    for (const key of UTM_KEYS) {
-      const v = params.get(`utm_${key}`);
-      if (v) utm[key] = v.slice(0, UTM_MAX);
-    }
-    window.sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(utm));
-  } catch {
-    // sessionStorage bị chặn: bỏ qua utm (siêu dữ liệu lỏng, không ảnh hưởng lead)
-  }
-}
-
-export function readUtm(): Record<string, string> | undefined {
-  try {
-    const raw = window.sessionStorage.getItem(UTM_STORAGE_KEY);
-    if (!raw) return undefined;
-    const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object') return undefined;
-    const out: Record<string, string> = {};
-    for (const key of UTM_KEYS) {
-      const v = (parsed as Record<string, unknown>)[key];
-      if (typeof v === 'string' && v) out[key] = v.slice(0, UTM_MAX);
-    }
-    return Object.keys(out).length > 0 ? out : undefined;
-  } catch {
-    return undefined;
-  }
 }
 
 /** Thay {tên} trong chuỗi messages (chữ truyền từ server qua props, không qua next-intl ở client). */

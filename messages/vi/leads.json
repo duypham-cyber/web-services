@@ -5,6 +5,7 @@
     "submitting": "Đang gửi…",
     "honeypot": "Không điền ô này",
     "noscript": "Trình duyệt đang tắt JavaScript nên biểu mẫu chưa gửi được. Vui lòng gọi hoặc gửi email cho Bluebolt:",
+    "placeholderContact": "Muốn trao đổi ngay? Liên hệ trực tiếp:",
     "verifyLabel": "Xác minh chống spam",
     "verifyPlaceholder": "Bước xác minh tự động của Cloudflare sẽ hiện ở đây khi bạn bắt đầu điền.",
     "verifyPending": "Vui lòng đợi bước xác minh chống spam hoàn tất rồi bấm gửi lại.",
@@ -89,7 +90,7 @@
   "technician": {
     "title": "Điền 4 thông tin để đăng ký",
     "lead": "Dành cho thợ kỹ thuật điện lạnh, điện máy. Bộ phận tuyển thợ sẽ gọi lại hướng dẫn các bước gia nhập.",
-    "sectionLead": "Điền form bên dưới, bộ phận tuyển thợ sẽ gọi lại. Cần hỏi trước? Gọi hoặc nhắn Zalo cho bộ phận tuyển thợ.",
+    "sectionLead": "Điền form bên dưới, bộ phận tuyển thợ sẽ gọi lại. Cần hỏi trước? Gọi hotline tuyển thợ.",
     "customerHint": "Bạn cần thợ lắp đặt cho nhà mình? Gọi {phone}",
     "submit": "Đăng ký",
     "fields": {
@@ -182,7 +183,7 @@
     },
     "body": {
       "b2b": "Gọi hotline hoặc gửi email, bộ phận kinh doanh sẽ tư vấn và gửi báo giá theo hợp đồng.",
-      "technician": "Gọi hotline hoặc nhắn Zalo cho bộ phận tuyển thợ để đăng ký và được hướng dẫn các bước gia nhập."
+      "technician": "Gọi hotline cho bộ phận tuyển thợ để đăng ký và được hướng dẫn các bước gia nhập."
     },
     "email": "Gửi email",
     "emailSubject": {

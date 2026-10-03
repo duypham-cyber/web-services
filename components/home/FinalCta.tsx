@@ -8,6 +8,7 @@ import { Heading } from '@/components/ui/Heading';
 import { Section, type SectionTone } from '@/components/ui/Section';
 import { site } from '@/content/site';
 import type { Locale } from '@/i18n/routing';
+import { getLeadFormState } from '@/lib/leads/form-state';
 
 /** Tia chớp + vòng tròn trang trí (thương hiệu Bluebolt), chỉ token màu, aria-hidden, nằm trong khung overflow-clip. */
 function BoltArt() {
@@ -16,7 +17,7 @@ function BoltArt() {
       viewBox="0 0 400 400"
       aria-hidden="true"
       focusable="false"
-      className="pointer-events-none absolute -bottom-32 -left-28 size-[26rem] max-lg:hidden xl:size-[28rem]"
+      className="pointer-events-none absolute -right-24 top-1/2 size-[26rem] -translate-y-1/2 max-lg:hidden xl:-right-[7.5rem] xl:size-[30rem]"
     >
       <circle cx="200" cy="200" r="194" fill="none" stroke="var(--color-blue-300)" strokeOpacity="0.12" strokeWidth="2" />
       <circle cx="200" cy="200" r="142" fill="none" stroke="var(--color-blue-300)" strokeOpacity="0.12" strokeWidth="2" />
@@ -43,6 +44,8 @@ function BoltArt() {
 export async function FinalCta({ locale, tone }: { locale: Locale; tone: SectionTone }) {
   const t = await getTranslations('home');
   const phone = site.hotline.display[locale];
+  // Form tắt (production khi câu đồng ý chưa duyệt): khung trắng đã có nút Gọi → không lặp nút Gọi ở cột trái
+  const formOn = getLeadFormState('lead_b2b', locale).enabled;
 
   return (
     <Section id="hop-tac" tone={tone} aria-labelledby="hop-tac-title">
@@ -57,17 +60,19 @@ export async function FinalCta({ locale, tone }: { locale: Locale; tone: Section
               </Heading>
               <p className="mt-5 max-w-[38rem] text-lead text-(--surface-muted)">{t('cta.lead')}</p>
             </Rise>
-            <Button
-              externalHref={`tel:${site.hotline.tel}`}
-              variant="on-dark"
-              size="lg"
-              className="mt-8 w-full sm:w-auto"
-              iconStart={<Phone aria-hidden="true" size={20} strokeWidth={1.75} />}
-            >
-              {t('cta.call', { phone })}
-            </Button>
+            {formOn ? (
+              <Button
+                externalHref={`tel:${site.hotline.tel}`}
+                variant="on-dark"
+                size="lg"
+                className="mt-8 w-full sm:w-auto"
+                iconStart={<Phone aria-hidden="true" size={20} strokeWidth={1.75} />}
+              >
+                {t('cta.call', { phone })}
+              </Button>
+            ) : null}
           </div>
-          <LeadB2BBlock locale={locale} intents={['quote', 'demo']} className="lg:col-span-7" />
+          <LeadB2BBlock locale={locale} intents={['quote', 'demo']} className="lg:col-span-7 lg:self-start" />
         </div>
       </div>
     </Section>

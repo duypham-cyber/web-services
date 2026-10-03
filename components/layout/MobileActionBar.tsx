@@ -2,7 +2,7 @@
 
 import { MessageCircle, Phone, UserPlus, FileText } from 'lucide-react';
 import { useEffect } from 'react';
-import { captureUtm } from '@/components/leads/client-utils';
+import { captureUtm } from '@/components/leads/utm';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { AppHref } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';

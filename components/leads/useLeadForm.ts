@@ -2,21 +2,11 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react';
 import type { LeadType } from '@/lib/leads/rules';
-import {
-  captureUtm,
-  fmt,
-  isInAppBrowser,
-  readFilmTier,
-  readUtm,
-  saveDraft,
-  scrollToAndFocus,
-  takeDraft,
-  track,
-  uuidV4,
-} from './client-utils';
+import { fmt, isInAppBrowser, readFilmTier, saveDraft, scrollToAndFocus, takeDraft, track, uuidV4 } from './client-utils';
 import { postLead, type LeadClientErrorCode } from './submit';
 import type { LeadFormBaseProps } from './types';
 import { useTurnstile } from './useTurnstile';
+import { captureUtm, readUtm } from './utm';
 import { errorFromDetail, validateAll, type FieldError, type FieldErrors } from './validation';
 
 type Status = 'idle' | 'submitting' | 'done' | 'disabled';
@@ -45,6 +35,8 @@ type Options<V extends Record<string, unknown>, K extends keyof V & string> = {
   /** Neo trong trang dẫn tới form: hash → việc phụ (vd đổi intent). Link có hash này được chặn để cuộn tới form. */
   anchors: Record<string, (() => void) | null>;
   firstFieldId: string;
+  /** Link tới neo được bấm TRƯỚC khi form tải xong (LazyLeadForm): áp việc phụ của neo rồi cuộn + focus ô đầu. */
+  activation?: { hash: string } | null;
 };
 
 /**
@@ -193,6 +185,14 @@ export function useLeadForm<V extends Record<string, unknown>, K extends keyof V
     document.addEventListener('click', onClick, true);
     return () => document.removeEventListener('click', onClick, true);
   }, []);
+
+  useEffect(() => {
+    if (!opts.activation) return;
+    const o = optsRef.current;
+    o.anchors[opts.activation.hash]?.();
+    const block = blockRef.current;
+    if (block) scrollToAndFocus(block, block.querySelector<HTMLElement>(`#${o.firstFieldId}`));
+  }, [opts.activation]);
 
   /** Lần tương tác đầu tiên với form → mới tải Turnstile. */
   const onFirstInteraction = turnstile.start;

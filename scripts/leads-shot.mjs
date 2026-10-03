@@ -61,6 +61,11 @@ try {
       const section = block.locator('xpath=ancestor::section[1]');
       const target = (await section.count()) > 0 ? section : block;
       await target.scrollIntoViewIfNeeded();
+      // Form bật: mã form là chunk import động (LazyLeadForm) → đợi form tải xong rồi mới chụp
+      if ((await block.getAttribute('data-lead-state')) === 'enabled') {
+        await block.locator('form').waitFor({ state: 'visible', timeout: 30_000 });
+        await target.scrollIntoViewIfNeeded();
+      }
       await page.waitForTimeout(400);
       const file = join(OUT, `${slug(path)}--${width}.png`);
       await target.screenshot({ path: file });

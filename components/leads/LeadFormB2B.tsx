@@ -37,7 +37,7 @@ function restoreB2B(saved: Record<string, unknown>): Partial<B2BValues> {
  * 9 ô (7 bắt buộc; chức danh và ghi chú tùy chọn, D-05). `intent` là ô ẩn do CTA đặt: link tới #bao-gia → quote,
  * #dat-lich-demo → demo (chỉ khi trang cho phép), trang sàn TMĐT → integration (D-15).
  */
-export function LeadFormB2B(props: LeadB2BProps) {
+export function LeadFormB2B(props: LeadB2BProps & { activation?: { hash: string } | null }) {
   const { copy, b2b, intents, contact, draftLabel, blockId } = props;
   const [intent, setIntent] = useState<B2BIntent>(intents[0] ?? 'quote');
   const canSwitch = intents.includes('quote') && intents.includes('demo');
@@ -77,6 +77,7 @@ export function LeadFormB2B(props: LeadB2BProps) {
       'dat-lich-demo': intents.includes('demo') ? () => setIntent('demo') : null,
     },
     firstFieldId: `${P}-fullName`,
+    activation: props.activation,
   });
 
   const fields = b2b.fields;

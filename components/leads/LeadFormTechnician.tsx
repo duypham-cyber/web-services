@@ -33,7 +33,7 @@ function restoreTechnician(saved: Record<string, unknown>): Partial<TechnicianVa
  * Neo: /doi-tac-tho#dang-ky (EN /en/technician-partners#register) — nút "Đăng ký thợ" ở thanh dính đáy cuộn tới form
  * và focus ô "Họ và tên" (AC-T9).
  */
-export function LeadFormTechnician(props: LeadTechnicianProps) {
+export function LeadFormTechnician(props: LeadTechnicianProps & { activation?: { hash: string } | null }) {
   const { copy, technician, contact, draftLabel } = props;
 
   const {
@@ -68,6 +68,7 @@ export function LeadFormTechnician(props: LeadTechnicianProps) {
     analytics: () => ({}),
     anchors: { 'dang-ky': null, register: null },
     firstFieldId: `${P}-fullName`,
+    activation: props.activation,
   });
 
   const fields = technician.fields;

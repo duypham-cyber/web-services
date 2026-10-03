@@ -5,6 +5,7 @@
     "submitting": "Sending…",
     "honeypot": "Leave this field empty",
     "noscript": "JavaScript is turned off in your browser, so this form cannot be sent. Please call or email Bluebolt:",
+    "placeholderContact": "Prefer to talk now? Contact us directly:",
     "verifyLabel": "Spam check",
     "verifyPlaceholder": "The automatic Cloudflare spam check will appear here once you start filling in the form.",
     "verifyPending": "Please wait for the spam check to finish, then send again.",
@@ -89,7 +90,7 @@
   "technician": {
     "title": "Fill in 4 details to register",
     "lead": "For air-conditioning and appliance technicians. Our recruitment team will call you back with the steps to join.",
-    "sectionLead": "Fill in the form below and our recruitment team will call you back. Questions first? Call or message the recruitment team on Zalo.",
+    "sectionLead": "Fill in the form below and our recruitment team will call you back. Questions first? Call the recruitment hotline.",
     "customerHint": "Need a technician for your home? Call {phone}",
     "submit": "Register",
     "fields": {
@@ -182,7 +183,7 @@
     },
     "body": {
       "b2b": "Call the hotline or send an email and our sales team will advise you and send a contract quote.",
-      "technician": "Call the hotline or message us on Zalo to register with our recruitment team and hear about the next steps."
+      "technician": "Call the hotline to register with our recruitment team and hear about the next steps."
     },
     "email": "Send an email",
     "emailSubject": {

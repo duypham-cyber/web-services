@@ -2,6 +2,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { ContactButtons } from '@/components/partners/ContactButtons';
 import { DraftLine } from '@/components/ui/DraftLine';
+import { Heading } from '@/components/ui/Heading';
 import { provinces } from '@/content/provinces';
 import { site } from '@/content/site';
 import { slaItems } from '@/content/sla';
@@ -11,8 +12,7 @@ import { isDraftPreview } from '@/lib/env';
 import { getLeadFormState } from '@/lib/leads/form-state';
 import type { B2BIntent, LeadType } from '@/lib/leads/rules';
 import { fmt } from './client-utils';
-import { LeadFormB2B } from './LeadFormB2B';
-import { LeadFormTechnician } from './LeadFormTechnician';
+import { LazyLeadForm } from './LazyLeadForm';
 import type { LeadContact, LeadFormBaseProps, LeadFormCopy, ProvinceOption } from './types';
 
 /**
@@ -21,8 +21,9 @@ import type { LeadContact, LeadFormBaseProps, LeadFormCopy, ProvinceOption } fro
  * Trạng thái form chốt LÚC BUILD (getLeadFormState, trang tĩnh):
  * - tắt (LEADS_FORM_ENABLED khác true, câu đồng ý chưa duyệt ở production, cấu hình thiếu) → khối Gọi · Zalo · email bộ
  *   phận thay form (AC-C10, A7). Bản xem trước có thêm một dòng ghi chú lý do.
- * - bật → form client + <noscript> khối liên hệ (A11). API vẫn kiểm lại mỗi request: 503 lúc chạy → form tự thay bằng khối
- *   liên hệ (prop `fallback`).
+ * - bật → LazyLeadForm: HTML server là tiêu đề + kênh liên hệ (cũng là bản không JS, A11); mã form là chunk import động,
+ *   tải khi khối gần vào màn hình / khi chạm / khi bấm link tới neo — không nằm trong JS tải đầu. API vẫn kiểm lại mỗi
+ *   request: 503 lúc chạy → form tự thay bằng khối liên hệ (prop `fallback`).
  * Chữ của form đi qua props (client chỉ có namespace common/errors). Không có chữ "Nháp" nào trong props ở production.
  */
 
@@ -62,12 +63,23 @@ function pickCopy(leads: Leads): LeadFormCopy {
 }
 
 /** Khung trắng chứa form (đặt được trên nền navy, blue-50 hay trắng). */
-function FormCard({ id, className, children }: { id?: string; className?: string; children: ReactNode }) {
+function FormCard({
+  id,
+  className,
+  enabled,
+  children,
+}: {
+  id?: string;
+  className?: string;
+  enabled: boolean;
+  children: ReactNode;
+}) {
   return (
     <div
       id={id}
       data-tone="light"
       data-lead-block=""
+      data-lead-state={enabled ? 'enabled' : 'disabled'}
       className={cn('relative min-w-0 rounded-lg border border-slate-300 bg-white p-4 text-ink-900 shadow-2 sm:p-8', className)}
     >
       {children}
@@ -89,6 +101,35 @@ export async function LeadContactFallback({ locale, type }: { locale: Locale; ty
         <p className="text-h3 text-(--surface-heading)">{t(`fallback.title.${key}`)}</p>
         <p className="mt-2 text-body text-(--surface-muted)">{t(`fallback.body.${key}`)}</p>
       </div>
+      <ContactButtons
+        callVariant="blue"
+        callLabel={tc('cta.callNumber', { phone: site.hotline.display[locale] })}
+        zaloLabel={t('form.zalo')}
+        email={{ label: t('fallback.email'), subject: t(`fallback.emailSubject.${key}`), style: 'link' }}
+        newTabLabel={t('form.newTab')}
+      />
+    </div>
+  );
+}
+
+/**
+ * Nội dung server của khối form trước khi mã form tải xong (LazyLeadForm) — cũng là trải nghiệm khi tắt JavaScript (A11):
+ * tiêu đề form + kênh liên hệ trực tiếp. Không có ô nhập nào trong HTML server (form là chunk import động).
+ */
+async function FormPlaceholder({ locale, type, title, lead }: { locale: Locale; type: LeadType; title: string; lead: string }) {
+  const t = await getTranslations({ locale, namespace: 'leads' });
+  const tc = await getTranslations({ locale, namespace: 'common' });
+  const key = type === 'lead_b2b' ? 'b2b' : 'technician';
+  return (
+    <div className="flex flex-col gap-5" data-lead-placeholder="">
+      <div>
+        <Heading level={3}>{title}</Heading>
+        <p className="mt-2 text-body text-(--surface-muted)">{lead}</p>
+      </div>
+      <noscript>
+        <p className="text-body text-ink-900">{t('form.noscript')}</p>
+      </noscript>
+      <p className="text-small text-(--surface-muted)">{t('form.placeholderContact')}</p>
       <ContactButtons
         callVariant="blue"
         callLabel={tc('cta.callNumber', { phone: site.hotline.display[locale] })}
@@ -135,9 +176,9 @@ export async function LeadB2BBlock({
 
   if (!state.enabled) {
     return (
-      <FormCard id={id} className={className}>
+      <FormCard id={id} className={className} enabled={false}>
         {demoAnchor}
-        <LeadContactFallback locale={locale} type="lead_b2b" />
+        <LazyLeadForm kind="contact" anchors={[id, 'dat-lich-demo']} placeholder={<LeadContactFallback locale={locale} type="lead_b2b" />} />
         <DisabledNote locale={locale} reason={state.reason} />
       </FormCard>
     );
@@ -157,19 +198,20 @@ export async function LeadB2BBlock({
   };
 
   return (
-    <FormCard id={id} className={className}>
+    <FormCard id={id} className={className} enabled>
       {demoAnchor}
-      <noscript>
-        <p className="mb-4 text-body text-ink-900">{leads.form.noscript}</p>
-        <LeadContactFallback locale={locale} type="lead_b2b" />
-      </noscript>
-      <LeadFormB2B
-        {...base}
-        b2b={leads.b2b}
-        provinces={provinceOptions(locale)}
-        intents={intents}
-        callbackDemo={callbackLine('lead_b2b', leads.thanks.callback.demo, locale, leads.preview.callbackPendingValue)}
-        blockId={id}
+      <LazyLeadForm
+        kind="b2b"
+        anchors={[id, 'dat-lich-demo']}
+        placeholder={<FormPlaceholder locale={locale} type="lead_b2b" title={leads.b2b.title[intents[0] ?? 'quote']} lead={leads.b2b.lead[intents[0] ?? 'quote']} />}
+        formProps={{
+          ...base,
+          b2b: leads.b2b,
+          provinces: provinceOptions(locale),
+          intents,
+          callbackDemo: callbackLine('lead_b2b', leads.thanks.callback.demo, locale, leads.preview.callbackPendingValue),
+          blockId: id,
+        }}
       />
       {callbackSlaApproved('lead_b2b') ? null : <DraftLine className="mt-6">{leads.preview.callbackPending}</DraftLine>}
     </FormCard>
@@ -184,7 +226,7 @@ export async function LeadTechnicianBlock({ locale, className }: { locale: Local
 
   if (!state.enabled) {
     return (
-      <FormCard className={className}>
+      <FormCard className={className} enabled={false}>
         <LeadContactFallback locale={locale} type="lead_technician" />
         <DisabledNote locale={locale} reason={state.reason} />
       </FormCard>
@@ -206,21 +248,24 @@ export async function LeadTechnicianBlock({ locale, className }: { locale: Local
   };
 
   return (
-    <FormCard className={className}>
-      <noscript>
-        <p className="mb-4 text-body text-ink-900">{leads.form.noscript}</p>
-        <LeadContactFallback locale={locale} type="lead_technician" />
-      </noscript>
-      <LeadFormTechnician
-        {...base}
-        technician={leads.technician}
-        provinces={provinceOptions(locale)}
-        steps={[
-          tp('onboarding.steps.register.title'),
-          tp('onboarding.steps.verify.title'),
-          tp('onboarding.steps.training.title'),
-          tp('onboarding.steps.jobs.title'),
-        ]}
+    <FormCard className={className} enabled>
+      <LazyLeadForm
+        kind="technician"
+        anchors={['dang-ky', 'register']}
+        placeholder={
+          <FormPlaceholder locale={locale} type="lead_technician" title={leads.technician.title} lead={leads.technician.lead} />
+        }
+        formProps={{
+          ...base,
+          technician: leads.technician,
+          provinces: provinceOptions(locale),
+          steps: [
+            tp('onboarding.steps.register.title'),
+            tp('onboarding.steps.verify.title'),
+            tp('onboarding.steps.training.title'),
+            tp('onboarding.steps.jobs.title'),
+          ],
+        }}
       />
       {callbackSlaApproved('lead_technician') ? null : <DraftLine className="mt-6">{leads.preview.callbackPending}</DraftLine>}
     </FormCard>
