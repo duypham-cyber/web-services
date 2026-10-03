@@ -464,7 +464,11 @@ chữ không đổi, số đếm khớp file. Agent nội dung tự kiểm lại
   khi công bố cam kết chính thức") vênh với dữ liệu đã duyệt. Cột "Thợ đang hoạt động" của bảng tỉnh ghi "Chưa có số" cả 34 tỉnh,
   đặt cạnh ô 500+ dễ đọc là mâu thuẫn.
 - `messages/{vi,en}/home.json` (dải KPI) và `solutions.json` (`title` "Số liệu vận hành" trên ô 60 phút): các số đang hiện là số
-  công bố hoặc mốc cam kết, không phải số đo. Câu "Số nào chưa đo được thì chúng tôi không hiển thị" cũng không còn đúng.
+  công bố hoặc mốc cam kết, không phải số đo. `home.json` `lead` ("Mỗi con số có định nghĩa và ngày cập nhật. Số nào chưa đo
+  được thì chúng tôi không hiển thị.") cần viết lại: từ nay ô số công bố không ghi ngày (`StatTile`), và các số này không phải số đo.
+- `messages/{vi,en}/services.json` `detail.warrantyLead` ("Bảo hành dịch vụ áp dụng cho lỗi do kỹ thuật lắp đặt…") nói cùng ý với
+  claim `b2b.warranty.installation-faults` (nay nháp) nhưng viết thẳng trong messages, không qua `claim()`, nên vẫn hiện ở
+  production. Chủ trang B2B chọn: giữ như câu giới thiệu trung tính, hoặc chuyển sang `claim()` để ẩn cùng claim.
 - `/giai-phap/*`: ô 60 phút đứng cạnh quy trình "điều phối → thợ gọi khách". Hoặc tách ô khỏi quy trình, hoặc chờ anh Duy chốt
   người liên hệ và thứ tự 02 → 03 của `content/process.ts`.
 - `components/solutions/kit/SlaRegionTable.tsx`: dòng "Xử lý lỗi lắp đặt" ghi "Theo hợp đồng" ở cả 4 vùng, trong khi
