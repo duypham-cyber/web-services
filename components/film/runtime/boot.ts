@@ -9,6 +9,12 @@
  *   4. import() chunk cảnh (runtime/stage.ts + components/film/map3d) sau ý định đầu tiên hoặc load + 2 s rảnh.
  *   5. Hạ tại chỗ (giữ chiều cao track): reduced-motion đổi giữa phiên, đổi bố cục dọc ↔ ngang, mất WebGL, FPS guard.
  */
+
+/** Ghi tầng lên track (data-tier) và lên <html data-film-tier> (T-FULL|T-LITE|T-STILL) cho analytics form lead (contract mục 3.7). */
+function markTier(root: HTMLElement, tier: 'full' | 'lite' | 'still'): void {
+  root.dataset.tier = tier;
+  document.documentElement.dataset.filmTier = tier === 'full' ? 'T-FULL' : tier === 'lite' ? 'T-LITE' : 'T-STILL';
+}
 export type Band = [number | null, number | null, number | null, number | null];
 export type HeroTier = 'full' | 'lite' | 'still';
 export type HeroBootConfig = {
@@ -139,14 +145,14 @@ export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): 
     toStill(why) {
       if (state.tier === 'still') return;
       state.tier = 'still';
-      root.dataset.tier = 'still';
+      markTier(root, 'still');
       root.dataset.stillReason = why;
       delete root.dataset.live;
       stop?.();
       stop = null;
     },
   };
-  root.dataset.tier = tier;
+  markTier(root, tier);
   root.dataset.tierReason = reason;
 
   const disarm = () => {
@@ -166,7 +172,7 @@ export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): 
   if (tier === 'still') return disarm;
   if (!fits(state)) {
     state.tier = 'still';
-    root.dataset.tier = 'still';
+    markTier(root, 'still');
     root.dataset.tierReason = 'no-fit';
     return disarm;
   }
