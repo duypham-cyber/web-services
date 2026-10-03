@@ -43,8 +43,8 @@
     "cta": "Xem mạng lưới"
   },
   "trust": {
-    "title": "Số liệu vận hành",
-    "lead": "Mỗi con số có định nghĩa và ngày cập nhật. Số nào chưa đo được thì chúng tôi không hiển thị.",
+    "title": "Quy mô và cam kết",
+    "lead": "Các con số dưới đây là quy mô mạng lưới và mốc cam kết Bluebolt đang công bố. Số đo vận hành như đơn hoàn thành hay tỷ lệ đúng hẹn sẽ hiện khi đã có dữ liệu đối soát.",
     "logosTitle": "Hãng và sàn đang hợp tác",
     "logosNote": "Logo chỉ hiện khi có văn bản đồng ý của từng đối tác."
   },

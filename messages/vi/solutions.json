@@ -7,7 +7,7 @@
     "pendingTitle": "Nội dung chờ xác nhận",
     "pendingIntro": "Chỉ hiện ở bản xem trước. Bản chính thức tự ẩn mọi nội dung nháp.",
     "kpiHidden": "Các ô số liệu {ids} đang ẩn vì chưa có số đo thật.",
-    "formPending": "Form gửi yêu cầu sẽ có khi contract form lead được duyệt. Hiện các nút dẫn tới trang Liên hệ, mục Kinh doanh.",
+    "formPending": "Trang này không có form riêng. Các nút Nhận báo giá dẫn tới form trên trang chủ (mục Nhận báo giá).",
     "faqEyebrow": "Câu hỏi thường gặp",
     "process": {
       "step": "Bước {n}",
@@ -209,7 +209,7 @@
       }
     },
     "kpi": {
-      "title": "Số liệu vận hành"
+      "title": "Quy mô và cam kết"
     },
     "sla": {
       "eyebrow": "SLA",

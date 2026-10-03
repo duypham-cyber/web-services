@@ -7,7 +7,7 @@
     "pendingTitle": "Pending confirmation",
     "pendingIntro": "Shown in preview builds only. The live site hides all draft content automatically.",
     "kpiHidden": "KPI tiles {ids} are hidden until measured figures are available.",
-    "formPending": "The request form will be added once the lead form contract is approved. For now the buttons lead to the sales section of the Contact page.",
+    "formPending": "This page has no form of its own. The quote buttons lead to the form on the home page (Get a quote section).",
     "faqEyebrow": "FAQ",
     "process": {
       "step": "Step {n}",
@@ -209,7 +209,7 @@
       }
     },
     "kpi": {
-      "title": "Operating figures"
+      "title": "Scale and commitments"
     },
     "sla": {
       "eyebrow": "SLA",
