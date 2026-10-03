@@ -1,0 +1,13 @@
+# Chạy bluebolt-web-leads-retry.service mỗi 5 phút (contracts/lead-b2b.md mục 3.5). Chạy chồng nhau vẫn an toàn
+# (lease + FOR UPDATE SKIP LOCKED), nhưng systemd không khởi động lượt mới khi lượt trước (oneshot) chưa xong.
+[Unit]
+Description=bluebolt-web — mỗi 5 phút gửi lại thông báo lead (chỉ bbsw/bản xem trước)
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=30s
+Unit=bluebolt-web-leads-retry.service
+
+[Install]
+WantedBy=timers.target

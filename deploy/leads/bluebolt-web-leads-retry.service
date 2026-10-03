@@ -1,0 +1,16 @@
+# bluebolt-web — gửi lại thông báo lead (outbox), contracts/lead-b2b.md mục 3.5.
+# CHỈ máy bbsw (dev 3091 + bản xem trước 9515): đọc .env.local của repo (DATABASE_URL = DB dev, email ghi thành tệp .eml).
+# Production KHÔNG dùng file này: cron trên host hoặc service lead-notifier trong compose (docs/LEADS-RUNBOOK.md).
+# Cài: docs/LEADS-RUNBOOK.md mục "Timer thử lại" (cp sang ~/.config/systemd/user/, daemon-reload, enable --now timer).
+[Unit]
+Description=bluebolt-web — gửi lại thông báo lead còn treo (outbox, chỉ bbsw/bản xem trước)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web
+# Script tự nạp .env.local (process.loadEnvFile); không đặt NODE_ENV=production để kênh tệp .eml được phép
+ExecStart=/usr/bin/node scripts/leads-notify-retry.mjs
+Nice=10
+MemoryMax=256M
+TimeoutStartSec=4min
