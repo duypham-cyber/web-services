@@ -202,6 +202,11 @@ async function main() {
   const { needles, skipped } = buildNeedles({ loadMessages, claims: ALL_CLAIMS, slaItems, stats });
 
   const files = walkDist(APP_DIR);
+  if (!files.some((f) => f.endsWith('.html'))) {
+    // Bản build hỏng/dở (vd type-check lỗi) không có trang nào: KHÔNG được coi là "0 vi phạm".
+    console.error(`[check-no-draft] ${DIST}: không có file HTML nào dưới server/app — bản build hỏng hoặc chưa build xong`);
+    process.exit(1);
+  }
   const violations = [];
   for (const file of files) {
     const raw = readFileSync(file, 'utf8');
