@@ -1,7 +1,9 @@
 /**
  * Kênh gửi email thông báo (kênh (a) của D-01, anh Duy duyệt ở D-20/D-26). CHỈ SERVER.
  *
- * - `SMTP_HOST` có giá trị → nodemailer SMTP (SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE, SMTP_FROM).
+ * - `SMTP_HOST` có giá trị → nodemailer SMTP (SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE, SMTP_FROM). TLS bắt buộc (review L6):
+ *   cổng 465/SMTP_SECURE=true dùng TLS ngay; cổng khác (587…) bắt buộc STARTTLS (`requireTLS`), máy chủ không hỗ trợ → lỗi,
+ *   KHÔNG rơi về văn bản thường; TLS ≥ 1.2, kiểm chứng chỉ. Ngoại lệ duy nhất: relay trên chính máy (loopback).
  * - Không có SMTP và `LEAD_MAIL_TRANSPORT=file` → ghi mỗi email thành một tệp .eml trong LEAD_MAIL_DIR (mặc định
  *   .cache/lead-mail, gitignore, quyền 700/600). CHỈ dev và bản xem trước: bị từ chối khi NODE_ENV=production mà không có
  *   DRAFT_PREVIEW=1 (site thật).
@@ -54,17 +56,33 @@ export function mailErrorCode(err: unknown, prefix: 'SMTP' | 'FILE'): string {
   return `${prefix}_${raw.toUpperCase().replace(/[^A-Z0-9_]/g, '_')}`.slice(0, 64);
 }
 
-function smtpTransport(env: Env): MailTransport {
+/** localhost, 127.0.0.0/8, ::1 — thư tới relay loopback không rời máy. */
+export function isLoopbackHost(host: string): boolean {
+  const h = host.trim().toLowerCase();
+  return h === 'localhost' || h === '::1' || h === '[::1]' || /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(h);
+}
+
+/** Tùy chọn nodemailer SMTP theo env (export để test kiểm chính sách TLS). */
+export function smtpTransportOptions(env: Env) {
+  const host = env.SMTP_HOST?.trim() ?? '';
   const port = Number(env.SMTP_PORT || 587);
-  const transporter = nodemailer.createTransport({
-    host: env.SMTP_HOST,
+  const secure = env.SMTP_SECURE ? env.SMTP_SECURE === 'true' : port === 465;
+  return {
+    host,
     port,
-    secure: env.SMTP_SECURE ? env.SMTP_SECURE === 'true' : port === 465,
+    secure,
+    // Không có TLS ngay từ đầu (587, 25, 2525…) → STARTTLS bắt buộc; lỗi nâng cấp = lỗi gửi (thử lại theo outbox)
+    requireTLS: !secure && !isLoopbackHost(host),
+    tls: { minVersion: 'TLSv1.2' as const, rejectUnauthorized: true },
     auth: env.SMTP_USER ? { user: env.SMTP_USER, pass: env.SMTP_PASS ?? '' } : undefined,
     connectionTimeout: 10_000,
     greetingTimeout: 10_000,
     socketTimeout: 20_000,
-  });
+  };
+}
+
+function smtpTransport(env: Env): MailTransport {
+  const transporter = nodemailer.createTransport(smtpTransportOptions(env));
   return {
     kind: 'smtp',
     async send(message) {

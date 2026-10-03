@@ -7,7 +7,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { readLeadsConfig } from '../../lib/leads/config';
 import { clientIpFromHeaders, hashIp, ipBucket, normalizeIp } from '../../lib/leads/ip';
 import { buildLeadEmail, escapeHtml, formatVnTime, type StoredLead } from '../../lib/leads/notify/email';
-import { createMailTransport, isPlaceholderAddress, mailErrorCode } from '../../lib/leads/notify/transport';
+import { createMailTransport, isLoopbackHost, isPlaceholderAddress, mailErrorCode, smtpTransportOptions } from '../../lib/leads/notify/transport';
 import { BACKOFF_MINUTES, MAX_ATTEMPTS, NOTIFY_ROUTES } from '../../lib/leads/outbox';
 import { createRateLimiter } from '../../lib/leads/rate-limit';
 import { PROVINCE_CODES } from '../../lib/leads/rules';
@@ -271,6 +271,24 @@ describe('kênh gửi email', () => {
     expect(createMailTransport({ NODE_ENV: 'production', DRAFT_PREVIEW: '1', LEAD_MAIL_TRANSPORT: 'file' }, '/tmp')?.kind).toBe('file');
     expect(createMailTransport({ NODE_ENV: 'production', LEAD_MAIL_TRANSPORT: 'file' })).toBeNull();
     expect(createMailTransport({})).toBeNull();
+  });
+  it('review L6: SMTP bắt buộc TLS — 587 requireTLS (STARTTLS), 465 TLS ngay, TLS ≥ 1.2; chỉ relay loopback được miễn', () => {
+    const o587 = smtpTransportOptions({ SMTP_HOST: 'smtp.example.vn', SMTP_PORT: '587' });
+    expect(o587).toMatchObject({ host: 'smtp.example.vn', port: 587, secure: false, requireTLS: true });
+    expect(o587.tls).toEqual({ minVersion: 'TLSv1.2', rejectUnauthorized: true });
+    expect(smtpTransportOptions({ SMTP_HOST: 'smtp.example.vn' })).toMatchObject({ port: 587, secure: false, requireTLS: true });
+    expect(smtpTransportOptions({ SMTP_HOST: 'smtp.example.vn', SMTP_PORT: '25' })).toMatchObject({ requireTLS: true });
+    const o465 = smtpTransportOptions({ SMTP_HOST: 'smtp.example.vn', SMTP_PORT: '465' });
+    expect(o465).toMatchObject({ secure: true, requireTLS: false, tls: { minVersion: 'TLSv1.2' } });
+    expect(smtpTransportOptions({ SMTP_HOST: 'smtp.example.vn', SMTP_PORT: '2465', SMTP_SECURE: 'true' })).toMatchObject({ secure: true });
+    // SMTP_SECURE=false không tắt được TLS: vẫn phải STARTTLS
+    expect(smtpTransportOptions({ SMTP_HOST: 'smtp.example.vn', SMTP_PORT: '465', SMTP_SECURE: 'false' })).toMatchObject({
+      secure: false,
+      requireTLS: true,
+    });
+    expect(smtpTransportOptions({ SMTP_HOST: '127.0.0.1', SMTP_PORT: '2525' })).toMatchObject({ requireTLS: false });
+    for (const h of ['localhost', '127.0.0.1', '127.1.2.3', '::1', '[::1]']) expect(isLoopbackHost(h), h).toBe(true);
+    for (const h of ['smtp.example.vn', '10.0.0.5', '127.example.vn', '0.0.0.0']) expect(isLoopbackHost(h), h).toBe(false);
   });
   it('mã lỗi kỹ thuật chỉ [A-Z0-9_], không mang nội dung', () => {
     expect(mailErrorCode({ code: 'ECONNREFUSED' }, 'SMTP')).toBe('SMTP_ECONNREFUSED');
