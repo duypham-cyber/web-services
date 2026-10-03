@@ -61,5 +61,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`[preview] 0.0.0.0:${PORT} → http://${TARGET_HOST}:${TARGET_PORT} (Basic Auth, user "${USER}")`);
+  process.stdout.write(`[preview] 0.0.0.0:${PORT} → http://${TARGET_HOST}:${TARGET_PORT} (Basic Auth, user "${USER}")\n`);
 });
