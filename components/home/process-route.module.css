@@ -1,0 +1,358 @@
+/*
+ * Tuyến đường các trạm — section quy trình trang chủ theo Mẫu 02 "Bản đồ sống" (D-26). Không JavaScript.
+ *  - Trạng thái MẶC ĐỊNH = trạng thái cuối: tuyến vẽ đủ, mọi trạm sáng (không JS, reduced-motion, Save-Data, JS lỗi
+ *    → html không có data-motion hoặc data-motion="off").
+ *  - Chỉ animate stroke-dashoffset / transform / opacity, chạy hữu hạn, không loop.
+ *  - Có animation-timeline: tuyến vẽ theo cú cuộn (CSS scroll-driven). Chưa có: vẽ một lần khi vào khung nhìn
+ *    (data-inview do MotionRuntime gắn lên [data-motion-item]).
+ *  - < 1280px: tuyến dọc. ≥ 1280px: đường cong ngang qua các trạm, SVG kéo giãn theo bề rộng (preserveAspectRatio=none).
+ * Tọa độ đường cong (viewBox, đỉnh/đáy sóng) sinh ở process-route.tsx; --band, --crest-* dưới đây phải khớp.
+ */
+
+.route {
+  --disk: 3rem;
+  --gap: 2rem;
+  --draw: 1.6s;
+  --route-lane: var(--color-blue-300);
+  --route-road: var(--color-white);
+  --route-road-shadow: color-mix(in srgb, var(--color-navy-900) 10%, transparent);
+  --route-trail: var(--color-orange-500);
+  --route-trail-glow: transparent;
+  --route-origin-bg: var(--color-white);
+  --route-origin-line: var(--color-slate-500);
+  --route-origin-fg: var(--color-slate-600);
+  position: relative;
+}
+
+:global([data-tone='light']) .route {
+  --route-road: var(--color-blue-50);
+  --route-road-shadow: transparent;
+}
+
+:global([data-tone='navy']) .route {
+  --route-lane: color-mix(in srgb, var(--color-white) 30%, transparent);
+  --route-road: color-mix(in srgb, var(--color-white) 8%, transparent);
+  --route-road-shadow: transparent;
+  --route-trail-glow: color-mix(in srgb, var(--color-orange-500) 70%, transparent);
+  --route-origin-bg: transparent;
+  --route-origin-line: color-mix(in srgb, var(--color-white) 45%, transparent);
+  --route-origin-fg: var(--color-slate-300);
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Tuyến dọc (mặc định, < 1280px): mỗi trạm = [đĩa số | nội dung], đường nối từ tâm đĩa này tới tâm đĩa kế tiếp.
+ * ---------------------------------------------------------------------------------------------- */
+.wave {
+  display: none;
+}
+
+.station {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--disk) minmax(0, 1fr);
+  column-gap: 1.5rem;
+}
+
+.stops {
+  display: grid;
+  row-gap: var(--gap);
+  margin: var(--gap) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stopsFull {
+  margin-top: 0;
+}
+
+.body {
+  padding-top: 0.5rem;
+}
+
+/* Nét đứt nền: 00 → 01 (trước khi đơn vào Bluebolt) và dưới vạch cam của 01 → 05 */
+.origin::before,
+.stops > .station:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--disk) / 2);
+  left: calc(var(--disk) / 2 - 1px);
+  height: calc(100% + var(--gap));
+  border-left: 2px dashed var(--route-lane);
+}
+
+.rail {
+  position: absolute;
+  top: calc(var(--disk) / 2);
+  left: calc(var(--disk) / 2 - 2px);
+  width: 4px;
+  height: calc(100% + var(--gap));
+  border-radius: 2px;
+  background-color: var(--route-trail);
+  transform-origin: 50% 0;
+}
+
+.disk {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  display: inline-flex;
+  width: var(--disk);
+  height: var(--disk);
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-blue-300);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-white);
+  color: var(--color-navy-900);
+}
+
+/* Trạm đã tới: lớp cam phủ lên đĩa (chữ navy-900 trên orange-500 = 6,2:1). Chỉ đổi opacity/transform. */
+.lit {
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--color-orange-500);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-orange-500) 22%, transparent);
+}
+
+/* Điểm xuất phát 00: sự kiện kích hoạt — đĩa rỗng nét đứt, không bao giờ "sáng" */
+.diskOrigin {
+  border-style: dashed;
+  border-color: var(--route-origin-line);
+  background-color: var(--route-origin-bg);
+  color: var(--route-origin-fg);
+}
+
+/* Nhãn "sự kiện kích hoạt" đứng đúng chỗ chip "ai làm" của các trạm; chuỗi messages viết thường → viết hoa chữ đầu */
+.triggerTag {
+  display: inline-block;
+  border: 1px dashed var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.625rem;
+}
+
+.triggerTag::first-letter {
+  text-transform: uppercase;
+}
+
+@media (min-width: 48rem) and (max-width: 79.999rem) {
+  .route {
+    max-width: 60rem;
+  }
+
+  /* Bảng giờ tàu: [tên trạm + ai làm | mô tả]. Hàng 2 là 1fr → mô tả dài chỉ kéo hàng chip, không đẩy chip xa tên trạm. */
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 2rem;
+    align-items: start;
+  }
+
+  .body > :nth-child(3) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Tuyến ngang (≥ 1280px): lưới N cột bằng nhau (không gap → tâm cột i đúng (i + 0,5)/N bề rộng = tọa độ x trong SVG).
+ * Đĩa nằm trên đường cong (--y), chữ mọi trạm thẳng một hàng dưới dải --band.
+ * ---------------------------------------------------------------------------------------------- */
+@media (min-width: 80rem) {
+  .route {
+    --band: 7.5rem; /* = BAND_H 120 của viewBox */
+    display: grid;
+    grid-template-columns: repeat(var(--stations), minmax(0, 1fr));
+  }
+
+  .wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: var(--band);
+    overflow: visible;
+  }
+
+  .road,
+  .lane,
+  .trail {
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  .road {
+    stroke: var(--route-road);
+    stroke-width: 22px;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 1px 2px var(--route-road-shadow));
+  }
+
+  .lane {
+    stroke: var(--route-lane);
+    stroke-width: 2px;
+    stroke-dasharray: 6 9;
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* Không non-scaling-stroke: pathLength=1 phải đo trong cùng hệ tọa độ với nét đứt (độ méo nét < 10% ở 1280–1440) */
+  .trail {
+    stroke: var(--route-trail);
+    stroke-width: 4px;
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 6px var(--route-trail-glow));
+  }
+
+  .station {
+    display: block;
+    padding: calc(var(--band) + 1.5rem) 0.5rem 0;
+    text-align: center;
+  }
+
+  .station[data-crest='high'] {
+    --y: 2.25rem; /* 36 / 120 */
+  }
+
+  .station[data-crest='low'] {
+    --y: 5.25rem; /* 84 / 120 */
+  }
+
+  .disk {
+    position: absolute;
+    top: calc(var(--y) - var(--disk) / 2);
+    left: calc(50% - var(--disk) / 2);
+  }
+
+  .body {
+    padding-top: 0;
+  }
+
+  /* Tên trạm giữ chỗ 2 dòng → chip "ai làm" và mô tả các cột thẳng hàng như bảng giờ tàu */
+  .body > :first-child {
+    min-height: 2lh;
+  }
+
+  .stops {
+    grid-column: 2 / -1;
+    grid-template-columns: repeat(var(--steps), minmax(0, 1fr));
+    row-gap: 0;
+    margin: 0;
+  }
+
+  .stopsFull {
+    grid-column: 1 / -1;
+  }
+
+  .origin::before,
+  .stops > .station::before,
+  .rail {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Chuyển động — chỉ khi html[data-motion] = pending | ready (script đầu trang đã cho phép).
+ * ---------------------------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* (a) Có animation-timeline: vẽ theo cú cuộn. Ngang: tuyến vẽ khi đỉnh .route đi từ 92vh lên 45vh (như Mẫu 02),
+   *     trạm có tỉ lệ --f sáng khi nét cam tới. Dọc: vạch cam và đĩa cùng bám một "vạch đọc" ở 60vh khung nhìn. */
+  @supports (animation-timeline: view()) {
+    @media (min-width: 80rem) {
+      :global(html:is([data-motion='pending'], [data-motion='ready'])) .route {
+        view-timeline: --bb-process-route block;
+      }
+
+      :global(html:is([data-motion='pending'], [data-motion='ready'])) .trail {
+        animation: route-draw linear both;
+        animation-timeline: --bb-process-route;
+        animation-range: cover 8vh cover 55vh;
+      }
+
+      :global(html:is([data-motion='pending'], [data-motion='ready'])) .lit {
+        animation: route-light linear both;
+        animation-timeline: --bb-process-route;
+        animation-range: cover calc(6.5vh + 47vh * var(--f, 0)) cover calc(9.5vh + 47vh * var(--f, 0));
+      }
+    }
+
+    @media (max-width: 79.999rem) {
+      :global(html:is([data-motion='pending'], [data-motion='ready'])) .rail {
+        animation: route-grow linear both;
+        animation-timeline: view();
+        animation-range: entry-crossing 40vh entry-crossing calc(100% + 40vh);
+      }
+
+      :global(html:is([data-motion='pending'], [data-motion='ready'])) .lit {
+        animation: route-light linear both;
+        animation-timeline: view();
+        animation-range: entry-crossing 40vh entry-crossing calc(100% + 40vh);
+      }
+    }
+  }
+
+  /* (b) Chưa có animation-timeline: vẽ một lần khi .route vào khung nhìn, trạm sáng lần lượt theo tiến độ nét cam. */
+  @supports not (animation-timeline: view()) {
+    :global(html:is([data-motion='pending'], [data-motion='ready'])) .route:not([data-inview]) .trail {
+      stroke-dashoffset: 1;
+    }
+
+    :global(html:is([data-motion='pending'], [data-motion='ready'])) .route:not([data-inview]) .rail {
+      transform: scaleY(0);
+    }
+
+    :global(html:is([data-motion='pending'], [data-motion='ready'])) .route:not([data-inview]) .lit {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+
+    :global(html[data-motion='ready']) .trail {
+      transition: stroke-dashoffset var(--draw) linear 0.15s;
+    }
+
+    :global(html[data-motion='ready']) .rail {
+      transition: transform calc(var(--draw) * var(--seg, 1)) linear;
+      transition-delay: calc(0.15s + var(--draw) * var(--f, 0));
+    }
+
+    :global(html[data-motion='ready']) .lit {
+      transition:
+        opacity var(--dur-base) var(--ease-entry),
+        transform var(--dur-base) var(--ease-entry);
+      transition-delay: calc(0.1s + var(--draw) * var(--f, 0));
+    }
+  }
+}
+
+@keyframes route-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes route-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes route-light {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
