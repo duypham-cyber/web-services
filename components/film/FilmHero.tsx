@@ -39,9 +39,9 @@ type LabelPoint = [number, number];
 
 /** Neo thẻ số thợ theo miền (cảnh toàn quốc, desktop) vào tâm một tỉnh + độ lệch px (như bản mẫu). Thứ tự = regionCounts(). */
 const CHIP_ANCHORS: { region: RegionId; code: string; dx: number; dy: number }[] = [
-  { region: 'north', code: '14', dx: -72, dy: -26 },
+  { region: 'north', code: '14', dx: -72, dy: -10 },
   { region: 'central', code: '51', dx: -104, dy: 34 },
-  { region: 'south', code: '56', dx: 46, dy: -60 },
+  { region: 'south', code: '56', dx: 46, dy: -48 },
   { region: 'south', code: '96', dx: 36, dy: 54 },
 ];
 /** Tỉnh có nhãn trên poster (cảnh toàn quốc): Hà Nội, Đà Nẵng (mobile chỉ Hà Nội) — như bản mẫu. */

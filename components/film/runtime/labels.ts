@@ -148,7 +148,10 @@ export function createLabels(layer: HTMLElement, mobile: boolean) {
         it.kind === 'city'
           ? [base, at(px - lw / 2, py + 14)]
           : it.kind === 'hq'
-            ? [base, at(px - 14 - lw, py + 10), at(px + 14, py - 10 - lh)]
+            ? // thứ tự giống nhãn tĩnh trên poster (desktop trái-dưới, mobile giữa-dưới) để khỏi nhảy khi canvas hiện
+              mobile
+              ? [at(px - lw / 2, py + 12), base, at(px - 14 - lw, py + 10)]
+              : [at(px - 14 - lw, py + 10), base, at(px + 14, py - 10 - lh)]
             : [base];
       const clampX = (b: Box): Box => [Math.min(Math.max(b[0], 8), W - 8 - lw), b[1], lw, lh];
       let box = it.kind === 'chip' ? base : clampX(base);

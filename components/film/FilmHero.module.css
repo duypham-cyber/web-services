@@ -258,6 +258,12 @@
   font-weight: 700;
 }
 
+/* poster desktop: nhãn văn phòng ở trái-dưới điểm (bên phải là vùng chấm Trường Sa) — trùng vị trí runtime chọn khi cảnh sống */
+.labelsStatic[data-layout='desktop'] .pillHq {
+  left: auto;
+  right: 14px;
+}
+
 .pillHq span {
   font-size: 12px;
   font-weight: 600;

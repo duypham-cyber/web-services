@@ -179,14 +179,31 @@ export async function startStage(
     if (fig) delete fig.dataset.on;
   }
 
+  /**
+   * Khối chữ: khung từng DÒNG chữ + nút (không lấy cả hộp .copy — hộp rộng tới mép vùng an toàn của bản đồ, sẽ ẩn oan thẻ số
+   * thợ theo miền ở cảnh toàn quốc). Toạ độ của stage, chừa 8 px.
+   */
+  function copyBoxes(origin: DOMRect): Box[] {
+    const out: Box[] = [];
+    const range = document.createRange();
+    const walker = document.createTreeWalker(copy, NodeFilter.SHOW_TEXT);
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      if (!n.textContent?.trim()) continue;
+      range.selectNodeContents(n);
+      for (const r of Array.from(range.getClientRects())) out.push([r.left - origin.left - 8, r.top - origin.top - 8, r.width + 16, r.height + 16]);
+    }
+    copy.querySelectorAll('a, button').forEach((el) => {
+      const b = rel(el, origin, 8);
+      if (b) out.push(b);
+    });
+    return out;
+  }
+
   /** Khung tránh nhãn/minimap: khối chữ (khi hiện), panel đang hiện + thẻ đơn minh hoạ — toạ độ của stage. */
   function avoidBoxes(origin: DOMRect): Box[] {
     const out: Box[] = [];
     if (state.mobile) return out;
-    if (copy.dataset.vis !== undefined) {
-      const b = rel(copy, origin, 8);
-      if (b) out.push(b);
-    }
+    if (copy.dataset.vis !== undefined) out.push(...copyBoxes(origin));
     for (const el of state.panels) {
       if (el.dataset.vis === undefined) continue;
       const b = rel(el, origin, 10);
