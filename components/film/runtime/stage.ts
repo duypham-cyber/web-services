@@ -104,6 +104,8 @@ export async function startStage(
   /** ?shot=1 (ảnh soát/test): không làm mượt tiến độ, thời gian đứng yên, không hiệu ứng nền — khung tất định. */
   const shot = q?.get('shot') === '1';
   const ambientAllowed = !shot && q?.get('ambient') !== '0';
+  /** ?slowms=40 (test FPS guard): giả lập máy chậm bằng cách giữ luồng chính thêm N ms mỗi khung vẽ. */
+  const slowMs = Math.min(200, Number(q?.get('slowms') ?? 0) || 0);
   let frames = 0;
   const raw = (await dataPromise) as RawHeroMap;
   const layer = root.querySelector<HTMLElement>('[data-hero-labels]');
@@ -232,15 +234,13 @@ export async function startStage(
     return pick[1];
   }
 
+  /** FPS guard: chỉ gọi khi đang cuộn, dt = khoảng giữa hai lần rAF liên tiếp. */
   function guard(now: number, dt: number) {
     if (!guardOn || !scene) return;
-    if (now - state.lastScroll > 200) {
-      samples = [];
-      return;
-    }
     samples.push({ t: now, dt });
     while (samples.length && now - samples[0]!.t > GUARD_WINDOW_MS) samples.shift();
-    if (samples.length < 8 || now - samples[0]!.t < GUARD_WINDOW_MS * 0.9) return;
+    // đủ ~2 s đang cuộn (máy rất chậm chỉ có vài khung trong 2 s — chính là lúc phải hạ)
+    if (samples.length < 3 || now - samples[0]!.t < GUARD_WINDOW_MS * 0.9) return;
     const sorted = samples.map((s) => s.dt).sort((a, b) => a - b);
     const p90 = sorted[Math.floor(sorted.length * 0.9)] ?? 0;
     if (p90 <= GUARD_P90_MS) return;
@@ -275,13 +275,16 @@ export async function startStage(
     const drew = scene.renderIfNeeded(now);
     if (drew) {
       placeOverlay(scene);
-      if (dt > 0) guard(now, dt);
-      raf = requestAnimationFrame(tick);
-    } else {
-      lastTick = -1;
-      // không còn gì để vẽ: dừng vòng tới khi tiến độ/khung/tương tác đổi; hẹn thức khi hiệu ứng nền hết hạn
-      if (ambientOn) raf = requestAnimationFrame(tick);
+      if (slowMs) for (const end = performance.now() + slowMs; performance.now() < end; );
     }
+    // Đang cuộn: giữ vòng rAF liên tục để đo nhịp khung thật (khoảng giữa hai lần rAF), kể cả khung không có gì mới để vẽ
+    // khung rất chậm (> 200 ms) chỉ có một sự kiện cuộn mỗi khung → cửa sổ "đang cuộn" giãn theo nhịp khung
+    const scrolling = now - state.lastScroll < Math.max(200, dt * 1.5);
+    if (scrolling && dt > 0) guard(now, dt);
+    else if (!scrolling) samples = [];
+    if (drew || ambientOn || scrolling) raf = requestAnimationFrame(tick);
+    // không còn gì để vẽ: dừng vòng tới khi tiến độ/khung/tương tác đổi
+    else lastTick = -1;
   }
 
   function wake() {

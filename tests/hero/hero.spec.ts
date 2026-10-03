@@ -334,3 +334,80 @@ test.describe('tương phản header + chữ hero ở hai trạng thái (sáng p
     });
   }
 });
+
+test.describe('vòng vẽ và hạ tầng tại chỗ (lite ép, SwiftShader)', () => {
+  async function openLive(page: Page, query: string) {
+    await page.goto(`/?tier=lite&${query}`);
+    const d = await heroData(page);
+    test.skip(d.tierReason !== 'query', 'bản production không nhận ?tier=');
+    await page.mouse.move(600, 400);
+    await page.waitForSelector(`${ROOT}[data-live]`, { timeout: 240_000 });
+  }
+  const frameCount = (page: Page) => page.evaluate((sel) => Number((document.querySelector(sel) as HTMLElement).dataset.heroFrame ?? 0), ROOT);
+
+  test('đứng yên + tắt hiệu ứng nền → không vẽ khung nào (AC-L-4)', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-1440', 'một bố cục là đủ');
+    test.setTimeout(300_000);
+    await openLive(page, 'shot=1&fpsguard=0');
+    await page.mouse.wheel(0, 300);
+    await page.waitForTimeout(2500);
+    const a = await frameCount(page);
+    await page.waitForTimeout(2500);
+    expect(await frameCount(page), 'số khung vẽ khi đứng yên').toBe(a);
+  });
+
+  test('webglcontextlost → T-STILL tại chỗ, giữ chiều cao track (AC-T-3)', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-1440', 'một bố cục là đủ');
+    test.setTimeout(300_000);
+    await openLive(page, 'shot=1&fpsguard=0');
+    const before = await page.evaluate((sel) => (document.querySelector(sel) as HTMLElement).offsetHeight, ROOT);
+    await page.evaluate((sel) => {
+      const c = document.querySelector<HTMLCanvasElement>(`${sel} canvas`)!;
+      (c.getContext('webgl2') as WebGL2RenderingContext).getExtension('WEBGL_lose_context')?.loseContext();
+    }, ROOT);
+    await expect.poll(() => page.evaluate((sel) => ({ ...(document.querySelector(sel) as HTMLElement).dataset }).stillReason, ROOT)).toBe('context-lost');
+    const after = await page.evaluate((sel) => {
+      const root = document.querySelector(sel) as HTMLElement;
+      return { h: root.offsetHeight, armed: root.classList.contains('film-armed'), live: root.dataset.live, tier: root.dataset.tier };
+    }, ROOT);
+    expect(after).toEqual({ h: before, armed: true, live: undefined, tier: 'still' });
+  });
+
+  test('FPS guard: khung > 25 ms khi đang cuộn → hạ bậc rồi T-STILL (AC-T-2)', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-1440', 'một bố cục là đủ');
+    test.setTimeout(300_000);
+    // ?slowms=40: mỗi khung vẽ giữ luồng chính thêm 40 ms (giả lập máy yếu, không phụ thuộc tốc độ SwiftShader của máy chạy test)
+    await openLive(page, 'shot=1&slowms=40');
+    // cuộn liên tục ngay trong trang (mỗi thao tác Playwright có trace sẽ chụp DOM → tạo khoảng nghỉ > 200 ms, guard coi là đã dừng cuộn)
+    await page.evaluate(async (sel) => {
+      const root = document.querySelector(sel) as HTMLElement;
+      const t0 = performance.now();
+      let dir = 1;
+      // một nấc cuộn mỗi khung (rAF) như người dùng kéo liên tục
+      while (performance.now() - t0 < 45_000 && !root.dataset.stillReason) {
+        window.scrollBy(0, 30 * dir);
+        if (window.scrollY > 1500) dir = -1;
+        if (window.scrollY < 100) dir = 1;
+        await new Promise((r) => requestAnimationFrame(r));
+      }
+    }, ROOT);
+    const d = await heroData(page);
+    expect(d.stillReason, `khung > 25 ms khi cuộn → guard hạ hết bậc (${JSON.stringify(d)})`).toBe('fps-guard');
+    expect(d.quality, 'đã hạ ít nhất một bậc trước khi về T-STILL').toBeDefined();
+  });
+
+  test('ra khỏi hero > 3 s → giải phóng cảnh; quay lại → dựng lại (AC-L-4/5)', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-1440', 'một bố cục là đủ');
+    test.setTimeout(300_000);
+    await openLive(page, 'shot=1&fpsguard=0');
+    await page.evaluate((sel) => {
+      const root = document.querySelector(sel) as HTMLElement;
+      window.scrollTo(0, root.getBoundingClientRect().bottom + window.scrollY + 400);
+    }, ROOT);
+    await expect.poll(() => page.locator(`${ROOT} canvas`).count(), { timeout: 15_000 }).toBe(0);
+    expect(await page.locator(`${ROOT}[data-live]`).count()).toBe(0);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForSelector(`${ROOT}[data-live]`, { timeout: 240_000 });
+    await expect(page.locator(`${ROOT} canvas`)).toHaveCount(1);
+  });
+});
