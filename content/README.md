@@ -34,11 +34,11 @@ Shape được thiết kế để sau này chuyển sang Payload CMS (P1, qua co
 | `schemas.ts` | Schema Zod của mọi file | Tech lead nền móng | — |
 | `validate.ts` | Kiểm toàn bộ + ràng buộc chéo | Tech lead nền móng | — |
 | `site.ts` | Pháp nhân, MST, địa chỉ, hotline 2 định dạng, email, Zalo (draft) | Tech lead nền móng | Anh Duy (địa chỉ theo ĐKDN, Zalo OA) |
-| `stats.ts` | KPI K1–K6 (đều `null`) + số site cũ `legacyValue`/`legacyByRegion` (chỉ bản xem trước) | Tech lead nền móng | Anh Duy + vận hành (docs/03 mục 15 dòng 4) |
+| `stats.ts` | KPI K1–K6: K1 500+ (kèm số theo miền `byRegion`), K2 34/34, K6 60 phút là số công bố đã duyệt (D-26, `basis: 'published'`); K3–K5 `null`. Số site cũ `legacy*` chỉ cho bản xem trước | Tech lead nền móng | Anh Duy + vận hành (docs/03 mục 15 dòng 4) |
 | `claims/core.ts` | 34 tỉnh, chuẩn hãng, E-KYC, bảo hành, 24/7 (đều draft) | Tech lead nền móng | Anh Duy + pháp chế duyệt bằng chứng |
 | `claims/<khu-vuc>.ts` | Câu khẳng định riêng từng khu vực: `home.ts`, `b2b.ts` (agent B2B), `partner.ts` (agent partner), `knowledge.ts` (agent SEO) | Agent của khu vực đó | Anh Duy + pháp chế |
 | `process.ts` | Quy trình 5 bước + bước 00 | Agent trang B2B | Anh Duy xác nhận thứ tự 02→03, kênh nhận đơn |
-| `sla.ts` | SLA, bảo hành, mọi mốc giờ (hotline, nhận đơn, thi công, bảo hành cùng hãng) — đều `null`, có cột "đang ghi" | Agent trang B2B | Anh Duy + pháp chế (docs/03 mục 15 dòng 6) |
+| `sla.ts` | SLA, bảo hành, mọi mốc giờ (hotline, nhận đơn, thi công, bảo hành cùng hãng). Đã duyệt `confirm-time` (60 phút) và `fix-response-time` (24–48 giờ, D-26/D-27); còn lại `null`, có cột "đang ghi" | Agent trang B2B | Anh Duy + pháp chế (docs/03 mục 15 dòng 6) |
 | `pricing.ts` | Khung giá vật tư `/bang-gia` (6 dòng × 4 vùng, chưa có ngày hiệu lực → production ẩn) | Agent trang B2B | Anh Duy (ngày hiệu lực, giá công) |
 | `jobs.ts` | Tin tuyển thợ (đều draft) | Agent trang thợ & công ty | Bộ phận tuyển thợ |
 | `legal.ts` | 3 văn bản pháp lý (bảo hành = chính sách cũ; bảo mật/điều khoản chỉ có khung) | Agent trang thợ & công ty | Pháp chế |
