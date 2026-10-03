@@ -14,6 +14,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:leads": "vitest run --config vitest.leads.config.mts",
+    "test:leads:e2e": "playwright test tests/leads",
     "test:e2e": "playwright test",
     "test:overflow": "playwright test tests/overflow.spec.ts",
     "test:seo": "playwright test tests/seo-render.spec.ts tests/seo/",
