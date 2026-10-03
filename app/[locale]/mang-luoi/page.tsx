@@ -22,9 +22,8 @@ import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
 import { claim } from '@/lib/claims';
 import { isDraftPreview } from '@/lib/env';
-import { formatStatValue } from '@/lib/format';
 import { buildMetadata } from '@/lib/seo';
-import { legacyRegionCounts, pendingStats, statViews } from '@/lib/stats';
+import { formatRegionCount, pendingStats, regionCounts, statViews } from '@/lib/stats';
 
 export const generateStaticParams = localeStaticParams;
 
@@ -40,7 +39,7 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/mang-luo
 }
 
 /** Hạng mục SLA liên quan tới phục vụ theo vùng (content/sla.ts — chủ sở hữu: agent B2B; ở đây chỉ đọc). */
-const SLA_IDS = ['order-intake-hours', 'completion-time', 'fix-response-time'] as const;
+const SLA_IDS = ['order-intake-hours', 'confirm-time', 'completion-time', 'fix-response-time'] as const;
 
 /**
  * /mang-luoi (T-NETWORK, contracts/site-shell-p0.md 1.3): H1 → bản đồ 34 tỉnh SVG → bảng 34 tỉnh có ô tìm (SSR)
@@ -136,8 +135,8 @@ export default async function NetworkPage({ params }: PageProps<'/[locale]/mang-
         <ul className="mt-10 grid gap-6 md:grid-cols-3">
           {regions.map((region) => {
             const count = provinces.filter((p) => p.region === region.id).length;
-            // Bản xem trước: số thợ theo miền site cũ ghi (/system-map); production luôn [] (lib/stats.ts)
-            const legacy = legacyRegionCounts(region.id);
+            // Số thợ theo miền đã duyệt (D-26, lib/stats.ts regionCounts): hiện ở mọi môi trường, không nhãn nháp
+            const counts = regionCounts(region.id);
             return (
               <Card as="li" key={region.id} padding="lg" className="flex flex-col">
                 <span
@@ -157,19 +156,11 @@ export default async function NetworkPage({ params }: PageProps<'/[locale]/mang-
                 <p className="mt-4 text-small font-semibold text-(--surface-heading)">
                   {t('regions.provinceCount', { count })}
                 </p>
-                {legacy.length > 0 ? (
-                  <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-small text-(--surface-muted)">
-                    <span>
-                      {legacy
-                        .map((r) =>
-                          t('regions.legacyTechnicians', {
-                            region: r.label[locale],
-                            count: `${formatStatValue(r.value, 'integer', locale)}${r.plus ? '+' : ''}`,
-                          }),
-                        )
-                        .join(' · ')}
-                    </span>
-                    <Badge variant="draft">{tc('status.draftLegacy')}</Badge>
+                {counts.length > 0 ? (
+                  <p className="mt-2 text-small text-(--surface-muted)">
+                    {counts
+                      .map((r) => t('regions.technicians', { region: r.label[locale], count: formatRegionCount(r, locale) }))
+                      .join(' · ')}
                   </p>
                 ) : null}
               </Card>

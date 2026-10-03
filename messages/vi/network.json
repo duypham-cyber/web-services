@@ -5,7 +5,7 @@
   },
   "eyebrow": "Mạng lưới",
   "title": "Mạng lưới lắp đặt Bluebolt theo từng tỉnh, thành",
-  "lead": "Xem ba vùng điều phối, danh sách 34 tỉnh, thành và số thợ đang hoạt động ở từng nơi. Số liệu chỉ hiện khi đã được đối soát với dữ liệu vận hành.",
+  "lead": "Xem ba vùng điều phối, số thợ của mạng lưới theo từng miền và danh sách 34 tỉnh, thành có ô tìm kiếm.",
   "mapTitle": "Bản đồ Việt Nam, gồm quần đảo Hoàng Sa và quần đảo Trường Sa",
   "map": {
     "hint": "Di chuột hoặc chạm vào một tỉnh để xem vùng và số thợ.",
@@ -25,7 +25,7 @@
   },
   "regions": {
     "provinceCount": "{count} tỉnh, thành",
-    "legacyTechnicians": "{region}: {count} thợ"
+    "technicians": "{region}: {count} thợ"
   },
   "table": {
     "eyebrow": "Tra cứu",
@@ -47,7 +47,7 @@
   "sla": {
     "eyebrow": "Cam kết dịch vụ",
     "title": "Thời gian phục vụ theo vùng",
-    "intro": "Thời gian tiếp nhận, xác nhận lịch và hoàn thành đơn của từng vùng sẽ hiện ở đây khi Bluebolt công bố cam kết chính thức.",
+    "intro": "Các mốc dưới đây là cam kết Bluebolt đang công bố. Mốc nào chưa có trong bảng, bộ phận kinh doanh sẽ báo cụ thể theo danh sách tỉnh của bạn.",
     "pending": "Gửi danh sách tỉnh bạn cần, bộ phận kinh doanh sẽ gửi lại thời gian cụ thể cho từng nơi.",
     "colItem": "Hạng mục",
     "colValue": "Cam kết",

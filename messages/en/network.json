@@ -5,7 +5,7 @@
   },
   "eyebrow": "Network",
   "title": "The Bluebolt installation network, province by province",
-  "lead": "See our three dispatch regions, all 34 provinces and the number of active technicians in each. Figures appear only after they have been checked against operating data.",
+  "lead": "See our three dispatch regions, the size of our technician network in each region and all 34 provinces, with search.",
   "mapTitle": "Map of Vietnam, including the Hoang Sa (Paracel) and Truong Sa (Spratly) archipelagos",
   "map": {
     "hint": "Hover over or tap a province to see its region and technician count.",
@@ -25,7 +25,7 @@
   },
   "regions": {
     "provinceCount": "{count} provinces",
-    "legacyTechnicians": "{region}: {count} technicians"
+    "technicians": "{region}: {count} technicians"
   },
   "table": {
     "eyebrow": "Look up",
@@ -47,7 +47,7 @@
   "sla": {
     "eyebrow": "Service levels",
     "title": "Service times by region",
-    "intro": "Intake, scheduling and completion times for each region will appear here once Bluebolt publishes its official commitments.",
+    "intro": "The times below are the commitments Bluebolt currently publishes. For anything not listed, our sales team will confirm times for the provinces you need.",
     "pending": "Send us the provinces you need and our sales team will reply with specific times for each one.",
     "colItem": "Item",
     "colValue": "Commitment",
