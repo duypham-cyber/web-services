@@ -43,7 +43,6 @@ export async function Breadcrumbs({ routeKey, locale, className, jsonLd = true }
                   <>
                     <Link
                       href={crumb.href as ComponentProps<typeof Link>['href']}
-                      locale={locale}
                       className="inline-flex min-h-11 items-center rounded-sm text-(--surface-link) underline-offset-[3px] hover:underline"
                     >
                       {crumb.name}
