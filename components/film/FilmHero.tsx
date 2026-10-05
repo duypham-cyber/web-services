@@ -46,6 +46,14 @@ const CHIP_ANCHORS: { region: RegionId; code: string; dx: number; dy: number }[]
 ];
 /** Tỉnh có nhãn trên poster (cảnh toàn quốc): Hà Nội, Đà Nẵng (mobile chỉ Hà Nội) — như bản mẫu. */
 const STATIC_CITIES = { desktop: ['01', '48'], mobile: ['01'] } as const;
+/**
+ * Lớp chấm chạy trên poster T-STILL (mobile luôn ở T-STILL — runtime/boot.ts): đường cung nào có chấm sáng chạy từ TP.HCM.
+ * Chọn trải đều ba miền; mobile ít hơn cho đỡ rối. Đường cung đã chiếu sẵn theo khung poster (hero-poster.json → routes).
+ */
+const ROUTE_CODES = {
+  desktop: ['01', '04', '11', '15', '22', '31', '40', '44', '46', '48', '51', '56', '66', '91', '92', '96'],
+  mobile: ['01', '04', '11', '22', '40', '46', '48', '52', '56', '66', '92', '96'],
+} as const;
 const HQ_CODE = '79';
 
 /** Biến CSS đặt poster theo đúng viewWindow() của motion/map-camera.ts (FilmHero.module.css → .posterBox). */
@@ -162,6 +170,50 @@ export async function FilmHero({
   const chips = counts.map(chip).filter((c) => c !== null);
 
   type StaticLayout = typeof dPoster | typeof mPoster;
+  /**
+   * Chấm sáng chạy dọc đường cung điều phối + nhịp sóng ở TP.HCM, vẽ bằng SVG trên poster (toạ độ = px của ảnh poster nên
+   * khớp từng điểm ảnh với đường cung in trong ảnh ở mọi khổ màn). Chỉ CSS: chạy 3 lượt rồi dừng, không chạy khi
+   * reduced-motion / Save-Data / không JS (html[data-motion] khác "ready"), ẩn khi cảnh 3D sống (canvas có chấm thật).
+   */
+  const routesLayer = (layout: 'desktop' | 'mobile', meta: StaticLayout) => {
+    const W = meta.width;
+    const H = meta.height;
+    const codes: readonly string[] = ROUTE_CODES[layout];
+    const routes = meta.routes.filter((r) => codes.includes(r.code));
+    const hq = pt(meta.labels.hq);
+    const px = (v: number, total: number) => Math.round((v * total) / 10) / 10;
+    return (
+      <svg className={styles.routes} data-routes={layout} viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
+        {routes.map((r, i) => {
+          const d = r.d.map(([x, y], j) => `${j ? 'L' : 'M'}${px(x!, W)} ${px(y!, H)}`).join('');
+          // đường dài chạy chậm hơn (giống tốc độ chấm của cảnh 3D), lệch pha để không chạy cùng lúc
+          const dur = Math.min(4.6, Math.max(2.2, 1.6 + 0.12 / r.speed));
+          const delay = 0.4 + ((i * 0.53) % 2.6);
+          return (
+            <path
+              key={r.code}
+              className={styles.route}
+              d={d}
+              pathLength={100}
+              style={{ '--d': `${dur.toFixed(2)}s`, '--delay': `${delay.toFixed(2)}s` } as CSSProperties}
+            />
+          );
+        })}
+        {hq
+          ? [0, 1].map((k) => (
+              <circle
+                key={k}
+                className={styles.hqPulse}
+                cx={px(hq[0], W)}
+                cy={px(hq[1], H)}
+                r={layout === 'desktop' ? 14 : 11}
+                style={{ '--delay': `${0.3 + k * 1.1}s` } as CSSProperties}
+              />
+            ))
+          : null}
+      </svg>
+    );
+  };
   const staticLayer = (layout: 'desktop' | 'mobile', meta: StaticLayout) => {
     const L = meta.labels;
     const prov = (code: string) => pt((L.provinces as Record<string, number[] | undefined>)[code]);
@@ -269,6 +321,8 @@ export async function FilmHero({
                   decoding="async"
                 />
               </picture>
+              {routesLayer('desktop', dPoster)}
+              {routesLayer('mobile', mPoster)}
               {staticLayer('desktop', dPoster)}
               {staticLayer('mobile', mPoster)}
             </div>

@@ -2,8 +2,10 @@
  * Bộ nạp hero bản đồ — phần nằm trong JS tải đầu (contracts/hero-map.md AC-L-1, ≤ 3 KB gz cùng MapHeroStage).
  * KHÔNG import three, motion/map-camera hay chunk cảnh: trọng số cảnh truyền từ server qua props.
  *
- *   1. Chọn tầng MỘT lần (AC-T-1): ?tier= (chỉ bản xem trước/dev) → reduced-motion → Save-Data → probe WebGL2 + renderer
- *      thật → heuristic GPU không mạng (renderer, deviceMemory, hardwareConcurrency, kích thước màn) → mobile tối đa lite.
+ *   1. Chọn tầng MỘT lần (AC-T-1): ?tier= (chỉ bản xem trước/dev) → reduced-motion → Save-Data → màn dọc (điện thoại) →
+ *      T-STILL → probe WebGL2 + renderer thật → heuristic GPU không mạng (renderer, deviceMemory, hardwareConcurrency, màn).
+ *      Điện thoại luôn T-STILL (05/10/2026, D-29): bản đồ dính chạy theo cuộn làm máy thật giật và chật chỗ đọc; poster có
+ *      lớp chấm chạy SVG thay thế. Muốn thử bản 3D mobile: ?tier=lite (dev/bản xem trước).
  *   2. T-FULL/T-LITE và khối chữ vừa khung → thêm .film-armed (track cao, khung sticky, panel theo tiến độ).
  *   3. Tiến độ cuộn: getBoundingClientRect trong rAF (chỉ khi có cuộn/resize) → state.p + biến CSS/data-attribute. Không setState.
  *   4. import() chunk cảnh (runtime/stage.ts + components/film/map3d) sau ý định đầu tiên hoặc load + 2 s rảnh.
@@ -78,6 +80,7 @@ function pickTier(q: URLSearchParams | null, mobile: boolean): [HeroTier, string
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return ['still', 'reduced-motion'];
   const nav = navigator as Navigator & { connection?: { saveData?: boolean }; deviceMemory?: number };
   if (nav.connection?.saveData) return ['still', 'save-data'];
+  if (mobile) return ['still', 'mobile'];
   let renderer = '';
   try {
     const gl = document.createElement('canvas').getContext('webgl2', { failIfMajorPerformanceCaveat: true });

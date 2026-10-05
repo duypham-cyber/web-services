@@ -145,6 +145,87 @@
   background: var(--color-navy-900);
 }
 
+/* ------------------------------------------------------------------ chấm chạy trên poster T-STILL (FilmHero routesLayer)
+ * SVG cùng khung với ảnh poster (viewBox = px của ảnh) → đường cung trùng đường in trong ảnh. Chỉ animate stroke-dashoffset,
+ * transform, opacity; 3 lượt rồi dừng (không loop vô hạn). Không chạy khi html[data-motion] khác "ready" (reduced-motion,
+ * Save-Data, không JS) và ẩn khi cảnh 3D sống. */
+.routes {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.routes[data-routes='mobile'] {
+  display: none;
+}
+
+.route {
+  fill: none;
+  stroke: var(--color-orange-500);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-dasharray: 4 96;
+  stroke-dashoffset: 100;
+  opacity: 0;
+}
+
+.routes[data-routes='mobile'] .route {
+  stroke-width: 4.8;
+}
+
+.hqPulse {
+  fill: none;
+  stroke: var(--color-orange-500);
+  stroke-width: 3;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+:root[data-motion='ready'] .route {
+  animation: hero-route var(--d, 3s) cubic-bezier(0.45, 0.05, 0.55, 0.95) var(--delay, 0s) 3 both;
+}
+
+:root[data-motion='ready'] .hqPulse {
+  animation: hero-pulse 2.2s cubic-bezier(0.2, 0.6, 0.35, 1) var(--delay, 0s) 4 both;
+}
+
+@keyframes hero-route {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 4;
+    opacity: 0;
+  }
+}
+
+@keyframes hero-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.track[data-live] .routes {
+  display: none;
+}
+
 /* ------------------------------------------------------------------ nhãn bản đồ (trang trí, aria-hidden) */
 .labelsStatic,
 .labelsLive {
@@ -784,6 +865,19 @@
 
   .labelsStatic[data-layout='mobile'] {
     display: block;
+  }
+
+  .routes[data-routes='desktop'] {
+    display: none;
+  }
+
+  .routes[data-routes='mobile'] {
+    display: block;
+  }
+
+  /* Màn dọc (điện thoại, luôn T-STILL): panel tour theo dòng chảy ngay dưới khối chữ, không chừa khoảng trống lớn */
+  .tour {
+    padding-block: 0.5rem 3rem;
   }
 
   .veil {

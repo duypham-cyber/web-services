@@ -142,7 +142,8 @@ for (const { locale, path } of PATHS) {
       await page.goto(path);
       const d = await heroData(page);
       expect(d.tier).toBe('still');
-      expect(d.tierReason).toBe('no-webgl2');
+      // màn dọc (điện thoại) dừng ở bước "mobile" trước khi dò WebGL (D-29)
+      expect(['no-webgl2', 'mobile']).toContain(d.tierReason);
       await page.mouse.move(300, 300);
       await page.waitForTimeout(2500);
       expect(requests.filter((u) => u.includes('/data/hero-map.json'))).toHaveLength(0);
@@ -152,7 +153,40 @@ for (const { locale, path } of PATHS) {
       await page.goto(path);
       const d = await heroData(page);
       expect(d.tier).toBe('still');
-      expect(['software-renderer', 'no-webgl2', 'no-fit']).toContain(d.tierReason);
+      expect(['software-renderer', 'no-webgl2', 'no-fit', 'mobile']).toContain(d.tierReason);
+    });
+
+    test('điện thoại (màn dọc) luôn T-STILL: không khung dính, không tải chunk 3D; poster có lớp chấm chạy', async ({ page }) => {
+      const vp = page.viewportSize();
+      test.skip(!vp || vp.width > vp.height, 'chỉ màn dọc');
+      const requests: string[] = [];
+      page.on('request', (r) => requests.push(r.url()));
+      await page.goto(path);
+      const d = await heroData(page);
+      expect(d.tier).toBe('still');
+      expect(d.tierReason).toBe('mobile');
+      expect(await page.locator(`${ROOT}.film-armed`).count()).toBe(0);
+      expect(await page.evaluate(() => document.documentElement.dataset.filmTier)).toBe('T-STILL');
+      const svg = page.locator(`${ROOT} svg[data-routes="mobile"]`);
+      await expect(svg).toBeVisible();
+      expect(await svg.locator('path').count()).toBeGreaterThanOrEqual(8);
+      await page.mouse.wheel(0, 500);
+      await page.waitForTimeout(2500);
+      expect(requests.filter((u) => u.includes('/data/hero-map.json')), 'không tải dữ liệu cảnh 3D').toHaveLength(0);
+    });
+
+    test('lớp chấm chạy không chạy khi reduced-motion', async ({ browser }) => {
+      const ctx = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+      const page = await ctx.newPage();
+      await page.goto(path);
+      await heroData(page);
+      const anim = await page.evaluate((sel) => {
+        const svg = Array.from(document.querySelectorAll<SVGElement>(`${sel} svg[data-routes]`)).find((el) => getComputedStyle(el).display !== 'none');
+        const route = svg?.querySelector('path');
+        return route ? getComputedStyle(route).animationName : 'missing';
+      }, ROOT);
+      expect(anim).toBe('none');
+      await ctx.close();
     });
 
     test('tầng lite (ép): .film-armed, cuộn hết track → panel cuối + link /mang-luoi bấm được', async ({ page }) => {
