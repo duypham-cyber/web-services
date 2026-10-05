@@ -1,0 +1,15 @@
+[Unit]
+Description=bluebolt-web — proxy Basic Auth 0.0.0.0:9516 -> localhost:3097, ban nhap noi bo (Tailscale/LAN, D-30)
+After=bluebolt-web-preview.service
+Wants=bluebolt-web-preview.service
+
+[Service]
+WorkingDirectory=/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web
+EnvironmentFile=/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web/.env.preview
+ExecStart=/usr/bin/node deploy/preview/proxy.mjs
+Restart=on-failure
+RestartSec=3
+MemoryMax=150M
+
+[Install]
+WantedBy=default.target

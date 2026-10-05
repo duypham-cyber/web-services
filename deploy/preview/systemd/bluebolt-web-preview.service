@@ -1,0 +1,19 @@
+[Unit]
+Description=bluebolt-web — ban nhap noi bo (next start, localhost:3097, .next-preview co DRAFT_PREVIEW, D-30)
+After=network.target
+
+[Service]
+WorkingDirectory=/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web
+EnvironmentFile=/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web/.env.preview
+Environment=NEXT_DIST_DIR=.next-preview
+Environment=PORT=3097
+Environment=DRAFT_PREVIEW=1
+Environment=STAGING=1
+Environment=NODE_OPTIONS=--max-old-space-size=768
+ExecStart=/usr/bin/npm run start
+Restart=on-failure
+RestartSec=5
+MemoryMax=1200M
+
+[Install]
+WantedBy=default.target
