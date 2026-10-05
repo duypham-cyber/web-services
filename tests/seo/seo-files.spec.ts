@@ -18,7 +18,9 @@ test('robots.txt chuẩn: có Sitemap tuyệt đối, không có Host:', async (
   expect(text).toMatch(/User-Agent: \*/i);
   expect(text).not.toMatch(/^Host:/im);
   if (process.env.STAGING === '1') {
-    expect(text).toMatch(/Disallow: \/\s*$/m);
+    // staging: cho crawl để Google thấy X-Robots-Tag noindex, không công bố sitemap (D-30)
+    expect(text).not.toMatch(/Disallow: \/\s*$/m);
+    expect(text).not.toMatch(/^Sitemap:/im);
   } else {
     expect(text).toContain('Sitemap: https://lapdattoanquoc.vn/sitemap.xml');
     expect(text).not.toMatch(/Disallow: \/\s*$/m);
