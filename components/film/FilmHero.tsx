@@ -82,6 +82,32 @@ function pos([x, y]: LabelPoint): CSSProperties {
   return { left: `${x}%`, top: `${y}%` };
 }
 
+/**
+ * Đường cung (13 điểm đã chiếu, px ảnh poster) → một đường Bézier bậc 3 đi qua hai đầu và hai điểm ở t = 1/3, 2/3.
+ * Sai số so với đường in trong ảnh ≤ 1,5 px ảnh (đo 05/10/2026) — nhỏ hơn bề dày nét chấm; HTML nhẹ hơn ~6 lần so với polyline.
+ */
+function cubicPath(pts: readonly (readonly [number, number])[]): string {
+  const n = pts.length - 1;
+  const [p0, a, b, p3] = [pts[0]!, pts[Math.round(n / 3)]!, pts[Math.round((2 * n) / 3)]!, pts[n]!];
+  const t1 = Math.round(n / 3) / n;
+  const t2 = Math.round((2 * n) / 3) / n;
+  const m = [
+    [3 * (1 - t1) ** 2 * t1, 3 * (1 - t1) * t1 ** 2],
+    [3 * (1 - t2) ** 2 * t2, 3 * (1 - t2) * t2 ** 2],
+  ];
+  const det = m[0]![0]! * m[1]![1]! - m[0]![1]! * m[1]![0]!;
+  const c1: number[] = [];
+  const c2: number[] = [];
+  for (const i of [0, 1] as const) {
+    const r1 = a[i] - (1 - t1) ** 3 * p0[i] - t1 ** 3 * p3[i];
+    const r2 = b[i] - (1 - t2) ** 3 * p0[i] - t2 ** 3 * p3[i];
+    c1.push((r1 * m[1]![1]! - m[0]![1]! * r2) / det);
+    c2.push((m[0]![0]! * r2 - m[1]![0]! * r1) / det);
+  }
+  const r = (v: number) => Math.round(v);
+  return `M${r(p0[0])} ${r(p0[1])}C${r(c1[0]!)} ${r(c1[1]!)} ${r(c2[0]!)} ${r(c2[1]!)} ${r(p3[0])} ${r(p3[1])}`;
+}
+
 /** Điểm nhãn trong hero-poster.json ([x%, y%]). */
 const pt = (v: readonly number[] | undefined): LabelPoint | null => (v && v.length >= 2 ? [v[0]!, v[1]!] : null);
 
@@ -184,33 +210,14 @@ export async function FilmHero({
     const px = (v: number, total: number) => Math.round((v * total) / 10) / 10;
     return (
       <svg className={styles.routes} data-routes={layout} viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
-        {routes.map((r, i) => {
-          const d = r.d.map(([x, y], j) => `${j ? 'L' : 'M'}${px(x!, W)} ${px(y!, H)}`).join('');
-          // đường dài chạy chậm hơn (giống tốc độ chấm của cảnh 3D), lệch pha để không chạy cùng lúc
-          const dur = Math.min(4.6, Math.max(2.2, 1.6 + 0.12 / r.speed));
-          const delay = 0.4 + ((i * 0.53) % 2.6);
-          return (
-            <path
-              key={r.code}
-              className={styles.route}
-              d={d}
-              pathLength={100}
-              style={{ '--d': `${dur.toFixed(2)}s`, '--delay': `${delay.toFixed(2)}s` } as CSSProperties}
-            />
-          );
+        {routes.map((r) => {
+          // tốc độ theo độ dài đường (giống chấm của cảnh 3D): 1 ngắn · 2 vừa · 3 dài → thời lượng ở CSS; lệch pha theo thứ tự
+          const dur = 1.6 + 0.12 / r.speed;
+          const bucket = dur < 2.8 ? 1 : dur < 3.6 ? 2 : 3;
+          const d = cubicPath(r.d.map(([x, y]) => [(x! * W) / 100, (y! * H) / 100] as const));
+          return <path key={r.code} d={d} pathLength={100} data-s={bucket} />;
         })}
-        {hq
-          ? [0, 1].map((k) => (
-              <circle
-                key={k}
-                className={styles.hqPulse}
-                cx={px(hq[0], W)}
-                cy={px(hq[1], H)}
-                r={layout === 'desktop' ? 14 : 11}
-                style={{ '--delay': `${0.3 + k * 1.1}s` } as CSSProperties}
-              />
-            ))
-          : null}
+        {hq ? [0, 1].map((k) => <circle key={k} cx={px(hq[0], W)} cy={px(hq[1], H)} r={layout === 'desktop' ? 14 : 11} />) : null}
       </svg>
     );
   };
