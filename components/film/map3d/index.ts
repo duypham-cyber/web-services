@@ -11,6 +11,7 @@ export type {
   MapSceneOptions,
   MapSceneStats,
   MapTier,
+  ProjectedArc,
   ProjectedArchipelago,
   ProjectedFrame,
   ProjectedPoint,

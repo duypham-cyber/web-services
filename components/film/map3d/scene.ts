@@ -394,6 +394,18 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
       applyQuality();
       return true;
     },
+    projectArcs(samples) {
+      const n = Math.max(2, Math.min(64, Math.round(samples)));
+      return arcs.curves.map((a) => {
+        const pts: { x: number; y: number }[] = [];
+        for (let i = 0; i <= n; i += 1) {
+          a.curve.getPoint(i / n, tmp);
+          const q = projectAt(tmp.x, tmp.y, tmp.z, tmp);
+          pts.push({ x: q.x, y: q.y });
+        }
+        return { code: a.code, speed: a.speed, seed: a.seed, pts };
+      });
+    },
     stats(): MapSceneStats {
       const info = renderer.info;
       return {

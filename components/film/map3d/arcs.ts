@@ -22,7 +22,7 @@ import { smoothstep } from './util';
  */
 export type ArcUniforms = { uTime: IUniform<number>; uNight: IUniform<number> };
 
-type Arc = { curve: QuadraticBezierCurve3; seed: number; speed: number };
+type Arc = { code: string; curve: QuadraticBezierCurve3; seed: number; speed: number };
 
 /** Gộp các BufferGeometry có index và cùng tập thuộc tính (thay mergeGeometries của addon — chunk nhỏ hơn). */
 function mergeIndexed(geos: BufferGeometry[], names: string[]): BufferGeometry {
@@ -121,7 +121,7 @@ export function buildArcs(
     const curve = new QuadraticBezierCurve3(a, c, b);
     const seed = rand();
     const speed = 0.36 / (0.8 + dist) + 0.03;
-    arcs.push({ curve, seed, speed });
+    arcs.push({ code: p.code, curve, seed, speed });
     const seg = Math.max(lite ? 20 : 28, Math.round((lite ? 20 : 30) + dist * (lite ? 5 : 7)));
     const specs: [TubeGeometry[], number, number][] = [
       [cores, opts.mobile ? 0.012 : 0.0095, lite ? 3 : 4],
@@ -186,5 +186,5 @@ void main(){ vec2 c = gl_PointCoord - 0.5; float d = length(c) * 2.0;
     dotsGeo.getAttribute('aVis').needsUpdate = true;
   }
 
-  return { glow: glowMesh, core: coreMesh, dots, dotsMaterial: dotsMat, update, count: arcs.length };
+  return { glow: glowMesh, core: coreMesh, dots, dotsMaterial: dotsMat, update, count: arcs.length, curves: arcs as readonly Arc[] };
 }

@@ -23,6 +23,7 @@ type DevApi = {
   frame(): ProjectedFrame | null;
   stats(): ReturnType<MapScene['stats']> | null;
   labels(): { id: string; box: Box; shown: boolean }[];
+  arcs(samples?: number): ReturnType<MapScene['projectArcs']> | null;
 };
 
 declare global {
@@ -212,6 +213,7 @@ export function HeroMapDev({ labels }: { labels: HeroMapDevLabels }) {
           frame: () => scene?.project() ?? null,
           stats: () => scene?.stats() ?? null,
           labels: () => lastBoxes,
+          arcs: (samples = 12) => scene?.projectArcs(samples) ?? null,
         };
       } catch (e) {
         if ((e as Error).name !== 'AbortError') {

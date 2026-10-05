@@ -12,7 +12,8 @@
  * (khung CSS gần cỡ hiển thị thật để nét viền/đường cung — tính theo px CSS — khớp canvas khi crossfade)
  * Ảnh lấy thẳng từ canvas (toDataURL, preserveDrawingBuffer ở chế độ chụp) → không dính lớp phủ dev của Next.
  * Kèm public/images/hero/hero-poster.json: vị trí nhãn (% khung poster) cho 34 tỉnh, văn phòng TP.HCM, Biển Đông,
- * hai quần đảo (+ khung chấm đảo), màu mép ảnh (tô phần viewport poster không phủ), hash để bước 2 gắn ?v=.
+ * hai quần đảo (+ khung chấm đảo), màu mép ảnh (tô phần viewport poster không phủ), hash để bước 2 gắn ?v=, và 33 đường
+ * cung điều phối chiếu ra % khung (`routes`: 13 điểm/đường) cho lớp chấm chạy SVG của poster T-STILL (FilmHero).
  * Script FAIL nếu một trong hai quần đảo không nằm trọn trong khung, hoặc ảnh vượt ngân sách ở chất lượng thấp nhất.
  */
 import { createHash } from 'node:crypto';
@@ -95,6 +96,8 @@ try {
       layout: t.id,
     });
     const frame = await page.evaluate(() => window.__heroMapDev.frame());
+    const arcs = await page.evaluate(() => window.__heroMapDev.arcs(12));
+    if (!arcs || arcs.length !== 33) problems.push(`${t.id}: cần 33 đường cung, nhận ${arcs ? arcs.length : 0}`);
     const dataUrl = await page.evaluate(() => document.querySelector('canvas').toDataURL('image/png'));
     await page.close();
     if (frame.layout !== t.id) problems.push(`${t.id}: trang dựng bố cục ${frame.layout}`);
@@ -134,6 +137,7 @@ try {
         ),
         provinces: Object.fromEntries(frame.provinces.map((p) => [p.code, pt(p)])),
       },
+      routes: (arcs ?? []).map((a) => ({ code: a.code, speed: Math.round(a.speed * 1000) / 1000, d: a.pts.map(pt) })),
       scene: { drawCalls: stats.firstFrameDrawCalls, triangles: stats.firstFrameTriangles, initMs: stats.initMs },
     };
     console.log(

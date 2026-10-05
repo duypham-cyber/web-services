@@ -150,6 +150,8 @@ export type MapSceneStats = {
   arcs: number;
 };
 
+export type ProjectedArc = { code: string; speed: number; seed: number; pts: { x: number; y: number }[] };
+
 export type MapScene = {
   readonly layout: LayoutId;
   readonly tier: MapTier;
@@ -160,6 +162,11 @@ export type MapScene = {
   renderIfNeeded(now: number): boolean;
   /** Vị trí px của tâm tỉnh, văn phòng TP.HCM, hai quần đảo, Biển Đông ở khung hiện tại. */
   project(): ProjectedFrame;
+  /**
+   * Đường cung điều phối chiếu ra px ở khung hiện tại (mỗi đường `samples + 1` điểm, từ TP.HCM tới tâm tỉnh) — để
+   * scripts/hero-poster.mjs ghi vào hero-poster.json cho lớp chấm chạy bằng SVG trên poster T-STILL.
+   */
+  projectArcs(samples: number): ProjectedArc[];
   /** Hiệu ứng nền theo thời gian (đường cung chạy, sóng ghim, mây trôi, rung máy rất nhẹ). */
   setAmbient(on: boolean): void;
   /** Toạ độ con trỏ chuẩn hoá [-0,5; 0,5] cho thị sai nhẹ (chỉ khi ambient). */
