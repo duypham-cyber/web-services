@@ -17,6 +17,7 @@ import { assertContentValid } from '@/content/validate';
 import { pickClientMessages } from '@/i18n/messages';
 import { routing, type Locale } from '@/i18n/routing';
 import { isDraftPreview } from '@/lib/env';
+import { SITE_URL } from '@/lib/routes';
 import '../globals.css';
 
 /**
@@ -51,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = (await rootParams.locale()) as Locale;
   const t = await getTranslations({ locale, namespace: 'home' });
   return {
-    metadataBase: new URL(site.url),
+    metadataBase: new URL(SITE_URL),
     title: { default: site.brandName, template: `%s | ${site.brandName}` },
     description: t('meta.description'),
     applicationName: site.brandName,

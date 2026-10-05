@@ -9,8 +9,18 @@ import { defaultLocale, locales, routing, type AppPathname, type Locale } from '
  * File này dùng được ở cả server, client và Playwright (chỉ import tương đối, không kéo zod).
  */
 
-/** Gốc URL tuyệt đối cho canonical/hreflang (content/site.ts). Staging vẫn trỏ về production + noindex. */
-export const SITE_URL: string = site.url;
+/**
+ * Gốc URL tuyệt đối cho canonical/hreflang/og/sitemap. Mặc định content/site.ts (lapdattoanquoc.vn). Bản dựng cho tên miền
+ * khác (vd bản trưng bày services.bluebolt.software, D-30) đặt biến SITE_URL LÚC BUILD (và lúc chạy cho route động) để link
+ * chia sẻ (Zalo, Facebook) và ảnh OG trỏ đúng nơi đang phục vụ. Client không đọc được biến này → luôn là giá trị mặc định
+ * (SITE_URL chỉ dùng ở server: metadata, sitemap, robots, JSON-LD).
+ */
+function siteUrl(): string {
+  const env = typeof process !== 'undefined' ? process.env.SITE_URL : undefined;
+  if (env && /^https?:\/\/[^/\s]+$/.test(env.replace(/\/+$/, ''))) return env.replace(/\/+$/, '');
+  return site.url;
+}
+export const SITE_URL: string = siteUrl();
 
 export type Priority = 'P0' | 'P1' | 'P2' | 'dev';
 
