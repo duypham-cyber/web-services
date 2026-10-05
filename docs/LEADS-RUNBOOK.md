@@ -186,8 +186,9 @@ chờ pháp chế, PC-03). Khi có số: chạy hằng ngày bằng cron, `--dry
   - `xff-last` (mặc định): lấy phần tử **cuối** của `X-Forwarded-For` — proxy bản xem trước (`deploy/preview/proxy.mjs`) và
     openresty (`$proxy_add_x_forwarded_for`) đều nối IP socket vào cuối; gọi thẳng app thì Next tự đặt 127.0.0.1. Phần client
     tự khai ở đầu chuỗi bị bỏ qua.
-  - `x-real-ip`: đọc `X-Real-IP` do openresty ghi đè (`snippets/bb-proxy-headers.conf`). KHÔNG dùng sau proxy 9515 (proxy này
-    chuyển nguyên header client gửi).
+  - `x-real-ip`: đọc `X-Real-IP` do openresty ghi đè (`snippets/bb-proxy-headers.conf`). Sau `proxy.mjs` (từ 05/10/2026, D-30):
+    header này chỉ được giữ khi kết nối đến từ IP trong `PREVIEW_TRUSTED_PROXIES` (openresty); nơi khác thì proxy ghi đè bằng IP
+    socket, nên client tự khai không có tác dụng.
   - Có Cloudflare proxy trước openresty → bật `real_ip_header CF-Connecting-IP` + `set_real_ip_from` dải IP Cloudflare
     (contract mục 3.8, giả định hiện tại: không có Cloudflare proxy).
 - Rate-limit chính xác trong app: cửa sổ trượt, mặc định 5 request / 600 giây / `ip_hash`, lưu trong **bộ nhớ tiến trình**
@@ -196,6 +197,15 @@ chờ pháp chế, PC-03). Khi có số: chạy hằng ngày bằng cron, `--dry
 - openresty: `location = /api/v1/leads` đã có trong `deploy/openresty/lapdattoanquoc.conf` (16 KB, 429/413 JSON, header IP).
   File sinh từ `scripts/gen-openresty-map.mjs` — sửa ở script sinh, không sửa tay. **CSP cho Turnstile chưa có** (site chưa có
   CSP nào): khi thêm CSP phải cho `script-src`/`frame-src https://challenges.cloudflare.com`, `connect-src 'self'`.
+
+- **Bản trưng bày services.bluebolt.software (D-30)**: chuỗi là khách → openresty (máy khác) → `proxy.mjs` (<IP Tailscale của máy chủ>:9515, tin
+  `X-Forwarded-*`/`X-Real-IP` CHỈ từ openresty <IP Tailscale của máy openresty>) → app. Phần tử cuối của `X-Forwarded-For` vì vậy là IP của openresty,
+  không phải IP khách → để `xff-last` thì mọi khách chung một bucket rate-limit. Trước khi bật form trên tên miền này:
+  - cho openresty gửi `X-Real-IP $remote_addr` và đặt `LEAD_CLIENT_IP_SOURCE=x-real-ip` cho bản công khai (`proxy.mjs` đã giữ
+    nguyên header này khi đến từ openresty và ghi đè khi đến từ nơi khác); hoặc thêm cấu hình số hop tin cậy;
+  - bỏ `LEADS_FORM_ENABLED=false` và các biến DB rỗng trong `.env.public`; `deploy/preview/update.sh` truyền
+    `LEADS_FORM_ENABLED=false` lúc build bản công khai — sửa cả chỗ đó;
+  - CSP tối thiểu của proxy hiện không giới hạn script nên không chặn Turnstile; khi siết CSP phải mở `challenges.cloudflare.com`.
 
 ## 10. Turnstile
 

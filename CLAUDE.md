@@ -37,8 +37,9 @@ Mọi quyết định và giả định: `docs/DECISIONS.md`. Đường dẫn ri
 - `scripts/safe-build.sh` — build production có khóa flock, distDir `.next-check-<pid>`, in bảng JS tải đầu mỗi route.
   `SAFE_BUILD_CLEAN=1` để tự xóa; `DRAFT_PREVIEW=1` / `DEV_PAGES=1` / `STAGING=1` (thêm X-Robots-Tag noindex) phải đặt
   LÚC BUILD (trang tĩnh và header được đóng băng khi build). KHÔNG gọi `next build` trực tiếp.
-- Xem bản build: `NEXT_DIST_DIR=.next-check-<pid> PORT=3093 npm run start` (cổng 3093–3096; 3092 là bản xem trước 9515,
-  `docs/PREVIEW.md`). Xong thì dừng theo PID.
+- Xem bản build: `NEXT_DIST_DIR=.next-check-<pid> PORT=3093 npm run start` (cổng 3093–3096). Cổng đã dùng (`docs/PREVIEW.md`, D-30):
+  3092 = bản trưng bày CÔNG KHAI (services.bluebolt.software, production, không mật khẩu, proxy 9515) · 3097 = bản nháp nội bộ
+  (DRAFT_PREVIEW, proxy 9516 có mật khẩu). Cập nhật cả hai: `bash deploy/preview/update.sh`. Xong việc thì dừng theo PID.
 - Playwright (chạy trên dev server; `BASE_URL=http://127.0.0.1:3093` cho bản build; tối đa 2 worker):
   `npm run test:overflow` (9 bề rộng × mọi route × VI/EN) · `npm run test:seo` (seo-render + tests/seo/) · `npm run test:a11y`
   · `npm run test:map` · `npm run test:e2e` (tất cả)

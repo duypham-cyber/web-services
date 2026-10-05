@@ -547,3 +547,60 @@ Anh Duy gán domain https://services.bluebolt.software (openresty → bản xem 
   khoảng 1,6 KB gz. JS tải đầu không đổi: 166,9 KB gz.
 - **Chưa đo trên máy thật:** Safari iOS, Android tầm trung. Nếu muốn có lại tour 3D trên điện thoại cao cấp, cần một tầng riêng
   (không bản đồ dính, dựng cảnh trong Worker hoặc chia nhỏ tác vụ) và phải đo trên máy thật trước.
+
+### D-30 · 05/10/2026 · Bỏ mật khẩu: services.bluebolt.software thành bản trưng bày công khai (anh Duy yêu cầu)
+Anh Duy: "Bỏ giúp anh tài khoản đăng nhập đi, không cần thiết vì là website cho khách hàng vào xem mà."
+
+**Cách làm** (chi tiết vận hành: `docs/PREVIEW.md`)
+- Domain công khai phục vụ **bản build production** (`.next-public`: không DRAFT_PREVIEW, `STAGING=1`,
+  `SITE_URL=https://services.bluebolt.software`), proxy 9515 không mật khẩu.
+  - **Lý do không mở bản nháp:** bản nháp hiện nhãn "Nháp", ghi chú nội bộ (PC-01…, D-12…) và câu khẳng định chưa duyệt.
+  - Bản nháp còn BẬT form với khóa Turnstile thử nghiệm, gửi email tới địa chỉ giữ chỗ — lead của khách sẽ không tới tay ai.
+- Bản nháp chuyển sang 9516 (Basic Auth, chỉ LAN/Tailscale) cho anh Duy và đội dự án.
+- **Không cho Google index:** dùng X-Robots-Tag noindex. Từ nay `robots.txt` của mọi bản `STAGING` cho crawl và không công
+  bố sitemap. "Disallow: /" làm Google không đọc được noindex và chặn trình xem trước link của Facebook/Telegram.
+- `SITE_URL` đặt được lúc build (`lib/routes.ts`), để canonical, `og:image`, sitemap, JSON-LD trỏ đúng tên miền đang phục vụ.
+  Link gửi qua Zalo/Facebook hiện đúng ảnh và tiêu đề.
+
+**Kiểm độc lập** (workflow 3 agent: bảo mật, nội dung/giao diện, chia sẻ/SEO). Đã sửa và triển khai cùng ngày:
+- **Cao — 404 lặp request:** trang 404 tiếng Anh (`/en/<sai>`) prefetch lặp không dừng khoảng 250 request/giây.
+  - Nguyên nhân: vỏ lỗi của `notFound()` (D-10) làm router không có cây trang.
+  - Sửa: `proxy.ts` đưa đường dẫn không khớp trang nào về đích `__404` của catch-all, kèm mã 404. Trang 404 nay render bình
+    thường (HTML đầy đủ, xem được cả khi tắt JS).
+- **Vừa — bản công khai nạp `.env.local` của dev:** công tắc form bật và có quyền đọc DB lead.
+  - Sửa: `.env.public` đặt `LEADS_FORM_ENABLED=false` và các biến DB/bí mật RỖNG. Biến của tiến trình được ưu tiên hơn
+    `.env.local`. Log nay ghi `lead_disabled reason=switch_off`.
+- **Thấp — proxy:**
+  - Chỉ tin `X-Forwarded-*`/`X-Real-IP` từ openresty (<IP Tailscale của máy openresty>).
+  - Bỏ header hop-by-hop.
+  - Đường dẫn sai mã hoá trả 400 (trước đây Next trả 500); URL quá dài trả 414.
+  - Neo regex viết lại `Location`.
+  - Thêm timeout upstream, CSP tối thiểu, HSTS `max-age=300`.
+  - 9515 chỉ nghe trên IP Tailscale.
+- **Vừa/thấp — chia sẻ:**
+  - Ảnh OG mặc định bỏ chữ lapdattoanquoc.vn, đổi tên file `-v2` để bỏ cache.
+  - Ảnh OG một bài viết cắt lại cho thấy mặt người.
+  - Breadcrumb bỏ tiền tố `/vi`.
+  - Thêm `favicon.ico` và `apple-icon.png`.
+  - Trang 410 không nhắc tên miền cũ.
+
+**Rủi ro còn lại, cần anh Duy quyết**
+- Tiến trình công khai vẫn chạy bằng user `bbsw`, thuộc nhóm docker/sudo. Đã thêm `NoNewPrivileges` + seccomp cho hai unit
+  công khai, nhưng một lỗ hổng chạy mã từ xa trong Next vẫn chạm được docker.sock. Máy này từng có sự cố mã độc 07/2026.
+- Đề xuất: chạy bản công khai trong container riêng — không mount docker.sock, user không phải root, rootfs chỉ đọc. Cách này
+  làm được không cần sudo, khoảng 1–2 giờ. Cách khác: tạo user hệ thống riêng, việc này cần sudo.
+
+**Chỗ khách thấy "chưa xong" vì nội dung chưa duyệt bị ẩn** (agent nội dung). Kỹ thuật không sai, cần quyết nội dung:
+- /bang-gia (có trên menu) chỉ còn "khung giá đang được cập nhật". Nhiều trang vẫn ghi "khung giá tham khảo công khai".
+- 3 trang pháp lý ghi "Chưa ban hành", và mọi link/FAQ bảo hành dẫn về đó.
+- Giờ làm việc và giờ hỗ trợ ghi "đang được cập nhật". Ở `/lien-he` và `/ho-tro-khach-hang`.
+- Nút "…trực tuyến" và "Đặt lịch demo 30 phút" hứa form, nhưng form đang tắt nên chỉ dẫn tới khối Gọi · email.
+- Bảng SLA trang giải pháp ghi "Theo hợp đồng", trong khi chỗ khác ghi 24–48 giờ. `/mang-luoi` ghi "Chưa có số" ở cả 34 tỉnh.
+- `/doi-tac-tho` gần như trống phần thu nhập và tin tuyển.
+- Khoảng trống bố cục: thẻ công nghệ còn 1 thẻ, dải KPI còn 1 ô.
+
+**Thấp, để sau**
+- 404 của đường dẫn có dấu chấm (`/index.php`) là trang mặc định tiếng Anh của Next.
+- Prefetch phân đoạn ở trang VI sinh vài dòng 404 trong console, điều hướng vẫn đúng.
+- 4/6 bài viết dùng chung ảnh bìa giữ chỗ.
+- Trang Điều khoản ghi "website lapdattoanquoc.vn".
