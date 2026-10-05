@@ -1,5 +1,6 @@
 [Unit]
-Description=bluebolt-web — proxy cong khai 0.0.0.0:9515 -> localhost:3092, khong mat khau, noindex (services.bluebolt.software, D-30)
+StartLimitIntervalSec=0
+Description=bluebolt-web — proxy cong khai <IP Tailscale của máy chủ>:9515 (Tailscale) -> localhost:3092, khong mat khau, noindex (services.bluebolt.software, D-30)
 After=bluebolt-web-public.service
 Wants=bluebolt-web-public.service
 
@@ -7,8 +8,13 @@ Wants=bluebolt-web-public.service
 WorkingDirectory=/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web
 EnvironmentFile=/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web/.env.public
 ExecStart=/usr/bin/node deploy/preview/proxy.mjs
+NoNewPrivileges=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+SystemCallArchitectures=native
 Restart=on-failure
-RestartSec=3
+RestartSec=5
 MemoryMax=150M
 
 [Install]

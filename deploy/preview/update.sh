@@ -39,7 +39,7 @@ deploy() { # $1 = thư mục dist, $2 = unit next start, $3 = cổng next start,
 
 case "$WHAT" in
   public | all)
-    deploy .next-public bluebolt-web-public 3092 STAGING=1 SITE_URL="$(env_value .env.public SITE_URL)"
+    deploy .next-public bluebolt-web-public 3092 STAGING=1 LEADS_FORM_ENABLED=false SITE_URL="$(env_value .env.public SITE_URL)"
     systemctl --user is-active bluebolt-web-public-proxy
     echo "[public] đã cập nhật — https://services.bluebolt.software (công khai, noindex)"
     ;;

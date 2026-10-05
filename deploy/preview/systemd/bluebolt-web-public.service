@@ -10,6 +10,11 @@ Environment=PORT=3092
 Environment=STAGING=1
 Environment=NODE_OPTIONS=--max-old-space-size=768
 ExecStart=/usr/bin/npm run start
+NoNewPrivileges=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+SystemCallArchitectures=native
 Restart=on-failure
 RestartSec=5
 MemoryMax=1200M
