@@ -175,7 +175,7 @@ export type LegacyAssetRow = {
 export const legacyAssets: readonly LegacyAssetRow[] = [
   {
     from: '/images/og-cover.jpg',
-    to: '/images/og/bluebolt-services-vi.jpg',
+    to: '/images/og/bluebolt-services-vi-v2.jpg',
     kind: 'redirect',
     note: 'og:image cũ của 18 trang. Ảnh là banner khóa học "Đào tạo chuyển đổi số AI" của đơn vị khác, hotline khác → KHÔNG giữ; 301 sang ảnh OG mới',
   },
@@ -187,7 +187,7 @@ export const legacyAssets: readonly LegacyAssetRow[] = [
   },
   {
     from: '/images/news/lap-dat-may-lanh-7-buoc.jpg',
-    to: '/images/og/bluebolt-services-vi.jpg',
+    to: '/images/og/bluebolt-services-vi-v2.jpg',
     kind: 'redirect',
     note:
       'og:image bài lap-dat-may-lanh-dung-cach-7-buoc (VI + EN). Ảnh AI (dấu ✦ Gemini, thợ mặc áo in "BLUEBOLT" giả) → ' +
@@ -241,7 +241,7 @@ export const legacyAssets: readonly LegacyAssetRow[] = [
   },
   {
     from: '/images/khang-3d-poster.webp',
-    to: '/images/og/bluebolt-services-vi.jpg',
+    to: '/images/og/bluebolt-services-vi-v2.jpg',
     kind: 'redirect',
     note:
       'Ảnh KHANG (quyền chưa xác nhận, D-03) — không phục vụ file cũ; 301 sang ảnh OG mặc định (không KHANG) vì AC-301-3 ' +

@@ -5,7 +5,8 @@
  *   node scripts/gen-og-images.mjs                 # tất cả: ảnh OG mặc định VI/EN + ảnh OG bài viết + logo PNG
  *   node scripts/gen-og-images.mjs --only articles # chỉ ảnh bài viết (không cần dev server)
  *
- * 1) public/images/og/bluebolt-services-{vi,en}.jpg — ảnh mặc định. Dựng bằng HTML trên dev server dùng chung
+ * 1) public/images/og/bluebolt-services-{vi,en}-v2.jpg — ảnh mặc định, KHÔNG in tên miền (dùng chung cho mọi tên miền đang
+ *    phục vụ — D-30; đổi hậu tố -vN mỗi lần sinh lại vì Facebook/Zalo cache ảnh theo URL). Dựng bằng HTML trên dev server dùng chung
  *    ($BASE_URL, mặc định http://127.0.0.1:3091) để có đúng font Be Vietnam Pro + logo <symbol>, chụp bằng Chromium
  *    rev 1234 (CLAUDE.local.md), nén bằng sharp. Khi poster phim có trong public/film/, lib/seo.ts tự dùng poster.
  * 2) public/images/news/og/<key>.jpg — cắt ảnh đầu bài (content/articles/<key>.ts → hero) về 1200×630.
@@ -34,6 +35,9 @@ function report(file) {
   if (bytes > MAX_BYTES) process.exitCode = 1;
 }
 
+/** Điểm neo khi cắt ảnh đầu bài về 1200×630 (mặc định sharp 'attention'); bài nào cắt mất mặt người thì neo riêng. */
+const ARTICLE_POSITION = { 'chuyen-doi-so-trong-lap-dat-toan-quoc': 'north' };
+
 async function articleImages() {
   const { ARTICLE_CONTENT } = await loadTs('content/articles/all.ts');
   for (const [key, content] of Object.entries(ARTICLE_CONTENT)) {
@@ -42,7 +46,7 @@ async function articleImages() {
     const out = pub(content.ogImage.src);
     mkdirSync(join(out, '..'), { recursive: true });
     await sharp(pub(content.hero.src))
-      .resize(1200, 630, { fit: 'cover', position: 'attention' })
+      .resize(1200, 630, { fit: 'cover', position: ARTICLE_POSITION[key] ?? 'attention' })
       .jpeg({ quality: 80, mozjpeg: true })
       .toFile(out);
     report(out);
@@ -91,7 +95,7 @@ function overlayHtml({ lang, headline, sub }) {
     <p style="margin:0;font-family:var(--font-display);font-weight:700;font-size:62px;line-height:1.12;letter-spacing:-0.015em">${headline}</p>
     <p style="margin:28px 0 0;font-size:26px;line-height:1.4;color:var(--color-slate-300)">${sub}</p>
   </div>
-  <p style="position:relative;margin:0;font-size:24px;font-weight:600;color:var(--color-blue-300)">lapdattoanquoc.vn</p>
+  <div aria-hidden="true" style="position:relative;height:30px"></div>
 </div>`;
 }
 
@@ -111,7 +115,7 @@ async function defaultImages() {
       await page.evaluate(() => document.fonts.ready);
       await page.waitForTimeout(300);
       const png = await page.screenshot({ clip: { x: 0, y: 0, width: 1200, height: 630 } });
-      const out = pub(`/images/og/bluebolt-services-${locale}.jpg`);
+      const out = pub(`/images/og/bluebolt-services-${locale}-v2.jpg`);
       mkdirSync(join(out, '..'), { recursive: true });
       await sharp(png).jpeg({ quality: 84, mozjpeg: true }).toFile(out);
       report(out);
