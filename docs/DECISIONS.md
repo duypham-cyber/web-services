@@ -526,3 +526,24 @@ Nguồn: báo cáo agent ở workflow `bluebolt-p0-tiep` (hero, leads, content, 
 - `SlaRegionTable` ghi "Theo hợp đồng" trong khi chỗ khác ghi 24–48 giờ.
 - Ô 60 phút đứng cạnh quy trình "điều phối → thợ gọi khách". Cần anh chốt ai xác nhận lịch: CSKH hay thợ.
 - `content/provinces.ts` để coverage "unknown".
+
+### D-29 · 05/10/2026 · Điện thoại dùng hero poster có chấm chạy, không chạy tour 3D theo cuộn (tech lead)
+Anh Duy gán domain https://services.bluebolt.software (openresty → bản xem trước 9515) và báo "trên Mobile bị đơ đơ nhìn xấu".
+- **Đo trên khung điện thoại (CPU giả lập chậm 4×):** tour 3D bản đồ dính (T-LITE) tốn khoảng 2,3 s tác vụ dài trên luồng chính lúc
+  dựng cảnh và vẽ lại theo từng nhịp cuộn. Bản đồ dính chiếm 54% màn hình; chữ và panel chỉ còn khoảng 200–300 px để đọc, bị thanh dính
+  đáy che, giữa các panel trống 30% màn hình.
+- **Quyết định:** màn dọc (điện thoại, máy tính bảng dọc) luôn ở T-STILL: poster + panel theo dòng chảy. `runtime/boot.ts`
+  trả `still/mobile` trước khi dò WebGL, nên không tạo context WebGL và không tải chunk 3D. Desktop và máy tính bảng ngang giữ tour 3D.
+  `?tier=lite` vẫn ép được bản 3D mobile ở dev và bản xem trước, để thử lại trên máy thật sau này.
+- **Sống động không cần WebGL:** lớp SVG chấm sáng chạy dọc 12 đường cung (desktop: 16) + nhịp sóng ở TP.HCM, chỉ dùng CSS, chạy 3 lượt
+  rồi dừng. Không chạy khi reduced-motion, Save-Data hoặc không JS; ẩn khi cảnh 3D sống.
+  - Đường cung lấy từ chính cảnh 3D (`projectArcs`), chiếu theo khung chụp poster và ghi vào `hero-poster.json` → `routes`.
+  - Vẽ bằng Bézier bậc 3, sai số ≤ 1,5 px ảnh poster, nên chấm chạy trùng đường in trong ảnh.
+- **Kết quả đo trên domain:**
+  - Hero sẵn sàng sau 0,66 s (trước: 4,2 s).
+  - Tác vụ dài lúc tải còn 0,7 s (trước: 2,3 s).
+  - Cuộn 3 s: 155 khung, p90 17 ms (trước: 17 khung, p90 450 ms).
+- **Đánh đổi đã chấp nhận:** HTML trang chủ 60,6 KB gz, vượt mức cảnh báo 60 KB (`budgets.json` QA-HTML chỉ ở mức warn), vì lớp SVG thêm
+  khoảng 1,6 KB gz. JS tải đầu không đổi: 166,9 KB gz.
+- **Chưa đo trên máy thật:** Safari iOS, Android tầm trung. Nếu muốn có lại tour 3D trên điện thoại cao cấp, cần một tầng riêng
+  (không bản đồ dính, dựng cảnh trong Worker hoặc chia nhỏ tác vụ) và phải đo trên máy thật trước.
