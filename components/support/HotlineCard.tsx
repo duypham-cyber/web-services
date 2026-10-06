@@ -22,7 +22,7 @@ export async function HotlineCard({ locale }: { locale: Locale }) {
   const preview = isDraftPreview();
 
   return (
-    <div data-tone="navy" className="relative overflow-clip rounded-xl bg-navy-900 p-6 text-white shadow-3 md:p-8">
+    <div data-tone="navy" className="relative overflow-clip rounded-xl bg-blue-600 p-6 text-white shadow-3 md:p-8">
       <p className="eyebrow text-orange-200">{t('hotlineCard.title')}</p>
       <p className="mt-4 flex items-center gap-3 whitespace-nowrap font-display text-h2 tabular text-white">
         <Phone aria-hidden="true" size={32} strokeWidth={1.5} className="shrink-0 text-orange-200" />
@@ -59,7 +59,7 @@ export async function HotlineCard({ locale }: { locale: Locale }) {
         <Mail aria-hidden="true" size={20} strokeWidth={1.5} className="mt-0.5 shrink-0 text-blue-300" />
         <div>
           <p className="font-semibold text-white">{t('hotlineCard.emailLabel')}</p>
-          <a href={`mailto:${site.email}`} className="mt-1 inline-block text-blue-300 hover:text-white hover:underline">
+          <a href={`mailto:${site.email}`} className="mt-1 inline-block text-blue-100 hover:text-white hover:underline">
             {site.email}
           </a>
         </div>

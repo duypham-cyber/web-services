@@ -91,7 +91,7 @@ export function SlaRegionTable({
         <table role="table" className="w-full border-collapse text-left max-md:block md:table-fixed">
           <caption className="sr-only">{caption}</caption>
           <thead role="rowgroup" className="max-md:sr-only">
-            <tr role="row" className="bg-navy-900 text-white">
+            <tr role="row" className="bg-blue-600 text-white">
               <th role="columnheader" scope="col" className="w-[24%] px-5 py-4 align-bottom text-small font-semibold">
                 {milestoneLabel}
               </th>

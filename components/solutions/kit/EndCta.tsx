@@ -31,12 +31,12 @@ export function EndCta({ locale, eyebrow, title, body, actions, callLabel, note,
     <Section id={id} aria-labelledby={titleId} spacing="compact" className="pb-16 md:pb-24">
       <div
         data-tone="navy"
-        className="relative overflow-clip rounded-xl bg-navy-900 px-6 py-12 md:px-12 md:py-14 lg:px-16 lg:py-16"
+        className="relative overflow-clip rounded-xl bg-blue-600 px-6 py-12 md:px-12 md:py-14 lg:px-16 lg:py-16"
       >
         {/* Trang trí: vệt sáng xanh + tia chớp nét mảnh, nằm trong khung overflow-clip */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-pill bg-[radial-gradient(circle,var(--color-blue-600)_0%,transparent_70%)] opacity-60"
+          className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-pill bg-[radial-gradient(circle,var(--color-blue-300)_0%,transparent_70%)] opacity-35"
         />
         <svg
           aria-hidden="true"

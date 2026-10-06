@@ -13,7 +13,7 @@ type CommonProps = {
    * primary = nền orange-500, chữ navy-900, viền 1px orange-700 (CTA chính, tối đa 1 mỗi màn hình)
    * blue    = nền blue-600, chữ trắng
    * ghost   = trong suốt, chữ + viền blue-600 (nền sáng)
-   * on-dark = trong suốt, chữ + viền trắng (nền navy / vùng phim)
+   * on-dark = trong suốt, chữ + viền trắng (dải tối blue-600 / vùng phim); hover nền trắng chữ blue-600
    */
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -55,7 +55,7 @@ const VARIANT: Record<ButtonVariant, string> = {
   primary: 'border-orange-700 bg-orange-500 text-navy-900 hover:bg-orange-400',
   blue: 'border-blue-600 bg-blue-600 text-white hover:border-blue-700 hover:bg-blue-700',
   ghost: 'border-blue-600 bg-transparent text-blue-600 hover:bg-blue-50',
-  'on-dark': 'border-white bg-transparent text-white hover:bg-white hover:text-navy-900',
+  'on-dark': 'border-white bg-transparent text-white hover:bg-white hover:text-blue-600',
 };
 
 // min-h thay cho h cố định: nhãn dài được xuống dòng thay vì tràn ngang trên màn hẹp

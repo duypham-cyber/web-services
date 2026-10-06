@@ -16,7 +16,7 @@ type CardProps = HTMLAttributes<HTMLElement> & {
 const TONE: Record<CardTone, { cls: string; dataTone: 'light' | 'blue-50' | 'navy' }> = {
   white: { cls: 'bg-white border border-slate-300', dataTone: 'light' },
   'blue-50': { cls: 'bg-blue-50 border border-blue-100', dataTone: 'blue-50' },
-  navy: { cls: 'bg-navy-900 border border-navy-900', dataTone: 'navy' },
+  navy: { cls: 'bg-blue-600 border border-blue-600', dataTone: 'navy' },
 };
 
 const PADDING = { md: 'p-6', lg: 'p-6 md:p-8', none: '' } as const;

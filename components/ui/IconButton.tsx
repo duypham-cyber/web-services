@@ -26,7 +26,7 @@ const BASE =
 
 const VARIANT: Record<Variant, string> = {
   ghost: 'border-transparent bg-transparent text-(--surface-link) hover:bg-blue-50',
-  'on-dark': 'border-transparent bg-transparent text-white hover:bg-white hover:text-navy-900',
+  'on-dark': 'border-transparent bg-transparent text-white hover:bg-white hover:text-blue-600',
   solid: 'border-blue-600 bg-blue-600 text-white hover:bg-blue-700',
 };
 

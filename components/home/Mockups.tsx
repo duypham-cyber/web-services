@@ -128,7 +128,7 @@ export async function DashboardMockup({ className, reserveEnd }: { className?: s
                 className={cn(
                   XS,
                   'rounded-pill px-2.5 py-1 font-medium',
-                  i === 0 ? 'bg-navy-900 text-white' : 'bg-blue-50 text-slate-600 ring-1 ring-slate-300',
+                  i === 0 ? 'bg-blue-600 text-white' : 'bg-blue-50 text-slate-600 ring-1 ring-slate-300',
                 )}
               >
                 {t(`technology.mock.filters.${f}`)}
@@ -171,10 +171,10 @@ export async function DashboardMockup({ className, reserveEnd }: { className?: s
                 ))}
               </div>
             </div>
-            <div className="flex flex-col justify-between gap-3 rounded-md bg-navy-900 p-3 text-white">
+            <div className="flex flex-col justify-between gap-3 rounded-md bg-blue-600 p-3 text-white">
               <div>
                 <p className={cn(XS, 'font-semibold text-white')}>{t('technology.mock.reconcile.title')}</p>
-                <p className={cn(XS, 'mt-1 font-medium text-blue-300')}>{t('technology.mock.reconcile.ready')}</p>
+                <p className={cn(XS, 'mt-1 font-medium text-blue-100')}>{t('technology.mock.reconcile.ready')}</p>
               </div>
               <span className={cn(XS, 'inline-flex w-fit items-center gap-1.5 rounded-pill bg-white px-3 py-1 font-semibold text-navy-900')}>
                 <FileSpreadsheet size={14} strokeWidth={1.75} />

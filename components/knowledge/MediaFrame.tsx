@@ -31,8 +31,8 @@ type MediaFrameProps = {
  *  - Có ảnh: next/image (AVIF/WebP, đúng cỡ theo `sizes`), `fit` cover (ảnh chụp) hoặc contain (infographic). Ảnh chụp
  *    phủ một lớp navy-900 10% để các ảnh bài thành một họ ảnh (docs/03 mục 11.4). Ảnh minh họa AI/stock
  *    (`illustrative`) có nhãn "Ảnh minh họa" (D-31).
- *  - Không có ảnh (CHỈ thẻ bài — trang bài không dựng khung khi hero = null): bìa dựng từ token (nền navy-900, vệt sáng
- *    blue-600, tia chớp nét blue-300, icon của bài), aria-hidden, không chữ trong ảnh. Không còn "khung giữ chỗ" lưới.
+ *  - Không có ảnh (CHỈ thẻ bài — trang bài không dựng khung khi hero = null): bìa dựng từ token (nền blue-600, vệt sáng
+ *    blue-300, tia chớp nét blue-300, icon của bài), aria-hidden, không chữ trong ảnh. Không còn "khung giữ chỗ" lưới.
  */
 export function MediaFrame({
   image,
@@ -49,12 +49,12 @@ export function MediaFrame({
 
   if (!image) {
     return (
-      <div aria-hidden="true" className={cn(frame, 'bg-navy-900')} style={{ aspectRatio: ratio ?? '16 / 9' }}>
-        <div className="absolute -right-16 -top-20 size-72 rounded-pill bg-[radial-gradient(circle,var(--color-blue-600)_0%,transparent_70%)] opacity-70" />
+      <div aria-hidden="true" className={cn(frame, 'bg-blue-600')} style={{ aspectRatio: ratio ?? '16 / 9' }}>
+        <div className="absolute -right-16 -top-20 size-72 rounded-pill bg-[radial-gradient(circle,var(--color-blue-300)_0%,transparent_70%)] opacity-40" />
         <svg viewBox="0 0 120 200" className="absolute -bottom-6 right-[8%] h-[115%] w-auto text-blue-300 opacity-25">
           <path d="M72 4 L20 112 H58 L44 196 L104 76 H64 Z" fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" />
         </svg>
-        <span className="absolute bottom-5 left-5 flex size-14 items-center justify-center rounded-md border border-blue-300/40 bg-navy-900/60 md:bottom-6 md:left-6 md:size-16">
+        <span className="absolute bottom-5 left-5 flex size-14 items-center justify-center rounded-md border border-blue-300/50 bg-blue-700/70 md:bottom-6 md:left-6 md:size-16">
           <Icon size={30} strokeWidth={1.5} className="text-blue-300" />
         </span>
         {previewNote ? (

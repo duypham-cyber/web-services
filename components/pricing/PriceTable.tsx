@@ -132,7 +132,7 @@ export function PriceTable({ rows, regions, deviceOptions, regionOptions, labels
         <table role="table" className="w-full border-collapse text-left max-md:block">
           <caption className="sr-only">{labels.caption}</caption>
           <thead role="rowgroup" className="max-md:sr-only">
-            <tr role="row" className="bg-navy-900 text-white">
+            <tr role="row" className="bg-blue-600 text-white">
               <th role="columnheader" scope="col" className="px-5 py-4 text-small font-semibold">
                 {labels.item}
               </th>

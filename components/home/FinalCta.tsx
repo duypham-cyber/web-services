@@ -21,10 +21,10 @@ function BoltArt() {
     >
       <circle cx="200" cy="200" r="194" fill="none" stroke="var(--color-blue-300)" strokeOpacity="0.12" strokeWidth="2" />
       <circle cx="200" cy="200" r="142" fill="none" stroke="var(--color-blue-300)" strokeOpacity="0.12" strokeWidth="2" />
-      <circle cx="200" cy="200" r="92" fill="var(--color-blue-600)" fillOpacity="0.22" />
+      <circle cx="200" cy="200" r="92" fill="var(--color-blue-700)" fillOpacity="0.5" />
       <path
         d="M224 70 L132 214 H196 L172 330 L270 172 H204 Z"
-        fill="var(--color-blue-600)"
+        fill="var(--color-blue-700)"
         fillOpacity="0.5"
         stroke="var(--color-blue-300)"
         strokeOpacity="0.35"
@@ -49,7 +49,7 @@ export async function FinalCta({ locale, tone }: { locale: Locale; tone: Section
 
   return (
     <Section id="hop-tac" tone={tone} aria-labelledby="hop-tac-title">
-      <div data-tone="navy" className="relative isolate overflow-clip rounded-xl bg-navy-900 px-4 py-10 sm:px-10 md:px-14 md:py-16 lg:p-16">
+      <div data-tone="navy" className="relative isolate overflow-clip rounded-xl bg-blue-600 px-4 py-10 sm:px-10 md:px-14 md:py-16 lg:p-16">
         <BoltArt />
         <div className="relative grid gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start lg:pt-8">

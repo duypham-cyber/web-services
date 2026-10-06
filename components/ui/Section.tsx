@@ -6,7 +6,7 @@ export type SectionTone = 'light' | 'blue-50' | 'navy';
 
 type SectionProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
   as?: 'section' | 'div' | 'aside' | 'header' | 'footer';
-  /** light = nền trắng · blue-50 = nền xanh rất nhạt · navy = dải tối (chữ trắng, focus ring cam nhạt) */
+  /** light = nền trắng · blue-50 = nền xanh rất nhạt · navy = dải màu xanh thương hiệu blue-600 (tên giữ từ trước D-32; chữ trắng, focus ring cam nhạt) */
   tone?: SectionTone;
   /** default = padding dọc clamp(64px, 10vw, 128px) · compact = 48/64px · none = không padding */
   spacing?: 'default' | 'compact' | 'none';
@@ -19,7 +19,7 @@ type SectionProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 const TONE_BG: Record<SectionTone, string> = {
   light: 'bg-white',
   'blue-50': 'bg-blue-50',
-  navy: 'bg-navy-900',
+  navy: 'bg-blue-600',
 };
 
 const SPACING: Record<NonNullable<SectionProps['spacing']>, string> = {

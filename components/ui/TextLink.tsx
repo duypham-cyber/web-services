@@ -23,7 +23,7 @@ const VARIANT = {
     'inline-flex items-center gap-1.5 font-semibold text-(--surface-link) no-underline underline-offset-[3px] hover:underline hover:text-(--surface-link-hover)',
 } as const;
 
-/** Link chữ. Màu theo tông bề mặt (blue-600 trên nền sáng, blue-300 trên navy). */
+/** Link chữ. Màu theo tông bề mặt (blue-600 trên nền sáng, blue-100 trên dải tối blue-600 — D-32). */
 export function TextLink(props: InternalProps | ExternalProps) {
   const { variant = 'inline', className, children } = props;
   const classes = cn(VARIANT[variant], className);

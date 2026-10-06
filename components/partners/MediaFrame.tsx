@@ -108,7 +108,7 @@ export function MediaFrame({
         <span className="absolute right-[15%] top-[30%] inline-flex size-11 items-center justify-center rounded-pill bg-orange-500 text-navy-900 shadow-1">
           <A2 size={20} strokeWidth={1.75} />
         </span>
-        <span className="absolute bottom-[18%] right-[24%] inline-flex size-12 items-center justify-center rounded-md bg-navy-900 text-white shadow-2">
+        <span className="absolute bottom-[18%] right-[24%] inline-flex size-12 items-center justify-center rounded-md bg-blue-700 text-white shadow-2">
           <A3 size={22} strokeWidth={1.5} />
         </span>
       </div>

@@ -70,7 +70,7 @@ export async function Footer() {
   const legalName = locale === 'vi' ? site.legalName.titleCase : site.legalName.upper;
 
   return (
-    <footer data-tone="navy" className="bg-navy-900 pb-[calc(6rem+env(safe-area-inset-bottom))] pt-16 md:pb-12 md:pt-20">
+    <footer data-tone="navy" className="bg-blue-600 pb-[calc(6rem+env(safe-area-inset-bottom))] pt-16 md:pb-12 md:pt-20">
       <Container>
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16">
           <div className="flex flex-col gap-6">

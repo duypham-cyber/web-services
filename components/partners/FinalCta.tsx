@@ -21,7 +21,7 @@ export function FinalCta({ id, eyebrow, title, body, actions, children }: FinalC
   const titleId = `${id}-title`;
   return (
     <Section id={id} aria-labelledby={titleId} spacing="compact">
-      <div data-tone="navy" className="relative overflow-clip rounded-xl bg-navy-900 px-6 py-12 shadow-3 md:px-12 md:py-16 lg:px-16">
+      <div data-tone="navy" className="relative overflow-clip rounded-xl bg-blue-600 px-6 py-12 shadow-3 md:px-12 md:py-16 lg:px-16">
         <svg
           aria-hidden="true"
           focusable="false"

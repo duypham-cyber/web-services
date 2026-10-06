@@ -195,10 +195,10 @@ export default async function PricingPage({ params }: PageProps<'/[locale]/bang-
       </Section>
 
       <Section id="gia-hop-dong" spacing="compact" aria-labelledby="gia-hop-dong-title" className="pb-16 md:pb-24">
-        <div data-tone="navy" className="relative overflow-clip rounded-xl bg-navy-900 px-6 py-12 md:px-12 md:py-14">
+        <div data-tone="navy" className="relative overflow-clip rounded-xl bg-blue-600 px-6 py-12 md:px-12 md:py-14">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-pill bg-[radial-gradient(circle,var(--color-blue-600)_0%,transparent_70%)] opacity-60"
+            className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-pill bg-[radial-gradient(circle,var(--color-blue-300)_0%,transparent_70%)] opacity-35"
           />
           <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-center">
             <div className="min-w-0">

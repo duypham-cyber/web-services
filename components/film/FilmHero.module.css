@@ -841,7 +841,8 @@
 
 .panelFinal {
   border-color: rgb(255 255 255 / 0.14);
-  background: var(--color-navy-900);
+  /* data-tone="navy" = dải xanh thương hiệu blue-600 (D-32) */
+  background: var(--color-blue-600);
 }
 
 .panelFinal .kicker {
@@ -1194,7 +1195,7 @@
   }
 
   .track:global(.film-armed) .panelFinal {
-    background: color-mix(in srgb, var(--color-navy-900) 80%, transparent);
+    background: color-mix(in srgb, var(--color-blue-600) 85%, transparent);
   }
 
   .track:global(.film-armed) .order {
