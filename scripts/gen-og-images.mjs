@@ -5,9 +5,9 @@
  *   node scripts/gen-og-images.mjs                 # tất cả: ảnh OG mặc định VI/EN + ảnh OG bài viết + logo PNG
  *   node scripts/gen-og-images.mjs --only articles # chỉ ảnh bài viết (không cần dev server)
  *
- * 1) public/images/og/bluebolt-services-{vi,en}-v2.jpg — ảnh mặc định, KHÔNG in tên miền (dùng chung cho mọi tên miền đang
+ * 1) public/images/og/bluebolt-services-{vi,en}-v3.jpg — ảnh mặc định, KHÔNG in tên miền (dùng chung cho mọi tên miền đang
  *    phục vụ — D-30; đổi hậu tố -vN mỗi lần sinh lại vì Facebook/Zalo cache ảnh theo URL). Dựng bằng HTML trên dev server dùng chung
- *    ($BASE_URL, mặc định http://127.0.0.1:3091) để có đúng font Be Vietnam Pro + logo <symbol>, chụp bằng Chromium
+ *    ($BASE_URL, mặc định http://127.0.0.1:3091) để có logo <symbol> + token màu, chụp bằng Chromium
  *    rev 1234 (CLAUDE.local.md), nén bằng sharp. Khi poster phim có trong public/film/, lib/seo.ts tự dùng poster.
  * 2) public/images/news/og/<key>.jpg — cắt ảnh đầu bài (content/articles/<key>.ts → hero) về 1200×630.
  * 3) public/images/logo-bluebolt-services-512.png — logo vuông nền trắng cho JSON-LD Organization.logo.
@@ -78,13 +78,30 @@ const COPY = {
   },
 };
 
+/**
+ * Web dùng bộ font hệ thống (D-32) nhưng máy dựng ảnh (Linux) không có Segoe UI/SF Pro/Roboto → nhúng Roboto (một font trong
+ * bộ đó, Apache-2.0, assets/fonts/roboto) dạng data URL chỉ khi chụp. Website không tải file này.
+ */
+function ogFontCss() {
+  const dir = join(ROOT, 'assets', 'fonts', 'roboto');
+  const { family, weight, faces } = JSON.parse(readFileSync(join(dir, 'faces.json'), 'utf8'));
+  return faces
+    .map(
+      (f) =>
+        `@font-face{font-family:'${family} OG';font-weight:${weight};font-style:normal;unicode-range:${f.unicodeRange};` +
+        `src:url(data:font/woff2;base64,${readFileSync(join(dir, f.file)).toString('base64')}) format('woff2')}`,
+    )
+    .join('');
+}
+
 function overlayHtml({ lang, headline, sub }) {
   return `
+<style>${ogFontCss()}</style>
 <div id="og-card" lang="${lang}" style="position:fixed;inset:0 auto auto 0;width:1200px;height:630px;z-index:2147483647;
-  overflow:hidden;background:var(--color-navy-900);color:#fff;font-family:var(--font-sans);box-sizing:border-box;padding:72px 80px;
+  overflow:hidden;background:var(--color-blue-600);color:#fff;font-family:'Roboto OG',var(--font-sans);box-sizing:border-box;padding:72px 80px;
   display:flex;flex-direction:column;justify-content:space-between">
   <div aria-hidden="true" style="position:absolute;right:-180px;top:-220px;width:720px;height:720px;border-radius:999px;
-    background:radial-gradient(closest-side,rgb(0 74 173 / .75),rgb(0 74 173 / 0));"></div>
+    background:radial-gradient(closest-side,rgb(127 170 240 / .45),rgb(127 170 240 / 0));"></div>
   <div aria-hidden="true" style="position:absolute;inset:0;opacity:.18;background-size:48px 48px;
     background-image:linear-gradient(to right,var(--color-blue-300) 1px,transparent 1px),linear-gradient(to bottom,var(--color-blue-300) 1px,transparent 1px);
     mask-image:linear-gradient(to left,#000 10%,transparent 70%);"></div>
@@ -92,7 +109,7 @@ function overlayHtml({ lang, headline, sub }) {
     <use href="#bb-logo"></use></svg>
   <div style="position:relative;max-width:920px">
     <div style="width:96px;height:8px;border-radius:999px;background:var(--color-orange-500);margin-bottom:32px"></div>
-    <p style="margin:0;font-family:var(--font-display);font-weight:700;font-size:62px;line-height:1.12;letter-spacing:-0.015em">${headline}</p>
+    <p style="margin:0;font-weight:700;font-size:62px;line-height:1.12;letter-spacing:-0.015em">${headline}</p>
     <p style="margin:28px 0 0;font-size:26px;line-height:1.4;color:var(--color-slate-300)">${sub}</p>
   </div>
   <div aria-hidden="true" style="position:relative;height:30px"></div>
@@ -115,7 +132,7 @@ async function defaultImages() {
       await page.evaluate(() => document.fonts.ready);
       await page.waitForTimeout(300);
       const png = await page.screenshot({ clip: { x: 0, y: 0, width: 1200, height: 630 } });
-      const out = pub(`/images/og/bluebolt-services-${locale}-v2.jpg`);
+      const out = pub(`/images/og/bluebolt-services-${locale}-v3.jpg`);
       mkdirSync(join(out, '..'), { recursive: true });
       await sharp(png).jpeg({ quality: 84, mozjpeg: true }).toFile(out);
       report(out);

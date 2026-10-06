@@ -316,13 +316,13 @@ export type SeoPageKey = keyof typeof SEO_PAGES;
  */
 export const DEFAULT_OG_IMAGE = {
   vi: {
-    src: '/images/og/bluebolt-services-vi-v2.jpg',
+    src: '/images/og/bluebolt-services-vi-v3.jpg',
     width: 1200,
     height: 630,
     alt: 'Bluebolt Services — lắp đặt điện máy cho hãng và sàn thương mại điện tử',
   },
   en: {
-    src: '/images/og/bluebolt-services-en-v2.jpg',
+    src: '/images/og/bluebolt-services-en-v3.jpg',
     width: 1200,
     height: 630,
     alt: 'Bluebolt Services — appliance installation for brands and marketplaces',
