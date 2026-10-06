@@ -147,8 +147,9 @@ Không pin, không tour, không tải three; poster p = 0 + nhãn HTML + ba pane
   và khoảng cách máy, chuyển đêm. Bóng đổ chỉ ở T-FULL.
 - 33 đường cung từ HQ TP.HCM tới tâm 33 tỉnh (đuôi sao chổi + 66 chấm sáng), ghim instanced + vòng sóng, cột sáng HQ.
 - Mây thủ tục (canvas): FULL 22 cụm biển mây + 5 dải trên đất + 5 mây tiền cảnh khi bay; LITE 12 + 2.
-- Màu thương hiệu đọc từ token (`styles/tokens.css`) lúc dựng cảnh; màu nước/mây/đất là bảng minh hoạ riêng của cảnh 3D, không
-  dùng cho UI HTML. Seed cố định (3402) → bố cục đường cung/mây giống poster.
+- Màu thương hiệu đọc từ token (`styles/tokens.css`) lúc dựng cảnh. Màu nước theo họ `blue-600` #004AAD (biển xa `blue-600`, gần bờ
+  #0057CC, nước nông `blue-300` — D-31); màu mây/đất là bảng minh hoạ riêng của cảnh 3D, không dùng cho UI HTML. Seed cố định
+  (3402) → bố cục đường cung/mây giống poster.
 
 ## 4. Quy tắc và edge case
 - R-CLAIM: như film-home mục 5 — production không render claim/số chưa duyệt, kể cả trong nhãn bản đồ và panel tour.

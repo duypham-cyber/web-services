@@ -17,19 +17,19 @@
       "webp": "/images/hero/hero-map-desktop.webp"
     },
     "bytes": {
-      "avif": 73259,
-      "webp": 120272
+      "avif": 73971,
+      "webp": 122894
     },
     "quality": {
       "avif": 66,
       "webp": 84
     },
-    "hash": "38b4b21fb3",
+    "hash": "f6be90c333",
     "edge": {
-      "top": "#bfcce7",
-      "bottom": "#538dd7",
-      "left": "#dce4ef",
-      "right": "#3b7dd1"
+      "top": "#bec8e0",
+      "bottom": "#4d7cc2",
+      "left": "#dde4ef",
+      "right": "#3268b9"
     },
     "labels": {
       "hq": [
@@ -2124,7 +2124,7 @@
     "scene": {
       "drawCalls": 22,
       "triangles": 96708,
-      "initMs": 1317
+      "initMs": 1901
     }
   },
   "mobile": {
@@ -2141,19 +2141,19 @@
       "webp": "/images/hero/hero-map-mobile.webp"
     },
     "bytes": {
-      "avif": 25159,
-      "webp": 37950
+      "avif": 25064,
+      "webp": 39180
     },
     "quality": {
       "avif": 66,
       "webp": 84
     },
-    "hash": "7e610d4536",
+    "hash": "80ce1601ec",
     "edge": {
-      "top": "#93a8dd",
-      "bottom": "#d4dced",
-      "left": "#6897da",
-      "right": "#5c90d8"
+      "top": "#91a0cc",
+      "bottom": "#d5ddec",
+      "left": "#6289c7",
+      "right": "#5681c3"
     },
     "labels": {
       "hq": [
@@ -4248,7 +4248,7 @@
     "scene": {
       "drawCalls": 16,
       "triangles": 51498,
-      "initMs": 468
+      "initMs": 483
     }
   }
 }

@@ -3,8 +3,8 @@ import { Color } from 'three';
 /**
  * Màu của cảnh. Màu THƯƠNG HIỆU đọc từ token (styles/tokens.css, `@theme static` xuất ra :root) lúc dựng cảnh, nên đổi
  * token là cảnh đổi theo; giá trị dự phòng = đúng token hiện tại (tests/hero kiểm khớp tokens.css).
- * Màu NƯỚC/MÂY/ĐẤT là bảng minh hoạ riêng của cảnh 3D (ánh sáng + tô bóng), lấy theo Mẫu 02 anh Duy đã chọn — không
- * dùng cho UI HTML (contracts/hero-map.md mục 6).
+ * Màu MÂY/ĐẤT là bảng minh hoạ riêng của cảnh 3D (ánh sáng + tô bóng), lấy theo Mẫu 02 anh Duy đã chọn; màu NƯỚC theo họ
+ * blue-600 (D-31) — không dùng cho UI HTML (contracts/hero-map.md mục 3.8).
  */
 export const TOKEN_FALLBACK = {
   'blue-600': '#004aad',
@@ -46,9 +46,13 @@ export function scenePalette() {
     landTop: new Color('#fbf8f2'),
     landSide: new Color('#edf1f7'),
     landTint: new Color('#fffaf2'),
-    seaDeep: new Color('#2467cf'),
-    seaMid: new Color('#3b8ae6'),
-    seaShallow: new Color('#93d6f3'),
+    /**
+     * Nước theo họ xanh thương hiệu (anh Duy, 06/10/2026: "xanh 004aad cho trang website"): biển xa = blue-600, gần bờ sáng
+     * lên cùng sắc độ (H 214°), nước nông + quầng quần đảo = blue-300. Tone mapping Neutral giữ nguyên màu có kênh đỏ 0.
+     */
+    seaDeep: blue.clone(),
+    seaMid: new Color('#0057cc'),
+    seaShallow: new Color(readToken('blue-300')),
     seaMist: new Color('#eef5ff'),
     seaDeepNight: new Color('#071d4f'),
     seaMidNight: new Color('#0f3a86'),
