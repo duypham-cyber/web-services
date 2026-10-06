@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-03",
+  "updated": "2026-10-06",
   "owner": "qa — đổi ngưỡng = sửa file này trong PR riêng, ghi lý do vào docs/DECISIONS.md",
   "sources": [
     "CLAUDE.md mục Ngân sách",
@@ -34,15 +34,10 @@
   "fonts": {
     "id": "AC-PERF-3",
     "level": "fail",
-    "preloadCount": 1,
-    "preloadFace": {
-      "family": "Be Vietnam Pro",
-      "weight": 700,
-      "subset": "vietnamese",
-      "unicodeRangeMarker": "U+1EA0-1EF9"
-    },
-    "allowedFamilies": ["Be Vietnam Pro"],
-    "allowedWeights": [400, 500, 600, 700]
+    "preloadCount": 0,
+    "allowedFamilies": [],
+    "allowedWeights": [400, 500, 600, 700],
+    "note": "D-32 (06/10/2026): bộ font hệ thống anh Duy chọn (-apple-system, BlinkMacSystemFont, SF Pro Rounded, Segoe UI, Roboto), không tải web font → 0 preload, không @font-face"
   },
   "images": {
     "id": "QA-IMG",

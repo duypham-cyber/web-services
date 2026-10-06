@@ -30,12 +30,13 @@
     --logo-sub: #a6b1b8; /* màu chữ "SERVICES" của logo gốc (tài sản thương hiệu, không phải token UI) */
   }
 
+  /* Dải tối = nền xanh thương hiệu blue-600 #004AAD (D-32; trước là navy-900). Link blue-100 (blue-300 chỉ 3,4:1 trên blue-600). */
   [data-tone='navy'] {
     --surface-fg: var(--color-white);
     --surface-heading: var(--color-white);
     --surface-muted: var(--color-slate-300);
     --surface-accent: var(--color-orange-200);
-    --surface-link: var(--color-blue-300);
+    --surface-link: var(--color-blue-100);
     --surface-link-hover: var(--color-white);
     --surface-border: rgb(203 213 225 / 0.28);
     --focus-ring: var(--color-orange-200);
@@ -81,7 +82,7 @@
     text-wrap: pretty;
   }
 
-  /* Chữ đậm dùng họ font 700 đã preload (tokens: --font-display) */
+  /* Chữ đậm: cùng bộ font hệ thống (tokens: --font-display, D-32) */
   strong,
   b {
     font-family: var(--font-display);

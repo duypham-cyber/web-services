@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
-import { Be_Vietnam_Pro } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import * as rootParams from 'next/root-params';
 import { Footer } from '@/components/layout/Footer';
@@ -21,26 +20,9 @@ import { SITE_URL } from '@/lib/routes';
 import '../globals.css';
 
 /**
- * Be Vietnam Pro tự host lúc build (next/font, docs/03 mục 11.2). Hai lần gọi để CHỈ preload 1 file:
- *  - fontSans: 400/500/600/700, mọi subset, KHÔNG preload.
- *  - fontDisplay: chỉ 700, preload subset vietnamese → dùng cho display/h1/kpi/strong (token --font-display).
+ * Font: bộ font hệ thống theo yêu cầu anh Duy 06/10/2026 (D-32) — khai báo ở styles/tokens.css (--font-sans). Không tải web
+ * font nào nên không có preload font (budgets.json AC-PERF-3: preloadCount 0).
  */
-const fontSans = Be_Vietnam_Pro({
-  subsets: ['latin', 'latin-ext', 'vietnamese'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  preload: false,
-  variable: '--font-bvp',
-});
-
-const fontDisplay = Be_Vietnam_Pro({
-  subsets: ['vietnamese'],
-  weight: '700',
-  display: 'swap',
-  preload: true,
-  variable: '--font-bvp-display',
-});
-
 /** Chỉ 'vi' và 'en'; mọi giá trị khác của [locale] → 404. */
 export const dynamicParams = false;
 
@@ -84,7 +66,6 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   return (
     <html
       lang={locale}
-      className={`${fontSans.variable} ${fontDisplay.variable}`}
       // Dấu hiệu bản xem trước (DRAFT_PREVIEW=1 lúc build) để test biết server đang kiểm là bản nào. Trải có điều kiện để
       // production không mang cả TÊN thuộc tính trong payload RSC (scripts/check-no-draft.mjs dò chuỗi này)
       {...(preview ? { 'data-draft-preview': '' } : {})}

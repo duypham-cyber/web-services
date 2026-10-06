@@ -15,7 +15,7 @@ type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
 const DEFAULT_SIZE: Record<HeadingProps['level'], HeadingSize> = { 1: 'h1', 2: 'h2', 3: 'h3', 4: 'h3' };
 
 const SIZE_CLASS: Record<HeadingSize, string> = {
-  // 700 → họ font --font-display (file 700 được preload)
+  // 700 → token --font-display (cùng bộ font hệ thống, D-32)
   display: 'font-display text-display',
   h1: 'font-display text-h1',
   h2: 'text-h2',
