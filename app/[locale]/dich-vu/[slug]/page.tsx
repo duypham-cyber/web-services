@@ -94,7 +94,7 @@ export default async function ServiceDetailPage({ params }: PageProps<'/[locale]
           </>
         }
         highlights={<ClaimList ids={p.heroClaims} locale={locale} />}
-        media={<MediaFrame illustration={p.illustration} ratio="4/3" previewLabel={preview ? ts('kit.imagePending') : null} />}
+        media={<MediaFrame illustration={p.illustration} ratio="4/3" priority previewLabel={preview ? ts('kit.imagePending') : null} />}
       />
 
       <Section id="pham-vi" aria-labelledby="pham-vi-title">

@@ -15,6 +15,7 @@ import { Button, type AppHref } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Section } from '@/components/ui/Section';
 import { TextLink } from '@/components/ui/TextLink';
+import { PHOTOS } from '@/content/photos';
 import { services } from '@/content/services';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
@@ -75,7 +76,15 @@ export default async function ServicesHubPage({ params }: PageProps<'/[locale]/d
             </Button>
           </>
         }
-        media={<MediaFrame illustration="appliances" ratio="4/3" previewLabel={preview ? ts('kit.imagePending') : null} />}
+        media={
+          <MediaFrame
+            illustration="appliances"
+            photo={PHOTOS['tho-nhan-don-xe-may']}
+            ratio="4/3"
+            priority
+            previewLabel={preview ? ts('kit.imagePending') : null}
+          />
+        }
       />
 
       <Section aria-labelledby="nhom-dich-vu-title">

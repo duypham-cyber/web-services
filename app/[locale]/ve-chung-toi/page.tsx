@@ -16,6 +16,7 @@ import { DraftLine } from '@/components/ui/DraftLine';
 import { Section } from '@/components/ui/Section';
 import { StatTile } from '@/components/ui/StatTile';
 import { partnersWithConsent } from '@/content/partners';
+import { PHOTOS } from '@/content/photos';
 import { stats } from '@/content/stats';
 import { resolveLocale } from '@/i18n/params';
 import { localeStaticParams } from '@/i18n/static-params';
@@ -47,7 +48,8 @@ const VALUES: { key: 'fast' | 'standard' | 'transparent'; icon: LucideIcon }[] =
  * sứ mệnh → cách làm việc (Nhanh – Chuẩn – Minh bạch) → KPI (content/stats.ts qua lib/stats.ts, null → ẩn) → mốc phát
  * triển (chỉ mốc có nguồn: hiện chưa có → bản xem trước chỉ còn dòng ghi chú) → pháp nhân, MST, văn phòng → đối tác
  * (ẩn tới khi có phép)
- * → CTA cuối. Ảnh: khung giữ chỗ (MediaFrame) — thay bằng ảnh thật/khung phim khi có, không dùng KHANG.
+ * → CTA cuối. Ảnh hero: ảnh minh họa phòng điều phối có nhãn (D-31), văn phòng: khung giữ chỗ — thay bằng ảnh thật khi có
+ * (content/photos.ts), không dùng KHANG.
  */
 export default async function AboutPage({ params }: PageProps<'/[locale]/ve-chung-toi'>) {
   const locale = await resolveLocale(params);
@@ -65,7 +67,15 @@ export default async function AboutPage({ params }: PageProps<'/[locale]/ve-chun
         eyebrow={t('eyebrow')}
         title={t('title')}
         lead={t('lead')}
-        aside={<MediaFrame motif="team" ratio="4/3" pendingNote={`${tp('media.photoPending')}: ${t('media.team')}`} />}
+        aside={
+          <MediaFrame
+            motif="team"
+            ratio="4/3"
+            photo={PHOTOS['phong-dieu-phoi']}
+            priority
+            pendingNote={`${tp('media.photoPending')}: ${t('media.team')}`}
+          />
+        }
       />
 
       <Section id="cau-chuyen" aria-labelledby="cau-chuyen-title">

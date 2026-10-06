@@ -13,19 +13,22 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type { CSSProperties } from 'react';
+import { Photo } from '@/components/media/Photo';
 import { Badge } from '@/components/ui/Badge';
+import type { PhotoAsset } from '@/content/photos';
 import { cn } from '@/lib/cn';
 import { isDraftPreview } from '@/lib/env';
 
 /**
  * KHUNG ẢNH DÙNG CHUNG của khu vực partner (/doi-tac-tho, /ho-tro-khach-hang, /ve-chung-toi, /lien-he).
  *
- * - Có ảnh thật → truyền `image` (đường dẫn trong /public đã xuất sẵn AVIF/WebP, alt mô tả, kích thước gốc): render
- *   <picture> thuần, KHÔNG kéo next/image (component client ~6 KB gz) vào JS tải đầu của trang.
- * - Chưa có ảnh thật (hiện tại) → khung giữ chỗ đúng tỉ lệ, dựng bằng token + icon Lucide (không stock, không mascot,
- *   không logo hãng — docs/03 mục 11.4). Ghi chú "Ảnh thật sẽ chụp: …" CHỈ hiện ở bản xem trước (DRAFT_PREVIEW=1).
+ * - Có ảnh → truyền `photo` (content/photos.ts, xuất sẵn AVIF/WebP nhiều cỡ): render <picture> thuần
+ *   (components/media/Photo.tsx), KHÔNG kéo next/image (component client ~6 KB gz) vào JS tải đầu của trang. Ảnh minh họa
+ *   AI/stock tự kèm nhãn "Ảnh minh họa" (D-31).
+ * - Chưa có ảnh → khung giữ chỗ đúng tỉ lệ, dựng bằng token + icon Lucide (không stock, không mascot, không logo hãng —
+ *   docs/03 mục 11.4). Ghi chú "Ảnh thật sẽ chụp: …" CHỈ hiện ở bản xem trước (DRAFT_PREVIEW=1).
  *
- * Thay ảnh thật sau này: chỉ đổi prop `image` ở nơi gọi, bố cục giữ nguyên (cùng tỉ lệ khung).
+ * Thay ảnh thật sau này: sửa content/photos.ts (hoặc prop `photo` ở nơi gọi), bố cục giữ nguyên (cùng tỉ lệ khung).
  */
 export type MediaMotif = 'team' | 'office' | 'technician' | 'support';
 export type MediaRatio = '4/3' | '3/2' | '16/10' | '1/1' | '4/5';
@@ -33,11 +36,13 @@ export type MediaRatio = '4/3' | '3/2' | '16/10' | '1/1' | '4/5';
 type MediaFrameProps = {
   motif: MediaMotif;
   ratio?: MediaRatio;
-  /** src = ảnh dự phòng (JPG/WebP); avif = bản AVIF cùng kích thước (nếu có). Ảnh đã nén sẵn, không qua /_next/image. */
-  image?: { src: string; avif?: string; alt: string; width: number; height: number };
+  /** Ảnh của content/photos.ts (đã nén sẵn, không qua /_next/image). */
+  photo?: PhotoAsset | null;
+  /** Thuộc tính sizes của ảnh. */
+  sizes?: string;
   /** Ghi chú bản xem trước, vd "Ảnh thật sẽ chụp: đội điều phối". */
   pendingNote?: string;
-  /** Ưu tiên tải (ảnh hero LCP). Chỉ dùng khi có ảnh thật. */
+  /** Ưu tiên tải (ảnh hero ở màn đầu). Chỉ có tác dụng khi có ảnh. */
   priority?: boolean;
   className?: string;
 };
@@ -63,25 +68,21 @@ const DOTS: CSSProperties = {
   backgroundSize: '22px 22px',
 };
 
-export function MediaFrame({ motif, ratio = '4/3', image, pendingNote, priority, className }: MediaFrameProps) {
+export function MediaFrame({
+  motif,
+  ratio = '4/3',
+  photo,
+  sizes = '(min-width: 1024px) 560px, 100vw',
+  pendingNote,
+  priority,
+  className,
+}: MediaFrameProps) {
   const frame = cn('relative overflow-hidden rounded-xl', RATIO_CLASS[ratio], className);
 
-  if (image) {
+  if (photo) {
     return (
       <div className={cn(frame, 'bg-blue-100')}>
-        <picture>
-          {image.avif ? <source type="image/avif" srcSet={image.avif} /> : null}
-          <img
-            src={image.src}
-            alt={image.alt}
-            width={image.width}
-            height={image.height}
-            loading={priority ? 'eager' : 'lazy'}
-            fetchPriority={priority ? 'high' : undefined}
-            decoding="async"
-            className="size-full object-cover"
-          />
-        </picture>
+        <Photo photo={photo} sizes={sizes} priority={priority} />
       </div>
     );
   }

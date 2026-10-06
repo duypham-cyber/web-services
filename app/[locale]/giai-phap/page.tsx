@@ -74,7 +74,7 @@ export default async function SolutionsHubPage({ params }: PageProps<'/[locale]/
           </>
         }
         highlights={<ClaimList ids={['coverage.provinces-34']} locale={locale} />}
-        media={<MediaFrame illustration="hub-flow" ratio="4/3" previewLabel={preview ? t('kit.imagePending') : null} />}
+        media={<MediaFrame illustration="hub-flow" ratio="4/3" priority previewLabel={preview ? t('kit.imagePending') : null} />}
       />
 
       <Section aria-labelledby="hai-mo-hinh-title">
@@ -85,6 +85,7 @@ export default async function SolutionsHubPage({ params }: PageProps<'/[locale]/
               <MediaFrame
                 illustration={c.illustration}
                 ratio="16/10"
+                sizes="(min-width: 1024px) 600px, 100vw"
                 className="rounded-none border-0 border-b border-blue-100"
                 previewLabel={preview ? t('kit.imagePending') : null}
               />

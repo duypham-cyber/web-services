@@ -74,6 +74,9 @@
     "updated": "updated {date}",
     "pending": "Awaiting figures: {items}"
   },
+  "media": {
+    "illustrative": "Illustrative image"
+  },
   "dev": {
     "panelTitle": "Build notes",
     "owner": "{agent} will build this page.",

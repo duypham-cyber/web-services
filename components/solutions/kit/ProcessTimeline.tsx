@@ -79,6 +79,7 @@ export function ProcessTimeline({ locale, stepLabel, triggerLabel, variant = 'de
             <MediaFrame
               illustration={STEP_STILL[step.id as keyof typeof STEP_STILL]}
               ratio="4/3"
+              sizes="(min-width: 1024px) 240px, (min-width: 640px) 50vw, 100vw"
               className="max-sm:aspect-[16/10]"
               previewLabel={stillLabel}
             />

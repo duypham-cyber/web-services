@@ -113,7 +113,7 @@ export default async function SolutionsRetailPage({ params }: PageProps<'/[local
           </>
         }
         highlights={<ClaimList ids={['b2b.retail.onsite-within-24h', 'coverage.provinces-34']} locale={locale} />}
-        media={<MediaFrame illustration="integration" ratio="4/3" previewLabel={preview ? t('kit.imagePending') : null} />}
+        media={<MediaFrame illustration="integration" ratio="4/3" priority previewLabel={preview ? t('kit.imagePending') : null} />}
       />
 
       <Section id="tich-hop" aria-labelledby="tich-hop-title">

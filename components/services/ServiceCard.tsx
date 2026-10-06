@@ -20,7 +20,13 @@ type ServiceCardProps = {
 export function ServiceCard({ id, href, icon: Icon, illustration, title, body, cta, previewLabel }: ServiceCardProps) {
   return (
     <Card as="article" id={id} interactive padding="none" className="flex h-full scroll-mt-28 flex-col overflow-clip">
-      <MediaFrame illustration={illustration} ratio="4/3" className="rounded-none border-0 border-b border-blue-100" previewLabel={previewLabel} />
+      <MediaFrame
+        illustration={illustration}
+        ratio="4/3"
+        sizes="(min-width: 1280px) 300px, (min-width: 768px) 50vw, 100vw"
+        className="rounded-none border-0 border-b border-blue-100"
+        previewLabel={previewLabel}
+      />
       <div className="flex flex-1 flex-col p-6">
         <span aria-hidden="true" className="inline-flex size-10 items-center justify-center rounded-md bg-blue-100 text-blue-600">
           <Icon size={20} strokeWidth={1.5} />

@@ -1,4 +1,6 @@
+import { Photo } from '@/components/media/Photo';
 import { Badge } from '@/components/ui/Badge';
+import { PHOTOS, type PhotoAsset } from '@/content/photos';
 import { cn } from '@/lib/cn';
 import { Illustration, type IllustrationKey } from './illustrations';
 
@@ -11,50 +13,62 @@ const RATIO: Record<MediaRatio, string> = {
   '1/1': 'aspect-square',
 };
 
+/**
+ * Ảnh mặc định theo khóa minh họa (D-31). Khóa chưa có ảnh → minh họa SVG. Một ảnh có thể dùng ở nhiều trang, nhưng
+ * KHÔNG lặp trong cùng một trang: /giai-phap/hang-dien-may có hero `dashboard` + 5 bước, /giai-phap có hero `hub-flow` +
+ * thẻ `dashboard`, `integration`.
+ */
+const KIT_PHOTOS: Partial<Record<IllustrationKey, PhotoAsset>> = {
+  'hub-flow': PHOTOS['phong-dieu-phoi'],
+  dashboard: PHOTOS['kho-hang-dien-may'],
+  integration: PHOTOS['tho-huong-dan-khach'],
+  'ac-split': PHOTOS['tho-lap-dieu-hoa'],
+  maintenance: PHOTOS['ve-sinh-loc-may-lanh'],
+  'step-intake': PHOTOS['phong-dieu-phoi'],
+  'step-dispatch': PHOTOS['tho-nhan-don-xe-may'],
+  'step-confirm': PHOTOS['tho-huong-dan-khach'],
+  'step-install': PHOTOS['tho-lap-dieu-hoa'],
+};
+
 type MediaFrameProps = {
-  /** Minh họa SVG giữ chỗ (không logo, không chữ) khi chưa có ảnh thật. */
+  /** Minh họa SVG giữ chỗ (không logo, không chữ) khi chưa có ảnh. */
   illustration: IllustrationKey;
   ratio?: MediaRatio;
   /**
-   * Ảnh thật (đường dẫn trong public/ hoặc import tĩnh) — khi có thì thay minh họa. BẮT BUỘC kèm `alt`.
-   * Quy tắc ảnh (docs/03 mục 11.4): chỉ ảnh thật của Bluebolt (thợ, điều phối, công trình), không stock lạc đề.
+   * Ảnh của content/photos.ts thay cho ảnh mặc định của khóa minh họa (vd hero /dich-vu). null = luôn dùng minh họa SVG.
+   * Quy tắc ảnh (docs/03 mục 11.4, D-31): ảnh AI/stock luôn có nhãn "Ảnh minh họa", không dùng ở mục công trình.
    */
-  src?: string;
-  alt?: string;
-  /** Kích thước gốc của ảnh thật (tránh CLS). */
-  width?: number;
-  height?: number;
+  photo?: PhotoAsset | null;
   sizes?: string;
+  /** Ảnh ở màn đầu (hero): tải ngay thay vì lazy. */
+  priority?: boolean;
   /** Nhãn nhỏ góc khung, CHỈ truyền khi DRAFT_PREVIEW (vd "Ảnh minh họa, ảnh thật sẽ chụp sau"). */
   previewLabel?: string | null;
   className?: string;
 };
 
 /**
- * Khung ảnh dùng chung cho trang B2B (giải pháp, dịch vụ). Một chỗ duy nhất để thay ảnh thật về sau:
- * hiện tại render minh họa SVG trên nền token (lưới chấm xanh nhạt) đúng tỉ lệ → không lệch bố cục khi thay ảnh.
- * Minh họa là trang trí (aria-hidden); ảnh thật có alt. Không animate (khung có thể nằm ở màn đầu trang con).
+ * Khung ảnh dùng chung cho trang B2B (giải pháp, dịch vụ). Một chỗ duy nhất để thay ảnh: content/photos.ts + KIT_PHOTOS.
+ * Chưa có ảnh: minh họa SVG trên nền token (lưới chấm xanh nhạt) đúng tỉ lệ → không lệch bố cục khi thay ảnh.
+ * Minh họa là trang trí (aria-hidden); ảnh có alt. Không animate (khung có thể nằm ở màn đầu trang con).
+ * Ảnh render <picture> thuần (components/media/Photo.tsx), không next/image: next/image là client component, thêm ~5 KB
+ * gz JS tải đầu cho MỌI trang dùng khung này (đo bằng safe-build 02/10/2026).
  */
 export function MediaFrame({
   illustration,
   ratio = '4/3',
-  src,
-  alt,
-  width,
-  height,
+  photo,
   sizes = '(min-width: 1024px) 560px, 100vw',
+  priority = false,
   previewLabel,
   className,
 }: MediaFrameProps) {
-  if (src) {
-    // <img> thường thay vì next/image: next/image là client component, thêm ~5 KB gz JS tải đầu cho MỌI trang dùng
-    // khung này (đo bằng safe-build 02/10/2026) trong khi chưa có ảnh thật nào. Ảnh thật phải xuất sẵn AVIF/WebP đúng
-    // kích thước (docs/03 mục 11.4); khi cần srcset tự động thì đổi sang next/image tại đây (một chỗ duy nhất).
+  const shown = photo === undefined ? KIT_PHOTOS[illustration] : photo;
+  if (shown) {
     return (
-      <figure className={cn('relative overflow-hidden rounded-lg bg-blue-50', RATIO[ratio], className)}>
-        {/* eslint-disable-next-line @next/next/no-img-element -- xem ghi chú phía trên */}
-        <img src={src} alt={alt ?? ''} width={width} height={height} sizes={sizes} loading="lazy" decoding="async" className="size-full object-cover" />
-      </figure>
+      <div className={cn('relative overflow-hidden rounded-lg bg-blue-50', RATIO[ratio], className)}>
+        <Photo photo={shown} sizes={sizes} priority={priority} />
+      </div>
     );
   }
   return (

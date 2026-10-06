@@ -104,7 +104,7 @@ export default async function SolutionsBrandsPage({ params }: PageProps<'/[local
           </>
         }
         highlights={<ClaimList ids={['coverage.provinces-34', 'quality.brand-standard', 'technician.ekyc']} locale={locale} />}
-        media={<MediaFrame illustration="dashboard" ratio="4/3" previewLabel={preview ? t('kit.imagePending') : null} />}
+        media={<MediaFrame illustration="dashboard" ratio="4/3" priority previewLabel={preview ? t('kit.imagePending') : null} />}
       />
 
       <Section aria-labelledby="van-de-title">

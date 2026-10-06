@@ -6,16 +6,29 @@ import { Chip } from '@/components/ui/Chip';
 import { Heading } from '@/components/ui/Heading';
 import { Section, type SectionTone } from '@/components/ui/Section';
 import { TextLink } from '@/components/ui/TextLink';
+import { PHOTOS, type PhotoAsset } from '@/content/photos';
 import type { IllustrationName } from './illustrations';
 import { MediaFrame } from './MediaFrame';
 import { SectionHeader } from './SectionHeader';
 
 type DoorKey = 'brands' | 'technicians' | 'consumers';
 
-const DOORS: readonly { key: DoorKey; illustration: IllustrationName; href: AppHref; secondaryHref?: AppHref }[] = [
-  { key: 'brands', illustration: 'brands', href: '/giai-phap/hang-dien-may', secondaryHref: '/giai-phap/san-tmdt-ban-le' },
-  { key: 'technicians', illustration: 'technicians', href: '/doi-tac-tho' },
-  { key: 'consumers', illustration: 'consumers', href: '/ho-tro-khach-hang' },
+const DOORS: readonly {
+  key: DoorKey;
+  illustration: IllustrationName;
+  photo: PhotoAsset;
+  href: AppHref;
+  secondaryHref?: AppHref;
+}[] = [
+  {
+    key: 'brands',
+    illustration: 'brands',
+    photo: PHOTOS['kho-hang-dien-may'],
+    href: '/giai-phap/hang-dien-may',
+    secondaryHref: '/giai-phap/san-tmdt-ban-le',
+  },
+  { key: 'technicians', illustration: 'technicians', photo: PHOTOS['tho-nhan-don-xe-may'], href: '/doi-tac-tho' },
+  { key: 'consumers', illustration: 'consumers', photo: PHOTOS['tho-huong-dan-khach'], href: '/ho-tro-khach-hang' },
 ];
 
 /**
@@ -41,7 +54,9 @@ export async function DoorsSection({ tone }: { tone: SectionTone }) {
           >
             <MediaFrame
               illustration={door.illustration}
+              photo={door.photo}
               ratio="16/10"
+              sizes="(min-width: 1024px) 400px, (min-width: 768px) 320px, 100vw"
               rounded={false}
               reveal
               pendingLabel={t('media.photoPending')}

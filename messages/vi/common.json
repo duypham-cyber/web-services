@@ -74,6 +74,9 @@
     "updated": "cập nhật {date}",
     "pending": "Chờ số liệu: {items}"
   },
+  "media": {
+    "illustrative": "Ảnh minh họa"
+  },
   "dev": {
     "panelTitle": "Ghi chú dựng trang",
     "owner": "{agent} sẽ dựng trang này.",
