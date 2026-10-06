@@ -654,3 +654,28 @@ phù hợp không ở thị trường Việt Nam thì dùng (Đừng lấy của
     ảnh (hành vi sẵn có khi `hero: null`).
 - Kết quả: mọi khung "chờ ảnh chụp" ở trang chủ, giải pháp, dịch vụ, quy trình và Về chúng tôi đều có ảnh; 3/4 bài Kiến thức thiếu
   ảnh nay có bìa.
+
+### D-32 · 06/10/2026 · Dải tối đổi sang xanh #004AAD, font hệ thống thay Be Vietnam Pro (anh Duy yêu cầu)
+Anh Duy gửi ảnh footer: "dùng màu xanh hình như chưa đúng mã màu… check lại toàn bộ website", và gửi bộ font
+`-apple-system, BlinkMacSystemFont, SF Pro Rounded, Segoe UI, Roboto, sans-serif`.
+
+**Màu**
+- Nguyên nhân: footer, các khối CTA cuối trang, dải KPI/công nghệ, thẻ hotline, header bảng giá/SLA và màn kết hero dùng
+  `navy-900` #0A1F44 (docs/03 mục 11.1 đặt navy cho "dải tối premium"). Nhìn như một màu xanh khác thương hiệu.
+- Đổi: mọi dải tối (Section/Card `tone="navy"`, footer, CTA, bảng, bìa bài chưa có ảnh, mockup) → `blue-600` #004AAD.
+  Vệt sáng trang trí trước là blue-600 (sẽ chìm) đổi sang blue-300 mờ hoặc blue-700.
+- Chữ trên dải xanh, đã tính lại (`styles/contrast-pairs.ts`, test): trắng 8,13 · `slate-300` 5,48 · `orange-200` 4,76 ·
+  link `blue-100` 7,13. `blue-300` chỉ 3,45:1 nên thôi dùng cho chữ/link trên dải tối (còn icon/trang trí).
+- Giữ navy: chữ tiêu đề (gần đen, dễ đọc), chữ trên nút cam (6,19:1; chữ xanh trên cam chỉ 3,1:1), nhãn TP.HCM và cảnh đêm
+  của hero (phải tối hơn biển xanh), tông "miền Nam" và đảo của bản đồ dữ liệu, khung điện thoại trong hình minh họa.
+- Ảnh OG mặc định dựng lại nền xanh, đổi tên `-v3` để Zalo/Facebook không giữ ảnh cũ; `content/seo.ts`, `content/redirects.ts`,
+  openresty + `redirect-inventory.csv` trỏ v3.
+
+**Font**
+- Bỏ Be Vietnam Pro tự host (`next/font`, docs/03 mục 11.2). Dùng bộ font hệ thống anh gửi: không tải web font nào, bớt
+  1 file preload. `budgets.json` AC-PERF-3: `preloadCount` 0, không @font-face.
+- Thực tế hiển thị: macOS/iOS → San Francisco · Windows → Segoe UI · Android → Roboto · máy khác → sans-serif mặc định. Cả ba
+  font chính đều đủ dấu tiếng Việt. Chữ sẽ hơi khác nhau giữa các hệ điều hành (đặc điểm của font hệ thống).
+- `SF Pro Rounded` chỉ có trên máy Apple đã cài; trình duyệt không có sẽ bỏ qua và dùng font kế tiếp.
+- Ảnh OG dựng trên máy Linux không có các font trên → nhúng Roboto (Apache-2.0, `assets/fonts/roboto`) chỉ lúc chụp.
+

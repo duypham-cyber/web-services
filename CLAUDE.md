@@ -115,7 +115,10 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 
 ## Design system (docs/03 mục 11–12) — chỉ dùng token
 - Màu: CHỈ tên trong `styles/tokens.css` (palette mặc định của Tailwind đã xóa). Cam `orange-500` chỉ làm NỀN (chữ navy-900
-  trên đó); chữ cam: `orange-700` trên nền sáng, `orange-200` trên navy. `slate-500` chỉ trên nền trắng.
+  trên đó); chữ cam: `orange-700` trên nền sáng, `orange-200` trên dải tối. `slate-500` chỉ trên nền trắng.
+- Dải tối (`tone="navy"`, footer, khối CTA, header bảng) = nền xanh thương hiệu `blue-600` #004AAD (D-32); tên tone giữ là
+  `navy`. Link trên dải tối là `blue-100` (`blue-300` chỉ 3,45:1 trên blue-600, chỉ dùng cho icon/trang trí). `navy-900` còn
+  dùng cho chữ tiêu đề và chữ trên nút cam.
 - Chữ: `text-display` `text-h1` (thêm `font-display`, weight 700) · `text-h2` `text-h3` `text-lead` `text-body` `text-small`
   · `eyebrow` (utility, VIẾT HOA) · `text-kpi` + `tabular`. Bo: `rounded-sm|md|lg|xl|pill`. Bóng: `shadow-1|2|3`.
   Khoảng cách bội 4 (`p-1`=4px … `p-32`=128px), `px-gutter`, `py-section`. Easing `ease-entry|glide|standard`,
@@ -148,7 +151,8 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 - Chunk 3D ≤ 290 KB gz (chỉ T-FULL/T-LITE; import sau ý định đầu tiên hoặc load + 2 s rảnh, KHÔNG ở lần render đầu).
 - Trang chủ mobile trước khi cuộn ≤ 600 KB byte truyền. Phim desktop T-FULL ≤ 2,2 MB · T-LITE ≤ 1,4 MB · shot 0–1 ≤ 1,2 MB.
 - Video tua mobile ≤ 110 KB/s phim, 540×960, GOP ≤ 8, shot đầu ≤ 400 KB. Poster ≤ 150 KB desktop / ≤ 90 KB mobile (AVIF).
-- Font: chỉ 1 file preload (Be Vietnam Pro 700 vietnamese). Không thêm weight/họ font.
+- Font: bộ font hệ thống `-apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'Segoe UI', Roboto, sans-serif` (D-32), không
+  tải web font, 0 preload. Không thêm `next/font` hay @font-face. Ảnh OG nhúng Roboto từ `assets/fonts/roboto` chỉ lúc chụp.
 
 ## Luật cảnh 3D và máy quay (Agent phim — KHÔNG vi phạm)
 Áp dụng cho hero bản đồ Mẫu 02:
