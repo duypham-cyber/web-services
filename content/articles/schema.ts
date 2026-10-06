@@ -33,6 +33,7 @@ const image = z
     alt: localized,
     locales: z.array(z.enum(['vi', 'en'])).min(1).optional(),
     fit: z.enum(['cover', 'contain']).optional(),
+    illustrative: z.literal(true).optional(),
   })
   .strict();
 

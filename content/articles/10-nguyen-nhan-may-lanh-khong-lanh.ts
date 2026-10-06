@@ -256,8 +256,18 @@ export const nguyenNhanMayLanhKhongLanh = {
   },
   publishedAt: '2026-04-05',
   updatedAt: '2026-10-02',
-  hero: null,
-  ogImage: null,
+  // Ảnh minh họa có nhãn (D-31, content/photos.ts): lưới lọc bám bụi — nguyên nhân số 1 của bài. Thay khi có ảnh thật.
+  hero: {
+    src: '/images/photos/ve-sinh-loc-may-lanh-16x9.jpg',
+    width: 1650,
+    height: 928,
+    alt: {
+      vi: 'Tay thợ rút tấm lưới lọc bám đầy bụi ra khỏi dàn lạnh điều hòa',
+      en: 'Hands pulling a dust-covered filter out of an air conditioner indoor unit',
+    },
+    illustrative: true,
+  },
+  ogImage: { src: '/images/news/og/10-nguyen-nhan-may-lanh-khong-lanh.jpg', width: 1200, height: 630 },
   intro: [
     {
       type: 'p',

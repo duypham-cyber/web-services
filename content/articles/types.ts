@@ -27,6 +27,8 @@ export type ImageAsset = {
   readonly locales?: readonly ('vi' | 'en')[];
   /** cover = cắt cho đầy khung (ảnh chụp) · contain = giữ trọn ảnh (infographic). Mặc định cover. */
   readonly fit?: 'cover' | 'contain';
+  /** Ảnh minh họa AI/stock (content/photos.ts, D-31) → khung hiện nhãn "Ảnh minh họa". */
+  readonly illustrative?: true;
 };
 
 /** Mục danh sách: chữ thường, hoặc một câu khẳng định đọc qua claim(). */

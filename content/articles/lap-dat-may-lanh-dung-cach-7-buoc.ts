@@ -20,10 +20,20 @@ export const lapDatMayLanhDungCach7Buoc = {
   },
   publishedAt: '2026-04-12',
   updatedAt: '2026-10-02',
-  // Ảnh đầu bài của site cũ là ảnh AI (dấu ✦ Gemini, thợ mặc áo "BLUEBOLT" giả) → gỡ (docs/03 mục 11.4). Chờ ảnh thật
-  // từ buổi chụp (docs/03 mục 15 dòng 10). og:image cũ /images/news/lap-dat-may-lanh-7-buoc.jpg → 301 (content/redirects.ts).
-  hero: null,
-  ogImage: null,
+  // Ảnh đầu bài của site cũ là ảnh AI (dấu ✦ Gemini, thợ mặc áo "BLUEBOLT" giả) → đã gỡ (docs/03 mục 11.4). Tạm dùng ảnh
+  // minh họa sạch (không logo, không chữ), có nhãn, theo D-31 (content/photos.ts) tới khi có ảnh thật từ buổi chụp
+  // (docs/03 mục 15 dòng 10). og:image cũ /images/news/lap-dat-may-lanh-7-buoc.jpg → 301 (content/redirects.ts).
+  hero: {
+    src: '/images/photos/tho-lap-dieu-hoa-16x9.jpg',
+    width: 1456,
+    height: 819,
+    alt: {
+      vi: 'Thợ kỹ thuật mặc áo xanh lắp dàn lạnh điều hòa treo tường trong căn hộ',
+      en: 'A technician in a blue polo shirt mounting a wall-mounted air conditioner in an apartment',
+    },
+    illustrative: true,
+  },
+  ogImage: { src: '/images/news/og/lap-dat-may-lanh-dung-cach-7-buoc.jpg', width: 1200, height: 630 },
   intro: [
     {
       type: 'p',

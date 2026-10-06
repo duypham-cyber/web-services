@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import Image from 'next/image';
+import { IllustrativeLabel } from '@/components/media/Photo';
 import { Badge } from '@/components/ui/Badge';
 import type { ImageAsset } from '@/content/articles/types';
 import type { Locale } from '@/i18n/routing';
@@ -28,7 +29,8 @@ type MediaFrameProps = {
  * Khung ảnh chung của khu vực Kiến thức (thẻ bài, ảnh đầu bài, ảnh trong bài). Thay ảnh thật sau này = đổi `src`
  * trong content/articles/<key>.ts, không sửa component.
  *  - Có ảnh: next/image (AVIF/WebP, đúng cỡ theo `sizes`), `fit` cover (ảnh chụp) hoặc contain (infographic). Ảnh chụp
- *    phủ một lớp navy-900 10% để các ảnh bài thành một họ ảnh (docs/03 mục 11.4).
+ *    phủ một lớp navy-900 10% để các ảnh bài thành một họ ảnh (docs/03 mục 11.4). Ảnh minh họa AI/stock
+ *    (`illustrative`) có nhãn "Ảnh minh họa" (D-31).
  *  - Không có ảnh (CHỈ thẻ bài — trang bài không dựng khung khi hero = null): bìa dựng từ token (nền navy-900, vệt sáng
  *    blue-600, tia chớp nét blue-300, icon của bài), aria-hidden, không chữ trong ảnh. Không còn "khung giữ chỗ" lưới.
  */
@@ -79,6 +81,7 @@ export function MediaFrame({
         className={fit === 'contain' ? 'object-contain p-2' : 'object-cover'}
       />
       {fit === 'cover' ? <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-navy-900/10" /> : null}
+      {image.illustrative ? <IllustrativeLabel /> : null}
     </div>
   );
 }
