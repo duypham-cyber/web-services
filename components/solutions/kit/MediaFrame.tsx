@@ -23,11 +23,14 @@ const KIT_PHOTOS: Partial<Record<IllustrationKey, PhotoAsset>> = {
   dashboard: PHOTOS['kho-hang-dien-may'],
   integration: PHOTOS['tho-huong-dan-khach'],
   'ac-split': PHOTOS['tho-lap-dieu-hoa'],
+  appliances: PHOTOS['lap-dat-dien-may'],
   maintenance: PHOTOS['ve-sinh-loc-may-lanh'],
+  robot: PHOTOS['robot-hut-bui'],
   'step-intake': PHOTOS['phong-dieu-phoi'],
   'step-dispatch': PHOTOS['tho-nhan-don-xe-may'],
   'step-confirm': PHOTOS['tho-huong-dan-khach'],
   'step-install': PHOTOS['tho-lap-dieu-hoa'],
+  'step-reconcile': PHOTOS['doi-soat-cuoi-ngay'],
 };
 
 type MediaFrameProps = {

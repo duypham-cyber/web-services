@@ -5,6 +5,7 @@ import { MediaFrame } from '@/components/partners/MediaFrame';
 import { SectionHeader } from '@/components/partners/SectionHeader';
 import { Section } from '@/components/ui/Section';
 import { TextLink } from '@/components/ui/TextLink';
+import { PHOTOS } from '@/content/photos';
 import { site } from '@/content/site';
 import type { Locale } from '@/i18n/routing';
 
@@ -62,7 +63,13 @@ export async function CompanyFacts({ locale }: { locale: Locale }) {
           <DraftNote className="mt-6">{t('company.addressNote')}</DraftNote>
         </div>
         <div className="min-w-0">
-          <MediaFrame motif="office" ratio="4/3" pendingNote={`${tp('media.photoPending')}: ${t('media.office')}`} />
+          <MediaFrame
+            motif="office"
+            ratio="4/3"
+            photo={PHOTOS['van-phong']}
+            sizes="(min-width: 1024px) 480px, 100vw"
+            pendingNote={`${tp('media.photoPending')}: ${t('media.office')}`}
+          />
           <TextLink href={{ pathname: '/lien-he', hash: 'van-phong' }} variant="arrow" className="mt-5 py-1">
             {t('company.contactLink')}
           </TextLink>

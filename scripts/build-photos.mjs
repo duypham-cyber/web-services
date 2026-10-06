@@ -2,8 +2,9 @@
 /**
  * build-photos.mjs — xuất ảnh minh họa / ảnh thật của content/photos.ts (D-31, docs/PHOTOS.md).
  *
- *   node scripts/build-photos.mjs           # xuất lại mọi ảnh
- *   node scripts/build-photos.mjs --check   # chỉ kiểm: đủ file, đúng kích thước, dưới ngân sách (không ghi)
+ *   node scripts/build-photos.mjs                 # xuất lại mọi ảnh
+ *   node scripts/build-photos.mjs --only a,b      # chỉ xuất các id này (AVIF effort 6 chậm, ~20 s/ảnh)
+ *   node scripts/build-photos.mjs --check         # chỉ kiểm: đủ file, đúng kích thước, dưới ngân sách (không ghi)
  *
  * Từ bản gốc assets/photos/<master>:
  *  - public/images/photos/<id>-<w>.avif + .webp ở photoWidths() (640, 1024, bề rộng gốc) cho <picture> (components/media/Photo.tsx);
@@ -16,6 +17,7 @@ import sharp from 'sharp';
 import { loadTs, ROOT } from './lib/load-ts.mjs';
 
 const CHECK = process.argv.includes('--check');
+const ONLY = process.argv.includes('--only') ? new Set(process.argv[process.argv.indexOf('--only') + 1].split(',')) : null;
 const { PHOTOS, photoWidths, photoSrc } = await loadTs('content/photos.ts');
 const OUT = join(ROOT, 'public', 'images', 'photos');
 const LIMIT_KB = { 1024: 90, max: 150 };
@@ -31,6 +33,7 @@ const kb = (file) => statSync(file).size / 1024;
 if (!CHECK) mkdirSync(OUT, { recursive: true });
 
 for (const photo of Object.values(PHOTOS)) {
+  if (ONLY && !ONLY.has(photo.id)) continue;
   const master = join(ROOT, 'assets', 'photos', photo.master);
   if (!existsSync(master)) {
     fail(`${photo.id}: thiếu bản gốc assets/photos/${photo.master}`);

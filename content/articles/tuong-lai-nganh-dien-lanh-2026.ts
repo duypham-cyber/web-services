@@ -19,10 +19,20 @@ export const tuongLaiNganhDienLanh2026 = {
   },
   publishedAt: '2026-04-20',
   updatedAt: '2026-10-02',
-  // Ảnh đầu bài cũ là ảnh ghép nhà máy lọc dầu + kỹ sư (lệch art direction, docs/03 mục 11.4) → gỡ, chờ ảnh thiết bị
-  // không người, không logo, hoặc ảnh thật. File cũ vẫn ở public/ (og:image cũ, content/redirects.ts "keep").
-  hero: null,
-  ogImage: null,
+  // Ảnh đầu bài cũ là ảnh ghép nhà máy lọc dầu + kỹ sư (lệch art direction, docs/03 mục 11.4) → đã gỡ. Nay dùng ảnh stock
+  // thiết bị không người, không logo, có nhãn minh họa (D-31, content/photos.ts) tới khi có ảnh thật. File cũ vẫn ở public/
+  // (og:image cũ, content/redirects.ts "keep").
+  hero: {
+    src: '/images/photos/dan-nong-mat-tien-16x9.jpg',
+    width: 1920,
+    height: 1080,
+    alt: {
+      vi: 'Các cục nóng điều hòa đặt trong lồng lam kim loại bên dưới cửa sổ của một tòa nhà ốp gạch màu đất nung',
+      en: 'Outdoor air-conditioner units in louvred metal cages below the windows of a terracotta-tiled apartment building',
+    },
+    illustrative: true,
+  },
+  ogImage: { src: '/images/news/og/tuong-lai-nganh-dien-lanh-2026.jpg', width: 1200, height: 630 },
   intro: [
     {
       type: 'p',
