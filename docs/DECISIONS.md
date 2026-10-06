@@ -604,3 +604,45 @@ Anh Duy: "Bỏ giúp anh tài khoản đăng nhập đi, không cần thiết v�
 - Prefetch phân đoạn ở trang VI sinh vài dòng 404 trong console, điều hướng vẫn đúng.
 - 4/6 bài viết dùng chung ảnh bìa giữ chỗ.
 - Trang Điều khoản ghi "website lapdattoanquoc.vn".
+
+### D-31 · 06/10/2026 · Màu xanh #004AAD cho cả hero, ảnh minh họa có nhãn thay khung chờ ảnh (anh Duy yêu cầu)
+Anh Duy: "màu xanh dùng mã màu: Xanh 004aad này cho trang website… các hình ảnh đang chờ hình ảnh chụp, em research xem có hình nào
+phù hợp không ở thị trường Việt Nam thì dùng (Đừng lấy của thương hiệu khác) hoặc em tạo ảnh thay vào cho anh luôn cũng được."
+
+**Màu**
+- UI đã đúng: token `blue-600` = #004AAD (nút, link, heading nhấn, logo). Quét mã nguồn không còn mã xanh nào ngoài token.
+- Chỗ lệch duy nhất là **biển của bản đồ hero** (#2467CF / #3B8AE6 / #93D6F3, xanh da trời sáng), chiếm gần hết màn đầu.
+  Nay đổi sang họ xanh thương hiệu:
+  - biển xa = `blue-600`;
+  - gần bờ = #0057CC (cùng sắc độ 214°, sáng hơn);
+  - nước nông và quầng quần đảo = `blue-300`.
+- Đo trên poster mới: biển ra #004BAC–#004BAF. Tone mapping Neutral giữ nguyên màu có kênh đỏ 0.
+- Poster T-STILL dựng lại bằng `scripts/hero-poster.mjs`. Hai quần đảo vẫn trọn trong khung. Dung lượng: desktop AVIF 72 KB,
+  mobile 24 KB.
+- Máy quay và hình học không đổi, nên vị trí nhãn và đường cung trong `hero-poster.json` vẫn khớp. Màu mây/đất giữ như Mẫu 02.
+
+**Ảnh** (chi tiết, nguồn, giấy phép, cách thay: `docs/PHOTOS.md`)
+- Thay các khung SVG "chờ ảnh chụp" bằng **ảnh minh họa**, mỗi ảnh có nhãn "Ảnh minh họa" / "Illustrative image" trên khung.
+  Lý do gắn nhãn:
+  - ảnh AI hoặc stock không phải thợ, văn phòng hay công trình thật của Bluebolt;
+  - khách không được hiểu nhầm (Luật Quảng cáo cấm gây nhầm lẫn);
+  - đúng điều khoản dự kiến "ảnh minh họa có nhãn" (`content/legal.ts`).
+  Muốn bỏ nhãn chỉ cần đổi `illustrative`, nhưng nên giữ tới khi có ảnh thật.
+- Quy tắc docs/03 mục 11.4 vẫn giữ: không logo, không chữ, không KHANG. Mục công trình/case study chỉ dùng ảnh thật.
+  Không vẽ bản đồ Việt Nam bằng AI (rủi ro chủ quyền).
+- **6 ảnh đang dùng:**
+  - 5 ảnh Canva AI: kho hàng điện máy, thợ trên xe máy, thợ hướng dẫn gia đình, phòng điều phối, thợ lắp dàn lạnh;
+  - 1 ảnh FLUX.1-schnell (Apache-2.0): lưới lọc bám bụi.
+  Mỗi ảnh xuất sẵn AVIF + WebP 640/1024/gốc. Bản 1024 px nặng 22–47 KB, dưới ngân sách 90 KB.
+  - Trang chủ, B2B và partner render `<picture>` thuần, không thêm JS.
+  - Bìa bài viết đi qua next/image.
+- Phủ: 3 thẻ trang chủ, hero và 2 thẻ /giai-phap, hero hai trang giải pháp con, hero /dich-vu, 2/4 thẻ dịch vụ và hero tương ứng,
+  bước 01–04 của quy trình, hero /ve-chung-toi, bìa 2 bài máy lạnh (kèm ảnh OG riêng).
+  Một ảnh dùng ở nhiều trang nhưng không lặp trong cùng một trang.
+- **Hạn chế gặp phải:**
+  - Canva hết hạn mức tạo ảnh sau 5 ảnh;
+  - Space Hugging Face (FLUX) hết hạn mức GPU cho máy không đăng nhập sau vài ảnh;
+  - Pollinations cho ảnh kém, có watermark;
+  - ảnh thợ trên stock miễn phí hầu như không phải bối cảnh Việt Nam.
+- Các khung còn lại (lắp điện máy, robot hút bụi, bước 05, văn phòng, bìa 2 bài máy giặt/ngành điện lạnh) đang tìm ảnh stock
+  không người, không logo. Khung nào chưa có ảnh đạt thì giữ minh họa SVG.
