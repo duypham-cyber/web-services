@@ -644,5 +644,13 @@ phù hợp không ở thị trường Việt Nam thì dùng (Đừng lấy của
   - Space Hugging Face (FLUX) hết hạn mức GPU cho máy không đăng nhập sau vài ảnh;
   - Pollinations cho ảnh kém, có watermark;
   - ảnh thợ trên stock miễn phí hầu như không phải bối cảnh Việt Nam.
-- Các khung còn lại (lắp điện máy, robot hút bụi, bước 05, văn phòng, bìa 2 bài máy giặt/ngành điện lạnh) đang tìm ảnh stock
-  không người, không logo. Khung nào chưa có ảnh đạt thì giữ minh họa SVG.
+- **Đợt 2, ảnh stock** (Pexels/Unsplash, giấy phép miễn phí cho thương mại). Workflow 6 agent: 3 agent tìm, 3 agent khác phóng to soát
+  logo/chữ và đối chiếu giấy phép trên trang gốc.
+  - Thêm 5 ảnh: tivi trên giá treo (lắp điện máy), robot hút bụi, nhân viên đối soát buổi tối (bước 05), chậu cây văn phòng (khối
+    thông tin doanh nghiệp), cục nóng trên mặt tiền (bìa bài ngành điện lạnh).
+  - Bị loại vì logo hoặc kiểu dáng: 4 ảnh văn phòng (ViewSonic, Dell, điều hòa Daikin, nhãn ghế), robot kiểu Roomba (nhận ra iRobot
+    dù không có logo), mọi ảnh mặt tiền có cục nóng Việt Nam/Singapore (Panasonic, Daikin, Midea… đọc được).
+  - Bìa bài máy giặt vẫn trống: không tìm được ảnh máy giặt cửa trước nào không lộ thương hiệu. Bài hiện thân bài ngay, không khung
+    ảnh (hành vi sẵn có khi `hero: null`).
+- Kết quả: mọi khung "chờ ảnh chụp" ở trang chủ, giải pháp, dịch vụ, quy trình và Về chúng tôi đều có ảnh; 3/4 bài Kiến thức thiếu
+  ảnh nay có bìa.

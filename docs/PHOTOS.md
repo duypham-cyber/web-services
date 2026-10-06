@@ -24,6 +24,20 @@ thương hiệu khác) hoặc ảnh tạo bằng AI. Tài liệu này ghi ảnh 
 | `phong-dieu-phoi` | Hai điều phối viên đeo tai nghe làm việc trước màn hình | Canva AI | Hero /giai-phap, hero /ve-chung-toi, bước 01 |
 | `tho-lap-dieu-hoa` | Thợ lắp dàn lạnh điều hòa treo tường trong căn hộ | Canva AI | Thẻ và hero /dich-vu/lap-dat-dieu-hoa, bước 04, bìa bài "Lắp máy lạnh đúng cách" |
 | `ve-sinh-loc-may-lanh` | Tay thợ rút tấm lưới lọc bám bụi khỏi dàn lạnh | FLUX.1 [schnell] · Apache-2.0 | Thẻ và hero /dich-vu/bao-tri-dinh-ky, bìa bài "10 nguyên nhân máy lạnh không lạnh" |
+| `lap-dat-dien-may` | Tivi trên giá treo xoay, vách ốp vân đá (không người) | [Pexels · Max Vakhtbovych](https://www.pexels.com/photo/interior-of-modern-living-room-with-tv-on-wall-6636297/) · Pexels License | Thẻ và hero /dich-vu/lap-dat-dien-may |
+| `robot-hut-bui` | Robot hút bụi trắng trên sàn gỗ xương cá (không người) | [Pexels · Ron Lach](https://www.pexels.com/photo/desk-area-and-cleaning-robot-on-floor-10567498/) · Pexels License | Thẻ và hero /dich-vu/lap-dat-robot-hut-bui |
+| `doi-soat-cuoi-ngay` | Nhân viên làm việc với máy tính buổi tối, đèn bàn ấm | [Pexels · Vitaly Gariev](https://www.pexels.com/photo/focused-professional-working-at-computer-desk-39853305/) · Pexels License | Bước 05 quy trình (/giai-phap/hang-dien-may) |
+| `van-phong` | Chậu cây trên tủ gỗ, văn phòng mở phía sau được làm mờ | [Pexels · Mikhail Nilov](https://www.pexels.com/photo/potted-plants-in-an-office-8297857/) · Pexels License | Khối "Thông tin doanh nghiệp" ở /ve-chung-toi |
+| `dan-nong-mat-tien` | Cục nóng điều hòa trong lồng lam trên tòa nhà ốp gạch (không người) | [Unsplash · ali syaaban](https://unsplash.com/photos/brown-and-white-concrete-buildings-during-daytime-kKRStYVnmGA) · Unsplash License | Bìa bài "Tương lai ngành điện lạnh 2026" |
+
+**Chưa có ảnh:** bìa bài "Rủi ro lắp máy giặt không đúng cách". Khoảng 30 ảnh máy giặt cửa trước miễn phí đã soát đều lộ thương hiệu
+đọc được (Electrolux, Samsung, Siemens, Hotpoint, Sharp, Indesit…). Bài này vẫn hiện thân bài ngay, không có khung ảnh. Cần chụp thật
+hoặc tạo ảnh AI khi có hạn mức.
+
+Ảnh stock được chọn qua hai vòng: một agent tìm, một agent khác phóng to từng góc ảnh để soát logo, chữ, và đối chiếu giấy phép
+trên trang gốc. Vòng soát đã loại 4 ảnh văn phòng vì có logo ViewSonic, Dell, điều hòa Daikin và nhãn ghế. Ảnh robot kiểu Roomba
+(iRobot) cũng bị loại vì kiểu dáng nhận ra được hãng, dù không có logo. Pexels License cho dùng thương mại, không bắt buộc ghi tên
+tác giả; bảng trên vẫn ghi để tra lại.
 
 Bản gốc nằm ở `assets/photos/`. Thiết kế Canva chứa các ảnh AI: "Bluebolt web — ảnh minh họa AI (06/10/2026)" trên tài khoản Canva của
 dự án; có thể xoá sau khi đã có ảnh thật.
