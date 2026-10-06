@@ -679,3 +679,28 @@ Anh Duy gửi ảnh footer: "dùng màu xanh hình như chưa đúng mã màu…
 - `SF Pro Rounded` chỉ có trên máy Apple đã cài; trình duyệt không có sẽ bỏ qua và dùng font kế tiếp.
 - Ảnh OG dựng trên máy Linux không có các font trên → nhúng Roboto (Apache-2.0, `assets/fonts/roboto`) chỉ lúc chụp.
 
+### D-33 · 06/10/2026 · Footer cân lại: chữ lớn hơn một bậc, nền gọn hơn, dải chân blue-700 (anh Duy yêu cầu)
+Anh Duy (ảnh footer trên màn 2285 px): "nền quá to mà chữ quá nhỏ… background chỉnh lại cho vừa, các dòng giãn cách đẹp hơn,
+chỉnh chữ lớn cho vừa cân đối".
+- **Nguyên nhân:** chữ footer ở bậc nhỏ nhất (link 14 px, tiêu đề cột 12 px). Khoảng đệm lớn: 80 px trên, 56 px + đường kẻ +
+  24 px trước dòng ©, 48 px dưới. Dòng © trôi giữa một mảng xanh phẳng.
+- **Cách chọn:** workflow 5 agent. 3 phương án dựng thật bằng HTML và chụp ở 2285/1440/1024/768/390:
+  - A: giữ bố cục, cân lại;
+  - B: hai tầng;
+  - C: chữ co giãn theo màn hình + hoạ tiết tia chớp.
+  2 giám khảo chấm độc lập: A 57 + 53 · B 49 + 55 · C 41 + 42. C bị loại vì làm footer cao thêm, dùng cỡ chữ ngoài token và
+  hoạ tiết không ai yêu cầu.
+- **Áp dụng A**, ghép thêm từ B và C: địa chỉ chỉ xuống dòng ở dấu phẩy, tên pháp nhân không tách "CÔNG NGHỆ" trên máy 360 px.
+  - Link, MST, địa chỉ, email: 16 px. Link blue-100 (D-32), vùng bấm cao 24 px, cách 12 px.
+  - Tiêu đề cột: 14 px. Vẫn là eyebrow: ghi đè biến `--text-eyebrow` ngay trên phần tử, không phụ thuộc thứ tự CSS.
+  - Hotline: `text-h3` (20–24 px). Logo 40/44 px.
+  - Đệm: 48/48 px, từ md 64/56 px. Dòng © nằm trong dải blue-700 (slate-300 trên blue-700: 7,13:1). Trên điện thoại dải
+    này chừa chỗ cho thanh Gọi/Báo giá.
+  - Bố cục: thương hiệu và cột link cạnh nhau từ xl (cùng mốc menu desktop); 1024–1279 xếp hai tầng; 4 cột link từ md; điện
+    thoại 2 × 2.
+- **Đo trên dev server:**
+  - Chiều cao: 2285 px là 459, 1440 px là 458. Bản xem trước có thêm dòng Zalo kèm nhãn Nháp (+34 px); bản công khai khoảng 424.
+    Footer cũ: 463.
+  - Không tràn ngang ở 360–2285 px, VI và EN.
+  - Bản EN ở 1280 px: 3 mục dịch vụ xuống 2 dòng, vẫn đọc là từng mục.
+
