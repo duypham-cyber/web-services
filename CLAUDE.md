@@ -151,6 +151,9 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 - Chunk 3D ≤ 290 KB gz (chỉ T-FULL/T-LITE; import sau ý định đầu tiên hoặc load + 2 s rảnh, KHÔNG ở lần render đầu).
 - Trang chủ mobile trước khi cuộn ≤ 600 KB byte truyền. Phim desktop T-FULL ≤ 2,2 MB · T-LITE ≤ 1,4 MB · shot 0–1 ≤ 1,2 MB.
 - Video tua mobile ≤ 110 KB/s phim, 540×960, GOP ≤ 8, shot đầu ≤ 400 KB. Poster ≤ 150 KB desktop / ≤ 90 KB mobile (AVIF).
+- Trình duyệt: `browserslist` trong package.json = Chrome/Edge/Firefox 111, Safari 15.4 (D-35). `scripts/safe-build.sh` FAIL nếu
+  chunk còn cú pháp Safari 15.4 không đọc được (`scripts/check-legacy-syntax.mjs`). CSS mới dùng cqw/cqh, color-mix(),
+  overflow: clip phải có dự phòng cho Safari 15.4–16.1 (xem `FilmHero.module.css`, `globals.css`).
 - Font: bộ font hệ thống `-apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'Segoe UI', Roboto, sans-serif` (D-32), không
   tải web font, 0 preload. Không thêm `next/font` hay @font-face. Ảnh OG nhúng Roboto từ `assets/fonts/roboto` chỉ lúc chụp.
 
@@ -167,9 +170,10 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 5. Khung establish nghiêng 2–4°, về 0° trước khi màn hình chiếm khung; roll handheld ≤ 0,5°. Mỗi shot 1 cú máy chính.
 6. Chữ không chuyển động cùng máy; đoạn dừng đọc 20–30 vh cuối mỗi shot.
 7. Một `<Canvas frameloop="demand">` cho cả phim; ra khỏi vùng phim → `frameloop="never"` + giải phóng texture lớn.
-8. `webglcontextlost` → T-STILL ở đúng khung. Guard FPS p90 > 25 ms trong 2 s ĐANG CUỘN → hạ tầng.
+8. `webglcontextlost` → T-STILL ở đúng khung. Guard FPS p90 > 25 ms trong 2 s ĐANG CUỘN → hạ bậc (trừ nhịp đều ~33 ms = trình
+   duyệt khoá 30 hình/s); hết bậc chỉ về T-STILL khi ≤ 20 hình/s (D-35, `components/film/runtime/fps-guard.ts`).
 9. Tầng T-FULL/T-LITE (WebGL) · T-SEQ (video tua, màn dọc/nhỏ) · T-STILL (poster). Chọn theo renderer thật; thiếu API = máy yếu.
-   T-SEQ/T-STILL KHÔNG tải three/GLB; T-STILL không tải video. Cấm tải/biên dịch shader khi tiến độ đang đổi.
+   T-SEQ/T-STILL KHÔNG tải three/GLB; T-STILL không tải video. Biên dịch shader chờ cuộn đứng ≥ 150 ms, tối đa 1 s (D-35).
 10. Không lưu tiến độ cuộn trong React state: ghi vào store/ref, đọc trong `useFrame`.
 11. Không logo/kiểu dáng hãng thật; số trên màn hình trong cảnh gắn "minh họa"; claim chưa duyệt không vào texture.
 12. KHANG: TẮT ở mọi bản, poster, OG (quyền chưa xác nhận). Lenis: TẮT.
@@ -180,6 +184,7 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
   trong HTML, cập nhật textContent qua rAF, không setState mỗi frame.
 - Ghim section (chỉ quy trình trang chủ, D-34): `ProcessPin` + `ProcessStepper`, sticky + đường băng, ghi trạng thái vào DOM.
   Chỉ desktop có chuột (`components/home/process-pin.ts`), không bắt wheel. Không thêm ghim ở section khác khi chưa hỏi.
+  CSS chỉ ghim lúc pending hoặc khi JS ghi `data-pin="on"` — JS chết thì không ghim (D-35).
 - KHÔNG bọc: H1, phần tử LCP, nội dung màn đầu của trang con, giá, hotline, nội dung pháp lý, trường form, thông báo lỗi.
 - Chỉ animate transform/opacity/clip-path. Không loop vô hạn. Reduced-motion/Save-Data/không JS: mọi thứ hiện ngay
   (`html[data-motion]` pending → ready; tự "off" sau 4 s nếu JS lỗi).

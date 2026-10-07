@@ -734,3 +734,73 @@ xong bước 5 hẳn xuống tiếp".
   Test: `tests/process-pin.spec.ts`, `tests/unit/process-pin.test.ts`; a11y/overflow/hero trang chủ xanh.
 - **Chấp nhận:** PageDown/Space nhảy 2–3 bước một lần (một trang dài hơn một bước). Mũi tên đi đủ từng bước; chữ luôn đọc được.
 
+
+### D-35 · 07/10/2026 · MacBook: Safari cũ không chạy được JS, bản đồ 3D tắt khi máy tiết kiệm pin (anh Duy báo lỗi)
+Anh Duy: "Có 1 vài macbook như macbook air không xem được website hoặc bản đồ scroll chuột không hoạt động 3D được."
+- **Điều tra:** workflow 3 agent: chạy thật WebKit 26.5 + Chromium ở 6 cỡ màn MacBook, soát mã hero, soát tương thích Safari
+  cũ. Không có Mac thật — kết luận dựa trên mã, bản build và giả lập. Đã loại: font San Francisco (khối chữ vẫn vừa 100svh,
+  còn dư ≥ 33 px), proxy zstd, CSP, WebGL2/shader trên WebKit mới.
+- **Nguyên nhân 1 — Safari < 16.4 không chạy được JavaScript nào ("không xem được"):**
+  - package.json chưa có `browserslist` nên Next 16 build cho Safari ≥ 16.4.
+  - Hai chunk tải đầu chứa class static block (`static{…}`): error boundary của Next và intl-messageformat (next-intl).
+  - Safari cũ báo SyntaxError, React không hydrate. Hậu quả: menu không bấm được, bản đồ đứng ở poster, nội dung "rise" ẩn 4 s,
+    đường băng quy trình (D-34) đứng yên khoảng 1.200 px.
+  - Trái NFR-COMP-02 (Safari ≥ 15).
+  - Sửa: `browserslist` = chrome/edge/firefox 111, safari/ios_saf 15.4 → SWC hạ cú pháp. JS tải đầu trang chủ 167,7 → 168,6 KB gz.
+  - Chặn tái phát: `scripts/check-legacy-syntax.mjs` chạy cuối `scripts/safe-build.sh`. Build FAIL nếu còn static block,
+    regex lookbehind, cờ v hoặc import attributes.
+- **Nguyên nhân 2 — FPS guard coi máy khoá 30 hình/s là máy yếu ("3D không chạy khi cuộn"):**
+  - Low Power Mode của macOS (Safari) và Energy Saver của Chrome (mặc định bật khi pin ≤ 20%) khoá rAF ở 30 hình/s.
+  - p90 luôn 33 ms > 25 ms → hạ hết bậc → T-STILL sau khoảng 6–7 s cuộn. Poster đứng yên tới khi tải lại trang.
+  - Sửa (`components/film/runtime/fps-guard.ts`, `tests/unit/fps-guard.test.ts`):
+    - nhịp đều quanh 33 ms (trung vị 28–40 ms, p90 sát trung vị) → không hạ;
+    - hết bậc chỉ về T-STILL khi p90 > 50 ms (≤ 20 hình/s), còn lại giữ bậc thấp nhất.
+- **Nguyên nhân 3 — vuốt trackpad liên tục chỉ thấy poster:**
+  - Cảnh chỉ dựng khi cuộn đứng ≥ 150 ms (vuốt có quán tính bắn sự kiện cuộn liên tục 1–3 s).
+  - Cảnh bị giải phóng 3 s sau khi rời hero, quay lại là phải dựng lại.
+  - Sửa: phần dựng trên CPU chạy ngay. Chỉ bước biên dịch shader + khung đầu chờ cuộn đứng, tối đa 1 s
+    (`createMapScene({ beforeCompile })`). Giải phóng sau 20 s ngoài hero, tab ẩn sau 10 s.
+  - Đánh đổi: có thể khựng một nhịp lúc biên dịch shader giữa lượt vuốt (Chrome biên dịch song song nên ít thấy). Như vậy
+    vẫn tốt hơn không có 3D suốt lượt vuốt.
+  - Đã sửa luật 8, 9 trong CLAUDE.md và AC-T-2, AC-L-3, AC-L-4 trong contracts/hero-map.md.
+- **Mac Intel bị đưa lên T-FULL:**
+  - Safari báo mọi GPU của Mac là "Apple GPU". MacBook Air Intel 8 luồng vì thế vào T-FULL (DPR 2 + bóng đổ) và quá tải.
+  - Nay "Apple GPU" chỉ được T-FULL khi có `WEBGL_compressed_texture_astc` (chip Apple có, GPU Intel/AMD của Mac không).
+    Còn lại T-LITE, `data-tier-reason="mac-intel"`.
+  - Regex nhận diện GPU: tên Intel trên Chrome có "(R)" làm HD 4000 lọt nhóm yếu và Arc lọt nhóm mạnh; đã sửa
+    (`tests/unit/hero-tier.test.ts`).
+  - Chưa kiểm được trên máy thật. Nếu một Mac M-series thật không báo ASTC, máy sẽ ra T-LITE (vẫn có 3D, nhẹ hơn).
+- **Giảm tải khi cảnh 3D đang chạy:**
+  - Panel tour bỏ kính mờ: backdrop-filter phải làm mờ lại canvas mỗi khung. Thay bằng nền trắng 94% / xanh 92%.
+  - Bỏ dòng `-webkit-backdrop-filter` viết tay: Lightning CSS gộp nó đè lên bản chuẩn nên Chrome mất kính mờ. Nay Lightning
+    CSS tự thêm tiền tố.
+  - `ProcessStepper` chỉ nghe scroll khi khối quy trình cách khung nhìn ≤ một màn (IntersectionObserver). Không còn đo bố
+    cục mỗi khung trong lúc người xem ở hero.
+- **Safari 15.4–16.1 (sau khi JS chạy được):**
+  - Thiếu container query (có từ 16.0): ô poster tính ra 0×0, cột chữ tràn hết bề ngang.
+  - Thiếu color-mix() (có từ 16.2): panel và lớp sương trong suốt.
+  - Thiếu overflow: clip (có từ 16.0): hình trang trí `-right-24` làm trang cuộn ngang 15–40 px.
+  - Sửa:
+    - 100cqw/100cqh đi qua biến `--cw/--ch`; `@supports not` thì dùng khung nhìn;
+    - `@supports not color-mix` thì dùng nền token đặc;
+    - thiếu overflow: clip thì `html { overflow-x: hidden }` (không đặt ở body vì sẽ làm hỏng sticky).
+  - Trình duyệt thiếu color-mix luôn T-STILL (`old-browser`).
+- **JS chết vì bất kỳ lý do nào:**
+  - Quy trình chỉ ghim lúc pending (giữ chỗ) hoặc khi ProcessStepper ghi `data-pin="on"`. Trước đây (D-34) ghim cả khi "off".
+  - Script đầu trang thấy SyntaxError trong `/_next/static/` lúc còn pending → đổi sang "off" ngay, nội dung hiện luôn.
+  - Test: `tests/process-pin.spec.ts`.
+- **Safari < 15.4** (MacBook Air 2010–2011 trên High Sierra, hoặc máy không cập nhật):
+  - Tailwind v4 đặt mọi CSS trong @layer nên trang hiện trơn; không sửa được.
+  - Có dòng nhắc "Trình duyệt này đã cũ… cập nhật hoặc mở bằng Google Chrome", chỉ hiện ở các trình duyệt này
+    (`.legacy-browser` trong globals.css, `data-nosnippet`).
+  - **Chờ anh Duy quyết:** NFR-COMP-02 ghi Safari ≥ 15, nhưng 15.0–15.3 không đạt được với Tailwind v4. Đề xuất sửa thành
+    "Safari ≥ 15.4 (15.4–16.1 xem poster), đầy đủ 3D từ 16.2". Đây là giả định.
+- **Chưa làm:**
+  - Safari trên macOS ≤ 10.15 (Catalina) không giải mã WebP/AVIF, nên poster và ảnh minh họa trống. Cần bản JPEG dự phòng
+    (khoảng 1–1,5 MB). Chờ anh quyết có cần hỗ trợ Safari trên Catalina không; Chrome 128 trên Catalina vẫn xem bình thường.
+  - Mất WebGL context vẫn về T-STILL tới khi tải lại (AC-T-3). Chưa thấy liên quan tới MacBook Air.
+  - Chuỗi chứng chỉ Let's Encrypt Gen Y: macOS cũ có thể báo lỗi chứng chỉ; chưa kiểm được từ Linux.
+- **Cách xác nhận trên máy bị báo lỗi:**
+  - Safari → Giới thiệu về Safari: dưới 16.4 là nguyên nhân 1.
+  - Cài đặt hệ thống → Pin → Chế độ nguồn điện thấp: nếu đang bật, là nguyên nhân 2.
+  - Console: `JSON.stringify({...document.querySelector('[data-hero-map]').dataset})` cho biết `tierReason` và `stillReason`.

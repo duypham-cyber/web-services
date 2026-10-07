@@ -96,15 +96,20 @@ I WANT TO đọc đủ nội dung, bỏ qua hero bằng một link, không tải
 |---|---|---|
 | T-FULL | desktop (màn ngang VÀ `pointer:fine`) VÀ WebGL2 VÀ renderer thật VÀ GPU mạnh theo heuristic AC-T-1 | bóng đổ (shadow map vẽ 1 lần), mây tiền cảnh khi bay, lưới kinh vĩ, DPR ≤ 2, mặt nạ biển 1024² |
 | T-LITE | như trên nhưng GPU không thuộc nhóm mạnh; HOẶC màn dọc/`pointer:coarse` không thuộc nhóm yếu | không bóng, 12 cụm mây + 2 dải, không mây tiền cảnh, biển rút gọn (bỏ lưới, bọt tĩnh), DPR ≤ 1,5, mặt nạ 512² |
-| T-STILL | không JS, reduced-motion, Save-Data, không WebGL2, renderer `/SwiftShader\|llvmpipe\|Software\|Basic Render/i` hoặc không đọc được, GPU yếu/máy yếu (AC-T-1), desktop có khối chữ không vừa 100svh, `webglcontextlost`, FPS guard hết bậc | poster `<picture>` + nhãn HTML tĩnh, KHÔNG tải three/chunk 3D; chọn từ đầu → bố cục dòng chảy, không pin; hạ giữa phiên → giữ track |
+| T-STILL | không JS, reduced-motion, Save-Data, trình duyệt thiếu `color-mix()` (Safari < 16.2, Chrome < 111 — D-35), không WebGL2, renderer `/SwiftShader\|llvmpipe\|Software\|Basic Render/i` hoặc không đọc được, GPU yếu/máy yếu (AC-T-1), desktop có khối chữ không vừa 100svh, `webglcontextlost`, FPS guard hết bậc ở ≤ 20 hình/s | poster `<picture>` + nhãn HTML tĩnh, KHÔNG tải three/chunk 3D; chọn từ đầu → bố cục dòng chảy, không pin; hạ giữa phiên → giữ track |
 
-- **AC-T-1** Thứ tự: no-JS → reduced-motion → Save-Data → probe WebGL2 (`failIfMajorPerformanceCaveat`) + `UNMASKED_RENDERER_WEBGL`
+- **AC-T-1** Thứ tự: no-JS → reduced-motion → Save-Data → trình duyệt thiếu `color-mix()` (`old-browser`) → probe WebGL2
+  (`failIfMajorPerformanceCaveat`) + `UNMASKED_RENDERER_WEBGL`
   → heuristic không gọi mạng (thay benchmark detect-gpu tải từ unpkg): renderer phần mềm/GPU đời cũ (Mali-T/4xx, Adreno ≤ 4xx,
-  PowerVR SGX, Intel HD 2000–4000, VideoCore) hoặc `deviceMemory` < 2 / `hardwareConcurrency` < 4 → T-STILL; màn dọc hoặc
-  `pointer:coarse` → T-LITE; GPU rời/đời mới (NVIDIA, Radeon RX/Pro, Apple M/GPU, Iris Xe, Arc) + ≥ 8 nhân + RAM ≥ 8 GB (hoặc
-  không báo) + màn ≤ 4K → T-FULL; còn lại T-LITE. Thiếu API = máy yếu (FH AC-T-2). Dev/bản xem trước nhận `?tier=`.
-- **AC-T-2** FPS guard: chỉ đo khi ĐANG cuộn; p90 frame time > 25 ms trong 2 s → `scene.degrade()` (hạ DPR, tắt mây tiền cảnh/dải,
-  không biên dịch lại shader); `degrade()` trả `false` → T-STILL tại chỗ.
+  PowerVR SGX, Intel HD 2000–4000 kể cả tên có "(R)", VideoCore) hoặc `deviceMemory` < 2 / `hardwareConcurrency` < 4 → T-STILL;
+  màn dọc hoặc `pointer:coarse` → T-LITE; Safari che tên GPU ("Apple GPU") mà không có `WEBGL_compressed_texture_astc` (Mac
+  Intel/AMD) → T-LITE (`mac-intel`, D-35); GPU rời/đời mới (NVIDIA, Radeon RX/Pro, Apple M, "Apple GPU" có ASTC, Iris Xe, Arc)
+  + ≥ 8 nhân + RAM ≥ 8 GB (hoặc không báo) + màn ≤ 4K → T-FULL; còn lại T-LITE. Thiếu API = máy yếu (FH AC-T-2). Dev/bản xem
+  trước nhận `?tier=`.
+- **AC-T-2** FPS guard: chỉ đo khi ĐANG cuộn; p90 khoảng rAF > 25 ms trong 2 s → `scene.degrade()` (hạ DPR, tắt mây tiền cảnh/dải,
+  không biên dịch lại shader). Ngoại lệ: nhịp đều quanh 33 ms (trung vị 28–40 ms, p90 − trung vị ≤ 6 ms) là trình duyệt khoá
+  30 hình/s (Low Power Mode của macOS, Energy Saver của Chrome, màn 30 Hz) → không hạ. `degrade()` trả `false` → T-STILL tại chỗ
+  chỉ khi p90 > 50 ms (≤ 20 hình/s); còn lại giữ bậc thấp nhất (D-35, `runtime/fps-guard.ts`).
 - **AC-T-3** `webglcontextlost` (callback `onContextLost`) → T-STILL tại chỗ: giữ chiều cao track (không nhảy cuộn), thay canvas bằng
   poster, panel HTML vẫn theo tiến độ; không tải thêm gì.
 - **AC-T-4** Đổi bố cục desktop ↔ mobile giữa phiên (xoay máy) → T-STILL tại chỗ với poster bố cục mới; không dựng lại cảnh.
@@ -120,12 +125,14 @@ Không pin, không tour, không tải three; poster p = 0 + nhãn HTML + ba pane
   (`wheel`, `scroll`, `pointermove`, `keydown`, `touchstart`) hoặc `load` + 2 s rảnh; không ở lần render đầu, không `React.lazy` ngay.
 - **AC-L-2** `hero-map.json` tải song song với chunk (truyền vào `createMapScene({ data })`). Ảnh poster là tài nguyên LCP duy nhất
   được preload (`fetchpriority="high"`).
-- **AC-L-3** `createMapScene()` dựng cảnh, `compileAsync` mọi shader và vẽ khung đầu TRƯỚC khi resolve. Bước 2 chỉ gọi nó khi cuộn
-  đã đứng ≥ 150 ms; cấm tải/biên dịch khi p đang đổi (FH luật 9).
+- **AC-L-3** `createMapScene()` dựng cảnh, `compileAsync` mọi shader và vẽ khung đầu TRƯỚC khi resolve. Phần dựng trên CPU (giải mã,
+  mặt nạ biển, hình học) chạy ngay; trước bước biên dịch + khung đầu, `beforeCompile` của bước 2 chờ cuộn đứng ≥ 150 ms, tối đa
+  1 s (D-35: vuốt trackpad liên tục vẫn có cảnh giữa chừng; trước đây chờ không giới hạn → cả lượt vuốt chỉ thấy poster).
 - **AC-L-4** Một rAF của bước 2 gọi `renderIfNeeded(now)`: chỉ vẽ khi p (đã làm mượt) đổi, khi resize, hoặc khi hiệu ứng nền bật.
   Hiệu ứng nền (đường cung chạy, sóng ghim, mây trôi, rung máy ≤ 1,2°) chỉ bật khi hero trong khung nhìn, tab hiện, không reduced-motion;
-  tắt sau 8 s không tương tác (brief bước 2). Ra khỏi khung (IntersectionObserver) hoặc tab ẩn → dừng rAF; ra khỏi khung > 3 s →
-  `dispose()` (giải phóng texture + WebGL context), quay lại thì dựng lại ở đúng tiến độ khi cuộn đã đứng.
+  tắt sau 8 s không tương tác (brief bước 2). Ra khỏi khung (IntersectionObserver) hoặc tab ẩn → dừng rAF; ra khỏi khung > 20 s
+  hoặc tab ẩn > 10 s → `dispose()` (giải phóng texture + WebGL context), quay lại thì dựng lại ở đúng tiến độ (D-35: trước là
+  3 s, cuộn xuống xem rồi quay lên là phải dựng lại).
 - **AC-L-5** `dispose()` giải phóng mọi geometry/material/texture, `renderer.dispose()` + `forceContextLoss()`.
 
 ### 3.7 Ngân sách (`budgets.json`; bước 1 đo, bước 2 giữ)
