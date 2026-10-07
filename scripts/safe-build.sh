@@ -80,6 +80,9 @@ echo "[safe-build] next build xong trong $((END - START)) s" >&2
 # Tóm tắt route + JS tải đầu (Next 16 đã bỏ cột "First Load JS" khỏi output build)
 node scripts/route-sizes.mjs "$DIST"
 
+# Cú pháp Safari 15.4 không đọc được (sàn browserslist trong package.json, D-35) → build FAIL, update.sh không đổi bản
+node scripts/check-legacy-syntax.mjs "$DIST"
+
 if [ "${SAFE_BUILD_CLEAN:-0}" = "1" ]; then
   rm -rf -- "$DIST"
   echo "[safe-build] đã xóa $DIST (SAFE_BUILD_CLEAN=1)" >&2
