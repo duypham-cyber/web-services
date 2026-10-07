@@ -3,7 +3,8 @@
  * KHÔNG import three, motion/map-camera hay chunk cảnh: trọng số cảnh truyền từ server qua props.
  *
  *   1. Chọn tầng MỘT lần (AC-T-1): ?tier= (chỉ bản xem trước/dev) → reduced-motion → Save-Data → màn dọc (điện thoại) →
- *      T-STILL → probe WebGL2 + renderer thật → heuristic GPU không mạng (renderer, deviceMemory, hardwareConcurrency, màn).
+ *      T-STILL → trình duyệt cũ (thiếu color-mix) → T-STILL → probe WebGL2 + renderer thật → heuristic GPU không mạng
+ *      (renderer, ASTC khi Safari che tên GPU, deviceMemory, hardwareConcurrency, màn).
  *      Điện thoại luôn T-STILL (05/10/2026, D-29): bản đồ dính chạy theo cuộn làm máy thật giật và chật chỗ đọc; poster có
  *      lớp chấm chạy SVG thay thế. Muốn thử bản 3D mobile: ?tier=lite (dev/bản xem trước).
  *   2. T-FULL/T-LITE và khối chữ vừa khung → thêm .film-armed (track cao, khung sticky, panel theo tiến độ).
@@ -58,10 +59,15 @@ export const SCENE_IDS = ['national', 'north', 'central', 'south', 'network'] as
 export type SceneKey = (typeof SCENE_IDS)[number];
 
 const SOFTWARE = /swiftshader|llvmpipe|software|basic render|microsoft basic/i;
-/** GPU đời cũ/yếu → T-STILL (thay benchmark detect-gpu, không gọi mạng). */
-const WEAK = /mali-(t|[2-4]\d\d)|adreno \(tm\) [1-4]\d\d\b|powervr sgx|intel[^,)]*(gma|hd graphics [2-4]\d{3})|vivante|videocore/i;
-/** GPU rời/đời mới đủ cho T-FULL ở desktop. */
-const STRONG = /nvidia|geforce|quadro|rtx|radeon (rx|pro)|apple (m\d|gpu)|iris\(r\) xe|intel[^,)]*arc/i;
+/**
+ * GPU đời cũ/yếu → T-STILL (thay benchmark detect-gpu, không gọi mạng). Tên Intel có "(R)" — "ANGLE (Intel, ANGLE Metal Renderer:
+ * Intel(R) HD Graphics 4000, …)" — nên chỉ dừng ở dấu phẩy, không dừng ở ")".
+ */
+export const WEAK = /mali-(t|[2-4]\d\d)|adreno \(tm\) [1-4]\d\d\b|powervr sgx|intel[^,]*?(gma|hd graphics [2-4]\d{3}\b)|vivante|videocore/i;
+/** GPU rời/đời mới đủ cho T-FULL ở desktop. "Apple GPU" (Safari che tên mọi GPU của Mac) xét riêng bằng ASTC. */
+export const STRONG = /nvidia|geforce|quadro|rtx|radeon (rx|pro)|apple m\d|iris\(r\) xe|intel[^,]*?\barc\b/i;
+/** Safari báo mọi Mac là "Apple GPU": chip Apple (M1…) có nén texture ASTC, GPU Intel/AMD của Mac thì không (D-35). */
+export const MASKED_APPLE = /^apple gpu$/i;
 
 const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
 const smooth = (a: number, b: number, x: number) => {
@@ -81,12 +87,16 @@ function pickTier(q: URLSearchParams | null, mobile: boolean): [HeroTier, string
   const nav = navigator as Navigator & { connection?: { saveData?: boolean }; deviceMemory?: number };
   if (nav.connection?.saveData) return ['still', 'save-data'];
   if (mobile) return ['still', 'mobile'];
+  // Trình duyệt chưa có color-mix() (Safari < 16.2, Chrome < 111) cũng chưa đủ container query cho bố cục phim → poster (D-35)
+  if (!CSS.supports('color', 'color-mix(in srgb, red 50%, blue)')) return ['still', 'old-browser'];
   let renderer = '';
+  let astc = false;
   try {
     const gl = document.createElement('canvas').getContext('webgl2', { failIfMajorPerformanceCaveat: true });
     if (!gl) return ['still', 'no-webgl2'];
     const ext = gl.getExtension('WEBGL_debug_renderer_info');
     renderer = String(gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER) ?? '');
+    astc = !!gl.getExtension('WEBGL_compressed_texture_astc');
     gl.getExtension('WEBGL_lose_context')?.loseContext();
   } catch {
     return ['still', 'no-webgl2'];
@@ -97,9 +107,11 @@ function pickTier(q: URLSearchParams | null, mobile: boolean): [HeroTier, string
   const cores = nav.hardwareConcurrency ?? 0;
   if ((mem && mem < 2) || (cores && cores < 4)) return ['still', 'low-end'];
   if (mobile || matchMedia('(pointer: coarse)').matches) return ['lite', 'mobile'];
+  const masked = MASKED_APPLE.test(renderer);
+  if (masked && !astc) return ['lite', 'mac-intel'];
   const dpr = Math.min(devicePixelRatio || 1, 2);
   const pixels = screen.width * screen.height * dpr * dpr;
-  if (STRONG.test(renderer) && (!mem || mem >= 8) && cores >= 8 && pixels <= 3840 * 2160 * 1.05) return ['full', 'strong-gpu'];
+  if ((masked || STRONG.test(renderer)) && (!mem || mem >= 8) && cores >= 8 && pixels <= 3840 * 2160 * 1.05) return ['full', 'strong-gpu'];
   return ['lite', 'gpu'];
 }
 
@@ -254,7 +266,8 @@ export function bootHero({ host, weights, night, allowQuery }: HeroBootConfig): 
     if (!b || band(b, state.p) > 0.5) return;
     const mid = b[1] === null ? 0 : b[2] === null ? 1 : (b[1] + b[2]) / 2;
     const top = root.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: top + mid * (root.offsetHeight - frame.offsetHeight), behavior: 'instant' });
+    // trang không đặt scroll-behavior: smooth → nhảy ngay; không dùng behavior 'instant' (WebKit cũ ném TypeError)
+    window.scrollTo(0, top + mid * (root.offsetHeight - frame.offsetHeight));
   };
   root.addEventListener('focusin', onFocus);
   cleanups.push(() => root.removeEventListener('focusin', onFocus));

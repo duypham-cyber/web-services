@@ -22,6 +22,9 @@
   --by1: var(--d-by1);
   --ti: var(--d-ti);
   --top: var(--d-top);
+  /* đơn vị container qua biến — dự phòng cho trình duyệt chưa có container query: khối @supports ngay dưới --fw/--cx/--cy */
+  --cw: 100cqw;
+  --ch: 100cqh;
 }
 
 .frame {
@@ -55,21 +58,43 @@
 .posterBox,
 .copy {
   --fw: min(
-    max(100cqw, 100cqh * var(--A)),
-    (100cqw - var(--ti) * 100cqw - 2 * var(--safe-m)) / (var(--bx1) - var(--bx0)),
-    (100cqh - var(--top) - 2 * var(--safe-m)) * var(--A) / (var(--by1) - var(--by0))
+    max(var(--cw), var(--ch) * var(--A)),
+    (var(--cw) - var(--ti) * var(--cw) - 2 * var(--safe-m)) / (var(--bx1) - var(--bx0)),
+    (var(--ch) - var(--top) - 2 * var(--safe-m)) * var(--A) / (var(--by1) - var(--by0))
   );
   --fh: calc(var(--fw) / var(--A));
   --cx: clamp(
-    var(--bx1) * var(--fw) - 100cqw + var(--safe-m),
-    (var(--fw) - 100cqw) * var(--ax),
-    var(--bx0) * var(--fw) - var(--ti) * 100cqw - var(--safe-m)
+    var(--bx1) * var(--fw) - var(--cw) + var(--safe-m),
+    (var(--fw) - var(--cw)) * var(--ax),
+    var(--bx0) * var(--fw) - var(--ti) * var(--cw) - var(--safe-m)
   );
   --cy: clamp(
-    var(--by1) * var(--fh) - 100cqh + var(--safe-m),
-    (var(--fh) - 100cqh) * var(--ay),
+    var(--by1) * var(--fh) - var(--ch) + var(--safe-m),
+    (var(--fh) - var(--ch)) * var(--ay),
     var(--by0) * var(--fh) - var(--top) - var(--safe-m)
   );
+}
+
+/*
+ * --cw/--ch = 100cqw/100cqh (Safari ≥ 16). Trình duyệt chưa có container query (Safari 15.4–15.6, Chrome < 105) dùng khung
+ * nhìn: cùng số đo vì .screen rộng trọn khung nhìn, stage cao bằng .screen (D-35). Không có dự phòng này ô poster tính ra 0×0
+ * (bản đồ biến mất) và cột chữ tràn hết bề ngang. Các trình duyệt này luôn T-STILL (boot.ts 'old-browser').
+ */
+@supports not (container-type: inline-size) {
+  .track {
+    --cw: 100vw;
+    --ch: 100svh;
+  }
+
+  .posterBox {
+    --ch: max(100svh, 38rem);
+  }
+
+  @media (orientation: portrait) {
+    .posterBox {
+      --ch: calc(1.16 * 100vw);
+    }
+  }
 }
 
 .posterBox {
@@ -555,14 +580,14 @@
   z-index: 5;
   /* desktop: khung chữ chỉ rộng bằng cột chữ (không phủ lên bản đồ), mép trái thẳng hàng Container 1280px */
   justify-self: start;
-  margin-left: max(var(--spacing-gutter), (100cqw - var(--container-content)) / 2);
+  margin-left: max(var(--spacing-gutter), (var(--cw) - var(--container-content)) / 2);
 }
 
 .copy {
   display: flex;
   flex-direction: column;
   /* cột chữ dừng trước mép trái vùng safe của bản đồ (bx0·fw − cx, cùng phép tính poster; cqh của .screen = svh) */
-  max-width: min(36rem, var(--bx0) * var(--fw) - var(--cx) - max(var(--spacing-gutter), (100cqw - var(--container-content)) / 2) - 20px);
+  max-width: min(36rem, var(--bx0) * var(--fw) - var(--cx) - max(var(--spacing-gutter), (var(--cw) - var(--container-content)) / 2) - 20px);
   padding-block: calc(var(--header-h) + 1.5rem) 1.5rem;
 }
 
@@ -635,7 +660,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, max-content));
   justify-content: start;
-  gap: 8px clamp(16px, 2.4cqw, 36px);
+  gap: 8px clamp(16px, 0.024 * var(--cw), 36px);
   margin-top: 2rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--color-slate-300);
@@ -703,8 +728,9 @@
   border-radius: var(--radius-xl);
   background: color-mix(in srgb, var(--color-white) 86%, transparent);
   box-shadow: 0 30px 60px -30px rgb(10 31 68 / 0.35);
+  /* chỉ khai báo bản không tiền tố: Lightning CSS tự thêm -webkit- cho Safari; viết tay -webkit- phía sau làm nó bỏ bản chuẩn
+   * (Chrome mất kính mờ) */
   backdrop-filter: blur(16px) saturate(1.3);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
 }
 
 .kicker {
@@ -897,7 +923,7 @@
     position: relative;
     inset: auto;
     flex: none;
-    height: calc(1.16 * 100cqw);
+    height: calc(1.16 * var(--cw));
     background: linear-gradient(180deg, var(--m-edge-top), var(--m-edge-bottom));
   }
 
@@ -1213,6 +1239,20 @@
   .track:global(.film-armed) .panel[data-scene='south'] .order {
     top: 64%;
   }
+
+  /* Cảnh 3D đang sống: canvas đổi mỗi khung nên kính mờ sau panel phải làm mờ lại mỗi khung (nặng với GPU tích hợp, MacBook
+   * Air Intel) → bỏ kính mờ, nền đặc hơn (D-35) */
+  .track:global(.film-armed)[data-live] .panel {
+    backdrop-filter: none;
+  }
+
+  .track:global(.film-armed)[data-live] .panel:not(.panelFinal) {
+    background: color-mix(in srgb, var(--color-white) 94%, transparent);
+  }
+
+  .track:global(.film-armed)[data-live] .panelFinal {
+    background: color-mix(in srgb, var(--color-blue-600) 92%, transparent);
+  }
 }
 
 /*
@@ -1253,5 +1293,29 @@
   .track:global(.film-armed) .frame {
     position: static;
     height: auto;
+  }
+}
+
+/*
+ * Chưa có color-mix() (Safari < 16.2, Chrome < 111 — luôn T-STILL): khai báo nền dùng color-mix() thành trong suốt → lớp
+ * sương sau cột chữ và nền panel dùng màu đặc của token (D-35).
+ */
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .veil {
+    background:
+      linear-gradient(90deg, var(--color-blue-50) 26%, transparent 52%),
+      linear-gradient(180deg, var(--color-blue-50) 0%, transparent 14%);
+  }
+
+  .panel:not(.panelFinal) {
+    background: var(--color-white);
+  }
+
+  @media (orientation: portrait) {
+    .veil {
+      background:
+        linear-gradient(180deg, var(--color-blue-50) 0%, transparent 13%),
+        linear-gradient(0deg, var(--color-blue-50) 0, transparent 16px);
+    }
   }
 }
