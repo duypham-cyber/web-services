@@ -33,13 +33,14 @@ export const CLIENT_NAMESPACES = ['common', 'errors'] as const satisfies readonl
 
 /**
  * Nhánh của `common` CHỈ dùng ở server — KHÔNG gửi xuống trình duyệt (pickClientMessages):
- *   status (nhãn "Nháp", "Minh họa"...), dev (ghi chú dựng trang), kpi (chữ của ô KPI).
+ *   status (nhãn "Nháp", "Minh họa"...), dev (ghi chú dựng trang), kpi (chữ của ô KPI), legacyBrowser (dòng nhắc trình duyệt
+ *   quá cũ ở root layout).
  * Lý do: production không mang chữ "Nháp"/ghi chú dựng trang trong payload RSC của mọi trang (cổng kiểm
  * scripts/check-no-draft.mjs dò HTML bản build), và bớt byte. Client component cần các nhãn này thì nhận qua props
  * từ Server Component (vd MobileActionBar nhận draftLabel) — gọi useTranslations('common')('status.draft') ở client
  * sẽ lỗi thiếu message.
  */
-export const SERVER_ONLY_COMMON_KEYS = ['status', 'dev', 'kpi'] as const satisfies readonly (keyof AppMessages['common'])[];
+export const SERVER_ONLY_COMMON_KEYS = ['status', 'dev', 'kpi', 'legacyBrowser'] as const satisfies readonly (keyof AppMessages['common'])[];
 
 type ServerOnlyCommonKey = (typeof SERVER_ONLY_COMMON_KEYS)[number];
 

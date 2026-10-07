@@ -70,6 +70,15 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Safari < 16 chưa có overflow: clip → lưới an toàn ở body mất, hình trang trí absolute (-right-24…) làm trang cuộn ngang
+   * 15–40 px. Chặn ở html: giá trị của html truyền cho khung nhìn nên sticky (ghim quy trình) vẫn chạy; đặt ở body sẽ biến
+   * body thành khung cuộn và làm hỏng sticky (D-35). */
+  @supports not (overflow-x: clip) {
+    html {
+      overflow-x: hidden;
+    }
+  }
+
   h1,
   h2,
   h3,
@@ -349,4 +358,31 @@ html:has(dialog[data-mobile-menu][open]) {
   background: var(--color-blue-50);
   padding: 0.125rem 0.375rem;
   font-size: 0.9em;
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * Trình duyệt quá cũ (chưa hiểu @layer — Safari < 15.4, Chrome < 99): mọi CSS Tailwind nằm trong @layer nên bị bỏ qua, trang
+ * hiện trơn. Dòng nhắc đầu <body> (root layout) chỉ hiện ở các trình duyệt đó: trình duyệt hiểu @layer ẩn nó bằng quy tắc
+ * trong @layer base; trình duyệt cũ bỏ qua cả khối ấy nên dòng nhắc hiện (D-35).
+ * Khối không lớp dưới đây KHÔNG được đặt display (CSS không lớp thắng CSS trong lớp → sẽ hiện ở mọi trình duyệt). Màu viết
+ * thẳng mã (orange-500, orange-50, navy-900) vì token nằm trong @layer theme, trình duyệt cũ không đọc được.
+ * ---------------------------------------------------------------------------------------------- */
+.legacy-browser {
+  margin: 0;
+  padding: 12px 16px;
+  border-bottom: 2px solid #ef8426;
+  background: #fff4ea;
+  color: #0a1f44;
+  font:
+    16px/1.5 -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+@layer base {
+  .legacy-browser {
+    display: none;
+  }
 }

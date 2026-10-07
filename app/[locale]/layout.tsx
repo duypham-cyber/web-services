@@ -75,6 +75,10 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
         <MotionBootScript />
       </head>
       <body>
+        {/* Chỉ hiện ở trình duyệt chưa hiểu @layer (Safari < 15.4, Chrome < 99): app/globals.css mục "Trình duyệt quá cũ" (D-35) */}
+        <p className="legacy-browser" data-nosnippet="">
+          {t('legacyBrowser')}
+        </p>
         <div data-scroll-sentinel="" aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px" />
         <LogoSymbol />
         <NextIntlClientProvider messages={clientMessages}>

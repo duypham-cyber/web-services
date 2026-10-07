@@ -66,6 +66,7 @@
     "pending": "Chờ xác nhận",
     "draftLegacy": "Nháp · số site cũ"
   },
+  "legacyBrowser": "Trình duyệt này đã cũ nên trang có thể hiển thị chưa đúng. Hãy cập nhật trình duyệt hoặc mở trang bằng Google Chrome bản mới.",
   "units": {
     "hours": "giờ",
     "minutes": "phút"

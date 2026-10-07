@@ -66,6 +66,7 @@
     "pending": "Pending confirmation",
     "draftLegacy": "Draft · old-site figure"
   },
+  "legacyBrowser": "This browser is out of date, so the page may not display correctly. Please update your browser or open the page in a recent version of Google Chrome.",
   "units": {
     "hours": "h",
     "minutes": "min"
