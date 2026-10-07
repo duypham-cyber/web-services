@@ -1,5 +1,6 @@
 /*
- * Tuyến đường các trạm — section quy trình trang chủ theo Mẫu 02 "Bản đồ sống" (D-26). Không JavaScript.
+ * Tuyến đường các trạm — section quy trình trang chủ theo Mẫu 02 "Bản đồ sống" (D-26). Hoạt ảnh tuyến là CSS thuần; chế độ
+ * ghim ở cuối file (D-34) có thêm ProcessStepper ghi trạng thái bước.
  *  - Trạng thái MẶC ĐỊNH = trạng thái cuối: tuyến vẽ đủ, mọi trạm sáng (không JS, reduced-motion, Save-Data, JS lỗi
  *    → html không có data-motion hoặc data-motion="off").
  *  - Chỉ animate stroke-dashoffset / transform / opacity, chạy hữu hạn, không loop.
@@ -354,5 +355,131 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * "Dừng và đi từng bước" (D-34, anh Duy 07/10/2026): khi cuộn tới, đầu section + tuyến đường đứng yên giữa phần khung nhìn
+ * dưới header ở bước 00; người xem cuộn qua đường băng (.pinRunway), mỗi đoạn --pin-step là một bước, trạm cuối giữ thêm
+ * --pin-hold đoạn rồi khối trôi tiếp. Không chiếm cuộn (không bắt wheel/touch/phím): chỉ sticky + trạng thái ProcessStepper ghi.
+ *  - Chỉ khi: màn hình (không in), có chuột (hover + pointer fine — docs/03 mục 12.3: tầng Lite/cảm ứng không pin), ≥ 1280 px
+ *    (tuyến ngang), khung nhìn ≥ 40rem, cho phép chuyển động (html[data-motion] có mặt — gồm cả "off" của mốc 4 s, để JS chậm
+ *    không làm đường băng biến mất giữa chừng). PIN_QUERY (process-pin.ts) phải trùng nguyên văn media query dưới đây (test kiểm).
+ *    JS tắt thêm (data-pin="off") khi khối cao hơn khung nhìn.
+ *  - Bước chưa tới KHÔNG làm mờ chữ (giữ tương phản AA): chỉ đĩa số, nét cam và thẻ nền của bước hiện tại đổi.
+ *  - Chuyển cảnh theo thời gian (không theo tốc độ cuộn) → mỗi bước là một nhịp rõ; cuộn ngược thì lùi từng bước.
+ *  - Trước khi JS chạy (pending): khối đặt gần giữa theo chiều cao ước lượng (--pin-stage-h) và hiện dáng bước 00, để lúc JS
+ *    chạy chỉ dịch vài px và tuyến vẽ tiến lên thay vì thu lại.
+ * ---------------------------------------------------------------------------------------------- */
+.pinTrack {
+  /* ≈ 2 nấc chuột mỗi bước; không dài thêm trên màn cao */
+  --pin-step: min(26vh, 240px);
+  /* Chiều cao khối đo được 509–576 px ở 1280–2560 px, VI/EN */
+  --pin-stage-h: 34rem;
+  position: relative;
+}
+
+.pinRunway {
+  display: none;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) and (min-width: 80rem) and (min-height: 40rem) {
+  :global(html[data-motion]) .pinTrack:not([data-pin='off']) {
+    /* Bố cục đổi lúc ghim/bỏ ghim: ProcessStepper tự cuộn bù, không để neo cuộn của trình duyệt cộng thêm */
+    overflow-anchor: none;
+  }
+
+  :global(html[data-motion]) .pinTrack:not([data-pin='off']) .pinStage {
+    position: sticky;
+    top: var(
+      --pin-top,
+      max(calc(var(--header-h) + 1.5rem), calc((100vh + var(--header-h) - var(--pin-stage-h)) / 2))
+    );
+  }
+
+  :global(html[data-motion]) .pinTrack:not([data-pin='off']) .pinRunway {
+    display: block;
+    height: calc((var(--pin-steps) + var(--pin-hold)) * var(--pin-step));
+  }
+
+  /* Chờ JS: dáng bước 00 (chưa vẽ, chưa sáng). Chỉ khi pending — JS lỗi ("off") thì giữ dáng cuối như cũ. */
+  :global(html[data-motion='pending']) .pinTrack:not([data-pin='off']):not([data-step]) .route .trail {
+    animation: none;
+    stroke-dashoffset: 1px;
+  }
+
+  :global(html[data-motion='pending']) .pinTrack:not([data-pin='off']):not([data-step]) .route .lit {
+    animation: none;
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  /* Trạng thái ProcessStepper ghi. Ngang hoặc cao hơn độ ưu tiên của hoạt ảnh theo cuộn (a) và dự phòng (b) ở trên,
+   * khai báo sau nên thắng. */
+  :global(html) .pinTrack[data-step] .route .trail {
+    animation: none;
+    stroke-dashoffset: var(--route-offset, 0px);
+    transition: stroke-dashoffset 0.7s var(--ease-standard);
+  }
+
+  :global(html) .pinTrack[data-step] .route .lit {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    /* Sáng sau khi nét cam chạy tới trạm (trễ 0,45 s); tắt ngay khi lùi (trễ 0 ở trạng thái todo) */
+    transition:
+      opacity var(--dur-medium) var(--ease-entry) 0.45s,
+      transform var(--dur-medium) var(--ease-entry) 0.45s;
+  }
+
+  :global(html) .pinTrack[data-step] .route .station[data-state='todo'] .lit {
+    opacity: 0;
+    transform: scale(0.6);
+    transition-delay: 0s;
+  }
+
+  :global(html) .pinTrack[data-step] .route .disk {
+    transition: transform var(--dur-medium) var(--ease-entry);
+  }
+
+  :global(html) .pinTrack[data-step] .route .station[data-state='current'] .disk {
+    transform: scale(1.12);
+  }
+
+  /* Thẻ nền của bước hiện tại: trắng + bóng trên nền blue-50; blue-50 trên nền trắng; blue-700 trên dải tối
+   * (slate-300 trên blue-700 7,13:1). Rộng hơn cột 0,25rem mỗi bên → chữ cách mép thẻ 12 px. */
+  :global(html) .pinTrack[data-step] .route .station {
+    isolation: isolate;
+  }
+
+  :global(html) .pinTrack[data-step] .route .station::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: calc(var(--band) + 0.5rem) -0.25rem -1.25rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-2);
+    opacity: 0;
+    transform: translateY(0.5rem);
+    pointer-events: none;
+    transition:
+      opacity var(--dur-medium) var(--ease-entry),
+      transform var(--dur-medium) var(--ease-entry);
+  }
+
+  :global([data-tone='light']) .pinTrack[data-step] .route .station::after {
+    background-color: var(--color-blue-50);
+  }
+
+  :global([data-tone='navy']) .pinTrack[data-step] .route .station::after {
+    background-color: var(--color-blue-700);
+    box-shadow: none;
+  }
+
+  :global(html) .pinTrack[data-step] .route .station[data-state='current']::after {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.3s;
   }
 }
