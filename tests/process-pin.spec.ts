@@ -68,3 +68,27 @@ test.describe('quy trình trang chủ khi giảm chuyển động (D-34)', () =>
     expect(await page.evaluate(() => document.documentElement.hasAttribute('data-motion'))).toBe(false);
   });
 });
+
+test.describe('quy trình trang chủ khi JavaScript không chạy được (D-35)', () => {
+  test('bundle lỗi cú pháp → nội dung hiện ngay, không ghim', async ({ page }, info) => {
+    test.skip(info.project.name !== 'desktop-1440', 'chế độ ghim chỉ có ở desktop có chuột');
+    // Như Safari cũ không đọc được bundle: mọi chunk JS lỗi cú pháp ngay ký tự đầu
+    await page.route(/\/_next\/static\/chunks\/.+\.js(\?.*)?$/, async (route) => {
+      const resp = await route.fetch();
+      const headers = { ...resp.headers() };
+      delete headers['content-encoding'];
+      delete headers['content-length'];
+      await route.fulfill({ status: resp.status(), headers, body: `@@;${await resp.text()}` });
+    });
+    await page.goto('/', { waitUntil: 'load' });
+    // script đầu trang thấy SyntaxError → "off" ngay, không chờ mốc 4 s
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.motion ?? null), { timeout: 2500 }).toBe('off');
+    const s = await read(page);
+    expect(s.runway, 'không có đường băng ghim').toBe(0);
+    expect(s.pin).toBeNull();
+    const hidden = await page.evaluate(
+      () => Array.from(document.querySelectorAll('[data-motion-item="rise"]')).filter((el) => getComputedStyle(el).opacity === '0').length,
+    );
+    expect(hidden, 'phần tử rise còn ẩn').toBe(0);
+  });
+});

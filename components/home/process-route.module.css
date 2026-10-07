@@ -363,9 +363,11 @@
  * dưới header ở bước 00; người xem cuộn qua đường băng (.pinRunway), mỗi đoạn --pin-step là một bước, trạm cuối giữ thêm
  * --pin-hold đoạn rồi khối trôi tiếp. Không chiếm cuộn (không bắt wheel/touch/phím): chỉ sticky + trạng thái ProcessStepper ghi.
  *  - Chỉ khi: màn hình (không in), có chuột (hover + pointer fine — docs/03 mục 12.3: tầng Lite/cảm ứng không pin), ≥ 1280 px
- *    (tuyến ngang), khung nhìn ≥ 40rem, cho phép chuyển động (html[data-motion] có mặt — gồm cả "off" của mốc 4 s, để JS chậm
- *    không làm đường băng biến mất giữa chừng). PIN_QUERY (process-pin.ts) phải trùng nguyên văn media query dưới đây (test kiểm).
- *    JS tắt thêm (data-pin="off") khi khối cao hơn khung nhìn.
+ *    (tuyến ngang), khung nhìn ≥ 40rem, cho phép chuyển động (html[data-motion]). PIN_QUERY (process-pin.ts) phải trùng nguyên
+ *    văn media query dưới đây (test kiểm). Lúc chờ JS (pending) CSS ghim sẵn để giữ chỗ; sau đó chỉ ghim khi ProcessStepper ghi
+ *    data-pin="on" (JS tới trễ hơn mốc 4 s vẫn ghim được). JS chết (Safari cũ không đọc được bundle, mốc 4 s thành "off") thì
+ *    không ghim — trước đây đường băng ~1.200 px đứng yên, người xem tưởng trang không cuộn (D-35). JS ghi data-pin="off" khi
+ *    khối cao hơn khung nhìn.
  *  - Bước chưa tới KHÔNG làm mờ chữ (giữ tương phản AA): chỉ đĩa số, nét cam và thẻ nền của bước hiện tại đổi.
  *  - Chuyển cảnh theo thời gian (không theo tốc độ cuộn) → mỗi bước là một nhịp rõ; cuộn ngược thì lùi từng bước.
  *  - Trước khi JS chạy (pending): khối đặt gần giữa theo chiều cao ước lượng (--pin-stage-h) và hiện dáng bước 00, để lúc JS
@@ -384,12 +386,14 @@
 }
 
 @media screen and (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) and (min-width: 80rem) and (min-height: 40rem) {
-  :global(html[data-motion]) .pinTrack:not([data-pin='off']) {
+  :global(html[data-motion='pending']) .pinTrack:not([data-pin='off']),
+  :global(html[data-motion]) .pinTrack[data-pin='on'] {
     /* Bố cục đổi lúc ghim/bỏ ghim: ProcessStepper tự cuộn bù, không để neo cuộn của trình duyệt cộng thêm */
     overflow-anchor: none;
   }
 
-  :global(html[data-motion]) .pinTrack:not([data-pin='off']) .pinStage {
+  :global(html[data-motion='pending']) .pinTrack:not([data-pin='off']) .pinStage,
+  :global(html[data-motion]) .pinTrack[data-pin='on'] .pinStage {
     position: sticky;
     top: var(
       --pin-top,
@@ -397,7 +401,8 @@
     );
   }
 
-  :global(html[data-motion]) .pinTrack:not([data-pin='off']) .pinRunway {
+  :global(html[data-motion='pending']) .pinTrack:not([data-pin='off']) .pinRunway,
+  :global(html[data-motion]) .pinTrack[data-pin='on'] .pinRunway {
     display: block;
     height: calc((var(--pin-steps) + var(--pin-hold)) * var(--pin-step));
   }

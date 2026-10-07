@@ -8,11 +8,12 @@ import { PIN_QUERY } from './process-pin';
  * - CSS quyết định bố cục ghim (sticky + đường băng, process-route.module.css). File này chỉ đọc vị trí cuộn và ghi trạng
  *   thái vào DOM khi giá trị đổi: track[data-pin|data-step], trạm[data-state=done|current|todo], --route-offset của nét cam,
  *   --pin-top (khối nằm giữa phần khung nhìn dưới header). Không React state, không bắt wheel/touch/phím (không chiếm cuộn);
- *   chỉ nghe scroll khi PIN_QUERY khớp (desktop có chuột).
+ *   chỉ nghe scroll khi PIN_QUERY khớp (desktop có chuột) và khối cách khung nhìn ≤ một màn (không đo bố cục mỗi khung khi
+ *   người xem đang ở hero bản đồ — D-35).
  * - Khối không vừa khung nhìn → data-pin=off: CSS bỏ ghim, xoá trạng thái, tuyến quay về hoạt ảnh cũ (vẽ theo cuộn, hoặc vẽ
  *   một lần khi chưa có animation-timeline). Bỏ ghim lúc đang ở giữa đường băng thì cuộn bù để người đọc vẫn ở khối này.
- * - Chạy cả khi html[data-motion] đã thành "off" (JS tới trễ hơn 4 s): bố cục ghim không phụ thuộc mốc 4 s (CSS chỉ cần
- *   thuộc tính có mặt), nên JS tới trễ vẫn đi từng bước được.
+ * - Chạy cả khi html[data-motion] đã thành "off" (JS tới trễ hơn 4 s): CSS ghim theo data-pin="on" do file này ghi, nên JS
+ *   tới trễ vẫn đi từng bước được; JS không chạy thì không ghim (D-35).
  * PIN_QUERY (process-pin.ts) trùng media query chế độ ghim trong process-route.module.css (tests/unit/process-pin.test.ts kiểm).
  */
 
@@ -45,6 +46,7 @@ export function ProcessStepper({ hold }: { hold: number }) {
     let frame = 0;
     let shown = -2;
     let pinTop = 0; // 0 = đang không ghim
+    let near = false;
 
     const show = (s: number) => {
       if (s === shown) return;
@@ -114,22 +116,31 @@ export function ProcessStepper({ hold }: { hold: number }) {
       header = readHeader();
       schedule();
     };
-    // Chỉ nghe cuộn khi có thể ghim: điện thoại, máy tính bảng, cửa sổ hẹp không chạy gì mỗi khung hình
+    // Chỉ nghe cuộn khi có thể ghim (điện thoại, máy tính bảng, cửa sổ hẹp không chạy gì mỗi khung hình) và khối ở gần
     const listen = () => {
       window.removeEventListener('scroll', schedule);
-      if (mq.matches) window.addEventListener('scroll', schedule, { passive: true });
+      if (mq.matches && near) window.addEventListener('scroll', schedule, { passive: true });
     };
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        near = entry?.isIntersecting ?? true;
+        listen();
+        if (near) schedule();
+      },
+      { rootMargin: '100% 0px' },
+    );
     const onQuery = () => {
       listen();
       onResize();
     };
 
     measure();
-    listen();
+    io.observe(track);
     window.addEventListener('resize', onResize);
     mq.addEventListener('change', onQuery);
     return () => {
       cancelAnimationFrame(frame);
+      io.disconnect();
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', onResize);
       mq.removeEventListener('change', onQuery);
