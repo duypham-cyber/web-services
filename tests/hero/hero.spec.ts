@@ -407,11 +407,12 @@ test.describe('vòng vẽ và hạ tầng tại chỗ (lite ép, SwiftShader)', 
     expect(after).toEqual({ h: before, armed: true, live: undefined, tier: 'still' });
   });
 
-  test('FPS guard: khung > 25 ms khi đang cuộn → hạ bậc rồi T-STILL (AC-T-2)', async ({ page }, testInfo) => {
+  test('FPS guard: ≤ 20 hình/s khi đang cuộn → hạ hết bậc rồi T-STILL (AC-T-2)', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-1440', 'một bố cục là đủ');
     test.setTimeout(300_000);
-    // ?slowms=40: mỗi khung vẽ giữ luồng chính thêm 40 ms (giả lập máy yếu, không phụ thuộc tốc độ SwiftShader của máy chạy test)
-    await openLive(page, 'shot=1&slowms=40');
+    // ?slowms=60: mỗi khung vẽ giữ luồng chính thêm 60 ms (giả lập máy yếu dưới 20 hình/s, không phụ thuộc tốc độ SwiftShader
+    // của máy chạy test). Chậm hơn 25 ms mà vẫn trên 20 hình/s thì chỉ hạ bậc, không về poster (D-35, tests/unit/fps-guard.test.ts).
+    await openLive(page, 'shot=1&slowms=60');
     // cuộn liên tục ngay trong trang (mỗi thao tác Playwright có trace sẽ chụp DOM → tạo khoảng nghỉ > 200 ms, guard coi là đã dừng cuộn)
     await page.evaluate(async (sel) => {
       const root = document.querySelector(sel) as HTMLElement;
@@ -426,11 +427,11 @@ test.describe('vòng vẽ và hạ tầng tại chỗ (lite ép, SwiftShader)', 
       }
     }, ROOT);
     const d = await heroData(page);
-    expect(d.stillReason, `khung > 25 ms khi cuộn → guard hạ hết bậc (${JSON.stringify(d)})`).toBe('fps-guard');
+    expect(d.stillReason, `≤ 20 hình/s khi cuộn → guard hạ hết bậc (${JSON.stringify(d)})`).toBe('fps-guard');
     expect(d.quality, 'đã hạ ít nhất một bậc trước khi về T-STILL').toBeDefined();
   });
 
-  test('ra khỏi hero > 3 s → giải phóng cảnh; quay lại → dựng lại (AC-L-4/5)', async ({ page }, testInfo) => {
+  test('ra khỏi hero > 20 s → giải phóng cảnh; quay lại → dựng lại (AC-L-4/5)', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-1440', 'một bố cục là đủ');
     test.setTimeout(300_000);
     await openLive(page, 'shot=1&fpsguard=0');
@@ -438,7 +439,10 @@ test.describe('vòng vẽ và hạ tầng tại chỗ (lite ép, SwiftShader)', 
       const root = document.querySelector(sel) as HTMLElement;
       window.scrollTo(0, root.getBoundingClientRect().bottom + window.scrollY + 400);
     }, ROOT);
-    await expect.poll(() => page.locator(`${ROOT} canvas`).count(), { timeout: 15_000 }).toBe(0);
+    // còn cảnh trong 20 s đầu (quay lên ngay không phải dựng lại — D-35), sau đó giải phóng
+    await page.waitForTimeout(5_000);
+    expect(await page.locator(`${ROOT} canvas`).count(), 'chưa giải phóng khi mới ra khỏi hero').toBe(1);
+    await expect.poll(() => page.locator(`${ROOT} canvas`).count(), { timeout: 40_000 }).toBe(0);
     expect(await page.locator(`${ROOT}[data-live]`).count()).toBe(0);
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForSelector(`${ROOT}[data-live]`, { timeout: 240_000 });

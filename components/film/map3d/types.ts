@@ -103,6 +103,11 @@ export type MapSceneOptions = {
   progress?: number;
   /** Kích thước khung đầu (px CSS); thiếu thì đọc canvas.clientWidth/clientHeight + devicePixelRatio. */
   size?: { width: number; height: number; dpr: number };
+  /**
+   * Gọi sau phần dựng trên CPU, ngay trước khi biên dịch shader + vẽ khung đầu (bước 2: chờ cuộn đứng). Reject → huỷ dựng,
+   * giải phóng phần đã tạo.
+   */
+  beforeCompile?: () => Promise<void>;
   signal?: AbortSignal;
 };
 

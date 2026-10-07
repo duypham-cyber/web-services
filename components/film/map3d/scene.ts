@@ -271,6 +271,7 @@ export async function createMapScene(canvas: HTMLCanvasElement, opts: MapSceneOp
   }
 
   // ------------------------------------------------------------------ khởi động: biên dịch + khung đầu
+  if (opts.beforeCompile) await step(opts.beforeCompile());
   applySize();
   update(p0);
   await step(renderer.compileAsync(scene, camera));

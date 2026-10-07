@@ -1,25 +1,31 @@
 /**
  * Chunk cảnh của hero bản đồ (import ĐỘNG từ runtime/boot.ts — cùng nhóm với three.js, KHÔNG vào JS tải đầu).
  * contracts/hero-map.md mục 3.4 và 3.6:
- *   - dựng cảnh khi cuộn đã đứng ≥ 150 ms (cấm biên dịch shader khi tiến độ đang đổi); canvas hiện đè poster khi khung đầu xong;
+ *   - dựng cảnh ngay (giải mã, mặt nạ biển, hình học); riêng bước biên dịch shader + khung đầu chờ cuộn đứng ≥ 150 ms, chờ tối
+ *     đa 1 s (D-35: vuốt trackpad liên tục vẫn có cảnh giữa chừng); canvas hiện đè poster khi khung đầu xong;
  *   - một rAF: setProgress(p) → renderIfNeeded(now) → nhãn chiếu từ project(); vòng tự dừng khi không còn gì để vẽ;
  *   - hiệu ứng nền chỉ khi hero trong khung nhìn + tab hiện, tắt sau ~8 s không tương tác;
- *   - ra khỏi vùng hero → dừng hẳn; > 3 s thì giải phóng cảnh (texture, WebGL context); quay lại → dựng lại ở đúng tiến độ;
- *   - webglcontextlost / FPS guard hết bậc → T-STILL tại chỗ (giữ chiều cao track, panel vẫn theo tiến độ);
+ *   - ra khỏi vùng hero → dừng hẳn; > 20 s (tab ẩn > 10 s) thì giải phóng cảnh (texture, WebGL context); quay lại → dựng lại ở
+ *     đúng tiến độ;
+ *   - webglcontextlost / FPS guard hết bậc ở ≤ 20 hình/s → T-STILL tại chỗ (giữ chiều cao track, panel vẫn theo tiến độ);
  *   - minimap (desktop) khi một quần đảo ra khỏi khung, vẽ đủ hai quần đảo có tên, né vùng chấm đảo.
  */
 import { createMapScene, type MapScene, type ProjectedFrame, type RawHeroMap } from '@/components/film/map3d';
 import { SCENE_IDS, type Band, type HeroState, type SceneKey } from './boot';
+import { guardVerdict } from './fps-guard';
 import { createLabels } from './labels';
 
 type Box = [number, number, number, number];
 
 const SETTLE_MS = 150;
+/** Chờ cuộn đứng tối đa chừng này trước khi biên dịch shader (D-35). */
+const SETTLE_MAX_MS = 1000;
 const AMBIENT_MS = 8000;
-const RELEASE_MS = 3000;
-/** FPS guard (AC-T-2): p90 thời gian khung > 25 ms trong 2 s ĐANG cuộn → hạ một bậc. */
+/** Ra khỏi hero quá lâu → giải phóng cảnh. Đủ dài để cuộn xuống xem rồi quay lên không phải dựng lại (D-35). */
+const RELEASE_MS = 20_000;
+const HIDDEN_RELEASE_MS = 10_000;
+/** FPS guard (AC-T-2): cửa sổ 2 s ĐANG cuộn; ngưỡng ở fps-guard.ts. */
 const GUARD_WINDOW_MS = 2000;
-const GUARD_P90_MS = 25;
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 const absTop = (el: HTMLElement) => el.getBoundingClientRect().top + window.scrollY;
@@ -129,12 +135,17 @@ export async function startStage(
   const headerH = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 64;
   const size = () => ({ width: stage.clientWidth, height: stage.clientHeight, dpr: window.devicePixelRatio || 1 });
 
+  /** Trước bước biên dịch shader: chờ cuộn đứng ≥ 150 ms (tối đa 1 s); hero đã ra khỏi khung thì huỷ, quay lại sẽ dựng lại. */
+  async function settle() {
+    const t0 = performance.now();
+    while (performance.now() - state.lastScroll < SETTLE_MS && performance.now() - t0 < SETTLE_MAX_MS) await sleep(SETTLE_MS / 3);
+    if (stopped || isStill() || !inView) throw new DOMException('hero out of view', 'AbortError');
+  }
+
   async function build() {
     if (building || scene || stopped || isStill()) return;
     building = true;
     try {
-      while (performance.now() - state.lastScroll < SETTLE_MS) await sleep(SETTLE_MS);
-      if (stopped || isStill() || !inView) return;
       // canvas MỚI mỗi lần dựng: canvas cũ đã dispose() → forceContextLoss() không lấy lại context được
       host.querySelector('canvas')?.remove();
       const canvas = document.createElement('canvas');
@@ -149,6 +160,7 @@ export async function startStage(
         shot,
         size: size(),
         signal,
+        beforeCompile: settle,
         onContextLost: () => state.toStill('context-lost'),
       });
       if (stopped || isStill() || !canvas.isConnected) {
@@ -157,6 +169,9 @@ export async function startStage(
         return;
       }
       scene = s;
+      // khung có thể đã đổi cỡ trong lúc dựng/chờ cuộn đứng (ResizeObserver bỏ qua khi chưa có cảnh)
+      const z = size();
+      s.resize(z.width, z.height, z.dpr);
       await document.fonts?.ready;
       labels?.measure();
       root.dataset.live = '';
@@ -251,19 +266,21 @@ export async function startStage(
     return pick[1];
   }
 
-  /** FPS guard: chỉ gọi khi đang cuộn, dt = khoảng giữa hai lần rAF liên tiếp. */
+  /**
+   * FPS guard: chỉ gọi khi đang cuộn, dt = khoảng giữa hai lần rAF liên tiếp. Khung chậm → hạ một bậc; hết bậc thì chỉ về
+   * T-STILL khi ≤ 20 hình/s, còn lại giữ bậc thấp nhất (máy hơi giật vẫn có bản đồ 3D).
+   */
   function guard(now: number, dt: number) {
     if (!guardOn || !scene) return;
     samples.push({ t: now, dt });
     while (samples.length && now - samples[0]!.t > GUARD_WINDOW_MS) samples.shift();
     // đủ ~2 s đang cuộn (máy rất chậm chỉ có vài khung trong 2 s — chính là lúc phải hạ)
     if (samples.length < 3 || now - samples[0]!.t < GUARD_WINDOW_MS * 0.9) return;
-    const sorted = samples.map((s) => s.dt).sort((a, b) => a - b);
-    const p90 = sorted[Math.floor(sorted.length * 0.9)] ?? 0;
-    if (p90 <= GUARD_P90_MS) return;
+    const verdict = guardVerdict(samples.map((s) => s.dt));
+    if (verdict === 'ok') return;
     samples = [];
-    if (!scene.degrade()) state.toStill('fps-guard');
-    else root.dataset.quality = String(scene.stats().quality);
+    if (scene.degrade()) root.dataset.quality = String(scene.stats().quality);
+    else if (verdict === 'slow') state.toStill('fps-guard');
   }
 
   /** Nhãn + minimap theo khung vừa vẽ. */
@@ -349,14 +366,24 @@ export async function startStage(
     window.addEventListener(type, onInput, { passive: true });
     cleanups.push(() => window.removeEventListener(type, onInput));
   }
+  const releaseAfter = (ms: number) => {
+    clearTimeout(releaseTimer);
+    releaseTimer = window.setTimeout(release, ms);
+  };
   const onVis = () => {
     visible = document.visibilityState === 'visible';
     if (visible) {
+      if (inView) clearTimeout(releaseTimer);
+      else releaseAfter(RELEASE_MS);
       lastTick = -1;
       wake();
-    } else if (scene && ambientOn) {
-      ambientOn = false;
-      scene.setAmbient(false);
+    } else {
+      if (scene && ambientOn) {
+        ambientOn = false;
+        scene.setAmbient(false);
+      }
+      // tab ẩn: trả bộ nhớ GPU sớm (MacBook Air 8 GB nhiều tab)
+      if (scene) releaseAfter(HIDDEN_RELEASE_MS);
     }
   };
   document.addEventListener('visibilitychange', onVis);
@@ -373,7 +400,7 @@ export async function startStage(
         ambientOn = false;
         scene.setAmbient(false);
       }
-      releaseTimer = window.setTimeout(release, RELEASE_MS);
+      releaseAfter(visible ? RELEASE_MS : HIDDEN_RELEASE_MS);
     }
   });
   io.observe(root);
