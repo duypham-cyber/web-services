@@ -704,3 +704,33 @@ chỉnh chữ lớn cho vừa cân đối".
   - Không tràn ngang ở 360–2285 px, VI và EN.
   - Bản EN ở 1280 px: 3 mục dịch vụ xuống 2 dòng, vẫn đọc là từng mục.
 
+### D-34 · 07/10/2026 · Quy trình trang chủ dừng ở bước 00 và đi từng bước khi cuộn (anh Duy yêu cầu)
+Anh Duy: "lúc lăn chuột không hợp lý lắm… lăn chuột xuống tới khúc này thì nên dừng ở từ 00 và lăn chuột từng bước đến khi
+xong bước 5 hẳn xuống tiếp".
+- **Trước:** section cuộn trôi, nét cam tự vẽ theo vị trí khối. Khi vẽ xong thì khối đã trôi gần hết khỏi màn hình.
+- **Cách làm:**
+  - Đầu section + tuyến đường nằm trong `ProcessPin`: khối `position: sticky` + đường băng phía dưới, dài
+    (số trạm − 1 + 1) × `--pin-step`, với `--pin-step = min(26vh, 240px)` ≈ 2 nấc chuột mỗi bước.
+  - `ProcessStepper` là client component nhỏ, nghe scroll passive + rAF, chỉ khi `PIN_QUERY` khớp. Nó chỉ ghi DOM khi giá trị
+    đổi: `data-step`, `data-state` của từng trạm, `--route-offset`, `--pin-top` (đặt khối giữa phần khung nhìn dưới header).
+  - Không bắt wheel/touch/phím, không setState, cuộn vẫn là cuộn gốc của trình duyệt.
+  - Mỗi trạng thái 00 → 05 giữ đúng một đoạn bước, trạm 05 giữ thêm một đoạn rồi khối trôi tiếp. Cuộn ngược thì lùi từng bước.
+  - Chuyển cảnh theo thời gian: nét cam 0,7 s, đĩa sáng trễ 0,45 s, thẻ nền bước hiện tại hiện trễ 0,3 s.
+  - Chữ không bị làm mờ (giữ AA). Bước hiện tại có thẻ nền: trắng trên blue-50, blue-50 trên nền trắng, blue-700 trên dải tối.
+- **Chỉ ghim khi** (`components/home/process-pin.ts` trùng nguyên văn media query CSS, unit test kiểm): màn hình (không in),
+  có chuột (`hover: hover` + `pointer: fine`, docs/03 mục 12.3: cảm ứng không pin), ≥ 1280 × 640 px, cho phép chuyển động,
+  và khối + thẻ nền vừa khung nhìn dưới header.
+  - Còn lại như D-26: điện thoại, máy tính bảng, cửa sổ thấp, reduced-motion, Save-Data, không JS.
+  - Bố cục ghim gắn với việc `html[data-motion]` có mặt (gồm cả "off" của mốc 4 s), nên JS chậm không làm đường băng biến
+    mất giữa chừng. Trước khi JS chạy: khối đặt gần giữa (ước lượng 34rem) và hiện dáng bước 00.
+  - Bỏ ghim lúc đang ở giữa đường băng (thu nhỏ cửa sổ): ProcessStepper cuộn bù, người đọc vẫn ở khối quy trình.
+- **Số đo dev server:**
+  - 1440 × 900: khối đứng ở top 225 px; bước đổi mỗi 234 px.
+  - 1920 × 1080 và 2285 × 1200: bước 240 px.
+  - 1366 × 657: ghim, bước 171 px.
+  - Không ghim: bản EN ở 1366 × 657 (khối EN cao hơn), cửa sổ < 640 px, máy tính bảng cảm ứng 1366 × 1024, reduced-motion.
+- **Đã kiểm:** workflow 2 agent (kiểm thử hành vi + soát code). Đã sửa theo báo cáo: mốc 4 s, ngưỡng chiều cao, máy tính bảng,
+  nhảy lúc tải, cuộn bù, in giấy khổ lớn, nhịp bước đều, giới hạn độ dài bước, độ dài nét cam ghi sẵn px, thẻ nền theo tông.
+  Test: `tests/process-pin.spec.ts`, `tests/unit/process-pin.test.ts`; a11y/overflow/hero trang chủ xanh.
+- **Chấp nhận:** PageDown/Space nhảy 2–3 bước một lần (một trang dài hơn một bước). Mũi tên đi đủ từng bước; chữ luôn đọc được.
+

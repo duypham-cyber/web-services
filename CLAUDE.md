@@ -178,6 +178,8 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 ## Motion ngoài phim (`components/motion`, không GSAP)
 - `Rise` · `Curtain` · `StaggerGrid` = thuộc tính data, MỘT IntersectionObserver (`MotionRuntime`). `CountUp`: số cuối có sẵn
   trong HTML, cập nhật textContent qua rAF, không setState mỗi frame.
+- Ghim section (chỉ quy trình trang chủ, D-34): `ProcessPin` + `ProcessStepper`, sticky + đường băng, ghi trạng thái vào DOM.
+  Chỉ desktop có chuột (`components/home/process-pin.ts`), không bắt wheel. Không thêm ghim ở section khác khi chưa hỏi.
 - KHÔNG bọc: H1, phần tử LCP, nội dung màn đầu của trang con, giá, hotline, nội dung pháp lý, trường form, thông báo lỗi.
 - Chỉ animate transform/opacity/clip-path. Không loop vô hạn. Reduced-motion/Save-Data/không JS: mọi thứ hiện ngay
   (`html[data-motion]` pending → ready; tự "off" sau 4 s nếu JS lỗi).
