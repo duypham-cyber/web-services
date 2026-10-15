@@ -1,6 +1,6 @@
 [Unit]
 StartLimitIntervalSec=0
-Description=bluebolt-web — proxy cong khai <IP Tailscale của máy chủ>:9515 (Tailscale) -> localhost:3092, khong mat khau, noindex (services.bluebolt.software, D-30)
+Description=bluebolt-web — proxy cong khai cong 9515 (Tailscale) -> localhost:3092, khong mat khau, noindex (services.bluebolt.software, D-30)
 After=bluebolt-web-public.service
 Wants=bluebolt-web-public.service
 

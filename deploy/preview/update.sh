@@ -48,6 +48,6 @@ case "$WHAT" in
   draft | all)
     deploy .next-preview bluebolt-web-preview 3097 DRAFT_PREVIEW=1 STAGING=1 SITE_URL="$(env_value .env.preview SITE_URL)"
     systemctl --user is-active bluebolt-web-preview-proxy
-    echo "[draft] đã cập nhật — http://<IP Tailscale của máy chủ>:9516 (Tailscale) · http://<IP LAN của máy chủ>:9516 (LAN), có mật khẩu"
+    echo "[draft] đã cập nhật — cổng 9516 qua Tailscale/LAN của máy chủ, có mật khẩu"
     ;;
 esac
