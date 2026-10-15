@@ -54,3 +54,8 @@ NEXT_DIST_DIR=.next-prod PORT=3000 npm run start   # nghe http://localhost:3000
 - Cập nhật: `git pull && npm ci && scripts/safe-build.sh .next-prod-new`, dừng dịch vụ, đổi tên `.next-prod-new` →
   `.next-prod`, chạy lại.
 - Trình duyệt hỗ trợ: Chrome/Edge/Firefox ≥ 111, Safari ≥ 15.4 (D-35 trong [`docs/DECISIONS.md`](docs/DECISIONS.md)).
+
+## Giấy phép
+
+Mã nguồn: MIT ([`LICENSE`](LICENSE)). Logo, tên thương hiệu, thông tin doanh nghiệp, ảnh minh họa, font và dữ liệu bản đồ có
+điều kiện riêng, xem [`NOTICE.md`](NOTICE.md). Dựng site cho đơn vị khác thì thay logo và nội dung trong `content/`, `messages/`.
