@@ -167,7 +167,7 @@ Anh Duy, 7 trang khu vực thợ & công ty (cả VI và EN) đã xong và đã 
   - Ảnh thật chưa có nên dùng khung giữ chỗ `MediaFrame`; ghi chú "Ảnh thật sẽ chụp" chỉ hiện ở bản xem trước.
   - Mọi trang có breadcrumb + BreadcrumbList (component của agent SEO).
 
-Commit: `534299d`, `f86782b`, `5dcfac0`, `70fbb7f`, `ff10f47`, `5876ab3`.
+Commit: `c100307`, `fb46291`, `c4d6cbf`, `28a8e9d`, `3b3deeb`, `271aa4f`.
 
 ## Kết quả kiểm
 | Kiểm | Kết quả |
@@ -223,7 +223,7 @@ Ghi chú thêm: tiêu đề và mô tả trang hiện do `content/seo.ts` quyế
 
 ## build:b2b-pages
 
-Đã dựng xong 6 trang B2B (9 route × VI/EN). Toàn repo xanh: typecheck 0 lỗi, lint 0 lỗi 0 cảnh báo, unit 120/120, `safe-build` xanh. Trên route của tôi: overflow 18/18, seo-render 36/36, axe 36/36. Có 5 commit trên `feat/s1-1.4-p0-build`: e0674b0, 0a4b518, 89b8392, 128b2d5, c7d7459.
+Đã dựng xong 6 trang B2B (9 route × VI/EN). Toàn repo xanh: typecheck 0 lỗi, lint 0 lỗi 0 cảnh báo, unit 120/120, `safe-build` xanh. Trên route của tôi: overflow 18/18, seo-render 36/36, axe 36/36. Có 5 commit trên `feat/s1-1.4-p0-build`: c5a32b5, 1bff5f2, 5836a64, 9184891, 8ab7081.
 
 ## Đã làm (đường dẫn tính từ `/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web/`)
 

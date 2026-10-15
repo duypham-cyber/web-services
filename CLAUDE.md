@@ -201,7 +201,8 @@ báo cáo/PR, giữ tương thích ngược, chạy lại typecheck + test + ove
 ## Git (một cây làm việc, nhiều agent song song)
 - Remote `origin` = https://github.com/duypham-cyber/web-services — **CÔNG KHAI** (anh Duy, 15/10/2026). Push qua deploy key
   `~/.ssh/deploy_web_services` (đã đặt `core.sshCommand`), CHỈ khi anh yêu cầu. Repo công khai: không commit IP nội bộ,
-  mật khẩu, token, email/SĐT cá nhân (dùng chỗ giữ chỗ như `<IP Tailscale của máy chủ>`).
+  mật khẩu, token, email/SĐT cá nhân (dùng chỗ giữ chỗ như `<IP Tailscale của máy chủ>`). Repo đã đặt `user.email` =
+  email noreply của duypham-cyber (D-36) — không đổi lại email cá nhân.
 - Nhánh tích hợp: `feat/s1-1.4-p0-build`; `main` (nhánh mặc định trên GitHub) và `develop` đi theo nó bằng fast-forward.
   Không `--force`, không rebase nhánh chung.
 - CHỈ `git add <đường dẫn mình sửa>` — KHÔNG `git add -A`/`git add .`/`git commit -a` (agent khác đang có file chưa commit).

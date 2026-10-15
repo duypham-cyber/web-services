@@ -198,7 +198,7 @@ cũ). `components/layout/Logo.tsx` khai báo path một lần (`<symbol>`), dùn
   trang trừ trang chủ và Service ở 2 trang giải pháp chi tiết + 4 trang dịch vụ (trước chỉ ghi chú).
 - `tests/seo-render.spec.ts`: robots kỳ vọng theo `isIndexable(route, { draftPreview })` với CHẾ ĐỘ CỦA SERVER (thuộc tính
   `data-draft-preview` trên `<html>` chỉ có ở bản xem trước) → 3 trang pháp lý chưa duyệt noindex ở production không còn đỏ
-  nhầm — partner #1, SEO #4. (`content/seo.ts`/`lib/seo.ts` đã loại trang pháp lý chưa duyệt khỏi sitemap từ commit a308920.)
+  nhầm — partner #1, SEO #4. (`content/seo.ts`/`lib/seo.ts` đã loại trang pháp lý chưa duyệt khỏi sitemap từ commit d10e6f0.)
 - `content/schemas.ts` + `content/validate.ts`: schema Zod cho `pricing.ts` (chuyển từ `components/pricing/pricing-schema.ts`, bỏ
   `assertPricingValid()` ở `/bang-gia`) — B2B #1; `jobs.ts`, `legal.ts`, `partners.ts` — partner #3; `regions`, `formerNames` —
   bản đồ #6; `validateContent()` gọi `validateArticles()` — SEO #5. Dữ liệu sai → build fail + Vitest đỏ như mọi file khác.
@@ -446,7 +446,7 @@ chữ không đổi, số đếm khớp file. Agent nội dung tự kiểm lại
 | 1 | Ô 60 phút ở `/giai-phap/*` đứng cạnh quy trình "điều phối → thợ gọi khách", dễ đọc thành "trong 60 phút đã điều phối và thợ đã gọi". Nguồn đặt 60 phút TRƯỚC bước điều phối | Đồng ý. Không sửa được trong vùng nội dung (thứ tự quy trình ở `content/process.ts`, bố cục ở trang giải pháp). Đã ghi vào note của `b2b.sla.confirm-60-minutes`, chuyển sang "Còn mở" |
 | 2 | `/mang-luoi`: `lead` nói "số thợ đang hoạt động… đã đối soát" ngay trên ô 500+; `sla.intro` nói "sẽ hiện khi công bố" ngay trên dòng 24–48 giờ; cột "Thợ đang hoạt động" ghi "Chưa có số" cả 34 tỉnh | Đồng ý. `messages/*/network.json` và bảng tỉnh ngoài vùng: "Còn mở" |
 | 3 | Số thợ theo miền đã duyệt không hiện ở đâu | Đồng ý. Không cho `legacyRegionCounts()` trả số duyệt, vì nơi gọi gắn nhãn "Nháp · số site cũ" (production sẽ lộ nhãn nháp). Trang phải đổi sang `regionCounts()`: "Còn mở" |
-| 4 | Trang dịch vụ hiện tiêu đề "Theo chính sách hiện hành" trong khi trang chính sách ghi "Chưa ban hành" | Đồng ý. Sửa từ gốc: đưa `b2b.warranty.installation-faults` về nháp (mục 5). Cả nhóm claim bảo hành lại là nháp nên khối tiêu đề và danh sách tự ẩn ở production, như trước 8324c75 |
+| 4 | Trang dịch vụ hiện tiêu đề "Theo chính sách hiện hành" trong khi trang chính sách ghi "Chưa ban hành" | Đồng ý. Sửa từ gốc: đưa `b2b.warranty.installation-faults` về nháp (mục 5). Cả nhóm claim bảo hành lại là nháp nên khối tiêu đề và danh sách tự ẩn ở production, như trước ae48606 |
 | 5 | `b2b.warranty.installation-faults` được duyệt ngoài danh sách của D-26 | Đồng ý. Đưa về nháp. Tech lead hoặc anh Duy có thể duyệt lại khi có chính sách bảo hành chính thức |
 | 6 | SLA `confirm-time` đã duyệt nhưng không trang nào hiện | Đồng ý, nhưng giữ duyệt: đây là nguồn chung của mốc 60 phút, để không hiện cũng không sai. Đề xuất thêm vào `SLA_IDS` của `/mang-luoi`: "Còn mở" |
 | 7 | Bảng SLA theo vùng ở B2B ghi "Theo hợp đồng" ở dòng xử lý lỗi, vênh với "Trong 24–48 giờ" ở `/mang-luoi` và `/dich-vu/*` | Đồng ý. Ô của dòng này là claim 24/36 giờ làm việc (nháp, khác mốc 24–48h). Không thêm claim mới. Cách sửa thuộc component B2B: "Còn mở" |
@@ -804,3 +804,26 @@ Anh Duy: "Có 1 vài macbook như macbook air không xem được website hoặc
   - Safari → Giới thiệu về Safari: dưới 16.4 là nguyên nhân 1.
   - Cài đặt hệ thống → Pin → Chế độ nguồn điện thấp: nếu đang bật, là nguyên nhân 2.
   - Console: `JSON.stringify({...document.querySelector('[data-hero-map]').dataset})` cho biết `tierReason` và `stillReason`.
+
+### D-36 · 15/10/2026 · Đưa repo lên GitHub công khai, viết lại lịch sử, giấy phép MIT (anh Duy yêu cầu)
+Anh Duy: đưa dự án lên GitHub để chia sẻ cho các team khác chạy trên server của họ; chọn repo công khai
+https://github.com/duypham-cyber/web-services, sau đó yêu cầu xoá IP nội bộ khỏi lịch sử, giấu email và gắn giấy phép.
+- **Đẩy lên:** bằng deploy key riêng của repo (`~/.ssh/deploy_web_services`, quyền ghi, chỉ repo này). `main` là nhánh mặc định;
+  `main`/`develop` đi theo `feat/s1-1.4-p0-build` bằng fast-forward.
+- **Trước khi công khai:**
+  - IP nội bộ trong tài liệu và script đổi thành chữ giữ chỗ.
+  - Thêm `.env.example` và mục "Cài lên server khác" trong README. Đã thử trên clone sạch: `npm ci` → `safe-build` → chạy được.
+- **Viết lại toàn bộ lịch sử** (160 commit, `git filter-branch`):
+  - IP LAN, Tailscale và IP công cộng văn phòng trong mọi bản cũ của file → chữ giữ chỗ.
+  - Tác giả/người commit → `duypham-cyber <269630155+duypham-cyber@users.noreply.github.com>`, thay email cá nhân.
+  - Ngày giờ commit giữ nguyên. Nội dung bản cuối giống hệt trước khi viết lại (cùng mã cây).
+  - Mọi mã commit đều đổi; các mã được nhắc trong docs đã cập nhật sang mã mới. Ai đã clone trước 15/10 phải clone lại.
+  - Bản sao lưu lịch sử cũ (còn IP và email, KHÔNG đưa lên đâu):
+    `../backup-git/bluebolt-web-truoc-viet-lai-2026-10-15.bundle`.
+- **Giấy phép:** mã nguồn MIT (`LICENSE`), chủ sở hữu ghi là Công ty Cổ phần Công nghệ Tia Chớp Xanh (giả định, chờ anh Duy).
+  Không thuộc MIT, xem `NOTICE.md`:
+  - logo và tên thương hiệu;
+  - thông tin doanh nghiệp, câu khẳng định dịch vụ;
+  - ảnh minh họa (theo `docs/PHOTOS.md`);
+  - font Roboto (Apache-2.0);
+  - dữ liệu ranh giới tỉnh (MIT, nguồn riêng).
