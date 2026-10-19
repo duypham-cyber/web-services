@@ -11,7 +11,7 @@ Environment=DRAFT_PREVIEW=1
 Environment=STAGING=1
 Environment=NODE_OPTIONS=--max-old-space-size=768
 ExecStart=/usr/bin/npm run start
-Restart=on-failure
+Restart=always
 RestartSec=5
 MemoryMax=1200M
 

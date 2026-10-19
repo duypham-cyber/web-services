@@ -15,7 +15,7 @@ LockPersonality=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
 SystemCallArchitectures=native
-Restart=on-failure
+Restart=always
 RestartSec=5
 MemoryMax=1200M
 

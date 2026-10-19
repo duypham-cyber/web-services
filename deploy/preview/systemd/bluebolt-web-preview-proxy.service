@@ -7,7 +7,7 @@ Wants=bluebolt-web-preview.service
 WorkingDirectory=/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web
 EnvironmentFile=/home/bbsw/WorkspaceDuy/LapDatToanQuoc/bluebolt-web/.env.preview
 ExecStart=/usr/bin/node deploy/preview/proxy.mjs
-Restart=on-failure
+Restart=always
 RestartSec=3
 MemoryMax=150M
 
